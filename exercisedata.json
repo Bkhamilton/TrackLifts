@@ -1,0 +1,23 @@
+{
+    "Exercises": [{
+        "Name" : "Bench Press (Barbell)",
+        "Muscle Group" : "Chest",
+        "Muscles" : ["Chest(1.0)", "Triceps(0.5)", "Front Delt(0.4)"]
+    },{
+        "Name" : "Incline Bench Press (Dumbbell)",
+        "Muscle Group" : "Chest",
+        "Muscles" : ["Upper Chest(1.0)", "Chest(0.6)", "Triceps(0.5)"]
+    },{
+        "Name" : "Tricep Pushdown (Rope)",
+        "Muscle Group" : "Triceps",
+        "Muscles" : ["Triceps(1.0)"]
+    },{
+        "Name" : "High-Low Chest Fly (Cable)",
+        "Muscle Group" : "Chest",
+        "Muscles" : ["Upper Chest(1.0)", "Chest(0.6)"]
+    },{
+        "Name" : "Tricep Dips",
+        "Muscle Group" : "Triceps",
+        "Muscles" : ["Triceps(1.0)"]
+    }]
+}

@@ -1,0 +1,15 @@
+{
+  "routines": [
+    {
+      "Push" : ["Bench Press (Barbell)", "Skullcrusher (Barbell)", "Incline Bench Press (Dumbbell)", "Tricep PullDown (Rope)", "Chest Fly Machine", "Triceps Dip"]
+    }, {
+      "Pull" : []
+    },
+    {
+      "Shoulders" : []
+    },
+    {
+      "Legs" : []
+    }
+  ]
+}

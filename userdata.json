@@ -1,0 +1,60 @@
+{
+    "Users" : [
+        {
+            "Username" : "benkhamilton",
+            "Total Workouts" : 1,
+            "History" : [{
+                "Date" : "3/10/21",
+                "Routine Name" : "Chest and Triceps",
+                "Setlist" : [{
+                    "Name" : "Bench Press (Barbell)",
+                    "Sets" : ["45 x 10", "95 x 6", "135 x 5", "165 x 3", "185 x 5", "185 x 5"]
+                },{
+                    "Name" : "Incline Bench Press (Dumbbell)",
+                    "Sets" : ["40 x 10", "50 x 10", "60 x 10", "65 x 7", "65 x 6"]
+                },{
+                    "Name" : "Tricep Pushdown (Rope)",
+                    "Sets" : ["20 x 12", "25 x 12", "30 x 12", "35 x 10", "35 x 10"]
+                },{
+                    "Name" : "High-Low Chest Fly (Cable)",
+                    "Sets" : ["35 x 10", "40 x 10", "40 x 10"]
+                },{
+                    "Name" : "Tricep Dips",
+                    "Sets" : ["0 x 10", "0 x 8"]
+                }]
+            }],
+            "PRData" : [{
+                "Name" : "Barbell Bench Press",
+                "Best Set" : "185 x 5",
+                "Volume" : "1350",
+                "1RM" : "215"
+            },{
+                "Name" : "Incline Bench Press (Dumbbell)",
+                "Best Set" : "65 x 7",
+                "Volume" : "600",
+                "1RM" : "75"
+            },{
+                "Name" : "Tricep Pushdown (Rope)",
+                "Best Set" : "35 x 10",
+                "Volume" : "360",
+                "1RM" : "40"                
+            },{
+                "Name" : "High-Low Chest Fly (Cable)",
+                "Best Set" : "40 x 10",
+                "Volume" : "400",
+                "1RM" : "45"
+            },{
+                "Name" : "Tricep Dips",
+                "Best Set" : "0 x 10",
+                "Volume" : "0",
+                "1RM" : "0"
+            }]
+        },{
+            "Username" : "Testbot",
+            "Total Workouts" : 0,
+            "History" : [],
+            "PRData" : []
+
+        }
+    ]
+}
