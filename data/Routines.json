@@ -1,0 +1,25 @@
+[{
+    "_id":"62c1e42ce0edecb1f65b0a30",
+    "title":"Test Routine",
+    "exercises":["Incline Curl (Dumbbell)","Hammer Curl (Dumbbell)","Preacher Curl (Barbell)"]
+},{
+    "_id":"62dd8302da3413c79236ac5d",
+    "title":"Routine 1",
+    "exercises":["Bench Press (Barbell)","Shoulder Press (Dumbbell)","Chest Fly (Machine)"]
+},{
+    "_id":"62dd83bd6f98b7003f1d2edb",
+    "title":"Routine 2",
+    "exercises":["Face Pulls (Cable)","Lever Row","Back Extension"]
+},{
+    "_id":"62ddac4ebb28d12410d8cba2",
+    "title":"Routine 3",
+    "exercises":["Face Pulls (Cable)","Lever Row","Back Extension","Preacher Curl (Barbell)"]
+},{
+    "_id":"62ddacab6041edba587d3d65",
+    "title":"Routine 4",
+    "exercises":["Face Pulls (Cable)","Lever Row","Back Extension","Preacher Curl (Barbell)","Lat Pulldown"]
+},{
+    "_id":"62ddac4ebb28d12410d8cba4",
+    "title":"Arms",
+    "exercises":["Preacher Curl (Barbell)","Incline Curl (Dumbbell)","Hammer Curl (Dumbbell)","Push Up","Tricep Dips"]
+}]
