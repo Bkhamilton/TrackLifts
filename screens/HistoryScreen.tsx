@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import HistoryInfo from '../components/HistoryInfo';
+import HistoryInfo from '../components/History/HistoryInfo';
 import HistoryModal from '../components/modals/HistoryModal';
 import { ScrollView, View } from '../components/Themed';
 import Title from '../components/Title';
