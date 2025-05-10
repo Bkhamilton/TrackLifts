@@ -17,3 +17,9 @@ export interface History {
     totalWeight: number;
     workout: any[];
 }
+
+export interface Routine {
+    id: number;
+    title: string;
+    exercises?: Exercise[];
+}
