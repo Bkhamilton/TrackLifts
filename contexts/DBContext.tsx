@@ -1,5 +1,7 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getExercises } from '@/db/general/Exercises';
+import { getRoutinesByUserId } from '@/db/user/Routines';
+import { getUserById } from '@/db/user/Users';
 import { Exercise } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
@@ -8,17 +10,33 @@ import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import { getMuscles } from '@/db/general/Muscles';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
-import { getRoutinesByUserId } from '@/db/user/Routines';
+
 */
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+}
 
 interface DBContextValue {
     db: any;
+    user: User;
     exercises: Exercise[];
+    routines: any[];
 }
 
 export const DBContext = createContext<DBContextValue>({
     db: null,
+    user: {
+        id: 0,
+        name: '',
+        email: '',
+        password: '',
+    },
     exercises: [],
+    routines: [],
 });
 
 interface DBContextValueProviderProps {
@@ -29,6 +47,13 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const db = useSQLiteContext();
 
     const [isLoading, setIsLoading] = useState(true);
+
+    const [user, setUser] = useState<User>({
+        id: 0,
+        name: '',
+        email: '',
+        password: '',
+    });
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [muscles, setMuscles] = useState<any[]>([]);
@@ -41,12 +66,25 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                 setExercises(data);
                 setIsLoading(false);
             });
+            getUserById(db, 1).then((data) => {
+                setUser(data);
+            });
         }
     }, [db]);
 
+    useEffect(() => {
+        if (db && user.id !== 0) {
+            getRoutinesByUserId(db, user.id).then((data) => {
+                setRoutines(data);
+            });
+        }
+    }, [db, user]);
+
     const value = {
         db,
+        user,
         exercises,
+        routines,
     };
 
     return (

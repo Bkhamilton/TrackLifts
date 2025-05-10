@@ -2,14 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
-import RoutineInfo from '../components/RoutineInfo';
+import RoutineInfo from '@/components/Home/RoutineInfo';
 import Title from '../components/Title';
 
 import { ScrollView, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
-import { RootTabScreenProps } from '../types';
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
+export default function HomeScreen() {
 
     const { db, routines } = useContext(DBContext) 
 
