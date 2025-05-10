@@ -1,0 +1,23 @@
+{
+    "Split" : [
+        {
+            "key" : "0001",
+            "title" : "Push" 
+        },{
+            "key" : "0002",
+            "title" : "Pull"
+        },{
+            "key" : "0003",
+            "title" : "Legs"
+        },{
+            "key" : "0004",
+            "title" : "Shoulders"
+        },{
+            "key" : "0005",
+            "title" : "Arms"
+        },{
+            "key" : "0006",
+            "title" : "Legs"
+        }
+    ]
+}

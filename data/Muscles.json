@@ -1,0 +1,214 @@
+[
+{
+    "name": "Biceps",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Long Head Bicep",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Short Head Bicep",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Traps (mid-back)",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Lower Back",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Abs",
+    "muscleGroup": "Core"
+},
+{
+    "name": "Upper Back",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Abdominals",
+    "muscleGroup": "Core"
+},
+{
+    "name": "Lower Abdominals",
+    "muscleGroup": "Core"
+},
+{
+    "name": "Upper Abdominals",
+    "muscleGroup": "Core"
+},
+{
+    "name": "Calves",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Tibialis",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Soleus",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Gastrocnemius",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Forearms",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Wrist Extensors",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Wrist Flexors",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Glutes",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Gluteus Medius",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Gluteus Maximus",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Hamstrings",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Medial Hamstrings",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Lateral Hamstrings",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Lats",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Shoulders",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Side Delts",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Front Delts",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Rear Delts",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Triceps",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Long Head Tricep",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Lateral Head Triceps",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Medial Head Triceps",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Traps",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Upper Traps",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Lower Traps",
+    "muscleGroup": "Back"
+},
+{
+    "name": "Quads",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Inner Quadriceps",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Outer Quadricep",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Rectus Femoris",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Chest",
+    "muscleGroup": "Chest"
+},
+{
+    "name": "Upper Chest",
+    "muscleGroup": "Chest"
+},
+{
+    "name": "Lower Chest",
+    "muscleGroup": "Chest"
+},
+{
+    "name": "Obliques",
+    "muscleGroup": "Core"
+},
+{
+    "name": "Hands",
+    "muscleGroup": "Arms"
+},
+{
+    "name": "Feet",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Front Shoulders",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Rear Shoulders",
+    "muscleGroup": "Shoulders"
+},
+{
+    "name": "Neck",
+    "muscleGroup": "Neck"
+},
+{
+    "name": "Groin",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Hip Flexors",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Hip Abductors",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Hip Adductors",
+    "muscleGroup": "Legs"
+},
+{
+    "name": "Rotator Cuff",
+    "muscleGroup": "Shoulders"
+}
+]

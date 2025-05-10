@@ -1,0 +1,49 @@
+// Create a new routine exercise
+export const insertRoutineExercise = async (db, routineExercise) => {
+    try {
+        const result = await db.runAsync(
+            'INSERT INTO RoutineExercises (routine_id, exercise_id, sets, reps) VALUES (?, ?, ?, ?)',
+            [routineExercise.routine_id, routineExercise.exercise_id, routineExercise.sets, routineExercise.reps]
+        );
+        return result.lastInsertRowId;
+    } catch (error) {
+        console.error('Error creating routine exercise:', error);
+        throw error;
+    }
+};
+
+// Read routine exercises by routine ID
+export const getRoutineExercisesByRoutineId = async (db, routineId) => {
+    try {
+        const allRows = await db.getAllAsync('SELECT * FROM RoutineExercises WHERE routine_id = ?', [routineId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error getting routine exercises:', error);
+        throw error;
+    }
+};
+
+// Update a routine exercise
+export const updateRoutineExercise = async (db, routineId, exerciseId, updates) => {
+    try {
+        await db.runAsync(
+            'UPDATE RoutineExercises SET sets = ?, reps = ? WHERE routine_id = ? AND exercise_id = ?',
+            [updates.sets, updates.reps, routineId, exerciseId]
+        );
+        console.log('Routine exercise updated');
+    } catch (error) {
+        console.error('Error updating routine exercise:', error);
+        throw error;
+    }
+};
+
+// Delete a routine exercise
+export const deleteRoutineExercise = async (db, routineId, exerciseId) => {
+    try {
+        await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?', [routineId, exerciseId]);
+        console.log('Routine exercise deleted');
+    } catch (error) {
+        console.error('Error deleting routine exercise:', error);
+        throw error;
+    }
+};
