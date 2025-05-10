@@ -1,6 +1,8 @@
+import equipment from '@/data/Equipment.json';
 import exercises from '@/data/Exercises.json';
 import muscleGroups from '@/data/MuscleGroups.json';
 import muscles from '@/data/Muscles.json';
+import { insertEquipment } from '@/db/general/Equipment';
 import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { insertExercise } from '@/db/general/Exercises';
 import { insertMuscleGroup } from '@/db/general/MuscleGroups';
@@ -12,6 +14,7 @@ import { insertRoutine } from '@/db/user/Routines';
 export const syncTables = async (db) => {
     await syncMuscleGroups(db);
     await syncMuscles(db);
+    await syncEquipment(db);
     await syncExercises(db);
     await syncRoutines(db);
 }
@@ -28,6 +31,12 @@ const syncMuscles = async (db) => {
     }
 };
 
+const syncEquipment = async (db) => {
+    for (const equip of equipment) {
+        await insertEquipment(db, equip);
+    }
+};
+
 const syncExercises = async (db) => {
     // Fetch muscle IDs for mapping
     const muscles = await db.getAllAsync('SELECT id, name FROM Muscles');
@@ -37,13 +46,24 @@ const syncExercises = async (db) => {
     const muscleGroups = await db.getAllAsync('SELECT id, name FROM MuscleGroups');
     const muscleGroupMap = new Map(muscleGroups.map(mg => [mg.name, mg.id]));
 
+    // Fetch equipment IDs for mapping
+    const equipmentList = await db.getAllAsync('SELECT id, name FROM Equipment');
+    const equipmentMap = new Map(equipmentList.map(e => [e.name, e.id]));
+
     // Insert exercises and their associated muscles
     for (const exercise of exercises) {
         const muscleGroupId = muscleGroupMap.get(exercise.muscleGroup);
-        if (muscleGroupId) {
-            console.log(`Inserting exercise "${exercise.title}" into muscle group "${exercise.muscleGroup}" with ID ${muscleGroupId}`);
+        const equipmentId = equipmentMap.get(exercise.equipment);
+
+        if (muscleGroupId && equipmentId) {
+            console.log(
+                `Inserting exercise "${exercise.title}" into muscle group "${exercise.muscleGroup}" with equipment "${exercise.equipment}"`
+            );
+
+            // Insert the exercise into the Exercises table
             const exerciseId = await insertExercise(db, {
                 title: exercise.title,
+                equipment_id: equipmentId,
                 muscle_group_id: muscleGroupId,
             });
 
@@ -61,7 +81,12 @@ const syncExercises = async (db) => {
                 }
             }
         } else {
-            console.warn(`Muscle group "${exercise.muscleGroup}" not found for exercise "${exercise.title}"`);
+            if (!muscleGroupId) {
+                console.warn(`Muscle group "${exercise.muscleGroup}" not found for exercise "${exercise.title}"`);
+            }
+            if (!equipmentId) {
+                console.warn(`Equipment "${exercise.equipment}" not found for exercise "${exercise.title}"`);
+            }
         }
     }
 };
@@ -73,7 +98,8 @@ const syncRoutines = async (db) => {
             title: 'Full Body Workout',
             exercises: [
                 {
-                    title: 'Squat (Barbell)',
+                    title: 'Squat',
+                    equipment: 'Barbell',
                     sets: [
                         { weight: 200, reps: 10 },
                         { weight: 210, reps: 8 },
@@ -81,7 +107,8 @@ const syncRoutines = async (db) => {
                     ],
                 },
                 {
-                    title: 'Bench Press (Barbell)',
+                    title: 'Bench Press',
+                    equipment: 'Barbell',
                     sets: [
                         { weight: 150, reps: 10 },
                         { weight: 160, reps: 8 },
@@ -89,7 +116,8 @@ const syncRoutines = async (db) => {
                     ],
                 },
                 {
-                    title: 'Deadlift (Barbell)',
+                    title: 'Deadlift',
+                    equipment: 'Barbell',
                     sets: [
                         { weight: 250, reps: 10 },
                         { weight: 260, reps: 8 },
@@ -103,6 +131,7 @@ const syncRoutines = async (db) => {
             exercises: [
                 {
                     title: 'Pull-Up',
+                    equipment: 'Bodyweight',
                     sets: [
                         { weight: 0, reps: 8 },
                         { weight: 0, reps: 8 },
@@ -110,7 +139,8 @@ const syncRoutines = async (db) => {
                     ],
                 },
                 {
-                    title: 'Shoulder Press (Dumbbell)',
+                    title: 'Shoulder Press',
+                    equipment: 'Dumbbell',
                     sets: [
                         { weight: 40, reps: 10 },
                         { weight: 45, reps: 8 },
@@ -118,7 +148,8 @@ const syncRoutines = async (db) => {
                     ],
                 },
                 {
-                    title: 'Incline Curl (Barbell)',
+                    title: 'Incline Curl',
+                    equipment: 'Dumbbell',
                     sets: [
                         { weight: 30, reps: 12 },
                         { weight: 35, reps: 10 },
@@ -137,7 +168,12 @@ const syncRoutines = async (db) => {
         });
 
         for (const exercise of routine.exercises) {
-            const exerciseId = await db.getAllAsync('SELECT id FROM Exercises WHERE title = ?', [exercise.title]);
+            // Fetch the exercise by title and equipment
+            const exerciseId = await db.getAsync(
+                'SELECT id FROM Exercises WHERE title = ? AND equipment_id = (SELECT id FROM Equipment WHERE name = ?)',
+                [exercise.title, exercise.equipment]
+            );
+
             if (exerciseId) {
                 const routineExerciseId = await insertRoutineExercise(db, {
                     routine_id: routineId,
@@ -156,7 +192,7 @@ const syncRoutines = async (db) => {
                     });
                 }
             } else {
-                console.warn(`Exercise "${exercise.title}" not found for routine "${routine.title}"`);
+                console.warn(`Exercise "${exercise.title}" with equipment "${exercise.equipment}" not found for routine "${routine.title}"`);
             }
         }
     }

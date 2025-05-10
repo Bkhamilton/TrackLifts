@@ -21,10 +21,16 @@ export const createGeneralTables = async (db) => {
             muscle_group_id INTEGER,
             FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
         );
+        CREATE TABLE IF NOT EXISTS Equipment (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS Exercises (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
+            equipment_id INTEGER,
             muscle_group_id INTEGER,
+            FOREIGN KEY (equipment_id) REFERENCES Equipment(id),
             FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
         );
         CREATE TABLE IF NOT EXISTS ExerciseMuscles (

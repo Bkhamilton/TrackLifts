@@ -1,37 +1,41 @@
 [
     {
         "_id": "62d5e69d8e146f940e31673e",
-        "title": "Bench Press (Barbell)",
+        "title": "Bench Press",
         "muscleGroup": "Chest",
         "muscles": [
             { "name": "Chest", "value": 1 },
             { "name": "Triceps", "value": 0.7 },
             { "name": "Front Delts", "value": 0.3 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62db293d27459f75e4f4c858",
-        "title": "Shoulder Press (Dumbbell)",
+        "title": "Shoulder Press",
         "muscleGroup": "Shoulders",
         "muscles": [
             { "name": "Front Delts", "value": 1 }
-        ]
+        ],
+        "equipment": "Dumbbell"
     },
     {
         "_id": "62db2a8fc0b51297e4ffd116",
-        "title": "Preacher Curl (Barbell)",
+        "title": "Preacher Curl",
         "muscleGroup": "Arms",
         "muscles": [
             { "name": "Biceps", "value": 1 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62db2b24ba5f437b00a54c6b",
-        "title": "Incline Curl (Barbell)",
+        "title": "Incline Curl",
         "muscleGroup": "Arms",
         "muscles": [
             { "name": "Biceps", "value": 1 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62db2be8d89ec892f598951c",
@@ -40,31 +44,35 @@
         "muscles": [
             { "name": "Lats", "value": 0.8 },
             { "name": "Upper Back", "value": 0.4 }
-        ]
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62db527805da79e8660dc7ef",
-        "title": "Face Pulls (Cable)",
+        "title": "Face Pulls",
         "muscleGroup": "Shoulders",
         "muscles": [
             { "name": "Rear Delts", "value": 1 }
-        ]
+        ],
+        "equipment": "Cable"
     },
     {
         "_id": "62dd80927b5319230c248237",
-        "title": "Lying Leg Curl (Machine)",
+        "title": "Lying Leg Curl",
         "muscleGroup": "Legs",
         "muscles": [
             { "name": "Hamstrings", "value": 1 }
-        ]
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62dd80c9c6658dac4cc51e16",
-        "title": "Leg Extension (Machine)",
+        "title": "Leg Extension",
         "muscleGroup": "Legs",
         "muscles": [
             { "name": "Quads", "value": 1 }
-        ]
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62dd83bd6f98b7003f1d2eda",
@@ -72,7 +80,8 @@
         "muscleGroup": "Back",
         "muscles": [
             { "name": "Lower Back", "value": 1 }
-        ]
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62ddac4ebb28d12410d8cba1",
@@ -82,25 +91,28 @@
             { "name": "Upper Back", "value": 1 },
             { "name": "Lats", "value": 0.5 },
             { "name": "Traps", "value": 0.2 }
-        ]
+        ],
+        "equipment": "Cable"
     },
     {
         "_id": "62ddacab6041edba587d3d64",
-        "title": "Seated Row (Cable)",
+        "title": "Seated Row",
         "muscleGroup": "Back",
         "muscles": [
             { "name": "Lats", "value": 0.9 },
             { "name": "Upper Back", "value": 0.3 },
             { "name": "Lower Traps", "value": 0.2 }
-        ]
+        ],
+        "equipment": "Cable"
     },
     {
         "_id": "62e83c72d5eb70aef44520a5",
-        "title": "Chest Fly (Machine)",
+        "title": "Chest Fly",
         "muscleGroup": "Chest",
         "muscles": [
             { "name": "Chest", "value": 1 }
-        ]
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62e83c9f0a22d26c9d160baa",
@@ -108,33 +120,37 @@
         "muscleGroup": "Chest",
         "muscles": [
             { "name": "Chest", "value": 1 }
-        ]
+        ],
+        "equipment": "Bodyweight"
     },
     {
         "_id": "62e9c5d8bc8afe96e698dfdd",
-        "title": "Incline Bench Press (Barbell)",
+        "title": "Incline Bench Press",
         "muscleGroup": "Chest",
         "muscles": [
             { "name": "Upper Chest", "value": 1 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62e9c5d8bc8afe96e698dfde",
-        "title": "Decline Bench Press (Barbell)",
+        "title": "Decline Bench Press",
         "muscleGroup": "Chest",
         "muscles": [
             { "name": "Lower Chest", "value": 1 },
             { "name": "Triceps", "value": 0.7 },
             { "name": "Front Delts", "value": 0.2 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62db293d27459f75e4f4c859",
-        "title": "Lateral Raise (Dumbbell)",
+        "title": "Lateral Raise",
         "muscleGroup": "Shoulders",
         "muscles": [
             { "name": "Side Delts", "value": 1 }
-        ]
+        ],
+        "equipment": "Dumbbell"
     },
     {
         "_id": "62db2b24ba5f437b00a54c6c",
@@ -143,7 +159,8 @@
         "muscles": [
             { "name": "Triceps", "value": 1 },
             { "name": "Chest", "value": 0.3 }
-        ]
+        ],
+        "equipment": "Bodyweight"
     },
     {
         "_id": "62ddacab6041edba587d3d65",
@@ -153,18 +170,20 @@
             { "name": "Lats", "value": 1 },
             { "name": "Upper Back", "value": 0.7 },
             { "name": "Biceps", "value": 0.5 }
-        ]
+        ],
+        "equipment": "Bodyweight"
     },
     {
         "_id": "62dd80c9c6658dac4cc51e17",
-        "title": "Squat (Barbell)",
+        "title": "Squat",
         "muscleGroup": "Legs",
         "muscles": [
             { "name": "Quads", "value": 1 },
             { "name": "Glutes", "value": 0.8 },
             { "name": "Hamstrings", "value": 0.5 },
             { "name": "Lower Back", "value": 0.3 }
-        ]
+        ],
+        "equipment": "Barbell"
     },
     {
         "_id": "62dd83bd6f98b7003f1d2edb",
@@ -173,17 +192,19 @@
         "muscles": [
             { "name": "Abs", "value": 1 },
             { "name": "Hip Flexors", "value": 0.5 }
-        ]
+        ],
+        "equipment": "Bodyweight"
     },
     {
         "_id": "62e9c5d8bc8afe96e698dfdf",
-        "title": "Deadlift (Barbell)",
+        "title": "Deadlift",
         "muscleGroup": "Back",
         "muscles": [
             { "name": "Lower Back", "value": 1 },
             { "name": "Glutes", "value": 0.8 },
             { "name": "Hamstrings", "value": 0.7 },
             { "name": "Upper Back", "value": 0.5 }
-        ]
+        ],
+        "equipment": "Barbell"
     }
 ]
