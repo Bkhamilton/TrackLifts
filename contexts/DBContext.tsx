@@ -1,5 +1,6 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getExercises } from '@/db/general/Exercises';
+import { Exercise } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 /*
@@ -9,13 +10,6 @@ import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 */
-
-interface Exercise {
-    id: number;
-    title: string;
-    muscleGroupId: number;
-    muscleGroup: string;
-}
 
 interface DBContextValue {
     db: any;

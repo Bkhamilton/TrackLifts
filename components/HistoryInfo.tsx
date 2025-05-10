@@ -22,7 +22,7 @@ export default function HistoryInfo({ open, data }: { open: Function, data: Hist
         return (
           <View>
             <TouchableOpacity
-              onPress={open(props.history.routine)}
+              onPress={() => open(props.history.routine)}
             >
               <View style={styles.historyModal}>
                 <Text>{props.history.date}</Text>
