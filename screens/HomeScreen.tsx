@@ -7,8 +7,11 @@ import Title from '../components/Title';
 
 import { ScrollView, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import useHookHome from '@/hooks/useHookHome';
 
 export default function HomeScreen() {
+
+    const { closeRoutineModal, openRoutineModal, openAddRoutineModal, openRoutineOptionsModal } = useHookHome();
 
     const { db, routines } = useContext(DBContext) 
 
@@ -35,11 +38,11 @@ export default function HomeScreen() {
             </View>
             <ScrollView style={{top:60, paddingTop: 10}}>
                 <RoutineInfo 
-                    close={startWorkout} 
+                    close={closeRoutineModal} 
                     open={openRoutineModal} 
-                    openAddRoutine={openAddRoutine} 
+                    openAddRoutine={openAddRoutineModal} 
                     routines={routines} 
-                    openRoutineOptions={openRoutineOptions}
+                    openRoutineOptions={openRoutineOptionsModal}
                 />
             </ScrollView>
         </View>

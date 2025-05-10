@@ -21,9 +21,9 @@ export default function RoutineInfo({ close, open, openAddRoutine, routines, ope
 
     function SplitList(props: { name: string; curDay: string }) {
         return (
-          <View style={{ top: 3 }}>
-            <Text style={{ fontWeight: props.name === props.curDay ? 'bold' : 'normal', fontSize: 14 }}>{props.name}</Text>
-          </View>
+            <View style={{ top: 3 }}>
+                <Text style={{ fontWeight: props.name === props.curDay ? 'bold' : 'normal', fontSize: 14 }}>{props.name}</Text>
+            </View>
         );
     }
     const textInputComponents = splitList.map(type => <View key={type.key}><SplitList name={type.title} curDay={curDay} /></View>);
