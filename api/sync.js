@@ -180,7 +180,6 @@ const syncRoutines = async (db) => {
                     routine_id: routineId,
                     exercise_id: exerciseId.id,
                     sets: exercise.sets.length, // Total number of sets
-                    reps: Math.max(...exercise.sets.map(set => set.reps)), // Max reps for display purposes
                 });
 
                 // Insert each set into the ExerciseSets table

@@ -3,7 +3,7 @@ import { getEquipment } from '@/db/general/Equipment';
 import { getExercises } from '@/db/general/Exercises';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
-import { Exercise } from '@/utils/types';
+import { Exercise, Routine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 /*
@@ -26,7 +26,7 @@ interface DBContextValue {
     user: User;
     exercises: Exercise[];
     equipment: any[];
-    routines: any[];
+    routines: Routine[];
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -62,7 +62,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [equipment, setEquipment] = useState<any[]>([]);
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<any[]>([]);
-    const [routines, setRoutines] = useState<any[]>([]);
+    const [routines, setRoutines] = useState<Routine[]>([]);
 
     useEffect(() => {
         if (db) {

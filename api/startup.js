@@ -55,7 +55,7 @@ export const createUserTables = async (db) => {
             password TEXT NOT NULL,
             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
         );
-            CREATE TABLE IF NOT EXISTS Routines (
+        CREATE TABLE IF NOT EXISTS Routines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             user_id INTEGER,
@@ -65,7 +65,6 @@ export const createUserTables = async (db) => {
             routine_id INTEGER,
             exercise_id INTEGER,
             sets INTEGER NOT NULL,
-            reps INTEGER NOT NULL,
             PRIMARY KEY (routine_id, exercise_id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id),
             FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
@@ -90,6 +89,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS Users;
         DROP TABLE IF EXISTS ExerciseMuscles;
         DROP TABLE IF EXISTS Exercises;
+        DROP TABLE IF EXISTS Equipment;
         DROP TABLE IF EXISTS Muscles;
         DROP TABLE IF EXISTS MuscleGroups;
     `);
