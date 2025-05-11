@@ -5,9 +5,11 @@ const useHookExercises = () => {
     const [addExerciseModal, setAddExerciseModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
     const [exercise, setExercise] = useState({
+        id: 0,
         title: '',
         equipment: '',
         muscleGroup: '',
+        muscleGroupId: 0,
     });
 
     const openAddExerciseModal = () => setAddExerciseModal(true);``
@@ -19,9 +21,11 @@ const useHookExercises = () => {
     }
     const closeExerciseModal = () => {
         setExercise({
+            id: 0,
             title: '',
             equipment: '',
             muscleGroup: '',
+            muscleGroupId: 0,
         });
         setExerciseModal(false);
     }
