@@ -1,16 +1,40 @@
 import { DBContext } from '@/contexts/DBContext';
+import useHookExercises from '@/hooks/useHookExercises';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import ExerciseList from '../components/Exercises/ExerciseList';
+import AddExerciseModal from '../components/modals/AddExerciseModal';
+import ExerciseModal from '../components/modals/ExerciseModal';
 import { View } from '../components/Themed';
 import Title from '../components/Title';
 
 export default function ExercisesScreen() {
     const { exercises } = useContext(DBContext);
 
+    const {
+        addExerciseModal,
+        openAddExerciseModal,
+        closeAddExerciseModal,
+        exerciseModal,
+        exercise,
+        openExerciseModal,
+        closeExerciseModal
+    } = useHookExercises();
+
     return (
         <View style={styles.container}>
+            <AddExerciseModal 
+                visible={addExerciseModal} 
+                close={closeAddExerciseModal} 
+                add={closeAddExerciseModal}
+            />
+            <ExerciseModal 
+                visible={exerciseModal} 
+                close={closeExerciseModal} 
+                exercise={exercise} 
+                onDelete={closeExerciseModal}
+            />
             <View style={{ top:60 }}>
                 <Title title="Exercises"></Title>
                 <TouchableOpacity
@@ -24,6 +48,7 @@ export default function ExercisesScreen() {
             <View style={{ top: 60, paddingTop: 10 }}>
                 <ExerciseList 
                     exercises={exercises} 
+                    openModal={openExerciseModal}
                 />
             </View>
         </View>

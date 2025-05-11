@@ -4,7 +4,12 @@ import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/utils/types';
 
-export default function ExerciseList( { exercises } : { exercises: Exercise[] } ) {
+interface ExerciseListProps {
+    exercises: Exercise[];
+    openModal: (exercise: Exercise) => void;
+}
+
+export default function ExerciseList( { exercises, openModal } : ExerciseListProps ) {
 
     const [typeBold, setTypeBold] = useState( false );
     const [muscleGroupBold, setMuscleGroupBold] = useState( false );
@@ -53,7 +58,7 @@ export default function ExerciseList( { exercises } : { exercises: Exercise[] } 
                     <View style={{ paddingVertical: 4, }}>
                         <TouchableOpacity
                             key={item.id}
-                            
+                            onPress={() => openModal(item)}
                         >
                             <View style={styles.exerciseListView}>
                                 <Text style={{ fontSize: 16 }}>{item.title}  ({item.equipment})</Text>
