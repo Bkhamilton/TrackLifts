@@ -37,13 +37,15 @@ export interface ActiveExercise {
     equipment: string;
     muscleGroupId: number;
     muscleGroup: string;
-    sets: {
-        id: number;
-        reps: number;
-        weight: number;
-        restTime: number;
-        order: number;
-    }[];
+    sets: ActiveSet[];
+}
+
+export interface ActiveSet {
+    id: number;
+    reps: number;
+    weight: number;
+    restTime: number;
+    order: number;
 }
 
 export interface Set {

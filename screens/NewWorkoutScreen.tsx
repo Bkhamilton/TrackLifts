@@ -12,7 +12,7 @@ export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
 
     const { exercises } = useContext(DBContext);
-    const { routine } = useContext(ActiveWorkoutContext);
+    const { routine, addToRoutine } = useContext(ActiveWorkoutContext);
 
     function openModal(){
         setModal(true)
@@ -22,8 +22,9 @@ export default function NewWorkoutScreen() {
         setModal(false)
     }
 
-    function addToWorkout(props: Exercise) {
-        setModal(false)
+    function addToWorkout(exercise : Exercise) {
+        addToRoutine(exercise);
+        closeModal();
     }
 
     return (

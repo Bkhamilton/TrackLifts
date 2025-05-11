@@ -1,4 +1,5 @@
 import { initializeDatabase } from '@/api/startup';
+import { ActiveWorkoutContextProvider } from '@/contexts/ActiveWorkoutContext';
 import { DBContextProvider } from '@/contexts/DBContext';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -22,7 +23,9 @@ export default function RootLayout() {
     return (
         <SQLiteProvider databaseName='workout-tracker.db' onInit={initializeDatabase} useSuspense>
             <DBContextProvider>
-                <RootLayoutNav />
+                <ActiveWorkoutContextProvider>
+                    <RootLayoutNav />
+                </ActiveWorkoutContextProvider>
             </DBContextProvider>
         </SQLiteProvider>
     );
