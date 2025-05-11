@@ -1,27 +1,32 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-
 import { Text, View } from '@/components/Themed';
+import { Routine } from '@/utils/types';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import WorkoutInfo from './WorkoutInfo';
 
-export default function Workout({ open, routine }: { open?: Function, routine: RoutineList }) {
-    const exerciseComponents = routine.exercises.map((type) => (
-        <View style={{ paddingVertical: 4 }} key={type.id}>
-            <WorkoutInfo
-                exercise={type}
-                sets={[
-                    {
-                        number: 1,
-                        weight: 100,
-                        reps: 10,
-                    },
-                ]}
-            />
-        </View>
-    ));
+interface WorkoutProps {
+    open: () => void;
+    routine: Routine;
+}
 
+export default function Workout({ open, routine }: WorkoutProps) {
     return (
         <View style={{ width: 350 }}>
-            {exerciseComponents}
+            {
+                routine.exercises.map((type) => (
+                    <View style={{ paddingVertical: 2 }} key={type.id}>
+                        <WorkoutInfo
+                            exercise={type}
+                            sets={[
+                                {
+                                    number: 1,
+                                    weight: 100,
+                                    reps: 10,
+                                },
+                            ]}
+                        />
+                    </View>
+                ))
+            }
             <TouchableOpacity
                 style={{
                     justifyContent: 'center',

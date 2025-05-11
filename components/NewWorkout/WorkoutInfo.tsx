@@ -1,23 +1,21 @@
+import { Text, View } from '@/components/Themed';
+import { Exercise, Set } from '@/utils/types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Set, workoutSet } from '../types';
-import { Text, View } from './Themed';
 
-export default function WorkoutInfo(props: workoutSet) {
-    function SetHeader(props: { set: Set }) {
+interface WorkoutInfoProps {
+    exercise: Exercise;
+    sets: Set[];
+}
+
+export default function WorkoutInfo({ exercise, sets }: WorkoutInfoProps) {
+    function SetCard({ set } : { set: Set }) {
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text>#{props.set.number}</Text>
+                <Text>#{set.number}</Text>
             </View>
         );
     }
-
-    const sets = props.sets;
-    const setInfo = sets.map((type) => (
-        <View key={type.number}>
-            <SetHeader set={type} />
-        </View>
-    ));
 
     function addSet() {
         sets.push({
@@ -31,12 +29,18 @@ export default function WorkoutInfo(props: workoutSet) {
     return (
         <View style={{ borderWidth: 1 }}>
             <View>
-                <Text style={{ fontSize: 17 }}>{props.exercise.title}</Text>
+                <Text style={{ fontSize: 17 }}>{exercise.title}</Text>
             </View>
             <View>
                 <Text style={{ fontSize: 14 }}>Sets</Text>
             </View>
-            {setInfo}
+            {
+                sets.map((type) => (
+                    <View style={{ paddingVertical: 2 }} key={type.number}>
+                        <SetCard set={type} />
+                    </View>
+                ))
+            }
             <TouchableOpacity onPress={addSet}>
                 <View style={styles.addSetButton}>
                     <Text>Add Set</Text>

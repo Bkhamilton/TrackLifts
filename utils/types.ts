@@ -39,3 +39,9 @@ export interface ActiveExercise {
         order: number;
     }[];
 }
+
+export interface Set {
+    number: number;
+    weight: number;
+    reps: number;
+}

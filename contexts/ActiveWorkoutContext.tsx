@@ -15,7 +15,7 @@ interface ActiveWorkoutContextValue {
 export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     routine: {
         id: 0,
-        title: '',
+        title: 'Empty Workout',
         exercises: [],
     } as Routine,
     // activeWorkout: null,
@@ -32,7 +32,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
     const [routine, setRoutine] = useState<Routine>({
         id: 0,
-        title: '',
+        title: 'Empty Workout',
         exercises: [],
     } as Routine);
 

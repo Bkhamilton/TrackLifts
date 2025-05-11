@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Exercise } from '@/utils/types';
@@ -13,19 +13,6 @@ interface ExerciseModalProps {
 }
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
-
-    useEffect(() => {
-        if (!exercise 
-            || !exercise.title
-            || !exercise.muscleGroup
-            || exercise.id === 0
-            || exercise.equipment === ''
-            || exercise.equipment === undefined
-        ) {
-            return;
-        }
-    }, [exercise]);
-
     return (
         <Modal
             visible = {visible}
