@@ -1,4 +1,5 @@
 // app/contexts/BetContext/BetContext.tsx
+import { getEquipment } from '@/db/general/Equipment';
 import { getExercises } from '@/db/general/Exercises';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
@@ -24,6 +25,7 @@ interface DBContextValue {
     db: any;
     user: User;
     exercises: Exercise[];
+    equipment: any[];
     routines: any[];
 }
 
@@ -36,6 +38,7 @@ export const DBContext = createContext<DBContextValue>({
         password: '',
     },
     exercises: [],
+    equipment: [],
     routines: [],
 });
 
@@ -56,6 +59,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     });
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [equipment, setEquipment] = useState<any[]>([]);
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<any[]>([]);
     const [routines, setRoutines] = useState<any[]>([]);
@@ -68,6 +72,9 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             });
             getUserById(db, 1).then((data) => {
                 setUser(data);
+            });
+            getEquipment(db).then((data) => {
+                setEquipment(data);
             });
         }
     }, [db]);
@@ -84,6 +91,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         db,
         user,
         exercises,
+        equipment,
         routines,
     };
 

@@ -2,7 +2,7 @@ export const getExercises = async (db) => {
     try {
         const query = `
             SELECT e.id, e.title, e.equipment_id, e.muscle_group_id, 
-                   eq.name AS equipment_title, mg.name AS muscle_group_title
+                   eq.name AS equipment, mg.name AS muscleGroup
             FROM Exercises e
             LEFT JOIN Equipment eq ON e.equipment_id = eq.id
             LEFT JOIN MuscleGroups mg ON e.muscle_group_id = mg.id

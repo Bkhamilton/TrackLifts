@@ -7,7 +7,7 @@ import { View } from '../components/Themed';
 import Title from '../components/Title';
 
 export default function ExercisesScreen() {
-    const { db, exercises } = useContext(DBContext);
+    const { exercises } = useContext(DBContext);
 
     return (
         <View style={styles.container}>

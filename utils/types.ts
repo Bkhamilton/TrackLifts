@@ -1,6 +1,7 @@
 export interface Exercise {
     id: number;
     title: string;
+    equipment: string;
     muscleGroupId: number;
     muscleGroup: string;
 }

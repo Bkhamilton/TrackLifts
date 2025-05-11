@@ -56,7 +56,7 @@ export default function ExerciseList( { exercises } : { exercises: Exercise[] } 
                             
                         >
                             <View style={styles.exerciseListView}>
-                                <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                                <Text style={{ fontSize: 16 }}>{item.title}  ({item.equipment})</Text>
                                 <View>
                                     <Text style={{ fontWeight: '500', fontSize: 15}}>{item.muscleGroup}</Text>
                                 </View>

@@ -49,6 +49,7 @@ const syncExercises = async (db) => {
     // Fetch equipment IDs for mapping
     const equipmentList = await db.getAllAsync('SELECT id, name FROM Equipment');
     const equipmentMap = new Map(equipmentList.map(e => [e.name, e.id]));
+    console.log('Equipment Map:', equipmentMap);
 
     // Insert exercises and their associated muscles
     for (const exercise of exercises) {
@@ -57,14 +58,14 @@ const syncExercises = async (db) => {
 
         if (muscleGroupId && equipmentId) {
             console.log(
-                `Inserting exercise "${exercise.title}" into muscle group "${exercise.muscleGroup}" with equipment "${exercise.equipment}"`
+                `Inserting exercise "${exercise.title}" into muscle group "${exercise.muscleGroup}" with equipment "${exercise.equipment} and equipmentId ${equipmentId}"`
             );
 
             // Insert the exercise into the Exercises table
             const exerciseId = await insertExercise(db, {
                 title: exercise.title,
-                equipment_id: equipmentId,
-                muscle_group_id: muscleGroupId,
+                equipmentId: equipmentId,
+                muscleGroupId: muscleGroupId,
             });
 
             // Insert associated muscles into ExerciseMuscles table
@@ -169,7 +170,7 @@ const syncRoutines = async (db) => {
 
         for (const exercise of routine.exercises) {
             // Fetch the exercise by title and equipment
-            const exerciseId = await db.getAsync(
+            const exerciseId = await db.getAllAsync(
                 'SELECT id FROM Exercises WHERE title = ? AND equipment_id = (SELECT id FROM Equipment WHERE name = ?)',
                 [exercise.title, exercise.equipment]
             );

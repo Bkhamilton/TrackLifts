@@ -127,11 +127,11 @@ export const setupDatabase = async (db) => {
 
 export const initializeDatabase = async (db) => {
     try {
-        const isFirstLaunch = await AsyncStorage.getItem('isFirstLaunch');
+        const isFirstLaunch = await AsyncStorage.getItem('firstLaunch');
         if (isFirstLaunch === null) {
             // First time launch
             await setupDatabase(db);
-            await AsyncStorage.setItem('isFirstLaunch', 'false');
+            await AsyncStorage.setItem('firstLaunch', 'false');
         }
         // Open a connection to the SQLite database.
     } catch (error) {
