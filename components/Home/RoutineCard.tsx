@@ -4,14 +4,14 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-interface RoutineHeaderProps {
+interface RoutineCardProps {
     id: number;
     title: string;
     open: (routine: Routine) => void;
     openRoutineOptions: (routine: Routine) => void;
 }
 
-export default function RoutineHeader({ id, title, open, openRoutineOptions }: RoutineHeaderProps) {
+export default function RoutineCard({ id, title, open, openRoutineOptions }: RoutineCardProps) {
     return (
         <View style={styles.container}>
             <TouchableOpacity 

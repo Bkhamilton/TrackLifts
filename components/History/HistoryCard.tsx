@@ -3,12 +3,12 @@ import { History } from '@/utils/types';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-interface HistoryHeaderProps {
+interface HistoryCardProps {
     history: History;
     open: (routine: any) => void;
 }
 
-export default function HistoryHeader({ history, open }: HistoryHeaderProps) {
+export default function HistoryCard({ history, open }: HistoryCardProps) {
 
     function convertTime(timeMin: string) {
         let newTime;

@@ -5,7 +5,7 @@ import split from '@/data/Split.json';
 
 import { Text, View } from '@/components/Themed';
 import { Routine } from '@/utils/types';
-import RoutineHeader from './RoutineHeader';
+import RoutineCard from './RoutineCard';
 
 interface RoutineInfoProps {
     close: () => void;
@@ -27,17 +27,6 @@ export default function RoutineInfo({ close, open, openAddRoutine, routines, ope
         );
     }
     const textInputComponents = splitList.map(type => <View key={type.key}><SplitList name={type.title} curDay={curDay} /></View>);
-
-    const routineComponents = routines.map(type => (
-        <View style={{ paddingTop: 6 }} key={type.id}>
-            <RoutineHeader 
-                id={type.id} 
-                title={type.title} 
-                open={open} 
-                openRoutineOptions={openRoutineOptions} 
-            />
-        </View>
-    ));
 
     return (
         <View style={styles.container}>
@@ -72,71 +61,82 @@ export default function RoutineInfo({ close, open, openAddRoutine, routines, ope
                     </View>
                 </TouchableOpacity>
                 <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
-                {routineComponents}
+                {
+                    routines.map(type => (
+                        <View style={{ paddingVertical: 2 }} key={type.id}>
+                            <RoutineCard 
+                                id={type.id} 
+                                title={type.title} 
+                                open={open} 
+                                openRoutineOptions={openRoutineOptions} 
+                            />
+                        </View>
+                    ))
+                }
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 16,
-  },
-  getStartedText: {
-    fontSize: 18,
-    fontWeight: '600',
-    lineHeight: 24,
-  },
-  splitTitle: {
-    width: '100%',
-    height: 75,
-  },
-  separator: {
-    marginVertical: 15,
-    height: 1,
-    width: 350,
-    alignItems: 'center',
-  },
-  routineTitle: {
-    width: '100%',
-    paddingHorizontal: 5,
-    top: 30,
-    left: '3%',
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  routineTitleText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  workoutButton: {
-    width: '100%',
-    top: 15,
-    height: 28,
-    borderRadius: 5,
-    backgroundColor: '#ff8787',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  workoutButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  modalPopup: {
-    width: '90%',
-    height: '70%',
-    bottom: '5%',
-    elevation: 20,
-    borderRadius: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-  },
-  modalContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    container: {
+        marginHorizontal: 16,
+    },
+    getStartedText: {
+        fontSize: 18,
+        fontWeight: '600',
+        lineHeight: 24,
+    },
+    splitTitle: {
+        width: '100%',
+        height: 75,
+    },
+    separator: {
+        marginVertical: 15,
+        height: 1,
+        width: 350,
+        alignItems: 'center',
+    },
+    routineTitle: {
+        width: '100%',
+        paddingHorizontal: 5,
+        top: 30,
+        left: '3%',
+    },
+    titleText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    routineTitleText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    workoutButton: {
+        width: '100%',
+        top: 15,
+        height: 28,
+        borderRadius: 5,
+        backgroundColor: '#ff8787',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    workoutButtonText: {
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    modalPopup: {
+        width: '90%',
+        height: '70%',
+        bottom: '5%',
+        elevation: 20,
+        borderRadius: 20,
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+    },
+    modalContainer: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
