@@ -27,7 +27,7 @@ export default function WorkoutInfo({ exercise, sets }: WorkoutInfoProps) {
     }
 
     return (
-        <View style={{ borderWidth: 1 }}>
+        <View>
             <View>
                 <Text style={{ fontSize: 17 }}>{exercise.title}</Text>
             </View>

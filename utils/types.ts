@@ -25,6 +25,12 @@ export interface Routine {
     exercises: Exercise[];
 }
 
+export interface ActiveRoutine {
+    id: number;
+    title: string;
+    exercises: ActiveExercise[];
+}
+
 export interface ActiveExercise {
     id: number;
     title: string;
