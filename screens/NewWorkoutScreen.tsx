@@ -1,70 +1,64 @@
-import * as React from 'react';
-import * as SQLite from 'expo-sqlite';
+import React, { useContext, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import Title from '../components/Title';
-import Workout from '../components/Workout';
-import AddToWorkoutModal from '../components/modals/AddToWorkoutModal';
-import Database from '../database/Database';
+import Workout from '@/components/NewWorkout/Workout';
+import Title from '@/components/Title';
+import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 
-import { Text, View, ScrollView } from '../components/Themed';
-import { Exercise, RootTabScreenProps, RoutineList } from '../types';
+import { Exercise } from '@/utils/types';
+import { ScrollView, View } from '../components/Themed';
 
-export default function NewWorkoutScreen({ navigation, route }: { navigation: RootTabScreenProps<'Home'>, route: { params: { routine: RoutineList }} }) {
-  const [modal, setModal] = React.useState(false);
-  const [exercises, setExercises] = React.useState<Exercise[]>([]);
+export default function NewWorkoutScreen() {
+    const [modal, setModal] = useState(false);
 
-  const db = Database.getInstance();
+    const { exercises } = useContext(DBContext);
+    const { routine } = useContext(RoutineContext);
 
-  React.useEffect(() => {
-    // Load routine data
-    loadData();
-  });
+    function openModal(){
+        setModal(true)
+    }
 
-  function loadData() {
-    db.loadExerciseData((dataArray: React.SetStateAction<Exercise[]>) => setExercises(dataArray));
-  }
+    function closeModal(){
+        setModal(false)
+    }
 
-  const Routine = route.params.routine;
+    function addToWorkout(props: Exercise) {
+        setModal(false)
+    }
 
-  function openModal(){
-    setModal(true)
-  }
-
-  function closeModal(){
-    setModal(false)
-  }
-
-  function addToWorkout(props: Exercise) {
-    Routine.exercises.push(props)
-    setModal(false)
-  }
-
-  return (
-    <View style={styles.container}>
-      <View style={{top:60}}>
-        <Title title={Routine.title}></Title>
-      </View>
-      <AddToWorkoutModal visible={modal} close={closeModal} add={addToWorkout} exercises={exercises}></AddToWorkoutModal>
-      <ScrollView style={{ top:60, paddingTop: 10 }}>
-        <Workout routine={Routine} open={openModal}/>
-      </ScrollView>
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <View style={{top:60}}>
+                <Title title={routine.title}></Title>
+            </View>
+            <AddToWorkoutModal 
+                visible={modal} 
+                close={closeModal} 
+                add={addToWorkout} 
+                exercises={exercises}
+            />
+            <ScrollView style={{ top:60, paddingTop: 10 }}>
+                <Workout 
+                    routine={routine} 
+                    open={openModal}
+                />
+            </ScrollView>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 20,
-    height: 1,
-    width: '90%',
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    separator: {
+        marginVertical: 20,
+        height: 1,
+        width: '90%',
+    },
 });
