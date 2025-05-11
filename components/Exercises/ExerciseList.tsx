@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 16,
         width: 350,
-        height: '85%',
+        height: '88%',
     },
     sortButtons: {
         width: 120,

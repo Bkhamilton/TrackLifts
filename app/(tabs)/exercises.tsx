@@ -1,6 +1,6 @@
 import ExercisesScreen from '@/screens/ExercisesScreen';
 
-export default function TabTwoScreen() {
+export default function Exercises() {
     return (
         <ExercisesScreen />
     );

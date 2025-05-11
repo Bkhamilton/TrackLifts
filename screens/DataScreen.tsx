@@ -1,22 +1,19 @@
+import GraphInfo from '@/components/Data/GraphInfo';
+import { View } from '@/components/Themed';
+import Title from '@/components/Title';
 import { StyleSheet } from 'react-native';
 
-import Title from '../components/Title';
-import GraphInfo from '../components/GraphInfo';
-
-import { Text, View, ScrollView } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
-
-export default function DataScreen({ navigation }: RootTabScreenProps<'Data'>) {
-  return (
-    <View style={styles.container}>
-      <View style={{top:60}}>
-        <Title title="Data"></Title>
-      </View>
-      <View style={styles.scrollContainer}>
-        <GraphInfo path="/screens/DataScreen.tsx" />
-      </View>
-    </View>
-  );
+export default function DataScreen() {
+    return (
+        <View style={styles.container}>
+            <View style={{top:60}}>
+                <Title title="Data"></Title>
+            </View>
+            <View style={styles.scrollContainer}>
+                <GraphInfo/>
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

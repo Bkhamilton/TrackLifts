@@ -1,7 +1,7 @@
 import NewWorkoutScreen from "@/screens/NewWorkoutScreen";
 import React from "react";
 
-export default function TabTwoScreen() {
+export default function NewWorkout() {
     return (
         <NewWorkoutScreen />
     );
