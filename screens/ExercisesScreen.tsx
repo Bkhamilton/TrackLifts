@@ -1,6 +1,7 @@
 import { DBContext } from '@/contexts/DBContext';
 import useHookExercises from '@/hooks/useHookExercises';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import ExerciseList from '../components/Exercises/ExerciseList';
@@ -22,6 +23,15 @@ export default function ExercisesScreen() {
         closeExerciseModal
     } = useHookExercises();
 
+    const clearAllStorage = async () => {
+        try {
+            await AsyncStorage.clear();
+            console.log('All AsyncStorage data cleared.');
+        } catch (error) {
+            console.error('Error clearing AsyncStorage:', error);
+        }
+    };    
+
     return (
         <View style={styles.container}>
             <AddExerciseModal 
@@ -39,6 +49,7 @@ export default function ExercisesScreen() {
                 <Title title="Exercises"></Title>
                 <TouchableOpacity
                     style = {styles.plusButton}
+                    onPress={clearAllStorage}
                 >
                     <View>
                         <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />

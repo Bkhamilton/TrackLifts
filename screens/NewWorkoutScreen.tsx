@@ -1,18 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { StyleSheet } from 'react-native';
-
 import Workout from '@/components/NewWorkout/Workout';
 import Title from '@/components/Title';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
-
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { DBContext } from '@/contexts/DBContext';
 import { Exercise } from '@/utils/types';
+import React, { useContext, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { ScrollView, View } from '../components/Themed';
 
 export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
 
     const { exercises } = useContext(DBContext);
-    const { routine } = useContext(RoutineContext);
+    const { routine } = useContext(ActiveWorkoutContext);
 
     function openModal(){
         setModal(true)

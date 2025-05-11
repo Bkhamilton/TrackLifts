@@ -22,5 +22,20 @@ export interface History {
 export interface Routine {
     id: number;
     title: string;
-    exercises?: Exercise[];
+    exercises: Exercise[];
+}
+
+export interface ActiveExercise {
+    id: number;
+    title: string;
+    equipment: string;
+    muscleGroupId: number;
+    muscleGroup: string;
+    sets: {
+        id: number;
+        reps: number;
+        weight: number;
+        restTime: number;
+        order: number;
+    }[];
 }
