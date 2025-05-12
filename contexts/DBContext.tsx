@@ -1,6 +1,6 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getEquipment } from '@/db/general/Equipment';
-import { getExercises } from '@/db/general/Exercises';
+import { getExercises, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
@@ -29,6 +29,7 @@ interface DBContextValue {
     equipment: any[];
     muscleGroups: MuscleGroup[];
     routines: Routine[];
+    addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -43,6 +44,9 @@ export const DBContext = createContext<DBContextValue>({
     equipment: [],
     muscleGroups: [],
     routines: [],
+    addExerciseToDB: async () => {
+        return undefined;
+    },
 });
 
 interface DBContextValueProviderProps {
@@ -66,6 +70,27 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
     const [routines, setRoutines] = useState<Routine[]>([]);
+
+    const addExerciseToDB = async (exercise: Exercise): Promise<number | undefined> => {
+        if (db) {
+            try {
+                // Insert the exercise into the database and get the inserted ID
+                const exerciseId = await insertExercise(db, exercise);
+    
+                // Update the exercises state with the new exercise, including the returned ID
+                setExercises((prevExercises) => [
+                    ...prevExercises,
+                    { ...exercise, id: exerciseId }, // Add the ID to the exercise object
+                ]);
+    
+                return exerciseId; // Return the ID of the newly inserted exercise
+            } catch (error) {
+                console.error('Error adding exercise to DB:', error);
+                return undefined; // Return undefined in case of an error
+            }
+        }
+        return undefined; // Return undefined if the database is not available
+    };
 
     useEffect(() => {
         if (db) {
@@ -100,6 +125,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         equipment,
         muscleGroups,
         routines,
+        addExerciseToDB,
     };
 
     return (

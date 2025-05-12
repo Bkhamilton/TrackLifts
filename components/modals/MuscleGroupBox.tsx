@@ -1,11 +1,12 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { MuscleGroup } from '@/utils/types';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface MuscleGroupBoxProps {
     visible: boolean;
-    onSelect: (item: string) => void;
+    onSelect: (item: MuscleGroup) => void;
     close: () => void;
 }
 
@@ -28,7 +29,7 @@ export function MuscleGroupBox({visible, onSelect, close} : MuscleGroupBoxProps)
                             <View style={{ paddingVertical: 1, }}>
                                 <TouchableOpacity
                                     key={item.id}
-                                    onPress={() => onSelect(item.name)}
+                                    onPress={() => onSelect(item)}
                                 >
                                     <View style={{ flexDirection: 'row', borderWidth: 1, paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
                                         <Text style={{ fontSize: 15 }}>{item.name}</Text>

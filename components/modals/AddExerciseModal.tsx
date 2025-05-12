@@ -1,7 +1,7 @@
+import { Equipment, MuscleGroup } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { Text, TextInput, View } from '../Themed';
 import { EquipmentBox } from './EquipmentBox';
 import { MuscleGroupBox } from './MuscleGroupBox';
@@ -9,41 +9,41 @@ import { MuscleGroupBox } from './MuscleGroupBox';
 interface AddExerciseModalProps {
     visible: boolean;
     close: () => void;
-    add: () => void;
+    add: ({ title, equipment, muscleGroup }: { title: string, equipment: Equipment, muscleGroup: MuscleGroup}) => void;
 }
 
 export default function AddExerciseModal({ visible, close, add }: AddExerciseModalProps) {
 
-    const [title, setTitle] = React.useState("");
-    const [equipmentBox, setEquipmentBox] = React.useState("Type");
-    const [muscleGroupBox, setMuscleGroupBox] = React.useState("Muscle Group");
+    const [title, setTitle] = useState("");
+    const [equipmentBox, setEquipmentBox] = useState<Equipment>({ id: 0, name: "Type" });
+    const [muscleGroupBox, setMuscleGroupBox] = useState<MuscleGroup>({ id: 0, name: "Muscle Group" });
 
-    const [showEquipmentBox, setShowEquipmentBox] = React.useState( false );
+    const [showEquipmentBox, setShowEquipmentBox] = useState( false );
     const [showMGBox, setShowMGBox] = React.useState( false );
 
     function addExercise() {
-        if (title != '' && equipmentBox != "Type" && muscleGroupBox != "Muscle Group") {
+        if (title != '' && equipmentBox.name != "Type" && muscleGroupBox.name != "Muscle Group") {
             //add({title: title, type: typeBox, muscleGroup: muscleGroupBox});
-            add();
+            add({title: title, equipment: equipmentBox, muscleGroup: muscleGroupBox});
             setTitle("");
-            setEquipmentBox("Type");
-            setMuscleGroupBox("Muscle Group");
+            setEquipmentBox({ id: 0, name: "Type" });
+            setMuscleGroupBox({ id: 0, name: "Muscle Group" });
         }
     }
 
     function clearBoxes() {
         setTitle("")
-        setEquipmentBox("Type");
-        setMuscleGroupBox("Muscle Group");
+        setEquipmentBox({ id: 0, name: "Type" });
+        setMuscleGroupBox({ id: 0, name: "Muscle Group" });
         close();
     }
 
-    function chooseEquipment(equipment: string) {
+    function chooseEquipment(equipment: Equipment) {
         setEquipmentBox(equipment);
         setShowEquipmentBox(false);
     }
 
-    function chooseMuscleGroup(muscleGroup: string) {
+    function chooseMuscleGroup(muscleGroup: MuscleGroup) {
         setMuscleGroupBox(muscleGroup);
         setShowMGBox(false); 
     }
@@ -110,14 +110,14 @@ export default function AddExerciseModal({ visible, close, add }: AddExerciseMod
                             onPress={openEquipmentBox}
                         >
                             <View style={[styles.sortButtons, { right: 1 }]}>
-                                <Text style={{ fontWeight: (equipmentBox != "Type") ? '600': '400' }}>{equipmentBox}</Text>
+                                <Text style={{ fontWeight: (equipmentBox.name != "Type") ? '600': '400' }}>{equipmentBox.name}</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={openMGBox}
                         >
                             <View style={[styles.sortButtons, { left: 1 }]}>
-                                <Text style={{ fontWeight: (muscleGroupBox != "Muscle Group") ? '600' : '400' }}>{muscleGroupBox}</Text>
+                                <Text style={{ fontWeight: (muscleGroupBox.name != "Muscle Group") ? '600' : '400' }}>{muscleGroupBox.name}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

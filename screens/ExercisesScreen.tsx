@@ -1,5 +1,6 @@
 import { DBContext } from '@/contexts/DBContext';
 import useHookExercises from '@/hooks/useHookExercises';
+import { Equipment, MuscleGroup } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react';
@@ -11,7 +12,7 @@ import { View } from '../components/Themed';
 import Title from '../components/Title';
 
 export default function ExercisesScreen() {
-    const { exercises } = useContext(DBContext);
+    const { exercises, addExerciseToDB } = useContext(DBContext);
 
     const [sortedExercises, setSortedExercises] = useState(exercises);
 
@@ -60,12 +61,38 @@ export default function ExercisesScreen() {
         setSortedExercises(exercises); // Reset to original order
     }
 
+    const onAdd = async (exercise: { title: string, equipment: Equipment, muscleGroup: MuscleGroup }) => {
+        const { title, equipment, muscleGroup } = exercise;
+        const toAdd = {
+            id: 0, // Temporary placeholder
+            title: title,
+            equipmentId: equipment.id,
+            equipment: equipment.name,
+            muscleGroupId: muscleGroup.id,
+            muscleGroup: muscleGroup.name,
+        };
+    
+        try {
+            const newExerciseId = await addExerciseToDB(toAdd); // Await the Promise
+            if (newExerciseId !== undefined) {
+                toAdd.id = newExerciseId; // Assign the returned ID
+                setSortedExercises([...sortedExercises, toAdd]); // Update the state
+            } else {
+                console.error("Failed to add exercise to the database.");
+            }
+        } catch (error) {
+            console.error("Error adding exercise:", error);
+        }
+    
+        closeAddExerciseModal(); // Close the modal
+    };
+
     return (
         <View style={styles.container}>
             <AddExerciseModal 
                 visible={addExerciseModal} 
                 close={closeAddExerciseModal} 
-                add={closeAddExerciseModal}
+                add={onAdd}
             />
             <ExerciseModal 
                 visible={exerciseModal} 

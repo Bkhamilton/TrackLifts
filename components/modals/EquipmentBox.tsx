@@ -1,11 +1,12 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { Equipment } from '@/utils/types';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface EquipmentBoxProps {
     visible: boolean;
-    onSelect: (type: string) => void;
+    onSelect: (type: Equipment) => void;
     close: () => void;
 }
 
@@ -28,7 +29,7 @@ export function EquipmentBox({visible, onSelect, close} : EquipmentBoxProps) {
                             <View style={{ paddingVertical: 1, borderWidth: 1, borderColor: '#ff8787' }}>
                                 <TouchableOpacity
                                     key={item.id}
-                                    onPress={() => onSelect(item.name)}
+                                    onPress={() => onSelect(item)}
                                 >
                                     <View style={{ flexDirection: 'row', paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
                                         <Text style={{ fontSize: 15 }}>{item.name}</Text>

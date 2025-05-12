@@ -65,3 +65,8 @@ export interface Muscle {
     muscleGroupId: number;
     muscleGroup: string;
 }
+
+export interface Equipment {
+    id: number;
+    name: string;
+}
