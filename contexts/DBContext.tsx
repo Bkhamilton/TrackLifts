@@ -1,15 +1,16 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getEquipment } from '@/db/general/Equipment';
 import { getExercises } from '@/db/general/Exercises';
+import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
-import { Exercise, Routine } from '@/utils/types';
+import { Exercise, MuscleGroup, Routine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 /*
 
 import { getMuscles } from '@/db/general/Muscles';
-import { getMuscleGroups } from '@/db/general/MuscleGroups';
+
 import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
 
 */
@@ -26,6 +27,7 @@ interface DBContextValue {
     user: User;
     exercises: Exercise[];
     equipment: any[];
+    muscleGroups: MuscleGroup[];
     routines: Routine[];
 }
 
@@ -39,6 +41,7 @@ export const DBContext = createContext<DBContextValue>({
     },
     exercises: [],
     equipment: [],
+    muscleGroups: [],
     routines: [],
 });
 
@@ -61,7 +64,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [equipment, setEquipment] = useState<any[]>([]);
     const [muscles, setMuscles] = useState<any[]>([]);
-    const [muscleGroups, setMuscleGroups] = useState<any[]>([]);
+    const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
     const [routines, setRoutines] = useState<Routine[]>([]);
 
     useEffect(() => {
@@ -75,6 +78,9 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             });
             getEquipment(db).then((data) => {
                 setEquipment(data);
+            });
+            getMuscleGroups(db).then((data) => {
+                setMuscleGroups(data);
             });
         }
     }, [db]);
@@ -92,6 +98,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         user,
         exercises,
         equipment,
+        muscleGroups,
         routines,
     };
 

@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { Text, View } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
+import React, { useContext } from 'react';
+import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface MuscleGroupBoxProps {
     visible: boolean;
@@ -10,26 +10,28 @@ interface MuscleGroupBoxProps {
 }
 
 export function MuscleGroupBox({visible, onSelect, close} : MuscleGroupBoxProps) {
-    const list = ["Muscle Group", "Chest", "Back", "Shoulders", "Arms", "Legs", "Core"]
+
+    const { muscleGroups } = useContext(DBContext);
 
     return (
         <Modal
             visible = {visible}
             transparent = {true}
             animationType = 'fade'
+            onRequestClose={() => close()}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
                     <FlatList
-                        data={list}
+                        data={muscleGroups}
                         renderItem={({ item }) => (
                             <View style={{ paddingVertical: 1, }}>
                                 <TouchableOpacity
-                                    key={item}
-                                    onPress={() => onSelect(item)}
+                                    key={item.id}
+                                    onPress={() => onSelect(item.name)}
                                 >
                                     <View style={{ flexDirection: 'row', borderWidth: 1, paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
-                                        <Text style={{ fontSize: 15 }}>{item}</Text>
+                                        <Text style={{ fontSize: 15 }}>{item.name}</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>

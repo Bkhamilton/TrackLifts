@@ -1,29 +1,37 @@
-import * as React from 'react';
+import { Text, View } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
+import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+interface EquipmentBoxProps {
+    visible: boolean;
+    onSelect: (type: string) => void;
+    close: () => void;
+}
 
-export function TypeBox({visible, onSelect, close} : {visible: boolean, onSelect? : Function, close?: Function}) {
-    const list = ["Type", "Barbell", "Dumbbell", "Bodyweight", "Cable", "Machine", "Plate Loaded", "Other"];
+export function EquipmentBox({visible, onSelect, close} : EquipmentBoxProps) {
+
+    const { equipment } = useContext(DBContext);
 
     return (
         <Modal
             visible = {visible}
             transparent = {true}
             animationType = 'fade'
+            onRequestClose={() => close()}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
                     <FlatList
-                        data={list}
+                        data={equipment}
                         renderItem={({ item }) => (
                             <View style={{ paddingVertical: 1, borderWidth: 1, borderColor: '#ff8787' }}>
                                 <TouchableOpacity
-                                    key={item}
-                                    onPress={() => onSelect(item)}
+                                    key={item.id}
+                                    onPress={() => onSelect(item.title)}
                                 >
                                     <View style={{ flexDirection: 'row', paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
-                                        <Text style={{ fontSize: 15 }}>{item}</Text>
+                                        <Text style={{ fontSize: 15 }}>{item.title} ({item.equipment})</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
