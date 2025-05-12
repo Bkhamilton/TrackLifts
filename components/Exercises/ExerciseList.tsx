@@ -7,63 +7,64 @@ import { Exercise } from '@/utils/types';
 interface ExerciseListProps {
     exercises: Exercise[];
     openModal: (exercise: Exercise) => void;
+    sortList: (type: string[]) => void;
+    clearSort: () => void;
 }
 
-export default function ExerciseList( { exercises, openModal } : ExerciseListProps ) {
+export default function ExerciseList({ exercises, openModal, sortList, clearSort }: ExerciseListProps) {
+    const [selectedCriteria, setSelectedCriteria] = useState<string[]>([]);
 
-    const [typeBold, setTypeBold] = useState( false );
-    const [muscleGroupBold, setMuscleGroupBold] = useState( false );
+    function toggleCriteria(criteria: string) {
+        let updatedCriteria = [...selectedCriteria];
+        if (updatedCriteria.includes(criteria)) {
+            updatedCriteria = updatedCriteria.filter(c => c !== criteria);
+        } else {
+            updatedCriteria.push(criteria);
+        }
 
-    /*
-    function toggleTypeBold() {
-        setTypeBold(!typeBold);
-        if (!typeBold) {
-            sortList({type: "Type"})
+        setSelectedCriteria(updatedCriteria);
+
+        if (updatedCriteria.length > 0) {
+            sortList(updatedCriteria);
         } else {
             clearSort();
         }
     }
-
-    function toggleMGBold() {
-        setMuscleGroupBold(!muscleGroupBold);
-        if (!muscleGroupBold) {
-            sortList({ type: "Muscle Group" })
-        } else {
-            clearSort();
-        }
-    }
-    */
 
     return (
         <View style={styles.container}>
             <View style={styles.sortButtonsContainer}>
-                <TouchableOpacity
-                
+                <TouchableOpacity 
+                    onPress={() => toggleCriteria("equipment")}
                 >
                     <View style={styles.sortButtons}>
-                        <Text style={{fontWeight: (typeBold) ? "600" : "400"}}>Type</Text>
+                        <Text style={{ fontWeight: selectedCriteria.includes("equipment") ? "600" : "400" }}>
+                            Equipment
+                        </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity
-                
+                <TouchableOpacity 
+                    onPress={() => toggleCriteria("muscleGroup")}
                 >
                     <View style={styles.sortButtons}>
-                        <Text style={{fontWeight: (muscleGroupBold) ? "600" : "400"}}>Muscle Group</Text>
+                        <Text style={{ fontWeight: selectedCriteria.includes("muscleGroup") ? "600" : "400" }}>
+                            Muscle Group
+                        </Text>
                     </View>
                 </TouchableOpacity>
             </View>
             <FlatList
                 data={exercises}
                 renderItem={({ item }) => (
-                    <View style={{ paddingVertical: 4, }}>
-                        <TouchableOpacity
-                            key={item.id}
+                    <View style={{ paddingVertical: 4 }}>
+                        <TouchableOpacity 
+                            key={item.id} 
                             onPress={() => openModal(item)}
                         >
                             <View style={styles.exerciseListView}>
-                                <Text style={{ fontSize: 16 }}>{item.title}  ({item.equipment})</Text>
+                                <Text style={{ fontSize: 16 }}>{item.title} ({item.equipment})</Text>
                                 <View>
-                                    <Text style={{ fontWeight: '500', fontSize: 15}}>{item.muscleGroup}</Text>
+                                    <Text style={{ fontWeight: '500', fontSize: 15 }}>{item.muscleGroup}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>

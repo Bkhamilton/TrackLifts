@@ -2,7 +2,7 @@ import { DBContext } from '@/contexts/DBContext';
 import useHookExercises from '@/hooks/useHookExercises';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import ExerciseList from '../components/Exercises/ExerciseList';
 import AddExerciseModal from '../components/modals/AddExerciseModal';
@@ -12,6 +12,8 @@ import Title from '../components/Title';
 
 export default function ExercisesScreen() {
     const { exercises } = useContext(DBContext);
+
+    const [sortedExercises, setSortedExercises] = useState(exercises);
 
     const {
         addExerciseModal,
@@ -31,6 +33,32 @@ export default function ExercisesScreen() {
             console.error('Error clearing AsyncStorage:', error);
         }
     };    
+
+    function sortList(criteria: string[]) {
+        let sortedArray = [...exercises]; // Create a copy of the exercises array
+    
+        sortedArray.sort((a, b) => {
+            for (const criterion of criteria) {
+                if (criterion === "title") {
+                    const result = a.title.localeCompare(b.title);
+                    if (result !== 0) return result;
+                } else if (criterion === "equipment") {
+                    const result = a.equipment.localeCompare(b.equipment);
+                    if (result !== 0) return result;
+                } else if (criterion === "muscleGroup") {
+                    const result = a.muscleGroup.localeCompare(b.muscleGroup);
+                    if (result !== 0) return result;
+                }
+            }
+            return 0; // If all criteria are equal
+        });
+    
+        setSortedExercises(sortedArray); // Update the sortedExercises state
+    }
+    
+    function clearSort() {
+        setSortedExercises(exercises); // Reset to original order
+    }
 
     return (
         <View style={styles.container}>
@@ -58,8 +86,10 @@ export default function ExercisesScreen() {
             </View>
             <View style={{ top: 60, paddingTop: 10 }}>
                 <ExerciseList 
-                    exercises={exercises} 
+                    exercises={sortedExercises} 
                     openModal={openExerciseModal}
+                    sortList={sortList}
+                    clearSort={clearSort}
                 />
             </View>
         </View>

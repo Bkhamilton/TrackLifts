@@ -28,10 +28,10 @@ export function EquipmentBox({visible, onSelect, close} : EquipmentBoxProps) {
                             <View style={{ paddingVertical: 1, borderWidth: 1, borderColor: '#ff8787' }}>
                                 <TouchableOpacity
                                     key={item.id}
-                                    onPress={() => onSelect(item.title)}
+                                    onPress={() => onSelect(item.name)}
                                 >
                                     <View style={{ flexDirection: 'row', paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
-                                        <Text style={{ fontSize: 15 }}>{item.title} ({item.equipment})</Text>
+                                        <Text style={{ fontSize: 15 }}>{item.name}</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
