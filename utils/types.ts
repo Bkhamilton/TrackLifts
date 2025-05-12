@@ -53,3 +53,15 @@ export interface Set {
     weight: number;
     reps: number;
 }
+
+export interface MuscleGroup {
+    id: number;
+    name: string;
+}
+
+export interface Muscle {
+    id: number;
+    name: string;
+    muscleGroupId: number;
+    muscleGroup: string;
+}
