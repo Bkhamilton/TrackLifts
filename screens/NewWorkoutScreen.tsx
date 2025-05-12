@@ -5,6 +5,7 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
 import { Exercise } from '@/utils/types';
+import { useRouter } from "expo-router";
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -14,15 +15,20 @@ export default function NewWorkoutScreen() {
     const { exercises } = useContext(DBContext);
     const { routine, addToRoutine } = useContext(ActiveWorkoutContext);
 
-    function openModal(){
-        setModal(true)
+    const router = useRouter();
+
+    const startWorkout = () => {
+        router.push('/activeWorkout');
     }
 
-    function closeModal(){
-        setModal(false)
+    const openModal = () => {
+        setModal(true);
+    }
+    const closeModal = () => {
+        setModal(false);
     }
 
-    function addToWorkout(exercise : Exercise) {
+    const addToWorkout = (exercise: Exercise) => {
         addToRoutine(exercise);
         closeModal();
     }
@@ -46,7 +52,7 @@ export default function NewWorkoutScreen() {
             </ScrollView>
             <TouchableOpacity
                 style={styles.startWorkoutButton}
-                onPress={openModal}
+                onPress={startWorkout}
             >
                 <View style={{ backgroundColor: 'transparent', alignItems: 'center' }}>
                     <Text style={styles.title}>Start Workout</Text>

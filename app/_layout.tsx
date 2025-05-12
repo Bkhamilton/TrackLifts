@@ -39,7 +39,7 @@ function RootLayoutNav() {
             <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
-                <Stack.Screen name="activeWorkout" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="activeWorkout" options={{ presentation: 'card' }} />
             </Stack>
             <StatusBar style="auto" />
         </ThemeProvider>
