@@ -16,7 +16,7 @@ interface TabBarButtonProps {
 
 function TabBarButton({ name, color }: TabBarButtonProps) {
     return (
-        <Link href='/(tabs)/newWorkout' asChild>
+        <Link href='/(tabs)/workout/activeWorkout' asChild>
             <TouchableOpacity
                 style={{
                     height: 60,
@@ -68,9 +68,9 @@ export default function TabLayout() {
             }}
         />
         <Tabs.Screen
-            name="newWorkout"
+            name="workout"
             options={{
-                title: 'New Bet',
+                title: 'New Workout',
                 tabBarIcon: ({ color }) => <IconSymbol name="figure.strengthtraining.traditional" color={color} />,
                 tabBarButton: (props) => (
                     <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
