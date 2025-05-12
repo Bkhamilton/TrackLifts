@@ -1,26 +1,18 @@
 import Workout from '@/components/NewWorkout/Workout';
-import { ScrollView, Text, View } from '@/components/Themed';
+import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
 import { Exercise } from '@/utils/types';
-import { useRouter } from "expo-router";
 import React, { useContext, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
 
     const { exercises } = useContext(DBContext);
-    const { routine, addToRoutine, setIsActiveWorkout } = useContext(ActiveWorkoutContext);
-
-    const router = useRouter();
-
-    const startWorkout = () => {
-        setIsActiveWorkout(true);
-        router.push('/(tabs)/workout/activeWorkout');
-    }
+    const { routine, addToRoutine } = useContext(ActiveWorkoutContext);
 
     const openModal = () => {
         setModal(true);
@@ -51,14 +43,6 @@ export default function NewWorkoutScreen() {
                     open={openModal}
                 />
             </ScrollView>
-            <TouchableOpacity
-                style={styles.startWorkoutButton}
-                onPress={startWorkout}
-            >
-                <View style={{ backgroundColor: 'transparent', alignItems: 'center' }}>
-                    <Text style={styles.title}>Start Workout</Text>
-                </View>
-            </TouchableOpacity>
         </View>
     );
 }

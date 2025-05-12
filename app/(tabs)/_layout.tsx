@@ -3,10 +3,11 @@ import { View } from '@/components/Themed';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Platform, TouchableOpacity } from 'react-native';
 
 interface TabBarButtonProps {
@@ -15,8 +16,13 @@ interface TabBarButtonProps {
 }
 
 function TabBarButton({ name, color }: TabBarButtonProps) {
+
+    const { isActiveWorkout } = useContext(ActiveWorkoutContext);
+
+    const route = isActiveWorkout ? '/(tabs)/workout/activeWorkout' : '/(tabs)/workout/newWorkout';
+
     return (
-        <Link href='/(tabs)/workout/activeWorkout' asChild>
+        <Link href={route} asChild>
             <TouchableOpacity
                 style={{
                     height: 60,
