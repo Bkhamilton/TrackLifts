@@ -15,7 +15,11 @@ export const insertRoutine = async (db, routine) => {
 // Function to get all routines for a user
 export const getRoutinesByUserId = async (db, userId) => {
     try {
-        const rows = await db.getAllAsync('SELECT * FROM Routines WHERE user_id = ?', [userId]);
+        const query = `
+            SELECT Routines.id, Routines.title, Routines.user_id
+            FROM Routines
+            WHERE Routines.user_id = ?`
+        const rows = await db.getAllAsync(query, [userId]);
         return rows;
     } catch (error) {
         console.error('Error getting routines by user ID:', error);

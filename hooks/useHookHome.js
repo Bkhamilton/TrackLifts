@@ -8,6 +8,12 @@ const useHookHome = () => {
     const [routineModal, setRoutineModal] = useState(false);
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
 
+    const [routine, setRoutine] = useState({
+        id: 0,
+        title: 'Test Routine',
+        exercises: []
+    });
+
     const openAddRoutineModal = () => setAddRoutineModal(true);
     const closeAddRoutineModal = () => setAddRoutineModal(false);
 
@@ -17,10 +23,16 @@ const useHookHome = () => {
     const openSettingsModal = () => setSettingsModal(true);
     const closeSettingsModal = () => setSettingsModal(false);
 
-    const openRoutineModal = () => setRoutineModal(true);
+    const openRoutineModal = (routine) => {
+        setRoutine(routine);
+        setRoutineModal(true);
+    }
     const closeRoutineModal = () => setRoutineModal(false);
 
-    const openRoutineOptionsModal = () => setRoutineOptionsModal(true);
+    const openRoutineOptionsModal = (routine) => {
+        setRoutine(routine);
+        setRoutineOptionsModal(true);
+    }
     const closeRoutineOptionsModal = () => setRoutineOptionsModal(false);
 
     return {
@@ -38,7 +50,8 @@ const useHookHome = () => {
         closeRoutineModal,
         routineOptionsModal,
         openRoutineOptionsModal,
-        closeRoutineOptionsModal
+        closeRoutineOptionsModal,
+        routine,
     };
 };
 

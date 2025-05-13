@@ -1,25 +1,25 @@
 import { Text } from '@/components/Themed';
+import { Routine } from '@/utils/types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface RoutineCardProps {
-    id: number;
-    title: string;
-    open: (item: { id: number; title: string }) => void;
-    openRoutineOptions: (item: { id: number; title: string }) => void;
+    routine: Routine;
+    open: (routine: Routine) => void;
+    openRoutineOptions: (routine: Routine) => void;
 }
 
-export default function RoutineCard({ id, title, open, openRoutineOptions }: RoutineCardProps) {
+export default function RoutineCard({ routine, open, openRoutineOptions }: RoutineCardProps) {
     return (
         <View style={styles.container}>
             <TouchableOpacity 
                 style={styles.touchable}
-                onPress={() => open({ id, title })}
+                onPress={() => open(routine)}
             >
                 <View style={styles.row}>
-                    <Text style={styles.title}>{title}</Text>
-                    <TouchableOpacity onPress={() => openRoutineOptions({ id, title })}>
+                    <Text style={styles.title}>{routine.title}</Text>
+                    <TouchableOpacity onPress={() => openRoutineOptions(routine)}>
                         <View style={styles.options}>
                             <SimpleLineIcons name="options" size={20} color="#ff8787" />
                         </View>

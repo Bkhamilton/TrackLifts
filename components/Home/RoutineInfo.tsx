@@ -62,11 +62,10 @@ export default function RoutineInfo({ close, open, openAddRoutine, routines, ope
                 </TouchableOpacity>
                 <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
                 {
-                    routines.map(type => (
-                        <View style={{ paddingVertical: 2 }} key={type.id}>
+                    routines.map(item => (
+                        <View style={{ paddingVertical: 2 }} key={item.id}>
                             <RoutineCard 
-                                id={type.id} 
-                                title={type.title} 
+                                routine={item}
                                 open={open} 
                                 openRoutineOptions={openRoutineOptions} 
                             />

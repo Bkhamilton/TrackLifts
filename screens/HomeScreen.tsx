@@ -6,6 +6,7 @@ import RoutineInfo from '@/components/Home/RoutineInfo';
 import Title from '../components/Title';
 
 import AddRoutineModal from '@/components/modals/AddRoutineModal';
+import RoutineModal from '@/components/modals/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import { ScrollView, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
@@ -19,13 +20,15 @@ export default function HomeScreen() {
         closeAddRoutineModal,
         routineOptionsModal,
         closeRoutineOptionsModal,
+        routineModal,
         closeRoutineModal, 
         openRoutineModal, 
         openAddRoutineModal, 
         openRoutineOptionsModal,
+        routine,
     } = useHookHome();
 
-    const { db, routines } = useContext(DBContext) 
+    const { routines } = useContext(DBContext) 
 
     const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
         console.log('Add Routine:', routine);
@@ -33,6 +36,14 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <RoutineModal
+                visible={routineModal}
+                close={closeRoutineModal}
+                start={(routine) => {
+                    console.log('Start Routine:', routine);
+                }}
+                routine={routine}
+            />
             <AddRoutineModal
                 visible={addRoutineModal}
                 close={closeAddRoutineModal}
@@ -41,7 +52,7 @@ export default function HomeScreen() {
             <RoutineOptions
                 visible={routineOptionsModal}
                 close={closeRoutineOptionsModal}
-                routine={{ id: 1, title: 'Test Routine', exercises: [] }} 
+                routine={routine} 
                 onDelete={(id) => {
                     console.log('Delete Routine with ID:', id);
                 }}
@@ -52,17 +63,17 @@ export default function HomeScreen() {
                     style = {styles.profileButton}
                 
                 >
-                <View>
-                    <Ionicons name="person" size={20} color="#ff8787" />
-                </View>  
+                    <View>
+                        <Ionicons name="person" size={20} color="#ff8787" />
+                    </View>  
                 </TouchableOpacity>
                 <TouchableOpacity
                     style = {styles.settingsButton}
                 
                 >
-                <View>
-                    <Ionicons name="settings" size={20} color="#ff8787" />
-                </View>  
+                    <View>
+                        <Ionicons name="settings" size={20} color="#ff8787" />
+                    </View>  
                 </TouchableOpacity>  
             </View>
             <ScrollView style={{top:60, paddingTop: 10}}>
