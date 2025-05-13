@@ -2,6 +2,8 @@
 import { getEquipment } from '@/db/general/Equipment';
 import { getExercises, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
+import { insertRoutineExercise } from '@/db/user/RoutineExercises';
+import { insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
 import { getRoutineData } from '@/utils/routineHelpers';
 import { Exercise, MuscleGroup, Routine } from '@/utils/types';
@@ -91,6 +93,36 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         }
         return undefined; // Return undefined if the database is not available
     };
+
+    const addRoutineToDB = async (routine: Routine): Promise<number | undefined> => {
+        if (db) {
+            try {
+                // Insert the routine into the database and get the inserted ID
+                const routineId = await insertRoutine(db, routine);
+
+                // For each exercise in the routine, insert a RoutineExercise entry
+                for (const exercise of routine.exercises) {
+                    await insertRoutineExercise(db, {
+                        routineId,
+                        exerciseId: exercise.id,
+                        sets: exercise.sets,
+                        reps: exercise.reps,
+                        weight: exercise.weight,
+                    });
+                }
+
+                // Update the routines state with the new routine, including the returned ID
+                setRoutines((prevRoutines) => [
+                    ...prevRoutines,
+                    { ...routine, id: routineId }, // Add the ID to the routine object
+                ]);
+            } catch (error) {
+                console.error('Error adding routine to DB:', error);
+                return undefined; // Return undefined in case of an error
+            }
+        }
+        return undefined; // Return undefined if the database is not available
+    }
 
     useEffect(() => {
         if (db) {
