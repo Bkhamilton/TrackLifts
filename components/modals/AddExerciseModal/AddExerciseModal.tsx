@@ -2,7 +2,7 @@ import { Equipment, MuscleGroup } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, TextInput, View } from '../Themed';
+import { Text, TextInput, View } from '../../Themed';
 import { EquipmentBox } from './EquipmentBox';
 import { MuscleGroupBox } from './MuscleGroupBox';
 

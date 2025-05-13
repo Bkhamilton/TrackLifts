@@ -2,12 +2,12 @@ import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AddExerciseModal from '../components/modals/AddExerciseModal';
-import ExerciseModal from '../components/modals/ExerciseModal';
-import Title from '../components/Title';
 import ExerciseList from '../components/ExerciseList';
-import { Text, View, ScrollView } from '../components/Themed';
-import { RootTabScreenProps, Exercise, Routine } from '../types';
+import AddExerciseModal from '../components/modals/AddExerciseModal/AddExerciseModal';
+import ExerciseModal from '../components/modals/ExerciseModal';
+import { View } from '../components/Themed';
+import Title from '../components/Title';
+import { Exercise, RootTabScreenProps } from '../types';
 
 import Database from '../database/Database';
 

@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import ExerciseList from '../components/Exercises/ExerciseList';
-import AddExerciseModal from '../components/modals/AddExerciseModal';
+import AddExerciseModal from '../components/modals/AddExerciseModal/AddExerciseModal';
 import ExerciseModal from '../components/modals/ExerciseModal';
 import { View } from '../components/Themed';
 import Title from '../components/Title';
