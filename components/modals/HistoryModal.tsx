@@ -5,39 +5,39 @@ import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 
 interface HistoryModalProps {
-  visible: boolean;
-  close: () => void;
-  routine: {
-    id: number;
-    title: string;
-    exercises: any[];
-  };
+    visible: boolean;
+    close: () => void;
+    routine: {
+        id: number;
+        title: string;
+        exercises: any[];
+    };
 }
 
 export default function HistoryModal({ visible, close, routine } : HistoryModalProps) {
     
-  return (
-    <Modal
-        visible = {visible}
-        transparent = {true}
-        animationType = 'fade'
-    >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalPopup}>
-              <TouchableOpacity
-                  onPress = {close}
-              >
-              <View>
-                  <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-              </View>
-              </TouchableOpacity>
-              <Text>
-                  {JSON.stringify(routine)}
-              </Text>
-          </View>
-        </View>
-    </Modal>
-  );
+    return (
+        <Modal
+            visible = {visible}
+            transparent = {true}
+            animationType = 'fade'
+        >
+            <View style={styles.modalContainer}>
+                <View style={styles.modalPopup}>
+                    <TouchableOpacity
+                        onPress = {close}
+                    >
+                        <View>
+                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                        </View>
+                    </TouchableOpacity>
+                    <Text>
+                        {JSON.stringify(routine)}
+                    </Text>
+                </View>
+            </View>
+        </Modal>
+    );
 }
 
 const styles = StyleSheet.create({
