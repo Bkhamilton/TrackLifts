@@ -3,8 +3,9 @@ import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, TextInput, View } from '../Themed';
-import { NewExerciseModal } from './NewExerciseModal';
+import { Text, TextInput, View } from '../../Themed';
+import { NewExerciseModal } from '../NewExerciseModal';
+import { ExerciseComponent } from './ExerciseComponent';
 
 interface AddRoutineModalProps {
     visible: boolean;
@@ -47,21 +48,6 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
     function remove(props: Exercise) {
         const temp = routineExercises.filter(exercise => exercise.title == props.title);
         setRoutineExercises(temp);
-    }
-
-    function ExerciseComponent({ exercise }: { exercise: Exercise }) {
-        return (
-            <View style={{ justifyContent: 'space-between', paddingHorizontal: 6, flexDirection: 'row', width: '100%', alignItems: 'center', borderWidth: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: '500' }}>{exercise.title}</Text>
-                <TouchableOpacity
-                
-                >
-                    <View style={{ padding: 4, borderWidth: 1, }}>
-                        <Text style={{ color: '#ff8787' }}>Remove</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
     }
 
     return (
@@ -111,7 +97,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                         {
                             routineExercises.map(type => (
                                 <View style={{ paddingVertical: 2 }} key={type.id}>
-                                    <ExerciseComponent exercise={type} />
+                                    <ExerciseComponent exercise={type} onRemove={remove} />
                                 </View>
                             ))
                         }

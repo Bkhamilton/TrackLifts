@@ -11,7 +11,7 @@ import Title from '../components/Title';
 import Database from '../database/Database';
 
 import { ScrollView, View } from '@/components/Themed';
-import AddRoutineModal from '../components/modals/AddRoutineModal';
+import AddRoutineModal from '../components/modals/AddRoutineModal/AddRoutineModal';
 import { TLRoutine } from '../database/types/types';
 import { Exercise, RootTabScreenProps, Routine, RoutineList } from '../types';
 

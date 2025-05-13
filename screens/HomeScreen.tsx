@@ -5,7 +5,7 @@ import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineInfo from '@/components/Home/RoutineInfo';
 import Title from '../components/Title';
 
-import AddRoutineModal from '@/components/modals/AddRoutineModal';
+import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import { ScrollView, View } from '@/components/Themed';
