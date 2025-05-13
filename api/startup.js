@@ -62,10 +62,10 @@ export const createUserTables = async (db) => {
             FOREIGN KEY (user_id) REFERENCES Users(id)
         );
         CREATE TABLE IF NOT EXISTS RoutineExercises (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             routine_id INTEGER,
             exercise_id INTEGER,
             sets INTEGER NOT NULL,
-            PRIMARY KEY (routine_id, exercise_id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id),
             FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
         );
