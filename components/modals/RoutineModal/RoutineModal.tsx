@@ -2,8 +2,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Exercise, Routine } from '@/utils/types';
-import { Text, View } from '../Themed';
+import { Text, View } from '@/components/Themed';
+import { Routine } from '@/utils/types';
+import ExerciseHeader from './ExerciseHeader'; // Import ExerciseHeader
 
 interface RoutineModalProps {
     visible: boolean;
@@ -13,15 +14,6 @@ interface RoutineModalProps {
 }
 
 export default function RoutineModal({ visible, close, start, routine }: RoutineModalProps) {
-
-    function ExerciseHeader(props: Exercise) {
-        return (
-            <View>
-                <Text>{props.title} ({props.equipment})</Text>
-            </View>
-        )
-    }
-    
     return (
         <Modal
             visible = {visible}
@@ -47,11 +39,7 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
                             routine.exercises.map((type, index) => (
                                 <View style={{ paddingVertical: 2 }} key={index}>
                                     <ExerciseHeader 
-                                        id={type.id} 
-                                        title={type.title} 
-                                        muscleGroup={type.muscleGroup} 
-                                        muscleGroupId={type.muscleGroupId}
-                                        equipment={type.equipment}
+                                        exercise = {type}
                                     />
                                 </View>
                             ))

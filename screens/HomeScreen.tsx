@@ -6,7 +6,7 @@ import RoutineInfo from '@/components/Home/RoutineInfo';
 import Title from '../components/Title';
 
 import AddRoutineModal from '@/components/modals/AddRoutineModal';
-import RoutineModal from '@/components/modals/RoutineModal';
+import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import { ScrollView, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';

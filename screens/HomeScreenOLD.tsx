@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 import ProfileModal from '../components/modals/ProfileModal';
-import RoutineModal from '../components/modals/RoutineModal';
+import RoutineModal from '../components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '../components/modals/RoutineOptions';
 import SettingsModal from '../components/modals/SettingsModal';
 import RoutineInfo from '../components/RoutineInfo';
