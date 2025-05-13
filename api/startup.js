@@ -72,6 +72,7 @@ export const createUserTables = async (db) => {
         CREATE TABLE IF NOT EXISTS ExerciseSets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             routine_exercise_id INTEGER,
+            set_order INTEGER NOT NULL,
             weight REAL NOT NULL,
             reps INTEGER NOT NULL,
             date DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -97,27 +97,27 @@ const syncRoutines = async (db) => {
                     title: 'Squat',
                     equipment: 'Barbell',
                     sets: [
-                        { weight: 200, reps: 10 },
-                        { weight: 210, reps: 8 },
-                        { weight: 220, reps: 6 },
+                        { weight: 200, reps: 10, order: 1 },
+                        { weight: 210, reps: 8, order: 2 },
+                        { weight: 220, reps: 6, order: 3 },
                     ],
                 },
                 {
                     title: 'Bench Press',
                     equipment: 'Barbell',
                     sets: [
-                        { weight: 150, reps: 10 },
-                        { weight: 160, reps: 8 },
-                        { weight: 170, reps: 6 },
+                        { weight: 150, reps: 10, order: 1 },
+                        { weight: 160, reps: 8, order: 2 },
+                        { weight: 170, reps: 6, order: 3 },
                     ],
                 },
                 {
                     title: 'Deadlift',
                     equipment: 'Barbell',
                     sets: [
-                        { weight: 250, reps: 10 },
-                        { weight: 260, reps: 8 },
-                        { weight: 270, reps: 6 },
+                        { weight: 250, reps: 10, order: 1 },
+                        { weight: 260, reps: 8, order: 2 },
+                        { weight: 270, reps: 6, order: 3 },
                     ],
                 },
             ],
@@ -129,27 +129,27 @@ const syncRoutines = async (db) => {
                     title: 'Pull-Up',
                     equipment: 'Bodyweight',
                     sets: [
-                        { weight: 0, reps: 8 },
-                        { weight: 0, reps: 8 },
-                        { weight: 0, reps: 8 },
+                        { weight: 0, reps: 8, order: 1 },
+                        { weight: 0, reps: 8, order: 2 },
+                        { weight: 0, reps: 8, order: 3 },
                     ],
                 },
                 {
                     title: 'Shoulder Press',
                     equipment: 'Dumbbell',
                     sets: [
-                        { weight: 40, reps: 10 },
-                        { weight: 45, reps: 8 },
-                        { weight: 50, reps: 6 },
+                        { weight: 40, reps: 10, order: 1 },
+                        { weight: 45, reps: 8, order: 2 },
+                        { weight: 50, reps: 6, order: 3 },
                     ],
                 },
                 {
                     title: 'Incline Curl',
                     equipment: 'Barbell',
                     sets: [
-                        { weight: 30, reps: 12 },
-                        { weight: 35, reps: 10 },
-                        { weight: 40, reps: 8 },
+                        { weight: 30, reps: 12, order: 1 },
+                        { weight: 35, reps: 10, order: 2 },
+                        { weight: 40, reps: 8, order: 3 },
                     ],
                 },
             ],
@@ -178,6 +178,7 @@ const syncRoutines = async (db) => {
                 for (const set of exercise.sets) {
                     await insertExerciseSet(db, {
                         routine_exercise_id: routineExerciseId,
+                        set_order: set.order,
                         weight: set.weight,
                         reps: set.reps,
                         date: set.date || new Date().toISOString(), // Use current date if not provided

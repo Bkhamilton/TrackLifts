@@ -2,8 +2,8 @@
 export const insertExerciseSet = async (db, exerciseSet) => {
     try {
         const result = await db.runAsync(
-            'INSERT INTO ExerciseSets (routine_exercise_id, weight, reps, date) VALUES (?, ?, ?, ?)',
-            [exerciseSet.routine_exercise_id, exerciseSet.weight, exerciseSet.reps, exerciseSet.date]
+            'INSERT INTO ExerciseSets (routine_exercise_id, set_order, weight, reps, date) VALUES (?, ?, ?, ?, ?)',
+            [exerciseSet.routine_exercise_id, exerciseSet.set_order, exerciseSet.weight, exerciseSet.reps, exerciseSet.date]
         );
         return result.lastInsertRowId;
     } catch (error) {
