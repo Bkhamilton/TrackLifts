@@ -21,10 +21,11 @@ export const fillRoutineData = async (db, routines) => {
         // Fetch exercises for the current routine
         const exercises = await getRoutineExercises(db, routine.id);
 
+        const exercisesWithDetails = await fillExerciseData(db, exercises);
         // Add the exercises field to the routine
         routinesWithExercises.push({
             ...routine, // Spread the existing routine fields
-            exercises,  // Add the exercises field
+            exercises: exercisesWithDetails,  // Add the exercises field
         });
     }
 
@@ -36,12 +37,12 @@ export const fillExerciseData = async (db, exercises) => {
 
     for (const exercise of exercises) {
         // Fetch details for the current exercise
-        const details = await getExerciseDetails(db, exercise.id);
+        const sets = await getExerciseDetails(db, exercise.id);
 
         // Add the details field to the exercise
         exercisesWithDetails.push({
             ...exercise, // Spread the existing exercise fields
-            details,     // Add the details field
+            sets,     // Add the details field
         });
     }
 

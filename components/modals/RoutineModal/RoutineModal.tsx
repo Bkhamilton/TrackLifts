@@ -2,15 +2,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
-import { Routine } from '@/utils/types';
+import { ScrollView, Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/utils/types';
 import ExerciseHeader from './ExerciseHeader'; // Import ExerciseHeader
 
 interface RoutineModalProps {
     visible: boolean;
     close: () => void;
-    start: (routine: Routine) => void;
-    routine: Routine;
+    start: (routine: ActiveRoutine) => void;
+    routine: ActiveRoutine;
 }
 
 export default function RoutineModal({ visible, close, start, routine }: RoutineModalProps) {
@@ -22,40 +22,42 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity
-                            onPress = {close}
-                        >
-                            <View>
-                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.titleText}>{routine.title}</Text>
-                    </View>
-                    <View>
-                        {
-                            routine.exercises.map((type, index) => (
-                                <View style={{ paddingVertical: 2 }} key={index}>
-                                    <ExerciseHeader 
-                                        exercise = {type}
-                                    />
+                    <ScrollView style={{ paddingVertical: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity
+                                onPress = {close}
+                            >
+                                <View>
+                                    <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
                                 </View>
-                            ))
-                        }
-                        <TouchableOpacity
-                            style = {{
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                            onPress={() => start(routine)}
-                        >
-                            <View style = {styles.workoutButton}>
-                                <Text style={styles.workoutButtonText}>GO</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ alignItems: 'center', marginBottom: 10 }}>
+                            <Text style={styles.titleText}>{routine.title}</Text>
+                        </View>
+                        <View>
+                            {
+                                routine.exercises.map((type, index) => (
+                                    <View style={{ paddingVertical: 2 }} key={index}>
+                                        <ExerciseHeader 
+                                            exercise = {type}
+                                        />
+                                    </View>
+                                ))
+                            }
+                            <TouchableOpacity
+                                style = {{
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                                onPress={() => start(routine)}
+                            >
+                                <View style = {styles.workoutButton}>
+                                    <Text style={styles.workoutButtonText}>GO</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
@@ -68,7 +70,6 @@ const styles = StyleSheet.create({
         bottom: '5%',
         elevation: 20,
         borderRadius: 4,
-        paddingVertical: 15,
         paddingHorizontal: 15,
     },
     modalContainer: {
@@ -91,11 +92,8 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     titleContainer: {
-        width: 190, 
         alignItems: 'center', 
-        position: 'absolute', 
-        left: 80, 
-        top: 15,
+        marginBottom: 10
     },
     titleText: {
         fontWeight: '500', 

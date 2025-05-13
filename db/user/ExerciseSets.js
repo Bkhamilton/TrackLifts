@@ -24,7 +24,6 @@ export const getExerciseDetails = async (db, routine_exercise_id) => {
             'SELECT * FROM ExerciseSets WHERE routine_exercise_id = ?',
             [routine_exercise_id]
         );
-        console.log('Exercise details:', allRows);
         return allRows;
     } catch (error) {
         console.error('Error getting exercise details:', error);
