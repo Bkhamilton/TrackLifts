@@ -17,6 +17,22 @@ export const getExercises = async (db) => {
     }
 };
 
+export const getExerciseIdByTitleAndEquipment = async (db, title, equipment) => {
+    try {
+        const query = `
+            SELECT e.id
+            FROM Exercises e
+            LEFT JOIN Equipment eq ON e.equipment_id = eq.id
+            WHERE e.title = ? AND eq.name = ?
+            `;
+        const rows = await db.getAllAsync(query, [title, equipment]);
+        return rows.length > 0 ? rows[0].id : null;
+    } catch (error) {
+        console.error('Error getting exercise ID:', error);
+        throw error;
+    }
+}
+
 export const insertExercise = async (db, exercise) => {
     try {
         const { title, equipmentId, muscleGroupId } = exercise;

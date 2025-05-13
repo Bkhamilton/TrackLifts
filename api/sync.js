@@ -4,7 +4,7 @@ import muscleGroups from '@/data/MuscleGroups.json';
 import muscles from '@/data/Muscles.json';
 import { insertEquipment } from '@/db/general/Equipment';
 import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
-import { insertExercise } from '@/db/general/Exercises';
+import { getExerciseIdByTitleAndEquipment, insertExercise } from '@/db/general/Exercises';
 import { insertMuscleGroup } from '@/db/general/MuscleGroups';
 import { insertMuscle } from '@/db/general/Muscles';
 import { insertExerciseSet } from '@/db/user/ExerciseSets';
@@ -145,7 +145,7 @@ const syncRoutines = async (db) => {
                 },
                 {
                     title: 'Incline Curl',
-                    equipment: 'Dumbbell',
+                    equipment: 'Barbell',
                     sets: [
                         { weight: 30, reps: 12 },
                         { weight: 35, reps: 10 },
@@ -165,15 +165,12 @@ const syncRoutines = async (db) => {
 
         for (const exercise of routine.exercises) {
             // Fetch the exercise by title and equipment
-            const exerciseId = await db.getAllAsync(
-                'SELECT id FROM Exercises WHERE title = ? AND equipment_id = (SELECT id FROM Equipment WHERE name = ?)',
-                [exercise.title, exercise.equipment]
-            );
+            const exerciseId = await getExerciseIdByTitleAndEquipment(db, exercise.title, exercise.equipment);
 
             if (exerciseId) {
                 const routineExerciseId = await insertRoutineExercise(db, {
                     routine_id: routineId,
-                    exercise_id: exerciseId.id,
+                    exercise_id: exerciseId,
                     sets: exercise.sets.length, // Total number of sets
                 });
 

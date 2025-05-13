@@ -104,7 +104,7 @@ export default function ExercisesScreen() {
                 <Title title="Exercises"></Title>
                 <TouchableOpacity
                     style = {styles.plusButton}
-                    onPress={openAddExerciseModal}
+                    onPress={clearAllStorage}
                 >
                     <View>
                         <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />

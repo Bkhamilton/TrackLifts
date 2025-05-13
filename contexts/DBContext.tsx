@@ -2,8 +2,8 @@
 import { getEquipment } from '@/db/general/Equipment';
 import { getExercises, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
-import { getRoutinesByUserId } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
+import { getRoutineData } from '@/utils/routineHelpers';
 import { Exercise, MuscleGroup, Routine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
@@ -112,9 +112,12 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
 
     useEffect(() => {
         if (db && user.id !== 0) {
-            getRoutinesByUserId(db, user.id).then((data) => {
-                setRoutines(data);
-            });
+            const fetchRoutines = async () => {
+                const data = await getRoutineData(db, user.id);
+                setRoutines(data || []);
+            }
+
+            fetchRoutines();
         }
     }, [db, user]);
 

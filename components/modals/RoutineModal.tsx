@@ -17,7 +17,7 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
     function ExerciseHeader(props: Exercise) {
         return (
             <View>
-                <Text>{props.title}</Text>
+                <Text>{props.title} ({props.equipment})</Text>
             </View>
         )
     }
@@ -44,8 +44,8 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
                     </View>
                     <View>
                         {
-                            routine.exercises.map(type => (
-                                <View style={{ paddingVertical: 2 }} key={type.id}>
+                            routine.exercises.map((type, index) => (
+                                <View style={{ paddingVertical: 2 }} key={index}>
                                     <ExerciseHeader 
                                         id={type.id} 
                                         title={type.title} 

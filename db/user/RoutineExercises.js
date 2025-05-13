@@ -13,6 +13,23 @@ export const insertRoutineExercise = async (db, routineExercise) => {
 };
 
 // Read routine exercises by routine ID
+export const getRoutineExercises = async (db, routineId) => {
+    try {
+        const query = `
+            SELECT re.*, e.title, eq.name as equipment
+            FROM RoutineExercises re
+            LEFT JOIN Exercises e ON re.exercise_id = e.id
+            LEFT JOIN Equipment eq ON e.equipment_id = eq.id
+            WHERE re.routine_id = ?`;
+        const allRows = await db.getAllAsync(query, [routineId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error getting routine exercises:', error);
+        throw error;
+    }
+};
+
+// Read routine exercises by routine ID
 export const getRoutineExercisesByRoutineId = async (db, routineId) => {
     try {
         const allRows = await db.getAllAsync('SELECT * FROM RoutineExercises WHERE routine_id = ?', [routineId]);
