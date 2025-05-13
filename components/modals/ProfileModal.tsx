@@ -8,10 +8,10 @@ import userData from '../../data/UserData.json';
 
 interface ProfileModalProps {
     visible: boolean;
-    onPress: () => void;
+    close: () => void;
 }
 
-export default function ProfileModal({ visible, onPress }: ProfileModalProps) {
+export default function ProfileModal({ visible, close }: ProfileModalProps) {
         
     return (
         <Modal
@@ -22,7 +22,7 @@ export default function ProfileModal({ visible, onPress }: ProfileModalProps) {
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
                     <TouchableOpacity
-                        onPress = {onPress}
+                        onPress = {close}
                     >
                         <View  style={{position:'absolute', right: 0, borderWidth: 1}}>
                             <MaterialCommunityIcons name="close" size={24} color="#ff8787" />

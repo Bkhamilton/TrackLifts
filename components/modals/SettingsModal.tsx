@@ -6,10 +6,10 @@ import { View } from '@/components/Themed';
 
 interface SettingsModalProps {
     visible: boolean;
-    onPress: () => void;
+    close: () => void;
 }
 
-export default function SettingsModal({ visible, onPress }: SettingsModalProps) {
+export default function SettingsModal({ visible, close }: SettingsModalProps) {
     return (
         <Modal
             visible = {visible}
@@ -19,7 +19,7 @@ export default function SettingsModal({ visible, onPress }: SettingsModalProps) 
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
                     <TouchableOpacity
-                        onPress = {onPress}
+                        onPress = {close}
                     >
                         <View>
                             <MaterialCommunityIcons name="close" size={24} color="#ff8787" />

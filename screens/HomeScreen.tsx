@@ -1,30 +1,36 @@
-import { Ionicons } from '@expo/vector-icons';
-import React, { useContext } from 'react';
-import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
-
 import RoutineInfo from '@/components/Home/RoutineInfo';
-import Title from '../components/Title';
-
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
+import ProfileModal from '@/components/modals/ProfileModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
+import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
+import Title from '@/components/Title';
 import { DBContext } from '@/contexts/DBContext';
 import useHookHome from '@/hooks/useHookHome';
 import { Exercise } from '@/utils/types';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useContext } from 'react';
+import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
 
     const { 
         addRoutineModal,
+        openAddRoutineModal,
         closeAddRoutineModal,
-        routineOptionsModal,
-        closeRoutineOptionsModal,
+        profileModal,
+        openProfileModal,
+        closeProfileModal,
+        settingsModal,
+        openSettingsModal,
+        closeSettingsModal,
         routineModal,
-        closeRoutineModal, 
-        openRoutineModal, 
-        openAddRoutineModal, 
+        openRoutineModal,
+        closeRoutineModal,
+        routineOptionsModal,
         openRoutineOptionsModal,
+        closeRoutineOptionsModal,
         routine,
     } = useHookHome();
 
@@ -36,6 +42,14 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <ProfileModal
+                visible={profileModal}
+                close={closeProfileModal}
+            />
+            <SettingsModal
+                visible={settingsModal}
+                close={closeSettingsModal}
+            />
             <RoutineModal
                 visible={routineModal}
                 close={closeRoutineModal}
@@ -61,7 +75,7 @@ export default function HomeScreen() {
                 <Title title="TrackLifts"></Title>
                 <TouchableOpacity
                     style = {styles.profileButton}
-                
+                    onPress = {openProfileModal}
                 >
                     <View>
                         <Ionicons name="person" size={20} color="#ff8787" />
@@ -69,7 +83,7 @@ export default function HomeScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style = {styles.settingsButton}
-                
+                    onPress = {openSettingsModal}
                 >
                     <View>
                         <Ionicons name="settings" size={20} color="#ff8787" />
