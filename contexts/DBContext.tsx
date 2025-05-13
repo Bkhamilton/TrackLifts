@@ -2,6 +2,7 @@
 import { getEquipment } from '@/db/general/Equipment';
 import { getExercises, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
+import { getMuscles } from '@/db/general/Muscles';
 import { insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
@@ -11,7 +12,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 /*
 
-import { getMuscles } from '@/db/general/Muscles';
+
 
 import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
 
@@ -139,6 +140,9 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             getMuscleGroups(db).then((data) => {
                 setMuscleGroups(data);
             });
+            getMuscles(db).then((data) => {
+                setMuscles(data);
+            });
         }
     }, [db]);
 
@@ -158,6 +162,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         user,
         exercises,
         equipment,
+        muscles,
         muscleGroups,
         routines,
         addExerciseToDB,
