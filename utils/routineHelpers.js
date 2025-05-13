@@ -1,3 +1,4 @@
+import { getExerciseDetails } from '@/db/user/ExerciseSets';
 import { getRoutineExercises } from '@/db/user/RoutineExercises';
 import { getRoutinesByUserId } from '@/db/user/Routines';
 
@@ -29,3 +30,20 @@ export const fillRoutineData = async (db, routines) => {
 
     return routinesWithExercises; // Return the updated routines array
 };
+
+export const fillExerciseData = async (db, exercises) => {
+    const exercisesWithDetails = [];
+
+    for (const exercise of exercises) {
+        // Fetch details for the current exercise
+        const details = await getExerciseDetails(db, exercise.id);
+
+        // Add the details field to the exercise
+        exercisesWithDetails.push({
+            ...exercise, // Spread the existing exercise fields
+            details,     // Add the details field
+        });
+    }
+
+    return exercisesWithDetails; // Return the updated exercises array
+}
