@@ -33,7 +33,7 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
                         reps: 0,
                         weight: 0,
                         restTime: 0,
-                        order: 0,
+                        set_order: 0,
                     },
                 ],
             },
@@ -71,7 +71,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         reps: 0,
                         weight: 0,
                         restTime: 0,
-                        order: 0,
+                        set_order: 0,
                     },
                 ],
             },
@@ -89,7 +89,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                     reps: 10, // Default reps
                     weight: 0, // Default weight
                     restTime: 60, // Default rest time in seconds
-                    order: routine.exercises.length + 1, // Set the order based on the current number of exercises
+                    set_order: routine.exercises.length + 1, // Set the order based on the current number of exercises
                 },
             ],
         };

@@ -6,10 +6,12 @@ import RoutineOptions from '@/components/modals/RoutineOptions';
 import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
 import useHookHome from '@/hooks/useHookHome';
-import { Exercise } from '@/utils/types';
+import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -36,8 +38,26 @@ export default function HomeScreen() {
 
     const { routines } = useContext(DBContext) 
 
+    const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+
+    const router = useRouter();
+
     const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
         console.log('Add Routine:', routine);
+    }
+
+    const onStart = (routine: ActiveRoutine) => {
+        setRoutine(routine);
+        closeRoutineModal();
+        if (isActiveWorkout) {
+            alert('You already have an active workout. Please finish it before starting a new one.');
+            setTimeout(() => {
+                router.replace('/(tabs)/workout/activeWorkout');
+            }, 500);
+        } else {
+            router.replace('/(tabs)/workout/newWorkout');
+        }
+        
     }
 
     return (
@@ -53,9 +73,7 @@ export default function HomeScreen() {
             <RoutineModal
                 visible={routineModal}
                 close={closeRoutineModal}
-                start={(routine) => {
-                    console.log('Start Routine:', routine);
-                }}
+                start={onStart}
                 routine={routine}
             />
             <AddRoutineModal
