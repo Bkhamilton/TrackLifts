@@ -4,8 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, TextInput, View } from '../../Themed';
-import { NewExerciseModal } from '../NewExerciseModal';
 import { ExerciseComponent } from './ExerciseComponent';
+import { NewExerciseModal } from './NewExerciseModal';
 
 interface AddRoutineModalProps {
     visible: boolean;
@@ -58,6 +58,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
         >
             <NewExerciseModal 
                 visible={newModal} 
+                close={() => setNewModal(false)}
                 onSelect={onSelect}
                 exercises={exercises}
             />
