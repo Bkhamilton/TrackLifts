@@ -15,13 +15,22 @@ export const insertExerciseSet = async (db, exerciseSet) => {
 export const getExerciseDetails = async (db, routine_exercise_id) => {
     try {
         const query = `
-            SELECT es.*, re.id AS routine_exercise_id, re.routine_id, re.exercise_id, e.name AS exercise_name
-            FROM ExerciseSets es
-            JOIN RoutineExercises re ON es.routine_exercise_id = re.id
-            JOIN Exercises e ON re.exercise_id = e.id
-            WHERE es.routine_exercise_id = ?`
+            SELECT 
+                es.*, 
+                re.id AS routine_exercise_id, 
+                re.routine_id, 
+                re.exercise_id, 
+                e.title AS exercise_name
+            FROM 
+                ExerciseSets es
+            JOIN 
+                RoutineExercises re ON es.routine_exercise_id = re.id
+            JOIN 
+                Exercises e ON re.exercise_id = e.id
+            WHERE 
+                es.routine_exercise_id = ?`
         const allRows = await db.getAllAsync(
-            'SELECT * FROM ExerciseSets WHERE routine_exercise_id = ?',
+            query,
             [routine_exercise_id]
         );
         return allRows;

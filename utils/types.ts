@@ -45,7 +45,7 @@ export interface ActiveSet {
     reps: number;
     weight: number;
     restTime: number;
-    order: number;
+    set_order: number;
 }
 
 export interface Set {

@@ -14,9 +14,8 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
             {
                 exercise.sets.map((set, index) => (
                     <View key={index}>
-                        <Text>Set {index + 1}</Text>
-                        <Text>Reps: {set.reps}</Text>
-                        <Text>Weight: {set.weight} kg</Text>
+                        <Text>Set {set.set_order}</Text>
+                        <Text>{set.reps} x {set.weight}lbs</Text>
                     </View>
                 ))
             }
