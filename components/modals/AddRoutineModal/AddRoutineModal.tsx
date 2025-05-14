@@ -30,6 +30,10 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
         setNewModal(true);
     }
 
+    function closeModal() {
+        setNewModal(false);
+    }
+
     function closeMain() {
         clearData();
         close();
@@ -58,7 +62,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
         >
             <NewExerciseModal 
                 visible={newModal} 
-                close={() => setNewModal(false)}
+                close={closeModal}
                 onSelect={onSelect}
                 exercises={exercises}
             />
@@ -98,7 +102,10 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                         {
                             routineExercises.map(type => (
                                 <View style={{ paddingVertical: 2 }} key={type.id}>
-                                    <ExerciseComponent exercise={type} onRemove={remove} />
+                                    <ExerciseComponent 
+                                        exercise={type} 
+                                        onRemove={remove} 
+                                    />
                                 </View>
                             ))
                         }
