@@ -1,5 +1,6 @@
 import { DBContext } from '@/contexts/DBContext';
 import useHookExercises from '@/hooks/useHookExercises';
+import { sortList } from '@/utils/exerciseUtils';
 import { Equipment, MuscleGroup } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,28 +35,6 @@ export default function ExercisesScreen() {
             console.error('Error clearing AsyncStorage:', error);
         }
     };    
-
-    function sortList(criteria: string[]) {
-        let sortedArray = [...exercises]; // Create a copy of the exercises array
-    
-        sortedArray.sort((a, b) => {
-            for (const criterion of criteria) {
-                if (criterion === "title") {
-                    const result = a.title.localeCompare(b.title);
-                    if (result !== 0) return result;
-                } else if (criterion === "equipment") {
-                    const result = a.equipment.localeCompare(b.equipment);
-                    if (result !== 0) return result;
-                } else if (criterion === "muscleGroup") {
-                    const result = a.muscleGroup.localeCompare(b.muscleGroup);
-                    if (result !== 0) return result;
-                }
-            }
-            return 0; // If all criteria are equal
-        });
-    
-        setSortedExercises(sortedArray); // Update the sortedExercises state
-    }
     
     function clearSort() {
         setSortedExercises(exercises); // Reset to original order
@@ -115,7 +94,7 @@ export default function ExercisesScreen() {
                 <ExerciseList 
                     exercises={sortedExercises} 
                     openModal={openExerciseModal}
-                    sortList={sortList}
+                    sortList={(criteria) => setSortedExercises(sortList(exercises, criteria))}
                     clearSort={clearSort}
                 />
             </View>

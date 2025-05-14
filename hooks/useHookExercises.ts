@@ -1,7 +1,7 @@
+import { Exercise } from '@/utils/types';
 import { useState } from 'react';
 
 const useHookExercises = () => {
-
     const [addExerciseModal, setAddExerciseModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
     const [exercise, setExercise] = useState({
@@ -12,10 +12,10 @@ const useHookExercises = () => {
         muscleGroupId: 0,
     });
 
-    const openAddExerciseModal = () => setAddExerciseModal(true);``
+    const openAddExerciseModal = () => setAddExerciseModal(true);
     const closeAddExerciseModal = () => setAddExerciseModal(false);
 
-    const openExerciseModal = (exercise) => {
+    const openExerciseModal = (exercise: Exercise) => {
         setExercise(exercise);
         setExerciseModal(true);
     }
@@ -37,7 +37,7 @@ const useHookExercises = () => {
         exerciseModal,
         exercise,
         openExerciseModal,
-        closeExerciseModal
+        closeExerciseModal,
     };
 };
 
