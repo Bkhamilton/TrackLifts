@@ -30,6 +30,7 @@ interface DBContextValue {
     user: User;
     exercises: Exercise[];
     equipment: any[];
+    muscles: any[];
     muscleGroups: MuscleGroup[];
     routines: Routine[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
@@ -45,6 +46,7 @@ export const DBContext = createContext<DBContextValue>({
     },
     exercises: [],
     equipment: [],
+    muscles: [],
     muscleGroups: [],
     routines: [],
     addExerciseToDB: async () => {
