@@ -34,10 +34,10 @@ export const createGeneralTables = async (db) => {
             FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
         );
         CREATE TABLE IF NOT EXISTS ExerciseMuscles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             exercise_id INTEGER,
             muscle_id INTEGER,
             intensity REAL NOT NULL,
-            PRIMARY KEY (exercise_id, muscle_id),
             FOREIGN KEY (exercise_id) REFERENCES Exercises(id),
             FOREIGN KEY (muscle_id) REFERENCES Muscles(id)
         );

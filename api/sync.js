@@ -5,7 +5,7 @@ import muscles from '@/data/Muscles.json';
 import { insertEquipment } from '@/db/general/Equipment';
 import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { getExerciseIdByTitleAndEquipment, insertExercise } from '@/db/general/Exercises';
-import { insertMuscleGroup } from '@/db/general/MuscleGroups';
+import { getMuscleGroupIdByName, insertMuscleGroup } from '@/db/general/MuscleGroups';
 import { insertMuscle } from '@/db/general/Muscles';
 import { insertExerciseSet } from '@/db/user/ExerciseSets';
 import { insertRoutineExercise } from '@/db/user/RoutineExercises';
@@ -27,7 +27,12 @@ const syncMuscleGroups = async (db) => {
 
 const syncMuscles = async (db) => {
     for (const muscle of muscles) {
-        await insertMuscle(db, muscle);
+        const muscleGroupId = await getMuscleGroupIdByName(db, muscle.muscleGroup);
+        const toAdd = {
+            name: muscle.name,
+            muscleGroupId: muscleGroupId,
+        }
+        await insertMuscle(db, toAdd);
     }
 };
 

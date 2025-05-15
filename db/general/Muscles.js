@@ -1,6 +1,17 @@
 export const getMuscles = async (db) => {
     try {
-        const allRows = await db.getAllAsync('SELECT * FROM Muscles');
+        const query = `
+            SELECT 
+                m.*, 
+                mg.name AS muscleGroup
+            FROM 
+                Muscles m
+            LEFT JOIN 
+                MuscleGroups mg 
+            ON 
+                m.muscle_group_id = mg.id
+            `;
+        const allRows = await db.getAllAsync(query);
         return allRows;
     } catch (error) {
         console.error('Error getting muscles:', error);

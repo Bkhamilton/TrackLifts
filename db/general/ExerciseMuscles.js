@@ -16,10 +16,7 @@ export const getExerciseMuscleDetails = async (db, exerciseId) => {
             JOIN Muscles m ON em.muscle_id = m.id
             WHERE em.exercise_id = ?
             `;
-        const rows = await db.getAllAsync(
-            query,
-            [exerciseId]
-        );
+        const rows = await db.getAllAsync(query, [exerciseId]);
         return rows;
     } catch (error) {
         console.error('Error getting exercise muscle details:', error);

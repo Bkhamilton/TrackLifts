@@ -4,7 +4,7 @@ import { Muscle } from '@/utils/types';
 import Slider from '@react-native-community/slider';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { MuscleSelectionModal } from './MuscleSelectionModal'; // Import the new component
+import { MuscleSelectionModal } from './MuscleSelectionModal';
 
 interface MuscleIntensity {
     muscleId: number;
@@ -66,6 +66,7 @@ export function MuscleIntensityModal({ visible, onSave, close, initialSelection 
     };
 
     const handleSave = () => {
+        console.log(JSON.stringify(selectedMuscles, null, 2));
         onSave(selectedMuscles);
         close();
     };

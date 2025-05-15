@@ -9,6 +9,16 @@ export const getMuscleGroups = async (db) => {
     }
 };
 
+export const getMuscleGroupIdByName = async (db, name) => {
+    try {
+        const result = await db.getAllAsync('SELECT id FROM MuscleGroups WHERE name = ?', [name]);
+        return result ? result[0].id : null;
+    } catch (error) {
+        console.error('Error getting muscle group ID by name:', error);
+        throw error;
+    }
+}
+
 // Function to insert a muscle group
 export const insertMuscleGroup = async (db, name) => {
     try {
