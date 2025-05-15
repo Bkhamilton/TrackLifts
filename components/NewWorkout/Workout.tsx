@@ -1,11 +1,11 @@
 import { Text, View } from '@/components/Themed';
-import { Routine } from '@/utils/types';
+import { ActiveRoutine } from '@/utils/types';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import WorkoutInfo from './WorkoutInfo';
 
 interface WorkoutProps {
     open: () => void;
-    routine: Routine;
+    routine: ActiveRoutine;
 }
 
 export default function Workout({ open, routine }: WorkoutProps) {
@@ -16,13 +16,6 @@ export default function Workout({ open, routine }: WorkoutProps) {
                     <View style={{ paddingVertical: 2 }} key={type.id}>
                         <WorkoutInfo
                             exercise={type}
-                            sets={[
-                                {
-                                    number: 1,
-                                    weight: 100,
-                                    reps: 10,
-                                },
-                            ]}
                         />
                     </View>
                 ))

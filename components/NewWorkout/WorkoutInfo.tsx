@@ -1,29 +1,34 @@
 import { Text, View } from '@/components/Themed';
-import { Exercise, Set } from '@/utils/types';
+import { ActiveExercise, ActiveSet } from '@/utils/types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface WorkoutInfoProps {
-    exercise: Exercise;
-    sets: Set[];
+    exercise: ActiveExercise;
 }
 
-export default function WorkoutInfo({ exercise, sets }: WorkoutInfoProps) {
-    function SetCard({ set } : { set: Set }) {
+export default function WorkoutInfo({ exercise }: WorkoutInfoProps) {
+    function SetCard({ set } : { set: ActiveSet }) {
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text>#{set.number}</Text>
+                <Text>#{set.set_order}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text>{set.weight} kg</Text>
+                    <Text style={{ marginLeft: 10 }}>{set.reps} reps</Text>
+                </View>
             </View>
         );
     }
 
     function addSet() {
-        sets.push({
-            number: sets.length + 1,
+        exercise.sets.push({
+            id: exercise.sets.length + 1,
+            set_order: exercise.sets.length + 1,
             weight: 100,
             reps: 10,
+            restTime: 60,
         });
-        console.log(sets.length);
+        exercise.sets.sort((a, b) => a.set_order - b.set_order);
     }
 
     return (
@@ -35,8 +40,8 @@ export default function WorkoutInfo({ exercise, sets }: WorkoutInfoProps) {
                 <Text style={{ fontSize: 14 }}>Sets</Text>
             </View>
             {
-                sets.map((type) => (
-                    <View style={{ paddingVertical: 2 }} key={type.number}>
+                exercise.sets.map((type) => (
+                    <View style={{ paddingVertical: 2 }} key={type.set_order}>
                         <SetCard set={type} />
                     </View>
                 ))
