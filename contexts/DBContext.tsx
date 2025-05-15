@@ -94,10 +94,9 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                 }
     
                 // Update the exercises state with the new exercise, including the returned ID
-                setExercises((prevExercises) => [
-                    ...prevExercises,
-                    { ...exercise, id: exerciseId }, // Add the ID to the exercise object
-                ]);
+                getExerciseData(db).then((data) => {
+                    setExercises(data || []);
+                });
     
                 return exerciseId; // Return the ID of the newly inserted exercise
             } catch (error) {
