@@ -112,7 +112,10 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         if (db) {
             try {
                 // Insert the routine into the database and get the inserted ID
-                const routineId = await insertRoutine(db, routine);
+                const routineId = await insertRoutine(db, {
+                    title: routine.title,
+                    user_id: user.id,
+                });
 
                 // For each exercise in the routine, insert a RoutineExercise entry
                 for (const exercise of routine.exercises) {
@@ -133,10 +136,9 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                 }
 
                 // Update the routines state with the new routine, including the returned ID
-                setRoutines((prevRoutines) => [
-                    ...prevRoutines,
-                    { ...routine, id: routineId }, // Add the ID to the routine object
-                ]);
+                getRoutineData(db, user.id).then((data) => {
+                    setRoutines(data || []);
+                });
 
                 return routineId; // Return the ID of the newly inserted routine
             } catch (error) {

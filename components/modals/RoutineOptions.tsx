@@ -1,6 +1,5 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 import { Routine } from '@/utils/types';
 import { Text, View } from '../Themed';
@@ -19,38 +18,33 @@ export default function RoutineOptions({ visible, close, routine, onDelete }: Ro
             transparent = {true}
             animationType = 'fade'
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <View style={{ flexDirection: 'row', paddingBottom: 4 }}>
-                        <TouchableOpacity
-                            onPress = {close}
-                        >
-                            <View>
-                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+            <TouchableWithoutFeedback onPress={close}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalPopup}>
+                        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', paddingVertical: 10 }}>
+                            <View style={{ paddingHorizontal: 6 }}>
+                                <Text style={{ fontSize: 18, fontWeight: '700' }}>{routine.title}</Text>
                             </View>
-                        </TouchableOpacity>
-                        <View style={{ height: 24, paddingHorizontal: 6, left: 60 }}>
-                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{routine.title}</Text>
+                        </View>
+                        <View>
+                            <TouchableOpacity>
+                                <View style={styles.optionButtons}>
+                                    <Text style={styles.optionText}>Edit Routine</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => onDelete(routine.id)}
+                            >
+                                <View style={styles.optionButtons}>
+                                    <Text style={styles.optionText}>Delete Routine</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View>
-                        <TouchableOpacity>
-                            <View style={styles.optionButtons}>
-                                <Text style={styles.optionText}>Edit Routine</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => onDelete(routine.id)}
-                        >
-                            <View style={styles.optionButtons}>
-                                <Text style={styles.optionText}>Delete Routine</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </Modal>
     );
 }
