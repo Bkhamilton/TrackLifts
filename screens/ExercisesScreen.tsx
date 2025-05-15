@@ -50,9 +50,10 @@ export default function ExercisesScreen() {
             muscleGroupId: muscleGroup.id,
             muscleGroup: muscleGroup.name,
             muscles: muscleIntensities.map((muscle) => ({
-                id: muscle.id,
-                name: muscle.name,
+                id: muscle.muscleId,
+                name: muscle.muscleName,
                 intensity: muscle.intensity,
+                muscleGroup: muscle.groupName
             })),
         };
     

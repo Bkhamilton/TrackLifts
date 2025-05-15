@@ -66,7 +66,6 @@ export function MuscleIntensityModal({ visible, onSave, close, initialSelection 
     };
 
     const handleSave = () => {
-        console.log(JSON.stringify(selectedMuscles, null, 2));
         onSave(selectedMuscles);
         close();
     };
