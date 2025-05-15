@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     modalPopup: {
         width: '90%',
         maxHeight: '80%',
-        backgroundColor: 'white',
         borderRadius: 10,
         padding: 15,
     },
