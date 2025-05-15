@@ -78,12 +78,14 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                 const exerciseId = await insertExercise(db, exercise);
 
                 // For each muscle in the exercise, insert a ExerciseMuscles entry
-                for (const muscle of exercise.muscles) {
-                    await insertExerciseMuscle(db, {
-                        exerciseId,
-                        muscleId: muscle.id,
-                        intensity: muscle.intensity,
-                    });
+                if (exercise.muscles) {
+                    for (const muscle of exercise.muscles) {
+                        await insertExerciseMuscle(db, {
+                            exerciseId,
+                            muscleId: muscle.id,
+                            intensity: muscle.intensity,
+                        });
+                    }
                 }
     
                 // Update the exercises state with the new exercise, including the returned ID

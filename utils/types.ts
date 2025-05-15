@@ -4,6 +4,7 @@ export interface Exercise {
     equipment: string;
     muscleGroupId: number;
     muscleGroup: string;
+    muscles?: any[];
 }
 
 export interface History {
