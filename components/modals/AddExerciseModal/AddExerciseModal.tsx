@@ -5,6 +5,7 @@ import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, TextInput, View } from '../../Themed';
 import { EquipmentBox } from './EquipmentBox';
 import { MuscleGroupBox } from './MuscleGroupBox';
+import { MuscleIntensityModal } from './MuscleIntensityModal';
 
 interface AddExerciseModalProps {
     visible: boolean;
@@ -15,25 +16,26 @@ interface AddExerciseModalProps {
 export default function AddExerciseModal({ visible, close, add }: AddExerciseModalProps) {
 
     const [title, setTitle] = useState("");
-    const [equipmentBox, setEquipmentBox] = useState<Equipment>({ id: 0, name: "Type" });
+    const [equipmentBox, setEquipmentBox] = useState<Equipment>({ id: 0, name: "Equipment" });
     const [muscleGroupBox, setMuscleGroupBox] = useState<MuscleGroup>({ id: 0, name: "Muscle Group" });
 
     const [showEquipmentBox, setShowEquipmentBox] = useState( false );
     const [showMGBox, setShowMGBox] = React.useState( false );
+    const [showIntensityBox, setShowIntensityBox] = useState(false);
 
     function addExercise() {
-        if (title != '' && equipmentBox.name != "Type" && muscleGroupBox.name != "Muscle Group") {
+        if (title != '' && equipmentBox.name != "Equipment" && muscleGroupBox.name != "Muscle Group") {
             //add({title: title, type: typeBox, muscleGroup: muscleGroupBox});
             add({title: title, equipment: equipmentBox, muscleGroup: muscleGroupBox});
             setTitle("");
-            setEquipmentBox({ id: 0, name: "Type" });
+            setEquipmentBox({ id: 0, name: "Equipment" });
             setMuscleGroupBox({ id: 0, name: "Muscle Group" });
         }
     }
 
     function clearBoxes() {
         setTitle("")
-        setEquipmentBox({ id: 0, name: "Type" });
+        setEquipmentBox({ id: 0, name: "Equipment" });
         setMuscleGroupBox({ id: 0, name: "Muscle Group" });
         close();
     }
@@ -70,6 +72,11 @@ export default function AddExerciseModal({ visible, close, add }: AddExerciseMod
             transparent = {true}
             animationType = 'fade'
         >
+            <MuscleIntensityModal 
+                visible={showIntensityBox} 
+                close={() => setShowIntensityBox(false)}
+                onSave={() => {}}
+            />
             <EquipmentBox 
                 visible={showEquipmentBox} 
                 onSelect={chooseEquipment} 
@@ -110,7 +117,7 @@ export default function AddExerciseModal({ visible, close, add }: AddExerciseMod
                             onPress={openEquipmentBox}
                         >
                             <View style={[styles.sortButtons, { right: 1 }]}>
-                                <Text style={{ fontWeight: (equipmentBox.name != "Type") ? '600': '400' }}>{equipmentBox.name}</Text>
+                                <Text style={{ fontWeight: (equipmentBox.name != "Equipment") ? '600': '400' }}>{equipmentBox.name}</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -118,6 +125,15 @@ export default function AddExerciseModal({ visible, close, add }: AddExerciseMod
                         >
                             <View style={[styles.sortButtons, { left: 1 }]}>
                                 <Text style={{ fontWeight: (muscleGroupBox.name != "Muscle Group") ? '600' : '400' }}>{muscleGroupBox.name}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ paddingTop: 8 }}>
+                        <TouchableOpacity
+                            onPress={() => setShowIntensityBox(true)}
+                        >
+                            <View style={[styles.sortButtons, { backgroundColor: '#ff8787' }]}>
+                                <Text style={{ color: 'white', fontWeight: '600' }}>Muscle Intensity</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
