@@ -1,22 +1,17 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getEquipment } from '@/db/general/Equipment';
-import { getExercises, insertExercise } from '@/db/general/Exercises';
+//import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
+import { insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
 import { insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
+import { getExerciseData } from '@/utils/exerciseHelpers';
 import { getRoutineData } from '@/utils/routineHelpers';
 import { Exercise, MuscleGroup, Routine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
-/*
-
-
-
-import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
-
-*/
 
 interface User {
     id: number;
@@ -129,10 +124,6 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
 
     useEffect(() => {
         if (db) {
-            getExercises(db).then((data) => {
-                setExercises(data);
-                setIsLoading(false);
-            });
             getUserById(db, 1).then((data) => {
                 setUser(data);
             });
@@ -145,6 +136,17 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             getMuscles(db).then((data) => {
                 setMuscles(data);
             });
+        }
+    }, [db]);
+
+    useEffect(() => {
+        if (db) {
+            const fetchExercises = async () => {
+                const data = await getExerciseData(db);
+                setExercises(data || []);
+            }
+
+            fetchExercises();
         }
     }, [db]);
 

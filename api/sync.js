@@ -68,8 +68,8 @@ const syncExercises = async (db) => {
                 const muscleId = muscleMap.get(muscle.name);
                 if (muscleId) {
                     await insertExerciseMuscle(db, {
-                        exercise_id: exerciseId,
-                        muscle_id: muscleId,
+                        exerciseId: exerciseId,
+                        muscleId: muscleId,
                         intensity: muscle.value,
                     });
                 } else {
