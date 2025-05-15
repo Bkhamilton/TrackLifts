@@ -4,6 +4,7 @@ import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
+import { insertExerciseSet } from '@/db/user/ExerciseSets';
 import { insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
@@ -29,6 +30,7 @@ interface DBContextValue {
     muscleGroups: MuscleGroup[];
     routines: Routine[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
+    addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -45,6 +47,9 @@ export const DBContext = createContext<DBContextValue>({
     muscleGroups: [],
     routines: [],
     addExerciseToDB: async () => {
+        return undefined;
+    },
+    addRoutineToDB: async () => {
         return undefined;
     },
 });
@@ -111,13 +116,20 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
 
                 // For each exercise in the routine, insert a RoutineExercise entry
                 for (const exercise of routine.exercises) {
-                    await insertRoutineExercise(db, {
-                        routineId,
-                        exerciseId: exercise.id,
-                        sets: exercise.sets,
-                        reps: exercise.reps,
-                        weight: exercise.weight,
+                    const routineExerciseId = await insertRoutineExercise(db, {
+                        routine_id: routineId,
+                        exercise_id: exercise.id,
+                        sets: 1,
                     });
+
+                    // Add Default Set to ExerciseSets (routine_exercise_id, set_order, weight, reps, date)
+                    await insertExerciseSet(db, {
+                        routine_exercise_id: routineExerciseId,
+                        set_order: 1,
+                        weight: 0,
+                        reps: 8,
+                        date: new Date().toISOString(),
+                    })
                 }
 
                 // Update the routines state with the new routine, including the returned ID
@@ -125,6 +137,8 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                     ...prevRoutines,
                     { ...routine, id: routineId }, // Add the ID to the routine object
                 ]);
+
+                return routineId; // Return the ID of the newly inserted routine
             } catch (error) {
                 console.error('Error adding routine to DB:', error);
                 return undefined; // Return undefined in case of an error
@@ -181,6 +195,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         muscleGroups,
         routines,
         addExerciseToDB,
+        addRoutineToDB,
     };
 
     return (

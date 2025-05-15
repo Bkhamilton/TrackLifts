@@ -57,7 +57,6 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                                 ))}
                             </View>
                         )}
-
                         <View style={{ paddingTop: 16 }}>
                             <TouchableOpacity
                                 onPress={() => onDelete(exercise)}

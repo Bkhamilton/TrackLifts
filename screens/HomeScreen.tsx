@@ -17,6 +17,8 @@ import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
 
+    const { addRoutineToDB } = useContext(DBContext);
+
     const { 
         addRoutineModal,
         openAddRoutineModal,
@@ -43,7 +45,22 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
-        console.log('Add Routine:', routine);
+        const newRoutine = {
+            ...routine,
+            id: 0, // ID will be auto-incremented by the database
+        };
+        addRoutineToDB(newRoutine)
+            .then((id) => {
+                if (id) {
+                    console.log('Routine added with ID:', id);
+                } else {
+                    console.log('Failed to add routine');
+                }
+            })
+            .catch((error) => {
+                console.error('Error adding routine:', error);
+            });
+        closeAddRoutineModal();
     }
 
     const onStart = (routine: ActiveRoutine) => {
