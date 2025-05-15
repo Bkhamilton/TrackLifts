@@ -1,9 +1,10 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
-import { Muscle } from '@/utils/types'; // Assuming you have a Muscle type
+import { Muscle } from '@/utils/types';
 import Slider from '@react-native-community/slider';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { MuscleSelectionModal } from './MuscleSelectionModal'; // Import the new component
 
 interface MuscleIntensity {
     muscleId: number;
@@ -22,7 +23,7 @@ interface MuscleIntensityModalProps {
 export function MuscleIntensityModal({ visible, onSave, close, initialSelection = []}: MuscleIntensityModalProps) {
     const { muscles } = useContext(DBContext);
     const [selectedMuscles, setSelectedMuscles] = useState<MuscleIntensity[]>(initialSelection);
-    const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+    const [showMuscleSelection, setShowMuscleSelection] = useState(false);
 
     // Group muscles by their muscle group
     const groupedMuscles = muscles.reduce((acc, muscle) => {
@@ -49,13 +50,7 @@ export function MuscleIntensityModal({ visible, onSave, close, initialSelection 
                 groupName: muscle.muscleGroup || 'Other'
             }
         ]);
-    };
-
-    const toggleGroup = (groupName: string) => {
-        setExpandedGroups(prev => ({
-            ...prev,
-            [groupName]: !prev[groupName]
-        }));
+        setShowMuscleSelection(false);
     };
 
     const handleIntensityChange = (muscleId: number, value: number) => {
@@ -76,206 +71,195 @@ export function MuscleIntensityModal({ visible, onSave, close, initialSelection 
     };
 
     return (
-        <Modal
-            visible={visible}
-            transparent={true}
-            animationType='fade'
-            onRequestClose={close}
-        >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <Text style={styles.header}>Select Muscles & Intensities</Text>
-                    
-                    {/* Muscle Selection */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Available Muscles</Text>
-                        <FlatList
-                            data={Object.keys(groupedMuscles)}
-                            renderItem={({ item: groupName }) => (
-                                <View style={styles.groupContainer}>
-                                    <TouchableOpacity onPress={() => toggleGroup(groupName)}>
-                                        <View style={styles.groupHeader}>
-                                            <Text style={styles.groupName}>{groupName}</Text>
-                                            <Text>{expandedGroups[groupName] ? '−' : '+'}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    
-                                    {expandedGroups[groupName] && (
-                                        <View style={styles.musclesList}>
-                                            {groupedMuscles[groupName].map(muscle => (
-                                                <TouchableOpacity
-                                                    key={muscle.id}
-                                                    onPress={() => handleSelectMuscle(muscle)}
-                                                    disabled={selectedMuscles.some(m => m.muscleId === muscle.id)}
-                                                >
-                                                    <View style={[
-                                                        styles.muscleItem,
-                                                        selectedMuscles.some(m => m.muscleId === muscle.id) && styles.selectedMuscle
-                                                    ]}>
-                                                        <Text>{muscle.name}</Text>
+        <>
+            {/* Main Modal */}
+            <Modal
+                visible={visible && !showMuscleSelection}
+                transparent={true}
+                animationType='fade'
+                onRequestClose={close}
+            >
+                <View style={styles.modalBackdrop}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalPopup}>
+                            <Text style={styles.header}>Select Muscles & Intensities</Text>
+                            
+                            {/* Add Muscle Button */}
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowMuscleSelection(true);
+                                }}
+                                style={styles.addMuscleButton}
+                            >
+                                <Text style={styles.addMuscleButtonText}>+ Add Muscles</Text>
+                            </TouchableOpacity>
+
+                            {/* Selected Muscles with Intensity Sliders */}
+                            <View style={styles.section}>
+                                {selectedMuscles.length === 0 ? (
+                                    <Text style={styles.emptyText}>No muscles selected yet</Text>
+                                ) : (
+                                    <FlatList
+                                        data={selectedMuscles}
+                                        renderItem={({ item }) => (
+                                            <View style={styles.selectedMuscleContainer}>
+                                                <View style={styles.muscleHeader}>
+                                                    <View>
+                                                        <Text style={styles.muscleName}>{item.muscleName}</Text>
+                                                        <Text style={styles.groupNameSmall}>{item.groupName}</Text>
                                                     </View>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </View>
-                                    )}
-                                </View>
-                            )}
-                            keyExtractor={groupName => groupName}
-                            contentContainerStyle={styles.listContent}
-                        />
-                    </View>
-
-                    {/* Selected Muscles with Intensity Sliders */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Selected Muscles</Text>
-                        {selectedMuscles.length === 0 ? (
-                            <Text style={styles.emptyText}>No muscles selected</Text>
-                        ) : (
-                            <FlatList
-                                data={selectedMuscles}
-                                renderItem={({ item }) => (
-                                    <View style={styles.selectedMuscleContainer}>
-                                        <View style={styles.muscleHeader}>
-                                            <View>
-                                                <Text style={styles.muscleName}>{item.muscleName}</Text>
-                                                <Text style={styles.groupNameSmall}>{item.groupName}</Text>
+                                                    <TouchableOpacity 
+                                                        onPress={() => removeMuscle(item.muscleId)}
+                                                        style={styles.removeButton}
+                                                    >
+                                                        <Text style={styles.removeText}>✕</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={styles.sliderContainer}>
+                                                    <Slider
+                                                        style={styles.slider}
+                                                        minimumValue={0}
+                                                        maximumValue={1}
+                                                        step={0.1}
+                                                        value={item.intensity}
+                                                        onValueChange={(value) => handleIntensityChange(item.muscleId, value)}
+                                                        minimumTrackTintColor="#ff8787"
+                                                        maximumTrackTintColor="#D3D3D3"
+                                                        thumbTintColor="#ff8787"
+                                                    />
+                                                    <Text style={styles.intensityValue}>{item.intensity.toFixed(1)}</Text>
+                                                </View>
                                             </View>
-                                            <TouchableOpacity onPress={() => removeMuscle(item.muscleId)}>
-                                                <Text style={styles.removeText}>✕</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.sliderContainer}>
-                                            <Slider
-                                                minimumValue={0}
-                                                maximumValue={1}
-                                                step={0.1}
-                                                value={item.intensity}
-                                                onValueChange={(value) => handleIntensityChange(item.muscleId, value)}
-                                                minimumTrackTintColor="#007AFF"
-                                                maximumTrackTintColor="#D3D3D3"
-                                            />
-                                            <Text style={styles.intensityValue}>{item.intensity.toFixed(1)}</Text>
-                                        </View>
-                                    </View>
+                                        )}
+                                        keyExtractor={item => item.muscleId.toString()}
+                                    />
                                 )}
-                                keyExtractor={item => item.muscleId.toString()}
-                            />
-                        )}
-                    </View>
+                            </View>
 
-                    {/* Action Buttons */}
-                    <View style={styles.buttonRow}>
-                        <TouchableOpacity onPress={close} style={[styles.button, styles.cancelButton]}>
-                            <Text style={styles.buttonText}>Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            onPress={handleSave} 
-                            style={[styles.button, styles.saveButton]}
-                            disabled={selectedMuscles.length === 0}
-                        >
-                            <Text style={styles.buttonText}>Save</Text>
-                        </TouchableOpacity>
+                            {/* Action Buttons */}
+                            <View style={styles.buttonRow}>
+                                <TouchableOpacity 
+                                    onPress={close} 
+                                    style={[styles.button, styles.cancelButton]}
+                                >
+                                    <Text style={styles.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    onPress={handleSave} 
+                                    style={[styles.button, styles.saveButton]}
+                                    disabled={selectedMuscles.length === 0}
+                                >
+                                    <Text style={styles.buttonText}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
+
+            {/* Muscle Selection Modal */}
+            <MuscleSelectionModal
+                visible={showMuscleSelection}
+                groupedMuscles={groupedMuscles}
+                selectedMuscles={selectedMuscles}
+                onSelectMuscle={handleSelectMuscle}
+                onClose={() => setShowMuscleSelection(false)}
+            />
+        </>
     );
 }
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // Main Modal Styles
+    modalBackdrop: {
         flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    modalPopup: {
+    modalContainer: {
         width: '90%',
         maxHeight: '80%',
-        borderRadius: 10,
-        padding: 15,
+    },
+    modalPopup: {
+        borderRadius: 12,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     header: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 15,
         textAlign: 'center',
+        color: '#333',
+    },
+    addMuscleButton: {
+        backgroundColor: '#f0f0f0',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    addMuscleButtonText: {
+        color: '#ff8787',
+        fontWeight: '500',
     },
     section: {
         marginBottom: 15,
     },
-    sectionTitle: {
-        fontWeight: '600',
-        marginBottom: 8,
-    },
-    listContent: {
-        paddingBottom: 10,
-    },
-    groupContainer: {
-        marginBottom: 10,
-    },
-    groupHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 5,
-    },
-    groupName: {
-        fontWeight: '600',
-    },
-    groupNameSmall: {
-        fontSize: 12,
-        color: '#666',
-    },
-    musclesList: {
-        marginLeft: 10,
-        marginTop: 5,
-    },
-    muscleItem: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        marginBottom: 5,
-        borderRadius: 5,
-    },
-    selectedMuscle: {
-        backgroundColor: '#f0f0f0',
-        borderColor: '#aaa',
-    },
     selectedMuscleContainer: {
         marginBottom: 15,
         borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 5,
-        padding: 10,
+        borderColor: '#eee',
+        borderRadius: 8,
+        padding: 12,
     },
     muscleHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom: 10,
     },
     muscleName: {
         fontWeight: '500',
+        fontSize: 15,
+        color: '#333',
+    },
+    groupNameSmall: {
+        fontSize: 12,
+        color: '#666',
+    },
+    removeButton: {
+        padding: 4,
     },
     removeText: {
-        color: 'red',
+        color: '#ff4444',
         fontSize: 18,
     },
     sliderContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
+    slider: {
+        flex: 1,
+        height: 40,
+    },
     intensityValue: {
         width: 40,
-        textAlign: 'right',
+        textAlign: 'center',
         marginLeft: 10,
+        fontWeight: '600',
+        color: '#ff8787',
     },
     emptyText: {
         color: '#888',
         textAlign: 'center',
         padding: 10,
+        fontStyle: 'italic',
     },
     buttonRow: {
         flexDirection: 'row',
@@ -283,20 +267,81 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        minWidth: 100,
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
+        minWidth: 120,
         alignItems: 'center',
     },
     cancelButton: {
         backgroundColor: '#e0e0e0',
     },
     saveButton: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#ff8787',
     },
     buttonText: {
         color: 'white',
         fontWeight: '600',
+        fontSize: 16,
+    },
+
+    // Muscle Selection Modal Styles
+    muscleModalBackdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    muscleModalContainer: {
+        width: '90%',
+        maxHeight: '80%',
+    },
+    muscleModalPopup: {
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    muscleModalHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        textAlign: 'center',
+        color: '#333',
+    },
+    muscleGroupContainer: {
+        marginBottom: 15,
+    },
+    muscleGroupHeader: {
+        fontWeight: '600',
+        fontSize: 16,
+        color: '#444',
+        marginBottom: 8,
+        paddingLeft: 8,
+    },
+    muscleList: {
+        marginLeft: 8,
+    },
+    muscleItem: {
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        marginBottom: 8,
+        borderRadius: 6,
+        backgroundColor: '#f9f9f9',
+    },
+    selectedMuscle: {
+        backgroundColor: '#e0e0e0',
+        borderColor: '#aaa',
+    },
+    muscleItemText: {
+        color: '#333',
+    },
+    muscleListContent: {
+        paddingBottom: 10,
     },
 });

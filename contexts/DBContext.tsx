@@ -1,6 +1,6 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getEquipment } from '@/db/general/Equipment';
-//import { getExerciseMuscles } from '@/db/general/ExerciseMuscles';
+import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
@@ -76,6 +76,15 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             try {
                 // Insert the exercise into the database and get the inserted ID
                 const exerciseId = await insertExercise(db, exercise);
+
+                // For each muscle in the exercise, insert a ExerciseMuscles entry
+                for (const muscle of exercise.muscles) {
+                    await insertExerciseMuscle(db, {
+                        exerciseId,
+                        muscleId: muscle.id,
+                        intensity: muscle.intensity,
+                    });
+                }
     
                 // Update the exercises state with the new exercise, including the returned ID
                 setExercises((prevExercises) => [

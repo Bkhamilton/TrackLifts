@@ -40,8 +40,8 @@ export default function ExercisesScreen() {
         setSortedExercises(exercises); // Reset to original order
     }
 
-    const onAdd = async (exercise: { title: string, equipment: Equipment, muscleGroup: MuscleGroup }) => {
-        const { title, equipment, muscleGroup } = exercise;
+    const onAdd = async (exercise: { title: string, equipment: Equipment, muscleGroup: MuscleGroup, muscleIntensities: any[] }) => {
+        const { title, equipment, muscleGroup, muscleIntensities } = exercise;
         const toAdd = {
             id: 0, // Temporary placeholder
             title: title,
@@ -49,6 +49,11 @@ export default function ExercisesScreen() {
             equipment: equipment.name,
             muscleGroupId: muscleGroup.id,
             muscleGroup: muscleGroup.name,
+            muscles: muscleIntensities.map((muscle) => ({
+                id: muscle.id,
+                name: muscle.name,
+                intensity: muscle.intensity,
+            })),
         };
     
         try {

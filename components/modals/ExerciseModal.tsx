@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 import { Exercise } from '@/utils/types';
 import { Text, View } from '../Themed';
@@ -19,35 +19,42 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
             transparent = {true}
             animationType = 'fade'
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <TouchableOpacity
-                            onPress = {close}
-                        >
-                            <View>
-                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+            <TouchableWithoutFeedback onPress={close}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalPopup}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity
+                                onPress = {close}
+                            >
+                                <View>
+                                    <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                                </View>
+                            </TouchableOpacity>
+                            <View style={{ width: 275, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ fontWeight: '600', fontSize: 15 }}>{exercise.title} ({exercise.equipment})</Text>
                             </View>
-                        </TouchableOpacity>
-                        <View style={{ width: 275, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: '600', fontSize: 15 }}>{exercise.title} ({exercise.equipment})</Text>
+                        </View>
+                        <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
+                        <View style={{ paddingTop: 4 }}>
+                            <Text>{exercise.muscleGroup}</Text>
+                        </View>
+                        {
+                            exercise.muscles && (
+                                <Text>{JSON.stringify(exercise.muscles)}</Text>
+                            )
+                        }
+                        <View style={{ paddingTop: 16 }}>
+                            <TouchableOpacity
+                                onPress={() => onDelete(exercise)}
+                            >
+                                <View style={styles.deleteButton}>
+                                <Text style={styles.deleteButtonText}>Delete Exercise</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
-                    <View style={{ paddingTop: 4 }}>
-                        <Text>{exercise.muscleGroup}</Text>
-                    </View>
-                    <View style={{ top: '68%' }}>
-                        <TouchableOpacity
-                            onPress={() => onDelete(exercise)}
-                        >
-                            <View style={styles.deleteButton}>
-                            <Text style={styles.deleteButtonText}>Delete Exercise</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </Modal>
     );
 }
@@ -55,7 +62,7 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
 const styles = StyleSheet.create({
     modalPopup:{
         width: '90%',
-        height: '40%',
+        
         bottom: '5%',
         elevation: 20,
         borderRadius: 10,
@@ -80,7 +87,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff8787',
         alignItems: 'center',
         justifyContent: 'center',
-        top: '70%',
     },
     deleteButtonText: {
         fontSize: 14, 
