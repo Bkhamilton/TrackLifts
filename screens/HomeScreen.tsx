@@ -86,6 +86,11 @@ export default function HomeScreen() {
             <SettingsModal
                 visible={settingsModal}
                 close={closeSettingsModal}
+                onEditProfile={closeSettingsModal}
+                onEditGoals={closeSettingsModal}
+                onNotificationSettings={closeSettingsModal}
+                onAppearanceSettings={closeSettingsModal}
+                onPrivacySettings={closeSettingsModal}
             />
             <RoutineModal
                 visible={routineModal}

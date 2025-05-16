@@ -1,30 +1,131 @@
+import { Text, View } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-
-import { View } from '@/components/Themed';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SettingsModalProps {
     visible: boolean;
     close: () => void;
+    onEditProfile: () => void;
+    onEditGoals: () => void;
+    onNotificationSettings: () => void;
+    onAppearanceSettings: () => void;
+    onPrivacySettings: () => void;
 }
 
-export default function SettingsModal({ visible, close }: SettingsModalProps) {
+export default function SettingsModal({ 
+    visible, 
+    close, 
+    onEditProfile, 
+    onEditGoals,
+    onNotificationSettings,
+    onAppearanceSettings,
+    onPrivacySettings
+}: SettingsModalProps) {
     return (
         <Modal
-            visible = {visible}
-            transparent = {true}
-            animationType = 'fade'
+            visible={visible}
+            transparent={true}
+            animationType='fade'
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
-                    <TouchableOpacity
-                        onPress = {close}
-                    >
-                        <View>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>Settings</Text>
+                        <TouchableOpacity onPress={close} style={styles.closeButton}>
                             <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                        </TouchableOpacity>
+                    </View>
+
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {/* Profile Settings Section */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Profile Settings</Text>
+                            <TouchableOpacity 
+                                onPress={onEditProfile}
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="account" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Edit Profile Information</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                onPress={onEditGoals}
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="target" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Edit Fitness Goals</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
+
+                        {/* App Settings Section */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>App Settings</Text>
+                            <TouchableOpacity 
+                                onPress={onNotificationSettings}
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="bell" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Notification Settings</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                onPress={onAppearanceSettings}
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="palette" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Appearance</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Privacy & Security Section */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Privacy & Security</Text>
+                            <TouchableOpacity 
+                                onPress={onPrivacySettings}
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="lock" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Privacy Settings</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Other Actions Section */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>Actions</Text>
+                            <TouchableOpacity style={styles.settingButton}>
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="export" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Export Workout Data</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity style={styles.settingButton}>
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="help-circle" size={20} color="#007AFF" />
+                                    <Text style={styles.buttonText}>Help & Support</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
@@ -32,19 +133,64 @@ export default function SettingsModal({ visible, close }: SettingsModalProps) {
 }
 
 const styles = StyleSheet.create({
-    modalPopup:{
-        width: '90%',
-        height: '60%',
-        bottom: '5%',
-        elevation: 20,
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-    },
     modalContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalPopup: {
+        width: '90%',
+        height: '70%',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    headerText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    section: {
+        marginBottom: 25,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#555',
+        marginBottom: 12,
+        paddingLeft: 8,
+    },
+    settingButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 14,
+        paddingHorizontal: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    buttonText: {
+        fontSize: 16,
+        marginLeft: 12,
+        color: '#333',
     },
 });

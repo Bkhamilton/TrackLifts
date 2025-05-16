@@ -38,25 +38,29 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                         <View style={{ paddingTop: 4 }}>
                             <Text>{exercise.muscleGroup}</Text>
                         </View>
-                        { exercise.muscles && exercise.muscles.length > 0 && (
-                            <View style={styles.musclesContainer}>
-                                <Text style={styles.musclesHeader}>Muscle Intensities:</Text>
-                                {exercise.muscles.map((muscle, index) => (
-                                    <View key={`${muscle.muscle_id}-${index}`} style={styles.muscleRow}>
-                                        <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
-                                        <View style={styles.intensityBarContainer}>
-                                            <View 
-                                                style={[
-                                                    styles.intensityBar,
-                                                    { width: `${muscle.intensity * 100}%` }
-                                                ]}
-                                            />
-                                            <Text style={styles.intensityValue}>{(muscle.intensity * 100).toFixed(0)}%</Text>
-                                        </View>
-                                    </View>
-                                ))}
-                            </View>
-                        )}
+                        { 
+                            exercise.muscles && exercise.muscles.length > 0 && (
+                                <View style={styles.musclesContainer}>
+                                    <Text style={styles.musclesHeader}>Muscle Intensities:</Text>
+                                    { 
+                                        exercise.muscles.map((muscle, index) => (
+                                            <View key={`${muscle.muscle_id}-${index}`} style={styles.muscleRow}>
+                                                <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
+                                                <View style={styles.intensityBarContainer}>
+                                                    <View 
+                                                        style={[
+                                                            styles.intensityBar,
+                                                            { width: `${muscle.intensity * 100}%` }
+                                                        ]}
+                                                    />
+                                                    <Text style={styles.intensityValue}>{(muscle.intensity * 100).toFixed(0)}%</Text>
+                                                </View>
+                                            </View>
+                                        ))
+                                    }
+                                </View>
+                            )
+                        }
                         <View style={{ paddingTop: 16 }}>
                             <TouchableOpacity
                                 onPress={() => onDelete(exercise)}
