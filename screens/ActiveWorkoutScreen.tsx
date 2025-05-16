@@ -1,5 +1,5 @@
 import Workout from '@/components/NewWorkout/Workout';
-import { ScrollView, View } from '@/components/Themed';
+import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
@@ -12,7 +12,7 @@ export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
 
     const { exercises } = useContext(DBContext);
-    const { routine, addToRoutine } = useContext(ActiveWorkoutContext);
+    const { routine, addToRoutine, startTime } = useContext(ActiveWorkoutContext);
 
     const openModal = () => {
         setModal(true);
@@ -26,10 +26,23 @@ export default function NewWorkoutScreen() {
         closeModal();
     }
 
+    // function to format time elapsed from startTime to Date.now() into a HH:MM:SS format
+    const formatTime = (startTime: number) => {
+        const elapsed = Date.now() - startTime;
+        const seconds = Math.floor((elapsed / 1000) % 60);
+        const minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+        const hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
     return (
         <View style={styles.container}>
             <Title 
                 title={routine.title}
+                rightContent={
+                    <Text>{formatTime(startTime)}</Text>
+                }
             />
             <AddToWorkoutModal 
                 visible={modal} 
