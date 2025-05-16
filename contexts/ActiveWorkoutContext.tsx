@@ -10,6 +10,8 @@ interface ActiveWorkoutContextValue {
     addToRoutine: (exercise: Exercise) => void;
     isActiveWorkout: boolean;
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
+    startTime: number | null;
+    startWorkout: () => void;
     // activeWorkout: Workout | null;
     // setActiveWorkout: (workout: Workout) => void;
     // addExerciseToWorkout: (exercise: Exercise) => void;
@@ -43,6 +45,8 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     addToRoutine: () => {},
     isActiveWorkout: false,
     setIsActiveWorkout: () => {},
+    startTime: null,
+    startWorkout: () => {},
     // activeWorkout: null,
     // setActiveWorkout: () => {},
     // addExerciseToWorkout: () => {},
@@ -54,6 +58,8 @@ interface ActiveWorkoutContextValueProviderProps {
 }
 
 export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextValueProviderProps) => {
+
+    const [startTime, setStartTime] = useState<number | null>(null);
 
     const [routine, setRoutine] = useState<ActiveRoutine>({
         id: 0,
@@ -101,12 +107,20 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         }));
     };
 
+    const startWorkout = () => {
+        setIsActiveWorkout(true);
+        setStartTime(Date.now());
+        console.log('Workout started at:', startTime);
+    };
+
     const value = {
         routine,
         setRoutine,
         addToRoutine,
         isActiveWorkout,
         setIsActiveWorkout,
+        startTime,
+        startWorkout,
         // activeWorkout,
         // setActiveWorkout,
         // addExerciseToWorkout,

@@ -13,12 +13,12 @@ export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
 
     const { exercises } = useContext(DBContext);
-    const { routine, addToRoutine, setIsActiveWorkout } = useContext(ActiveWorkoutContext);
+    const { routine, addToRoutine, setIsActiveWorkout, startWorkout } = useContext(ActiveWorkoutContext);
 
     const router = useRouter();
 
-    const startWorkout = () => {
-        setIsActiveWorkout(true);
+    const onStartWorkout = () => {
+        startWorkout();
         router.push('/(tabs)/workout/activeWorkout');
     }
 
@@ -53,7 +53,7 @@ export default function NewWorkoutScreen() {
             </ScrollView>
             <TouchableOpacity
                 style={styles.startWorkoutButton}
-                onPress={startWorkout}
+                onPress={onStartWorkout}
             >
                 <View style={{ backgroundColor: 'transparent', alignItems: 'center' }}>
                     <Text style={styles.title}>Start Workout</Text>
