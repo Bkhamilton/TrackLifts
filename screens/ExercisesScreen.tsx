@@ -41,18 +41,21 @@ export default function ExercisesScreen() {
                 exercise={exercise} 
                 onDelete={closeExerciseModal}
             />
-            <View style={{ top:60 }}>
-                <Title title="Exercises"></Title>
-                <TouchableOpacity
-                    style = {styles.plusButton}
-                    onPress={openAddExerciseModal}
-                >
-                    <View>
-                        <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
-                    </View>  
-                </TouchableOpacity>
-            </View>
-            <View style={{ top: 60, paddingTop: 10 }}>
+            <Title 
+                title="Exercises"
+                rightContent={
+                    <View style={{ paddingRight: 12 }}>
+                        <TouchableOpacity
+                            onPress={openAddExerciseModal}
+                        >
+                            <View>
+                                <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
+                            </View>  
+                        </TouchableOpacity>
+                    </View>
+                }
+            />
+            <View style={{ paddingTop: 10 }}>
                 <ExerciseList 
                     exercises={sortedExercises} 
                     openModal={openExerciseModal}
@@ -68,10 +71,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-    },
-    plusButton: {
-        position: 'absolute',
-        right: 18,
     },
     title: {
         fontSize: 18,

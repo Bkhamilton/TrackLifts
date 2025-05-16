@@ -6,9 +6,9 @@ import { StyleSheet } from 'react-native';
 export default function DataScreen() {
     return (
         <View style={styles.container}>
-            <View style={{top:60}}>
-                <Title title="Data"></Title>
-            </View>
+            <Title 
+                title="Data"
+            />
             <View style={styles.scrollContainer}>
                 <GraphInfo/>
             </View>
@@ -17,12 +17,11 @@ export default function DataScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  scrollContainer: {
-    top: 60,
-    paddingTop: 10,
-  }
+    container: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    scrollContainer: {
+        paddingTop: 10,
+    }
 });

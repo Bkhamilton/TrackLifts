@@ -60,15 +60,15 @@ export default function HistoryScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={{top:60}}>
-                <Title title="History"></Title>
-            </View>
+            <Title 
+                title="History"
+            />
             <HistoryModal 
                 visible={showModal} 
                 close={closeModal} 
                 routine={routine}
             />
-            <ScrollView style={{ top: 60, paddingTop: 10 }}>
+            <ScrollView style={{ paddingTop: 10 }}>
                 <HistoryInfo 
                     open={openModal} 
                     data={data}

@@ -106,26 +106,20 @@ export default function HomeScreen() {
                     console.log('Delete Routine with ID:', id);
                 }}
             />
-            <View style={{top:60}}>
-                <Title title="TrackLifts"></Title>
-                <TouchableOpacity
-                    style = {styles.profileButton}
-                    onPress = {openProfileModal}
-                >
-                    <View>
-                        <Ionicons name="person" size={20} color="#ff8787" />
-                    </View>  
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style = {styles.settingsButton}
-                    onPress = {openSettingsModal}
-                >
-                    <View>
-                        <Ionicons name="settings" size={20} color="#ff8787" />
-                    </View>  
-                </TouchableOpacity>  
-            </View>
-            <ScrollView style={{top:60, paddingTop: 10}}>
+            <Title 
+                title="TrackLifts"
+                rightContent={
+                    <View style={styles.rightContent}>
+                        <TouchableOpacity onPress={openProfileModal}>
+                            <Ionicons name="person" size={20} color="#ff8787" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={openSettingsModal}>
+                            <Ionicons name="settings" size={20} color="#ff8787" />
+                        </TouchableOpacity>
+                    </View>                        
+                }
+            /> 
+            <ScrollView style={{ paddingTop: 10 }}>
                 <RoutineInfo 
                     close={closeRoutineModal} 
                     open={openRoutineModal} 
@@ -144,12 +138,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: StatusBar.currentHeight,
     },
-    profileButton: {
-        position: 'absolute',
-        right: 18,
-    },
-    settingsButton: {
-        position: 'absolute',
-        right: 45,
+    rightContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4, // Add spacing between the icons
     },  
 });

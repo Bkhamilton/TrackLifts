@@ -36,9 +36,9 @@ export default function NewWorkoutScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={{ paddingTop: 60 }}>
-                <Title title={routine.title}></Title>
-            </View>
+            <Title 
+                title={routine.title}
+            />
             <AddToWorkoutModal 
                 visible={modal} 
                 close={closeModal} 
