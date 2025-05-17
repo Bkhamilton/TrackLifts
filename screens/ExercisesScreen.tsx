@@ -44,7 +44,7 @@ export default function ExercisesScreen() {
             <Title 
                 title="Exercises"
                 rightContent={
-                    <View style={{ paddingRight: 12 }}>
+                    <View>
                         <TouchableOpacity
                             onPress={openAddExerciseModal}
                         >
