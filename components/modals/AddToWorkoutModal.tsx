@@ -5,43 +5,84 @@ import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 
+type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
 interface AddToWorkoutModalProps {
     visible: boolean;
     close: () => void;
     add: (props: Exercise) => void;
 }
 
+// Muscle group icons mapping
+const muscleGroupIcons = {
+    'Chest': 'weight-lifter',
+    'Back': 'human-handsup',
+    'Legs': 'human-male-height',
+    'Arms': 'arm-flex',
+    'Shoulders': 'human-male-height-variant',
+    'Core': 'human-queue',
+    'Full Body': 'human-greeting-variant',
+    // Add more muscle groups as needed
+};
+
 export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutModalProps) {
     const { exercises } = useContext(DBContext);
+
+    const getMuscleGroupIcon = (muscleGroup: string): IconName => {
+        return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
+    };
+
     return (
         <Modal
-            visible = {visible}
-            transparent = {true}
-            animationType = 'fade'
+            visible={visible}
+            transparent={true}
+            animationType='fade'
+            onRequestClose={close}
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <TouchableOpacity
-                        onPress = {close}
-                    >
-                        <View>
-                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                        </View>
-                    </TouchableOpacity>
+            <View style={styles.modalBackdrop}>
+                <View style={styles.modalContainer}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>Add Exercise</Text>
+                        <TouchableOpacity onPress={close} style={styles.closeButton}>
+                            <MaterialCommunityIcons name="close" size={24} color="#666" />
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Exercises List */}
                     <FlatList
                         data={exercises}
+                        keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <View style={{ paddingVertical: 4 }}>
-                                <TouchableOpacity
-                                    key={item.id}
-                                    onPress={() => add(item)}
-                                >
-                                    <View style={{ borderWidth: 1, paddingVertical: 4 }}>
-                                        <Text style={{ fontSize: 16 }}>{item.title} ({item.equipment})</Text>
+                            <TouchableOpacity
+                                style={styles.exerciseItem}
+                                onPress={() => add(item)}
+                            >
+                                <View style={styles.exerciseContent}>
+                                    <View style={styles.iconContainer}>
+                                        <MaterialCommunityIcons 
+                                            name={getMuscleGroupIcon(item.muscleGroup)} 
+                                            size={24} 
+                                            color="#ff8787" 
+                                        />
                                     </View>
-                                </TouchableOpacity>
-                            </View>
+                                    <View style={styles.exerciseInfo}>
+                                        <Text style={styles.exerciseName}>{item.title}</Text>
+                                        <View style={styles.exerciseMeta}>
+                                            <Text style={styles.equipmentText}>{item.equipment}</Text>
+                                            <Text style={styles.muscleGroupText}>{item.muscleGroup}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <MaterialCommunityIcons 
+                                    name="plus-circle" 
+                                    size={24} 
+                                    color="#ff8787" 
+                                />
+                            </TouchableOpacity>
                         )}
+                        ItemSeparatorComponent={() => <View style={styles.separator} />}
+                        contentContainerStyle={styles.listContent}
                     />
                 </View>
             </View>
@@ -50,19 +91,84 @@ export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutM
 }
 
 const styles = StyleSheet.create({
-    modalPopup:{
-        width: '90%',
-        height: '40%',
-        bottom: '5%',
-        elevation: 20,
-        borderRadius: 10,
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-    },
-    modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    modalBackdrop: {
         flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalContainer: {
+        width: '90%',
+        maxHeight: '70%',
+        borderRadius: 12,
+        padding: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    headerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    listContent: {
+        paddingBottom: 8,
+    },
+    exerciseItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 12,
+    },
+    exerciseContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
+    iconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#f0f7ff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    exerciseInfo: {
+        flex: 1,
+    },
+    exerciseName: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 4,
+    },
+    exerciseMeta: {
+        flexDirection: 'row',
+    },
+    equipmentText: {
+        fontSize: 13,
+        color: '#666',
+        marginRight: 8,
+    },
+    muscleGroupText: {
+        fontSize: 13,
+        color: '#ff8787',
+        fontWeight: '500',
+    },
+    separator: {
+        height: 1,
+        backgroundColor: '#f0f0f0',
     },
 });
