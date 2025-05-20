@@ -7,6 +7,7 @@ interface ActiveWorkoutContextValue {
     // For example:
     routine: ActiveRoutine;
     setRoutine: React.Dispatch<React.SetStateAction<ActiveRoutine>>;
+    updateRoutine: (routine: ActiveRoutine) => void;
     addToRoutine: (exercise: Exercise) => void;
     isActiveWorkout: boolean;
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,6 +43,7 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
         ],
     } as ActiveRoutine,
     setRoutine: () => {},
+    updateRoutine: () => {},
     addToRoutine: () => {},
     isActiveWorkout: false,
     setIsActiveWorkout: () => {},
@@ -86,6 +88,11 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
     const [isActiveWorkout, setIsActiveWorkout] = useState(false);
 
+    const updateRoutine = (updatedRoutine: ActiveRoutine) => {
+        setRoutine(updatedRoutine);
+        console.log('Updated routine:', updatedRoutine);
+    };
+
     const addToRoutine = (exercise: Exercise) => {
         const exerciseWithSets = {
             ...exercise,
@@ -116,6 +123,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     const value = {
         routine,
         setRoutine,
+        updateRoutine,
         addToRoutine,
         isActiveWorkout,
         setIsActiveWorkout,

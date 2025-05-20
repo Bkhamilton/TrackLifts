@@ -6,54 +6,42 @@ import WorkoutInfo from './WorkoutInfo';
 interface WorkoutProps {
     open: () => void;
     routine: ActiveRoutine;
+    onUpdateSet: (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => void;
+    onAddSet: (exerciseId: number) => void;
 }
 
-export default function Workout({ open, routine }: WorkoutProps) {
+export default function Workout({ open, routine, onUpdateSet, onAddSet }: WorkoutProps) {
     return (
-        <View style={{ width: 350 }}>
-            {
-                routine.exercises.map((type) => (
-                    <View style={{ paddingVertical: 2 }} key={type.id}>
-                        <WorkoutInfo
-                            exercise={type}
-                        />
-                    </View>
-                ))
-            }
-            <TouchableOpacity
-                style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-                onPress={open}
-            >
-                <View style={styles.workoutButton}>
-                    <Text style={styles.workoutButtonText}>Add Exercise</Text>
-                </View>
+        <View style={styles.container}>
+            {routine.exercises.map((exercise) => (
+                <WorkoutInfo
+                    key={exercise.id}
+                    exercise={exercise}
+                    onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
+                    onAddSet={() => onAddSet(exercise.id)}
+                />
+            ))}
+            <TouchableOpacity onPress={open} style={styles.addExerciseButton}>
+                <Text style={styles.addExerciseButtonText}>+ Add Exercise</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    workoutButton: {
+    container: {
         width: '100%',
-        top: 8,
-        height: 28,
-        borderRadius: 5,
-        backgroundColor: '#ff8787',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
-    workoutButtonText: {
-        fontSize: 12,
+    addExerciseButton: {
+        padding: 12,
+        backgroundColor: '#ff8787',
+        borderRadius: 8,
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    addExerciseButtonText: {
+        color: 'white',
         fontWeight: '600',
-    },
-    addSetButton: {
-        borderWidth: 1,
-        width: '100%',
-        alignItems: 'center',
-        borderRadius: 5,
-        backgroundColor: '#ff8787',
+        fontSize: 14,
     },
 });

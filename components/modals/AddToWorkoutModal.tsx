@@ -1,6 +1,7 @@
+import { DBContext } from '@/contexts/DBContext';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 
@@ -8,11 +9,10 @@ interface AddToWorkoutModalProps {
     visible: boolean;
     close: () => void;
     add: (props: Exercise) => void;
-    exercises: Exercise[];
 }
 
-export default function AddToWorkoutModal({ visible, close, add, exercises }: AddToWorkoutModalProps) {
-        
+export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutModalProps) {
+    const { exercises } = useContext(DBContext);
     return (
         <Modal
             visible = {visible}

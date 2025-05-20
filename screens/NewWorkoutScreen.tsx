@@ -3,17 +3,15 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { DBContext } from '@/contexts/DBContext';
-import { Exercise } from '@/utils/types';
+import { useWorkoutActions } from '@/hooks/useWorkoutActions';
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function NewWorkoutScreen() {
     const [modal, setModal] = useState(false);
-
-    const { exercises } = useContext(DBContext);
-    const { routine, addToRoutine, setIsActiveWorkout, startWorkout } = useContext(ActiveWorkoutContext);
+    const { routine, startWorkout } = useContext(ActiveWorkoutContext);
+    const { addExercise, updateSet, addSet } = useWorkoutActions();
 
     const router = useRouter();
 
@@ -29,11 +27,6 @@ export default function NewWorkoutScreen() {
         setModal(false);
     }
 
-    const addToWorkout = (exercise: Exercise) => {
-        addToRoutine(exercise);
-        closeModal();
-    }
-
     return (
         <View style={styles.container}>
             <Title 
@@ -42,13 +35,14 @@ export default function NewWorkoutScreen() {
             <AddToWorkoutModal 
                 visible={modal} 
                 close={closeModal} 
-                add={addToWorkout} 
-                exercises={exercises}
+                add={addExercise}
             />
             <ScrollView style={styles.scrollView}>
                 <Workout 
                     routine={routine} 
                     open={openModal}
+                    onUpdateSet={updateSet}
+                    onAddSet={addSet}
                 />
             </ScrollView>
             <TouchableOpacity
@@ -71,6 +65,7 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1, // Allow the ScrollView to take up available space
         marginBottom: 80, // Add space for the button
+        width: '100%', // Ensure the ScrollView takes the full width
     },
     startWorkoutButton: {
         position: 'absolute',
