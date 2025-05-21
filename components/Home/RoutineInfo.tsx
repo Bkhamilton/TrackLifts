@@ -16,9 +16,6 @@ interface RoutineInfoProps {
 export default function RoutineInfo({ close, open, openAddRoutine, routines, openRoutineOptions }: RoutineInfoProps) {
     return (
         <View style={styles.container}>
-            {/* SPLIT */}
-
-            {/* ROUTINES */}
             <View style={{ marginTop: 5 }}>
                 <Text
                     style={styles.getStartedText}

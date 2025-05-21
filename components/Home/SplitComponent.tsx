@@ -86,13 +86,14 @@ const styles = StyleSheet.create({
     },
     daysScrollContainer: {
         paddingBottom: 12,
+        marginLeft: 8,
     },
     dayPill: {
         paddingVertical: 6,
         paddingHorizontal: 12,
-        borderRadius: 20,
+        borderRadius: 12,
         backgroundColor: '#f0f0f0',
-        marginRight: 8,
+        marginRight: 4,
     },
     activeDayPill: {
         backgroundColor: '#ff8787',

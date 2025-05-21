@@ -14,6 +14,7 @@ const useHookHome = () => {
         title: 'Test Routine',
         exercises: []
     });
+    const [curDay, setDay] = useState("Arms");
 
     const openAddRoutineModal = () => setAddRoutineModal(true);
     const closeAddRoutineModal = () => setAddRoutineModal(false);
@@ -53,6 +54,8 @@ const useHookHome = () => {
         openRoutineOptionsModal,
         closeRoutineOptionsModal,
         routine,
+        curDay,
+        setDay,
     };
 };
 

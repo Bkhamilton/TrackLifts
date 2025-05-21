@@ -17,9 +17,6 @@ import React, { useContext } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
-
-    const [curDay, setDay] = React.useState("Arms");
-
     const { addRoutineToDB } = useContext(DBContext);
 
     const { 
@@ -39,6 +36,8 @@ export default function HomeScreen() {
         openRoutineOptionsModal,
         closeRoutineOptionsModal,
         routine,
+        curDay,
+        setDay,
     } = useHookHome();
 
     const { routines } = useContext(DBContext) 
