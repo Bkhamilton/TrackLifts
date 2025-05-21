@@ -22,20 +22,26 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
             <TouchableWithoutFeedback onPress={close}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalPopup}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TouchableOpacity
-                                onPress = {close}
-                            >
+                        <View style={[styles.row, styles.alignCenter]}>
+                            <TouchableOpacity onPress={close}>
                                 <View>
                                     <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
                                 </View>
                             </TouchableOpacity>
-                            <View style={{ width: 275, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ fontWeight: '600', fontSize: 15 }}>{exercise.title} ({exercise.equipment})</Text>
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.titleText}>{exercise.title} ({exercise.equipment})</Text>
                             </View>
                         </View>
                         <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
-                        <View style={{ paddingTop: 4 }}>
+                        <View style={styles.muscleDataContainer}>
+                            <View style={styles.flexCenter}>
+                                <Text style={styles.muscleDataText}>Muscles</Text>
+                            </View>
+                            <View style={styles.flexCenter}>
+                                <Text style={[styles.muscleDataText, styles.paddingLeft]}>Data</Text>
+                            </View>
+                        </View>
+                        <View style={styles.paddingTop}>
                             <Text>{exercise.muscleGroup}</Text>
                         </View>
                         { 
@@ -61,12 +67,10 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                                 </View>
                             )
                         }
-                        <View style={{ paddingTop: 16 }}>
-                            <TouchableOpacity
-                                onPress={() => onDelete(exercise)}
-                            >
+                        <View style={styles.paddingTopLarge}>
+                            <TouchableOpacity onPress={() => onDelete(exercise)}>
                                 <View style={styles.deleteButton}>
-                                <Text style={styles.deleteButtonText}>Delete Exercise</Text>
+                                    <Text style={styles.deleteButtonText}>Delete Exercise</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -80,7 +84,6 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
 const styles = StyleSheet.create({
     modalPopup:{
         width: '90%',
-        
         bottom: '5%',
         elevation: 20,
         borderRadius: 10,
@@ -145,5 +148,47 @@ const styles = StyleSheet.create({
     intensityValue: {
         position: 'absolute',
         right: 8,
+    },
+    row: {
+        flexDirection: 'row',
+    },
+    alignCenter: {
+        alignItems: 'center',
+    },
+    titleContainer: {
+        width: 275,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    titleText: {
+        fontWeight: '600',
+        fontSize: 15,
+    },
+    muscleDataContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#e3dada',
+        borderRadius: 5,
+        paddingVertical: 8,
+        marginHorizontal: '20%',
+    },
+    flexCenter: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    muscleDataText: {
+        fontWeight: '500',
+        fontSize: 15,
+    },
+    paddingLeft: {
+        paddingLeft: 8,
+    },
+    paddingTop: {
+        paddingTop: 4,
+    },
+    paddingTopLarge: {
+        paddingTop: 16,
     },
 });

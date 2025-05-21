@@ -77,14 +77,13 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 16,
-        width: 350,
+        paddingHorizontal: 16,
         height: '88%',
     },
     sortButtons: {
         width: 120,
         paddingHorizontal: 10,
-        paddingVertical: 5,
+        paddingVertical: 8,
         alignItems: 'center',
         borderRadius: 8,
         backgroundColor: '#ff8787'
@@ -93,9 +92,8 @@ const styles = StyleSheet.create({
         flexDirection: "row" , 
         marginLeft: 20, 
         justifyContent: 'space-evenly', 
-        paddingBottom: 9, 
+        paddingBottom: 4, 
         paddingTop: 3,
-        height: 40
     },
     exerciseListView: {
         flexDirection: 'row', 

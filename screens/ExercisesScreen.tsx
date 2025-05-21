@@ -55,7 +55,7 @@ export default function ExercisesScreen() {
                     </View>
                 }
             />
-            <View style={{ paddingTop: 10 }}>
+            <View style={{ paddingTop: 10, width: '100%' }}>
                 <ExerciseList 
                     exercises={sortedExercises} 
                     openModal={openExerciseModal}
