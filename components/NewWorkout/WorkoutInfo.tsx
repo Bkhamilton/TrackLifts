@@ -1,8 +1,8 @@
-import { Text, TextInput, View } from '@/components/Themed';
-import { ActiveExercise, ActiveSet } from '@/utils/types';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text, View } from '@/components/Themed';
+import { ActiveExercise } from '@/utils/types';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import SetCard from './SetCard';
 
 interface WorkoutInfoProps {
     exercise: ActiveExercise;
@@ -12,46 +12,6 @@ interface WorkoutInfoProps {
 
 export default function WorkoutInfo({ exercise, onUpdateSet, onAddSet }: WorkoutInfoProps) {
     const [editingSet, setEditingSet] = useState<number | null>(null);
-
-    function SetCard({ set }: { set: ActiveSet }) {
-        return (
-            <View style={styles.setContainer}>
-                <Text style={styles.setNumber}>#{set.set_order}</Text>
-                
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        value={set.weight.toString()}
-                        onChangeText={(value) => onUpdateSet(set.id, 'weight', value)}
-                        keyboardType="numeric"
-                        onFocus={() => setEditingSet(set.id)}
-                        onBlur={() => setEditingSet(null)}
-                    />
-                    <Text style={styles.unit}>kg</Text>
-                </View>
-                
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        value={set.reps.toString()}
-                        onChangeText={(value) => onUpdateSet(set.id, 'reps', value)}
-                        keyboardType="numeric"
-                        onFocus={() => setEditingSet(set.id)}
-                        onBlur={() => setEditingSet(null)}
-                    />
-                    <Text style={styles.unit}>reps</Text>
-                </View>
-
-                <View style={styles.checkContainer}>
-                    <MaterialCommunityIcons
-                        name={editingSet === set.id ? "pencil" : "check"}
-                        size={24}
-                        color={editingSet === set.id ? "#007AFF" : "green"}
-                    />
-                </View>
-            </View>
-        );
-    }
 
     return (
         <View style={styles.exerciseContainer}>
@@ -67,7 +27,13 @@ export default function WorkoutInfo({ exercise, onUpdateSet, onAddSet }: Workout
             
             {/* Sets List */}
             {exercise.sets.map((set) => (
-                <SetCard key={set.id} set={set} />
+                <SetCard 
+                    key={set.id} 
+                    set={set} 
+                    onUpdateSet={onUpdateSet} 
+                    editingSet={editingSet} 
+                    setEditingSet={setEditingSet} 
+                />
             ))}
             
             {/* Add Set Button */}
@@ -108,44 +74,6 @@ const styles = StyleSheet.create({
         color: '#666',
         flex: 1,
         textAlign: 'center',
-    },
-    setContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
-    },
-    setNumber: {
-        width: 40,
-        textAlign: 'center',
-        fontSize: 14,
-        color: '#555',
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 5,
-        padding: 6,
-        width: 60,
-        textAlign: 'center',
-        marginRight: 4,
-        backgroundColor: 'white',
-    },
-    unit: {
-        fontSize: 12,
-        color: '#777',
-    },
-    checkContainer: {
-        width: 24,
-        alignItems: 'center',
     },
     addSetButton: {
         marginTop: 10,
