@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1, // Allow the ScrollView to take up available space
-        marginBottom: 80, // Add space for the button
+        marginBottom: 83, // Add space for the button
         width: '100%', // Ensure the ScrollView takes the full width
     },
     endWorkoutButton: {

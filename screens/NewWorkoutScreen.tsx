@@ -31,6 +31,11 @@ export default function NewWorkoutScreen() {
         <View style={styles.container}>
             <Title 
                 title={routine.title}
+                rightContent={
+                    <TouchableOpacity onPress={onStartWorkout} style={styles.endWorkoutButton}>
+                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>START</Text>
+                    </TouchableOpacity>
+                }
             />
             <AddToWorkoutModal 
                 visible={modal} 
@@ -45,14 +50,6 @@ export default function NewWorkoutScreen() {
                     onAddSet={addSet}
                 />
             </ScrollView>
-            <TouchableOpacity
-                style={styles.startWorkoutButton}
-                onPress={onStartWorkout}
-            >
-                <View style={{ backgroundColor: 'transparent', alignItems: 'center' }}>
-                    <Text style={styles.title}>Start Workout</Text>
-                </View>
-            </TouchableOpacity>
         </View>
     );
 }
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1, // Allow the ScrollView to take up available space
-        marginBottom: 80, // Add space for the button
+        marginBottom: 83, // Add space for the button
         width: '100%', // Ensure the ScrollView takes the full width
     },
     startWorkoutButton: {
@@ -78,5 +75,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    endWorkoutButton: {
+        backgroundColor: '#ff8787',
+        paddingVertical: 8,
+        paddingHorizontal: 8,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
