@@ -1,13 +1,13 @@
 import { Text } from '@/components/Themed';
-import { Routine } from '@/utils/types';
+import { ActiveRoutine } from '@/utils/types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface RoutineCardProps {
-    routine: Routine;
-    open: (routine: Routine) => void;
-    openRoutineOptions: (routine: Routine) => void;
+    routine: ActiveRoutine;
+    open: (routine: ActiveRoutine) => void;
+    openRoutineOptions: (routine: ActiveRoutine) => void;
 }
 
 export default function RoutineCard({ routine, open, openRoutineOptions }: RoutineCardProps) {

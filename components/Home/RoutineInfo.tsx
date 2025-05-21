@@ -4,15 +4,15 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import split from '@/data/Split.json';
 
 import { Text, View } from '@/components/Themed';
-import { Routine } from '@/utils/types';
+import { ActiveRoutine } from '@/utils/types';
 import RoutineCard from './RoutineCard';
 
 interface RoutineInfoProps {
     close: () => void;
-    open: (routine: Routine) => void;
+    open: (routine: ActiveRoutine) => void;
     openAddRoutine: () => void;
-    routines: Routine[];
-    openRoutineOptions: (routine: Routine) => void;
+    routines: ActiveRoutine[];
+    openRoutineOptions: (routine: ActiveRoutine) => void;
 }
 
 export default function RoutineInfo({ close, open, openAddRoutine, routines, openRoutineOptions }: RoutineInfoProps) {
