@@ -79,7 +79,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         reps: 0,
                         weight: 0,
                         restTime: 0,
-                        set_order: 0,
+                        set_order: 1,
                     },
                 ],
             },
@@ -90,7 +90,6 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
     const updateRoutine = (updatedRoutine: ActiveRoutine) => {
         setRoutine(updatedRoutine);
-        console.log('Updated routine:', updatedRoutine);
     };
 
     const addToRoutine = (exercise: Exercise) => {
@@ -102,11 +101,10 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                     reps: 10, // Default reps
                     weight: 0, // Default weight
                     restTime: 60, // Default rest time in seconds
-                    set_order: routine.exercises.length + 1, // Set the order based on the current number of exercises
+                    set_order: 1, // Set the order to 1
                 },
             ],
         };
-        console.log('Adding exercise to routine:', exerciseWithSets);
     
         setRoutine((prevRoutine) => ({
             ...prevRoutine,
@@ -117,7 +115,6 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     const startWorkout = () => {
         setIsActiveWorkout(true);
         setStartTime(Date.now());
-        console.log('Workout started at:', startTime);
     };
 
     const value = {
