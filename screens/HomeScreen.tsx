@@ -1,4 +1,5 @@
 import RoutineInfo from '@/components/Home/RoutineInfo';
+import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import ProfileModal from '@/components/modals/ProfileModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
@@ -16,6 +17,8 @@ import React, { useContext } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
+
+    const [curDay, setDay] = React.useState("Arms");
 
     const { addRoutineToDB } = useContext(DBContext);
 
@@ -125,6 +128,11 @@ export default function HomeScreen() {
                 }
             /> 
             <ScrollView style={{ paddingTop: 10 }}>
+                <SplitComponent
+                    curDay={curDay} 
+                    setDay={setDay} 
+                    close={closeRoutineModal}
+                />
                 <RoutineInfo 
                     close={closeRoutineModal} 
                     open={openRoutineModal} 

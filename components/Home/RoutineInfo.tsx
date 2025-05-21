@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import split from '@/data/Split.json';
-
 import { Text, View } from '@/components/Themed';
 import { ActiveRoutine } from '@/utils/types';
 import RoutineCard from './RoutineCard';
@@ -16,35 +14,11 @@ interface RoutineInfoProps {
 }
 
 export default function RoutineInfo({ close, open, openAddRoutine, routines, openRoutineOptions }: RoutineInfoProps) {
-    const splitList = split.Split;
-    const [curDay, setDay] = React.useState("Arms");
-
-    function SplitList(props: { name: string; curDay: string }) {
-        return (
-            <View style={{ top: 3 }}>
-                <Text style={{ fontWeight: props.name === props.curDay ? 'bold' : 'normal', fontSize: 14 }}>{props.name}</Text>
-            </View>
-        );
-    }
-    const textInputComponents = splitList.map(type => <View key={type.key}><SplitList name={type.title} curDay={curDay} /></View>);
-
     return (
         <View style={styles.container}>
-            <View style={styles.splitTitle}>
-                <Text style={{ fontSize: 16, fontWeight: '500' }}>SPLIT: {textInputComponents}</Text>
-                <TouchableOpacity
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                    onPress={close}
-                >
-                    <View style={styles.workoutButton}>
-                        <Text style={styles.workoutButtonText}>Start New Workout: {curDay}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            {/* SPLIT */}
 
+            {/* ROUTINES */}
             <View style={{ marginTop: 5 }}>
                 <Text
                     style={styles.getStartedText}
@@ -86,29 +60,11 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         lineHeight: 24,
     },
-    splitTitle: {
-        width: '100%',
-        height: 75,
-    },
     separator: {
         marginVertical: 15,
         height: 1,
         width: 350,
         alignItems: 'center',
-    },
-    routineTitle: {
-        width: '100%',
-        paddingHorizontal: 5,
-        top: 30,
-        left: '3%',
-    },
-    titleText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    routineTitleText: {
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     workoutButton: {
         width: '100%',
@@ -122,20 +78,5 @@ const styles = StyleSheet.create({
     workoutButtonText: {
         fontSize: 12,
         fontWeight: '600',
-    },
-    modalPopup: {
-        width: '90%',
-        height: '70%',
-        bottom: '5%',
-        elevation: 20,
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-    },
-    modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });
