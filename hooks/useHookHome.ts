@@ -1,3 +1,4 @@
+import { ActiveRoutine } from '@/utils/types';
 import { useState } from 'react';
 
 const useHookHome = () => {
@@ -8,7 +9,7 @@ const useHookHome = () => {
     const [routineModal, setRoutineModal] = useState(false);
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
 
-    const [routine, setRoutine] = useState({
+    const [routine, setRoutine] = useState<ActiveRoutine>({
         id: 0,
         title: 'Test Routine',
         exercises: []
@@ -23,13 +24,13 @@ const useHookHome = () => {
     const openSettingsModal = () => setSettingsModal(true);
     const closeSettingsModal = () => setSettingsModal(false);
 
-    const openRoutineModal = (routine) => {
+    const openRoutineModal = (routine : ActiveRoutine) => {
         setRoutine(routine);
         setRoutineModal(true);
     }
     const closeRoutineModal = () => setRoutineModal(false);
 
-    const openRoutineOptionsModal = (routine) => {
+    const openRoutineOptionsModal = (routine: ActiveRoutine) => {
         setRoutine(routine);
         setRoutineOptionsModal(true);
     }
