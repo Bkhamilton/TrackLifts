@@ -38,7 +38,7 @@ export default function ActiveWorkoutScreen() {
                 leftContent={<Text>{formattedTime}</Text>}
                 rightContent={
                     <TouchableOpacity onPress={stopWorkout} style={styles.endWorkoutButton}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>DONE</Text>
+                        <Text style={styles.title}>DONE</Text>
                     </TouchableOpacity>
                 }
             />
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 'bold',
     },
 });

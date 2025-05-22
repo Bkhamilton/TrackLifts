@@ -33,7 +33,7 @@ export default function NewWorkoutScreen() {
                 title={routine.title}
                 rightContent={
                     <TouchableOpacity onPress={onStartWorkout} style={styles.endWorkoutButton}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>START</Text>
+                        <Text style={styles.title}>START</Text>
                     </TouchableOpacity>
                 }
             />
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 48,
     },
     title: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: 'bold',
     },
     endWorkoutButton: {

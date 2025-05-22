@@ -99,6 +99,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS Equipment;
         DROP TABLE IF EXISTS Muscles;
         DROP TABLE IF EXISTS MuscleGroups;
+        DROP TABLE IF EXISTS Splits;
     `);
 };
 
