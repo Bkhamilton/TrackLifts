@@ -16,10 +16,19 @@ export const insertRoutineExercise = async (db, routineExercise) => {
 export const getRoutineExercises = async (db, routineId) => {
     try {
         const query = `
-            SELECT re.*, e.title, eq.name as equipment
-            FROM RoutineExercises re
-            LEFT JOIN Exercises e ON re.exercise_id = e.id
-            LEFT JOIN Equipment eq ON e.equipment_id = eq.id
+            SELECT 
+                re.*, 
+                e.title, 
+                eq.name as equipment,
+                mg.name as muscleGroup
+            FROM 
+                RoutineExercises re
+            LEFT JOIN 
+                Exercises e ON re.exercise_id = e.id
+            LEFT JOIN 
+                Equipment eq ON e.equipment_id = eq.id
+            LEFT JOIN
+                MuscleGroups mg ON e.muscle_group_id = mg.id
             WHERE re.routine_id = ?`;
         const allRows = await db.getAllAsync(query, [routineId]);
         return allRows;
