@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/utils/types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface ExerciseListProps {
     exercises: Exercise[];
@@ -11,8 +11,25 @@ interface ExerciseListProps {
     clearSort: () => void;
 }
 
+type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+// Muscle group icons mapping (same as in your modal)
+const muscleGroupIcons = {
+    'Chest': 'weight-lifter',
+    'Back': 'human-handsup',
+    'Legs': 'human-male-height',
+    'Arms': 'arm-flex',
+    'Shoulders': 'human-male-height-variant',
+    'Core': 'human-queue',
+    'Full Body': 'human-greeting-variant',
+};
+
 export default function ExerciseList({ exercises, openModal, sortList, clearSort }: ExerciseListProps) {
     const [selectedCriteria, setSelectedCriteria] = useState<string[]>([]);
+
+    const getMuscleGroupIcon = (muscleGroup: string): IconName => {
+        return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
+    };
 
     function toggleCriteria(criteria: string) {
         let updatedCriteria = [...selectedCriteria];
@@ -55,21 +72,36 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
             </View>
             <FlatList
                 data={exercises}
+                contentContainerStyle={styles.listContent}
                 renderItem={({ item }) => (
-                    <View style={{ paddingVertical: 4 }}>
-                        <TouchableOpacity 
-                            key={item.id} 
-                            onPress={() => openModal(item)}
-                        >
-                            <View style={styles.exerciseListView}>
-                                <Text style={{ fontSize: 16 }}>{item.title} ({item.equipment})</Text>
-                                <View>
-                                    <Text style={{ fontWeight: '500', fontSize: 15 }}>{item.muscleGroup}</Text>
+                    <TouchableOpacity 
+                        style={styles.exerciseItem}
+                        onPress={() => openModal(item)}
+                    >
+                        <View style={styles.exerciseContent}>
+                            <View style={styles.iconContainer}>
+                                <MaterialCommunityIcons 
+                                    name={getMuscleGroupIcon(item.muscleGroup)} 
+                                    size={24} 
+                                    color="#ff8787" 
+                                />
+                            </View>
+                            <View style={styles.exerciseInfo}>
+                                <Text style={styles.exerciseName}>{item.title}</Text>
+                                <View style={styles.exerciseMeta}>
+                                    <Text style={styles.equipmentText}>{item.equipment}</Text>
+                                    <Text style={styles.muscleGroupText}>{item.muscleGroup}</Text>
                                 </View>
                             </View>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                        <MaterialCommunityIcons 
+                            name="chevron-right" 
+                            size={24} 
+                            color="#ccc" 
+                        />
+                    </TouchableOpacity>
                 )}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
         </View>
     );
@@ -77,7 +109,7 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 8,
         height: '88%',
     },
     sortButtons: {
@@ -101,5 +133,55 @@ const styles = StyleSheet.create({
         paddingVertical: 4, 
         paddingHorizontal: 6, 
         justifyContent: 'space-between'
+    },
+    listContent: {
+        paddingBottom: 16,
+    },
+    exerciseItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 12,
+    },
+    exerciseContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
+    iconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#f0f7ff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    exerciseInfo: {
+        flex: 1,
+    },
+    exerciseName: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 4,
+    },
+    exerciseMeta: {
+        flexDirection: 'row',
+    },
+    equipmentText: {
+        fontSize: 13,
+        color: '#666',
+        marginRight: 8,
+    },
+    muscleGroupText: {
+        fontSize: 13,
+        color: '#ff8787',
+        fontWeight: '500',
+    },
+    separator: {
+        height: 1,
+        backgroundColor: '#f0f0f0',
+        marginLeft: 52, // icon width + marginRight
     },
 });
