@@ -1,7 +1,7 @@
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import Workout from '@/components/Workout/Workout';
+import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
 import { useWorkoutTimer } from '@/hooks/useWorkoutTimer';

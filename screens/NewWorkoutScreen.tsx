@@ -1,6 +1,6 @@
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import Workout from '@/components/Workout/Workout';
+import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
@@ -43,11 +43,9 @@ export default function NewWorkoutScreen() {
                 add={addExercise}
             />
             <ScrollView style={styles.scrollView}>
-                <Workout 
+                <WorkoutDisplay 
                     routine={routine} 
                     open={openModal}
-                    onUpdateSet={updateSet}
-                    onAddSet={addSet}
                 />
             </ScrollView>
         </View>
