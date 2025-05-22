@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff8787',
         borderRadius: 8,
         alignItems: 'center',
-        marginTop: 10,
     },
     addExerciseButtonText: {
         color: 'white',
