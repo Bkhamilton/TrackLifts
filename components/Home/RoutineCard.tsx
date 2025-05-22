@@ -13,8 +13,6 @@ interface RoutineCardProps {
 export default function RoutineCard({ routine, open, openRoutineOptions }: RoutineCardProps) {
     // Calculate total sets
     const totalSets = routine.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
-
-    console.log('Routine Exercises:', routine.exercises);
     
     // Get unique muscle groups
     const muscleGroups = [...new Set(routine.exercises.map(ex => ex.muscleGroup))];
