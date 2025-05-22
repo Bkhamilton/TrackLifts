@@ -3,7 +3,7 @@ import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, TextInput, View } from '../../Themed';
+import { ScrollView, Text, TextInput, View } from '../../Themed';
 import { ExerciseComponent } from './ExerciseComponent';
 import { NewExerciseModal } from './NewExerciseModal';
 
@@ -14,11 +14,9 @@ interface AddRoutineModalProps {
 }
 
 export default function AddRoutineModal({ visible, close, add }: AddRoutineModalProps) {
-    
-    const [newModal, setNewModal] = useState( false );
+    const [newModal, setNewModal] = useState(false);
     const [routineExercises, setRoutineExercises] = useState<Exercise[]>([]);
     const { exercises } = useContext(DBContext);
-
     const [title, setTitle] = useState("");
 
     function addRoutine() {
@@ -56,9 +54,9 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
 
     return (
         <Modal
-            visible = {visible}
-            transparent = {true}
-            animationType = 'fade'
+            visible={visible}
+            transparent={true}
+            animationType='fade'
         >
             <NewExerciseModal 
                 visible={newModal} 
@@ -66,59 +64,51 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                 onSelect={onSelect}
                 exercises={exercises}
             />
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <TouchableOpacity
-                            onPress = {closeMain}
-                        >
-                            <View>
-                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                            </View>
+            <View style={styles.modalBackdrop}>
+                <View style={styles.modalContainer}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <TouchableOpacity onPress={closeMain} style={styles.closeButton}>
+                            <MaterialCommunityIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>
-                            <View style={{ height: 24, paddingHorizontal: 6 }}>
-                                <Text style={{ fontSize: 17, fontWeight: '600' }}>New Routine</Text>
-                            </View>
-                        <TouchableOpacity
-                            onPress = {addRoutine}
-                        >
-                            <View>
-                                <Text style={{ color:'#ff8787' }}>ADD</Text>
-                            </View>
+                        <Text style={styles.headerText}>New Routine</Text>
+                        <TouchableOpacity onPress={addRoutine} style={styles.addButton}>
+                            <Text style={styles.addButtonText}>SAVE</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 10}}>
-                        <Text style={{fontWeight: '500', fontSize: 16}}>Title</Text>
-                        <View style={styles.headerContainer}>
-                            <TextInput
-                                style={styles.textInput}
-                                onChangeText={setTitle}
-                                value={title}
-                                placeholder="Title Here"
-                            ></TextInput>
-                        </View>
+
+                    {/* Title Input */}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>Routine Title</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={setTitle}
+                            value={title}
+                            placeholder="Enter routine name"
+                            placeholderTextColor="#999"
+                        />
                     </View>
-                    <View style={{paddingBottom: 20}}>
-                        {
-                            routineExercises.map(type => (
-                                <View style={{ paddingVertical: 2 }} key={type.id}>
-                                    <ExerciseComponent 
-                                        exercise={type} 
-                                        onRemove={remove} 
-                                    />
-                                </View>
+
+                    {/* Exercises List */}
+                    <ScrollView style={styles.exercisesContainer} contentContainerStyle={styles.exercisesContent}>
+                        {routineExercises.length > 0 ? (
+                            routineExercises.map((exercise) => (
+                                <ExerciseComponent 
+                                    key={exercise.id}
+                                    exercise={exercise} 
+                                    onRemove={remove} 
+                                />
                             ))
-                        }
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            onPress={addExerciseModal}
-                        >
-                            <View style={styles.addExerciseButton}>
-                                <Text style={{fontWeight: '500', fontSize: 16}}>Add Exercise</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                        ) : (
+                            <Text style={styles.emptyText}>No exercises added yet</Text>
+                        )}
+                    </ScrollView>
+
+                    {/* Add Exercise Button */}
+                    <TouchableOpacity onPress={addExerciseModal} style={styles.addExerciseButton}>
+                        <MaterialCommunityIcons name="plus" size={20} color="#ff8787" />
+                        <Text style={styles.addExerciseButtonText}>Add Exercise</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -126,34 +116,95 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
 }
 
 const styles = StyleSheet.create({
-    modalPopup:{
-        width: '90%',
-        bottom: '5%',
-        elevation: 20,
-        borderRadius: 10,
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-    },
-    modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    modalBackdrop: {
         flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    textInput: {
-        borderWidth: 1, 
-        height: 40, 
-        padding: 10,
+    modalContainer: {
+        width: '90%',
+        maxHeight: '80%',
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
-    headerContainer: {
-        width: '80%', 
-        paddingLeft: 10
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        paddingBottom: 12,
+    },
+    headerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    addButton: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 4,
+    },
+    addButtonText: {
+        color: '#ff8787',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    inputContainer: {
+        marginBottom: 16,
+    },
+    inputLabel: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#666',
+        marginBottom: 8,
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+        color: '#333',
+        backgroundColor: '#f9f9f9',
+    },
+    exercisesContainer: {
+        maxHeight: 200, // Set a maximum height for the exercises list
+        marginBottom: 16,
+    },
+    exercisesContent: {
+        paddingBottom: 8, // Optional: Add padding to the content inside the ScrollView
+    },
+    emptyText: {
+        textAlign: 'center',
+        color: '#999',
+        paddingVertical: 16,
     },
     addExerciseButton: {
-        borderWidth: 1, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        borderRadius: 4, 
-        paddingVertical: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 12,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#ff8787',
+        backgroundColor: '#fff5f5',
+    },
+    addExerciseButtonText: {
+        color: '#ff8787',
+        fontWeight: '600',
+        fontSize: 16,
+        marginLeft: 8,
     },
 });
