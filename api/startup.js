@@ -78,6 +78,12 @@ export const createUserTables = async (db) => {
             date DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (routine_exercise_id) REFERENCES RoutineExercises(id)
         );
+        CREATE TABLE IF NOT EXISTS Splits (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            routine_id INTEGER,
+            FOREIGN KEY (routine_id) REFERENCES Routines(id)
+        );
     `);
 }
 
