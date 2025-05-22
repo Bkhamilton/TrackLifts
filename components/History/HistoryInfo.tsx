@@ -13,12 +13,12 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
     return (
         <View style={styles.container}>
             <View>
-                <Text style={{ fontSize: 14, fontWeight: '800' }}>March 2022</Text>
+                <Text style={styles.titleText}>March 2022</Text>
             </View>
-            <View style={{ paddingTop: 10 }}>
+            <View style={styles.dataContainer}>
                 {
                     data.map(type => (
-                        <View style={{ paddingVertical: 2 }} key={type.id}>
+                        <View style={styles.historyCardContainer} key={type.id}>
                             <HistoryCard 
                                 history={type} 
                                 open={open} 
@@ -36,7 +36,13 @@ const styles = StyleSheet.create({
         width: 350,
     },
     titleText: {
-        fontSize: 18,
-        fontWeight: 'bold'
+        fontSize: 14,
+        fontWeight: '800'
+    },
+    dataContainer: {
+        paddingTop: 10
+    },
+    historyCardContainer: {
+        paddingVertical: 2,
     }
 });

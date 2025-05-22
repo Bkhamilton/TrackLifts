@@ -55,7 +55,7 @@ export default function ExercisesScreen() {
                     </View>
                 }
             />
-            <View style={{ paddingTop: 10, width: '100%' }}>
+            <View style={styles.exerciseContainer}>
                 <ExerciseList 
                     exercises={sortedExercises} 
                     openModal={openExerciseModal}
@@ -72,13 +72,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 20,
-        height: 1,
-        width: '90%',
-    },
+    exerciseContainer: {
+        width: '100%',
+        padding: 10,
+    }
 });
