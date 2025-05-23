@@ -1,5 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import { History } from '@/utils/types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -9,41 +10,118 @@ interface HistoryCardProps {
 }
 
 export default function HistoryCard({ history, open }: HistoryCardProps) {
-
     function convertTime(timeMin: string) {
-        let newTime;
-        if (parseInt(timeMin, 10) > 60) {
-            newTime = "" + (Math.floor(parseInt(timeMin, 10) / 60)) + "hr" + (parseInt(timeMin, 10) % 60) + "min";
-        } else {
-            newTime = "" + timeMin + "min";
+        const minutes = parseInt(timeMin, 10);
+        if (minutes > 60) {
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+            return `${hours}h ${remainingMinutes}m`;
         }
-        return newTime;
+        return `${minutes}m`;
     }
-    
+
+    function formatDate(dateString: string) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
     return (
-        <View>
-            <TouchableOpacity
-                onPress={() => open(history)}
-            >
-                <View style={styles.historyModal}>
-                    <Text>{history.date}</Text>
-                    <Text style={{ fontWeight: '500' }}> {history.routine.title}</Text>
-                    <Text> {convertTime(history.lengthMin)}</Text>
-                    <Text> {history.totalWeight}lbs</Text>
+        <TouchableOpacity onPress={() => open(history)}>
+            <View style={styles.cardContainer}>
+                <View style={styles.dateContainer}>
+                    <Text style={styles.dateText}>{formatDate(history.date)}</Text>
                 </View>
-            </TouchableOpacity>
-        </View>
+                
+                <View style={styles.contentContainer}>
+                    <Text style={styles.routineTitle}>{history.routine.title}</Text>
+                    
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statItem}>
+                            <MaterialCommunityIcons 
+                                name="clock-outline" 
+                                size={16} 
+                                color="#ff8787" 
+                                style={styles.icon}
+                            />
+                            <Text style={styles.statText}>{convertTime(history.lengthMin)}</Text>
+                        </View>
+                        
+                        <View style={styles.statItem}>
+                            <MaterialCommunityIcons 
+                                name="weight-kilogram" 
+                                size={16} 
+                                color="#ff8787" 
+                                style={styles.icon}
+                            />
+                            <Text style={styles.statText}>{history.totalWeight} lbs</Text>
+                        </View>
+                    </View>
+                </View>
+                
+                <MaterialCommunityIcons 
+                    name="chevron-right" 
+                    size={20} 
+                    color="#ccc" 
+                />
+            </View>
+        </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
-    historyModal: {
-        width: '100%',
-        borderWidth: 1,
+    cardContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 4,
-        paddingVertical: 10
-    }
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    dateContainer: {
+        backgroundColor: '#ff8787',
+        borderRadius: 6,
+        paddingVertical: 6,
+        paddingHorizontal: 8,
+        marginRight: 12,
+        minWidth: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dateText: {
+        color: 'white',
+        fontWeight: '600',
+        fontSize: 12,
+    },
+    contentContainer: {
+        flex: 1,
+    },
+    routineTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 4,
+    },
+    statsContainer: {
+        flexDirection: 'row',
+    },
+    statItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 16,
+    },
+    icon: {
+        marginRight: 4,
+    },
+    statText: {
+        fontSize: 14,
+        color: '#666',
+    },
 });

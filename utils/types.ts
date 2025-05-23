@@ -10,14 +10,9 @@ export interface Exercise {
 export interface History {
     id: number;
     date: string;
-    routine: {
-        id: number;
-        title: string;
-        exercises: Exercise[];
-    };
+    routine: ActiveRoutine;
     lengthMin: string;
     totalWeight: number;
-    workout: any[];
 }
 
 export interface Routine {
