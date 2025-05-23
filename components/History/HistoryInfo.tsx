@@ -5,7 +5,7 @@ import { Text, View } from '../Themed';
 import HistoryCard from './HistoryCard';
 
 interface HistoryInfoProps {
-    open: (routine: any) => void;
+    open: (history: any) => void;
     data: History[];
 }
 

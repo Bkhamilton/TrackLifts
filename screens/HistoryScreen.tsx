@@ -8,11 +8,6 @@ import Title from '../components/Title';
 
 export default function HistoryScreen() {
     const [showModal, setShowModal] = React.useState(false)
-    const [routine, setRoutine] = React.useState({
-        id: 1,
-        title: "Routine 1",
-        exercises: []
-    })
     const [history, setHistory] = React.useState({
         id: 1,
         date: "03/11/2022",
@@ -65,7 +60,7 @@ export default function HistoryScreen() {
         setShowModal(false)
     }
 
-    function openModal({ history }: { history: any }) {
+    function openModal(history: any) {
         setHistory(history);
         setShowModal(true);
     }

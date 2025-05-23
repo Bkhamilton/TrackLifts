@@ -19,7 +19,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
         }
         return newTime;
     }
-
+    
     return (
         <View>
             <TouchableOpacity
