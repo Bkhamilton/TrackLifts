@@ -13,6 +13,18 @@ export default function HistoryScreen() {
         title: "Routine 1",
         exercises: []
     })
+    const [history, setHistory] = React.useState({
+        id: 1,
+        date: "03/11/2022",
+        routine: {
+            id: 1,
+            title: "Routine 1",
+            exercises: []
+        },
+        lengthMin: "89",
+        totalWeight: 15560,
+        workout: []
+    })
 
     const data = [{
         id: 1,
@@ -53,8 +65,8 @@ export default function HistoryScreen() {
         setShowModal(false)
     }
 
-    function openModal({ routine }: { routine: any }) {
-        setRoutine(routine);
+    function openModal({ history }: { history: any }) {
+        setHistory(history);
         setShowModal(true);
     }
 
@@ -66,7 +78,7 @@ export default function HistoryScreen() {
             <HistoryModal 
                 visible={showModal} 
                 close={closeModal} 
-                routine={routine}
+                history={history}
             />
             <ScrollView style={{ paddingTop: 10 }}>
                 <HistoryInfo 

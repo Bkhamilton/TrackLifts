@@ -7,14 +7,10 @@ import { Text, View } from '../Themed';
 interface HistoryModalProps {
     visible: boolean;
     close: () => void;
-    routine: {
-        id: number;
-        title: string;
-        exercises: any[];
-    };
+    history: any
 }
 
-export default function HistoryModal({ visible, close, routine } : HistoryModalProps) {
+export default function HistoryModal({ visible, close, history } : HistoryModalProps) {
     
     return (
         <Modal
@@ -32,7 +28,7 @@ export default function HistoryModal({ visible, close, routine } : HistoryModalP
                         </View>
                     </TouchableOpacity>
                     <Text>
-                        {JSON.stringify(routine)}
+                        {JSON.stringify(history)}
                     </Text>
                 </View>
             </View>

@@ -5,7 +5,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface HistoryCardProps {
     history: History;
-    open: (routine: any) => void;
+    open: (history: any) => void;
 }
 
 export default function HistoryCard({ history, open }: HistoryCardProps) {
@@ -23,7 +23,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
     return (
         <View>
             <TouchableOpacity
-                onPress={() => open(history.routine)}
+                onPress={() => open(history)}
             >
                 <View style={styles.historyModal}>
                     <Text>{history.date}</Text>
