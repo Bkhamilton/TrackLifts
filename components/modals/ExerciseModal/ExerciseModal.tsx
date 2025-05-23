@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Exercise } from '@/utils/types';
-import { Text, View } from '../Themed';
+import { Text, View } from '../../Themed';
+import DataTab from './DataTab';
+import MusclesTab from './MusclesTab';
 
 interface ExerciseModalProps {
     visible: boolean;
@@ -14,6 +16,15 @@ interface ExerciseModalProps {
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
     const [selectedTab, setSelectedTab] = useState<'Muscles' | 'Data'>('Muscles');
+
+    const renderTabContent = () => {
+        if (selectedTab === 'Muscles') {
+            return <MusclesTab exercise={exercise} />;
+        } else {
+            return <DataTab />;
+        }
+    };
+
     return (
         <Modal
             visible = {visible}
@@ -72,29 +83,9 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                     <View style={styles.paddingTop}>
                         <Text>{exercise.muscleGroup}</Text>
                     </View>
-                    { 
-                        exercise.muscles && exercise.muscles.length > 0 && (
-                            <View style={styles.musclesContainer}>
-                                <Text style={styles.musclesHeader}>Muscle Activation:</Text>
-                                { 
-                                    exercise.muscles.map((muscle, index) => (
-                                        <View key={`${muscle.muscle_id}-${index}`} style={styles.muscleRow}>
-                                            <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
-                                            <View style={styles.intensityBarContainer}>
-                                                <View 
-                                                    style={[
-                                                        styles.intensityBar,
-                                                        { width: `${muscle.intensity * 100}%` }
-                                                    ]}
-                                                />
-                                                <Text style={styles.intensityValue}>{(muscle.intensity * 100).toFixed(0)}%</Text>
-                                            </View>
-                                        </View>
-                                    ))
-                                }
-                            </View>
-                        )
-                    }
+                    <View style={styles.paddingTop}>
+                        {renderTabContent()}
+                    </View>
                     <View style={styles.paddingTopLarge}>
                         <TouchableOpacity onPress={() => onDelete(exercise)}>
                             <View style={styles.deleteButton}>
