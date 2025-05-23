@@ -1,10 +1,9 @@
+import { ScrollView, Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-
-import { ScrollView, Text, View } from '@/components/Themed';
-import { ActiveRoutine } from '@/utils/types';
-import ExerciseHeader from './ExerciseHeader'; // Import ExerciseHeader
+import ExerciseHeader from './ExerciseHeader';
 
 interface RoutineModalProps {
     visible: boolean;
@@ -16,48 +15,45 @@ interface RoutineModalProps {
 export default function RoutineModal({ visible, close, start, routine }: RoutineModalProps) {
     return (
         <Modal
-            visible = {visible}
-            transparent = {true}
-            animationType = 'fade'
+            visible={visible}
+            transparent={true}
+            animationType='fade'
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalPopup}>
-                    <ScrollView style={{ paddingVertical: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity
-                                onPress = {close}
-                            >
-                                <View>
-                                    <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ alignItems: 'center', marginBottom: 10 }}>
-                            <Text style={styles.titleText}>{routine.title}</Text>
-                        </View>
-                        <View>
-                            {
-                                routine.exercises.map((type, index) => (
-                                    <View style={{ paddingVertical: 2 }} key={index}>
-                                        <ExerciseHeader 
-                                            exercise = {type}
-                                        />
-                                    </View>
-                                ))
-                            }
-                            <TouchableOpacity
-                                style = {{
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                                onPress={() => start(routine)}
-                            >
-                                <View style = {styles.workoutButton}>
-                                    <Text style={styles.workoutButtonText}>GO</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+            <View style={styles.modalBackdrop}>
+                <View style={styles.modalContainer}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>{routine.title}</Text>
+                        <TouchableOpacity onPress={close} style={styles.closeButton}>
+                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Exercises List */}
+                    <ScrollView 
+                        style={styles.exercisesContainer}
+                        contentContainerStyle={styles.exercisesContent}
+                    >
+                        {routine.exercises.map((exercise) => (
+                            <ExerciseHeader 
+                                key={exercise.id}
+                                exercise={exercise}
+                            />
+                        ))}
                     </ScrollView>
+
+                    {/* Start Button */}
+                    <TouchableOpacity 
+                        onPress={() => start(routine)} 
+                        style={styles.startButton}
+                    >
+                        <Text style={styles.startButtonText}>Start Workout</Text>
+                        <MaterialCommunityIcons 
+                            name="arrow-right" 
+                            size={20} 
+                            color="white" 
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -65,38 +61,59 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
 }
 
 const styles = StyleSheet.create({
-    modalPopup:{
-        width: '90%',
-        bottom: '5%',
-        elevation: 20,
-        borderRadius: 4,
-        paddingHorizontal: 15,
+    modalBackdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '90%',
+        maxHeight: '80%',
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
-    workoutButton: {
-        width:'100%',
-        top: 8,
-        height: 28,
-        borderRadius: 5,
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        paddingBottom: 12,
+    },
+    headerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    exercisesContainer: {
+        marginBottom: 16,
+    },
+    exercisesContent: {
+        paddingBottom: 8,
+    },
+    startButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 14,
+        borderRadius: 8,
         backgroundColor: '#ff8787',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
-    workoutButtonText: {
-        fontSize: 12, 
+    startButtonText: {
+        color: 'white',
         fontWeight: '600',
+        fontSize: 16,
+        marginRight: 8,
     },
-    titleContainer: {
-        alignItems: 'center', 
-        marginBottom: 10
-    },
-    titleText: {
-        fontWeight: '500', 
-        fontSize: 15,
-    }
 });
