@@ -51,7 +51,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                         
                         <View style={styles.statItem}>
                             <MaterialCommunityIcons 
-                                name="weight-kilogram" 
+                                name="weight-pound" 
                                 size={16} 
                                 color="#ff8787" 
                                 style={styles.icon}

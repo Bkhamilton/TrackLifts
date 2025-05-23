@@ -71,7 +71,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                                 <Text style={styles.statText}>{history.lengthMin} min</Text>
                             </View>
                             <View style={styles.statItem}>
-                                <MaterialCommunityIcons name="weight-kilogram" size={20} color="#ff8787" />
+                                <MaterialCommunityIcons name="weight-pound" size={20} color="#ff8787" />
                                 <Text style={styles.statText}>{history.totalWeight} lbs</Text>
                             </View>
                         </View>
