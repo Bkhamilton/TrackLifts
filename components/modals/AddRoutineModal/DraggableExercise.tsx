@@ -1,7 +1,7 @@
 import { Exercise } from '@/utils/types';
 import React from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { runOnJS, SharedValue, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { runOnJS, SharedValue, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
 import { View } from '../../Themed';
 import { ExerciseComponent } from './ExerciseComponent';
 
@@ -28,15 +28,17 @@ export const DraggableExercise = ({
     onRemove: (exercise: Exercise) => void;
 }) => {
     const ITEM_HEIGHT = 60; // Fixed height for each item
-    const position = positions.value[index] || { y: index * ITEM_HEIGHT, originalIndex: index };
+    const position = useDerivedValue(() => {
+        return positions.value[index] || { y: index * ITEM_HEIGHT, originalIndex: index };
+    });
     const isActive = useSharedValue(false);
-    const translateY = useSharedValue(position.y);
-    const startY = useSharedValue(position.y);
+    const translateY = useSharedValue(position.value.y);
+    const startY = useSharedValue(position.value.y);
 
     const panGesture = Gesture.Pan()
         .onBegin(() => {
             isActive.value = true;
-            startY.value = position.y;
+            startY.value = position.value.y;
         })
         .onUpdate((event) => {
             translateY.value = startY.value + event.translationY;
@@ -50,8 +52,8 @@ export const DraggableExercise = ({
                 if (i !== index && Math.abs(translateY.value - newPositions[i].y) < ITEM_HEIGHT / 2) {
                     // Swap positions
                     const tempY = newPositions[i].y;
-                    newPositions[i].y = position.y;
-                    position.y = tempY;
+                    newPositions[i].y = position.value.y;
+                    position.value.y = tempY;
                     break;
                 }
             }
@@ -60,7 +62,7 @@ export const DraggableExercise = ({
         })
         .onEnd(() => {
             isActive.value = false;
-            translateY.value = withSpring(position.y);
+            translateY.value = withSpring(position.value.y);
             runOnJS(onDragEnd)();
         });
 
