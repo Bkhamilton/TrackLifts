@@ -76,12 +76,21 @@
                 ]
             },
             {
-                "title": "Calf Raise",
-                "equipment": "Barbell",
+                "title": "Calf Raises",
+                "equipment": "Machine",
                 "sets": [
                     { "weight": 100, "reps": 15, "order": 1 },
                     { "weight": 110, "reps": 12, "order": 2 },
                     { "weight": 120, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Leg Extension",
+                "equipment": "Machine",
+                "sets": [
+                    { "weight": 150, "reps": 10, "order": 1 },
+                    { "weight": 160, "reps": 8, "order": 2 },
+                    { "weight": 170, "reps": 6, "order": 3 }
                 ]
             }
         ]
