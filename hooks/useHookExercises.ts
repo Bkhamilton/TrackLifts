@@ -29,13 +29,6 @@ const useHookExercises = () => {
         setExerciseModal(true);
     }
     const closeExerciseModal = () => {
-        setExercise({
-            id: 0,
-            title: '',
-            equipment: '',
-            muscleGroup: '',
-            muscleGroupId: 0,
-        });
         setExerciseModal(false);
     }
 
