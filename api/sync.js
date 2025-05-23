@@ -2,6 +2,7 @@ import equipment from '@/data/Equipment.json';
 import exercises from '@/data/Exercises.json';
 import muscleGroups from '@/data/MuscleGroups.json';
 import muscles from '@/data/Muscles.json';
+import sampleRoutines from '@/data/SampleRoutines.json';
 import { insertEquipment } from '@/db/general/Equipment';
 import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { getExerciseIdByTitleAndEquipment, insertExercise } from '@/db/general/Exercises';
@@ -93,74 +94,6 @@ const syncExercises = async (db) => {
 };
 
 const syncRoutines = async (db) => {
-    // Create a few sample routines with sets and weights
-    const sampleRoutines = [
-        {
-            title: 'Full Body Workout',
-            exercises: [
-                {
-                    title: 'Squat',
-                    equipment: 'Barbell',
-                    sets: [
-                        { weight: 200, reps: 10, order: 1 },
-                        { weight: 210, reps: 8, order: 2 },
-                        { weight: 220, reps: 6, order: 3 },
-                    ],
-                },
-                {
-                    title: 'Bench Press',
-                    equipment: 'Barbell',
-                    sets: [
-                        { weight: 150, reps: 10, order: 1 },
-                        { weight: 160, reps: 8, order: 2 },
-                        { weight: 170, reps: 6, order: 3 },
-                    ],
-                },
-                {
-                    title: 'Deadlift',
-                    equipment: 'Barbell',
-                    sets: [
-                        { weight: 250, reps: 10, order: 1 },
-                        { weight: 260, reps: 8, order: 2 },
-                        { weight: 270, reps: 6, order: 3 },
-                    ],
-                },
-            ],
-        },
-        {
-            title: 'Upper Body Workout',
-            exercises: [
-                {
-                    title: 'Pull-Up',
-                    equipment: 'Bodyweight',
-                    sets: [
-                        { weight: 0, reps: 8, order: 1 },
-                        { weight: 0, reps: 8, order: 2 },
-                        { weight: 0, reps: 8, order: 3 },
-                    ],
-                },
-                {
-                    title: 'Shoulder Press',
-                    equipment: 'Dumbbell',
-                    sets: [
-                        { weight: 40, reps: 10, order: 1 },
-                        { weight: 45, reps: 8, order: 2 },
-                        { weight: 50, reps: 6, order: 3 },
-                    ],
-                },
-                {
-                    title: 'Incline Curl',
-                    equipment: 'Barbell',
-                    sets: [
-                        { weight: 30, reps: 12, order: 1 },
-                        { weight: 35, reps: 10, order: 2 },
-                        { weight: 40, reps: 8, order: 3 },
-                    ],
-                },
-            ],
-        },
-    ];
-
     // Insert sample routines, their exercises, and sets
     for (const routine of sampleRoutines) {
         const routineId = await insertRoutine(db, {

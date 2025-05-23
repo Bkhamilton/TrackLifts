@@ -1,0 +1,89 @@
+[
+    {
+        "title": "Full Body Workout",
+        "exercises": [
+            {
+                "title": "Squat",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 200, "reps": 10, "order": 1 },
+                    { "weight": 210, "reps": 8, "order": 2 },
+                    { "weight": 220, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 150, "reps": 10, "order": 1 },
+                    { "weight": 160, "reps": 8, "order": 2 },
+                    { "weight": 170, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Deadlift",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 250, "reps": 10, "order": 1 },
+                    { "weight": 260, "reps": 8, "order": 2 },
+                    { "weight": 270, "reps": 6, "order": 3 }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Upper Body Workout",
+        "exercises": [
+            {
+                "title": "Pull-Up",
+                "equipment": "Bodyweight",
+                "sets": [
+                    { "weight": 0, "reps": 8, "order": 1 },
+                    { "weight": 0, "reps": 8, "order": 2 },
+                    { "weight": 0, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Shoulder Press",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 40, "reps": 10, "order": 1 },
+                    { "weight": 45, "reps": 8, "order": 2 },
+                    { "weight": 50, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Incline Curl",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 30, "reps": 12, "order": 1 },
+                    { "weight": 35, "reps": 10, "order": 2 },
+                    { "weight": 40, "reps": 8, "order": 3 }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Legs",
+        "exercises": [
+            {
+                "title": "Leg Press",
+                "equipment": "Machine",
+                "sets": [
+                    { "weight": 300, "reps": 10, "order": 1 },
+                    { "weight": 320, "reps": 8, "order": 2 },
+                    { "weight": 340, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Calf Raise",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 100, "reps": 15, "order": 1 },
+                    { "weight": 110, "reps": 12, "order": 2 },
+                    { "weight": 120, "reps": 10, "order": 3 }
+                ]
+            }
+        ]
+    }
+]

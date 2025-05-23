@@ -206,5 +206,35 @@
             { "name": "Upper Back", "value": 0.5 }
         ],
         "equipment": "Barbell"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe0",
+        "title": "Leg Press",
+        "muscleGroup": "Legs",
+        "muscles": [
+            { "name": "Quads", "value": 1 },
+            { "name": "Glutes", "value": 0.8 },
+            { "name": "Hamstrings", "value": 0.5 }
+        ],
+        "equipment": "Machine"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe1",
+        "title": "Calf Raise",
+        "muscleGroup": "Legs",
+        "muscles": [
+            { "name": "Calves", "value": 1 }
+        ],
+        "equipment": "Machine"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe2",
+        "title": "Plank",
+        "muscleGroup": "Core",
+        "muscles": [
+            { "name": "Abs", "value": 1 },
+            { "name": "Obliques", "value": 0.5 }
+        ],
+        "equipment": "Bodyweight"
     }
 ]
