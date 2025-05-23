@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Exercise } from '@/utils/types';
 import { Text, View } from '../Themed';
@@ -13,70 +13,97 @@ interface ExerciseModalProps {
 }
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
+    const [selectedTab, setSelectedTab] = useState<'Muscles' | 'Data'>('Muscles');
     return (
         <Modal
             visible = {visible}
             transparent = {true}
             animationType = 'fade'
         >
-            <TouchableWithoutFeedback onPress={close}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalPopup}>
-                        <View style={[styles.row, styles.alignCenter]}>
-                            <TouchableOpacity onPress={close}>
-                                <View>
-                                    <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                                </View>
-                            </TouchableOpacity>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.titleText}>{exercise.title} ({exercise.equipment})</Text>
+            <View style={styles.modalContainer}>
+                <View style={styles.modalPopup}>
+                    <View style={[styles.row, styles.alignCenter]}>
+                        <TouchableOpacity onPress={close}>
+                            <View>
+                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
                             </View>
-                        </View>
-                        <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
-                        <View style={styles.muscleDataContainer}>
-                            <View style={styles.flexCenter}>
-                                <Text style={styles.muscleDataText}>Muscles</Text>
-                            </View>
-                            <View style={styles.flexCenter}>
-                                <Text style={[styles.muscleDataText, styles.paddingLeft]}>Data</Text>
-                            </View>
-                        </View>
-                        <View style={styles.paddingTop}>
-                            <Text>{exercise.muscleGroup}</Text>
-                        </View>
-                        { 
-                            exercise.muscles && exercise.muscles.length > 0 && (
-                                <View style={styles.musclesContainer}>
-                                    <Text style={styles.musclesHeader}>Muscle Intensities:</Text>
-                                    { 
-                                        exercise.muscles.map((muscle, index) => (
-                                            <View key={`${muscle.muscle_id}-${index}`} style={styles.muscleRow}>
-                                                <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
-                                                <View style={styles.intensityBarContainer}>
-                                                    <View 
-                                                        style={[
-                                                            styles.intensityBar,
-                                                            { width: `${muscle.intensity * 100}%` }
-                                                        ]}
-                                                    />
-                                                    <Text style={styles.intensityValue}>{(muscle.intensity * 100).toFixed(0)}%</Text>
-                                                </View>
-                                            </View>
-                                        ))
-                                    }
-                                </View>
-                            )
-                        }
-                        <View style={styles.paddingTopLarge}>
-                            <TouchableOpacity onPress={() => onDelete(exercise)}>
-                                <View style={styles.deleteButton}>
-                                    <Text style={styles.deleteButtonText}>Delete Exercise</Text>
-                                </View>
-                            </TouchableOpacity>
+                        </TouchableOpacity>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.titleText}>{exercise.title} ({exercise.equipment})</Text>
                         </View>
                     </View>
+                    <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
+                    <View style={styles.muscleDataContainer}>
+                        <TouchableOpacity
+                            style={[
+                                styles.flexCenter,
+                                styles.dataTypeButton,
+                                selectedTab === 'Muscles' && styles.selectedButton, // Highlight if selected
+                            ]}
+                            onPress={() => setSelectedTab('Muscles')} // Set tab to 'Muscles'
+                        >
+                            <Text
+                                style={[
+                                    styles.muscleDataText,
+                                    selectedTab === 'Muscles' && styles.selectedText, // Bold if selected
+                                ]}
+                            >
+                                Muscles
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[
+                                styles.flexCenter,
+                                styles.dataTypeButton,
+                                selectedTab === 'Data' && styles.selectedButton, // Highlight if selected
+                            ]}
+                            onPress={() => setSelectedTab('Data')} // Set tab to 'Data'
+                        >
+                            <Text
+                                style={[
+                                    styles.muscleDataText,
+                                    selectedTab === 'Data' && styles.selectedText, // Bold if selected
+                                ]}
+                            >
+                                Data
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.paddingTop}>
+                        <Text>{exercise.muscleGroup}</Text>
+                    </View>
+                    { 
+                        exercise.muscles && exercise.muscles.length > 0 && (
+                            <View style={styles.musclesContainer}>
+                                <Text style={styles.musclesHeader}>Muscle Activation:</Text>
+                                { 
+                                    exercise.muscles.map((muscle, index) => (
+                                        <View key={`${muscle.muscle_id}-${index}`} style={styles.muscleRow}>
+                                            <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
+                                            <View style={styles.intensityBarContainer}>
+                                                <View 
+                                                    style={[
+                                                        styles.intensityBar,
+                                                        { width: `${muscle.intensity * 100}%` }
+                                                    ]}
+                                                />
+                                                <Text style={styles.intensityValue}>{(muscle.intensity * 100).toFixed(0)}%</Text>
+                                            </View>
+                                        </View>
+                                    ))
+                                }
+                            </View>
+                        )
+                    }
+                    <View style={styles.paddingTopLarge}>
+                        <TouchableOpacity onPress={() => onDelete(exercise)}>
+                            <View style={styles.deleteButton}>
+                                <Text style={styles.deleteButtonText}>Delete Exercise</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </TouchableWithoutFeedback>
+            </View>
         </Modal>
     );
 }
@@ -171,12 +198,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#e3dada',
         borderRadius: 5,
-        paddingVertical: 8,
         marginHorizontal: '20%',
     },
     flexCenter: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     muscleDataText: {
         fontWeight: '500',
@@ -190,5 +217,16 @@ const styles = StyleSheet.create({
     },
     paddingTopLarge: {
         paddingTop: 16,
+    },
+    dataTypeButton: {
+        borderRadius: 5,
+        paddingVertical: 4,
+    },
+    selectedButton: {
+        backgroundColor: '#ff8787', // Highlighted background color
+    },
+    selectedText: {
+        fontWeight: 'bold', // Bold text for selected tab
+        color: 'white', // Optional: Change text color for better contrast
     },
 });
