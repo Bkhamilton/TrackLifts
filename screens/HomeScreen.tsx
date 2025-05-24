@@ -4,6 +4,7 @@ import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal
 import ProfileModal from '@/components/modals/ProfileModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
+import RoutinesModal from '@/components/modals/RoutinesModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -35,6 +36,9 @@ export default function HomeScreen() {
         routineOptionsModal,
         openRoutineOptionsModal,
         closeRoutineOptionsModal,
+        routinesModal,
+        openRoutinesModal,
+        closeRoutinesModal,
         routine,
         curDay,
         setDay,
@@ -111,6 +115,13 @@ export default function HomeScreen() {
                 routine={routine} 
                 onDelete={deleteRoutineFromDB}
             />
+            <RoutinesModal
+                visible={routinesModal}
+                onClose={closeRoutinesModal}
+                openRoutine={openRoutineModal}
+                openRoutineOptions={openRoutineOptionsModal}
+                favoriteRoutineIds={[1, 3]} // Example IDs
+            />
             <Title 
                 title="TrackLifts"
                 rightContent={
@@ -124,7 +135,7 @@ export default function HomeScreen() {
                     </View>                        
                 }
             /> 
-            <ScrollView style={{ paddingTop: 10 }}>
+            <ScrollView style={{ paddingTop: 10, marginBottom: 83 }}>
                 <SplitComponent
                     curDay={curDay} 
                     setDay={setDay} 
@@ -136,6 +147,7 @@ export default function HomeScreen() {
                     openAddRoutine={openAddRoutineModal} 
                     routines={routines} 
                     openRoutineOptions={openRoutineOptionsModal}
+                    openRoutinesModal={openRoutinesModal}
                 />
             </ScrollView>
         </View>

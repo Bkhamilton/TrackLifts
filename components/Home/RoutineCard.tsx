@@ -1,6 +1,6 @@
 import { Text } from '@/components/Themed';
 import { ActiveRoutine } from '@/utils/types';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -8,9 +8,10 @@ interface RoutineCardProps {
     routine: ActiveRoutine;
     open: (routine: ActiveRoutine) => void;
     openRoutineOptions: (routine: ActiveRoutine) => void;
+    isFavorite?: boolean;
 }
 
-export default function RoutineCard({ routine, open, openRoutineOptions }: RoutineCardProps) {
+export default function RoutineCard({ routine, open, openRoutineOptions, isFavorite = false }: RoutineCardProps) {
     // Calculate total sets
     const totalSets = routine.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
     
@@ -27,7 +28,17 @@ export default function RoutineCard({ routine, open, openRoutineOptions }: Routi
             >
                 <View style={styles.cardContent}>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>{routine.title}</Text>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>{routine.title}</Text>
+                            {isFavorite && (
+                                <MaterialCommunityIcons 
+                                    name="star" 
+                                    size={16} 
+                                    color="#ff8787" 
+                                    style={styles.favoriteIcon}
+                                />
+                            )}
+                        </View>
                         
                         <View style={styles.detailsContainer}>
                             <View style={styles.detailItem}>
@@ -117,5 +128,12 @@ const styles = StyleSheet.create({
     optionsButton: {
         padding: 8,
         marginLeft: 8,
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    favoriteIcon: {
+        marginLeft: 6,
     },
 });
