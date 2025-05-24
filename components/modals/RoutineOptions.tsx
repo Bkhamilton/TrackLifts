@@ -12,6 +12,12 @@ interface RoutineOptionsProps {
 }
 
 export default function RoutineOptions({ visible, close, routine, onDelete }: RoutineOptionsProps) {
+
+    const handleDelete = () => {
+        onDelete(routine.id);
+        close();
+    };
+
     return (
         <Modal
             visible = {visible}
@@ -35,7 +41,7 @@ export default function RoutineOptions({ visible, close, routine, onDelete }: Ro
                         </View>
                         <View>
                             <TouchableOpacity
-                                onPress={() => onDelete(routine.id)}
+                                onPress={handleDelete}
                             >
                                 <View style={styles.optionButtons}>
                                     <Text style={styles.optionText}>Delete Routine</Text>

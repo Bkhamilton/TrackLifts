@@ -25,6 +25,11 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
         }
     };
 
+    const handleDelete = () => {
+        onDelete(exercise.id);
+        close();
+    };
+
     return (
         <Modal
             visible = {visible}
@@ -87,7 +92,7 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                         {renderTabContent()}
                     </View>
                     <View style={styles.paddingTopLarge}>
-                        <TouchableOpacity onPress={() => onDelete(exercise.id)}>
+                        <TouchableOpacity onPress={handleDelete}>
                             <View style={styles.deleteButton}>
                                 <Text style={styles.deleteButtonText}>Delete Exercise</Text>
                             </View>
