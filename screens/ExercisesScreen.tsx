@@ -12,7 +12,7 @@ import Title from '../components/Title';
 
 export default function ExercisesScreen() {
     
-    const { exercises } = useContext(DBContext);
+    const { exercises, deleteExerciseFromDB } = useContext(DBContext);
     
     const {
         addExerciseModal,
@@ -39,7 +39,7 @@ export default function ExercisesScreen() {
                 visible={exerciseModal} 
                 close={closeExerciseModal} 
                 exercise={exercise} 
-                onDelete={closeExerciseModal}
+                onDelete={deleteExerciseFromDB}
             />
             <Title 
                 title="Exercises"

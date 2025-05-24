@@ -11,7 +11,7 @@ interface ExerciseModalProps {
     visible: boolean;
     close: () => void;
     exercise: Exercise;
-    onDelete: (exercise: Exercise) => void;
+    onDelete: (exerciseId: number) => void;
 }
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
@@ -87,7 +87,7 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                         {renderTabContent()}
                     </View>
                     <View style={styles.paddingTopLarge}>
-                        <TouchableOpacity onPress={() => onDelete(exercise)}>
+                        <TouchableOpacity onPress={() => onDelete(exercise.id)}>
                             <View style={styles.deleteButton}>
                                 <Text style={styles.deleteButtonText}>Delete Exercise</Text>
                             </View>

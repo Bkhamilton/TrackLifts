@@ -40,7 +40,7 @@ export default function HomeScreen() {
         setDay,
     } = useHookHome();
 
-    const { routines } = useContext(DBContext) 
+    const { routines, deleteRoutineFromDB } = useContext(DBContext) 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
@@ -109,9 +109,7 @@ export default function HomeScreen() {
                 visible={routineOptionsModal}
                 close={closeRoutineOptionsModal}
                 routine={routine} 
-                onDelete={(id) => {
-                    console.log('Delete Routine with ID:', id);
-                }}
+                onDelete={deleteRoutineFromDB}
             />
             <Title 
                 title="TrackLifts"
