@@ -1,0 +1,12 @@
+{
+    "name": "Weekly Cycle",
+    "routines": [
+        { "day": 1, "routine": "Push" },
+        { "day": 2, "routine": "Pull" },
+        { "day": 3, "routine": "Legs" },
+        { "day": 4, "routine": "Rest" },
+        { "day": 5, "routine": "Push" },
+        { "day": 6, "routine": "Pull" },
+        { "day": 7, "routine": "Legs" }
+    ]
+}

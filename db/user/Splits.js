@@ -2,8 +2,8 @@
 export const insertSplit = async (db, split) => {
     try {
         const result = await db.runAsync(
-            'INSERT INTO Splits (name, routine_id) VALUES (?, ?)',
-            [split.name, split.routine_id]
+            'INSERT INTO Splits (name, split_order, routine_id) VALUES (?, ?, ?)',
+            [split.name, split.split_order, split.routine_id]
         );
         return result.lastInsertRowId;
     } catch (error) {

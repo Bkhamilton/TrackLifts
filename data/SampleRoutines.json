@@ -95,4 +95,69 @@
             }
         ]
     }
+    ,
+    {
+        "title": "Push",
+        "exercises": [
+            {
+                "title": "Incline Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 140, "reps": 10, "order": 1 },
+                    { "weight": 150, "reps": 8, "order": 2 },
+                    { "weight": 160, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Shoulder Press",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 100, "reps": 10, "order": 1 },
+                    { "weight": 110, "reps": 8, "order": 2 },
+                    { "weight": 120, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Tricep Dips",
+                "equipment": "Bodyweight",
+                "sets": [
+                    { "weight": 0, "reps": 12, "order": 1 },
+                    { "weight": 0, "reps": 12, "order": 2 },
+                    { "weight": 0, "reps": 12, "order": 3 }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Pull",
+        "exercises": [
+            {
+                "title": "Barbell Row",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 160, "reps": 10, "order": 1 },
+                    { "weight": 170, "reps": 8, "order": 2 },
+                    { "weight": 180, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Pull-Up",
+                "equipment": "Bodyweight",
+                "sets": [
+                    { "weight": 0, "reps": 10, "order": 1 },
+                    { "weight": 0, "reps": 10, "order": 2 },
+                    { "weight": 0, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Face Pulls",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 50, "reps": 12, "order": 1 },
+                    { "weight": 55, "reps": 10, "order": 2 },
+                    { "weight": 60, "reps": 8, "order": 3 }
+                ]
+            }
+        ]
+    }
 ]

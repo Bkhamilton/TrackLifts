@@ -154,7 +154,7 @@
     },
     {
         "_id": "62db2b24ba5f437b00a54c6c",
-        "title": "Triceps Dip",
+        "title": "Tricep Dips",
         "muscleGroup": "Arms",
         "muscles": [
             { "name": "Triceps", "value": 1 },
@@ -236,5 +236,16 @@
             { "name": "Obliques", "value": 0.5 }
         ],
         "equipment": "Bodyweight"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe3",
+        "title": "Barbell Row",
+        "muscleGroup": "Back",
+        "muscles": [
+            { "name": "Lats", "value": 1 },
+            { "name": "Upper Back", "value": 0.7 },
+            { "name": "Biceps", "value": 0.5 }
+        ],
+        "equipment": "Barbell"
     }
 ]
