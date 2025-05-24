@@ -7,18 +7,16 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 interface ExerciseComponentProps {
     exercise: Exercise;
     onRemove: (exercise: Exercise) => void;
-    isDragging?: boolean;
 }
 
-export function ExerciseComponent({ exercise, onRemove, isDragging }: ExerciseComponentProps) {
+export function ExerciseComponent({ exercise, onRemove }: ExerciseComponentProps) {
     return (
         <View style={[
-            styles.container,
-            isDragging && styles.draggingContainer
+            styles.container
         ]}>
             <View style={styles.content}>
                 <MaterialCommunityIcons 
-                    name={isDragging ? "drag" : "dumbbell"} 
+                    name={"dumbbell"} 
                     size={20} 
                     color="#ff8787" 
                     style={styles.icon}

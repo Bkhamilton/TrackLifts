@@ -6,7 +6,7 @@ import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 import { Text, TextInput, View } from '../../Themed';
-import { DraggableExercise } from './DraggableExercise';
+import { ExerciseComponent } from './ExerciseComponent';
 import { NewExerciseModal } from './NewExerciseModal';
 
 interface AddRoutineModalProps {
@@ -133,14 +133,9 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                         <FlatList
                             data={routineExercises}
                             renderItem={({ item, index }) => (
-                                <DraggableExercise
+                                <ExerciseComponent
                                     key={item.id}
                                     exercise={item}
-                                    index={index}
-                                    positions={positions}
-                                    isDragging={isDragging}
-                                    onLongPress={handleLongPress}
-                                    onDragEnd={handleDragEnd}
                                     onRemove={remove}
                                 />
                             )}
@@ -226,10 +221,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
     },
     exercisesContainer: {
-        maxHeight: 200, // Set a maximum height for the exercises list
+        maxHeight: 240, // Set a maximum height for the exercises list
         marginBottom: 16,
     },
     exercisesContent: {
+        flexGrow: 1,
         paddingBottom: 8, // Optional: Add padding to the content inside the ScrollView
     },
     emptyText: {
