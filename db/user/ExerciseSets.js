@@ -78,3 +78,55 @@ export const deleteExerciseSet = async (db, id) => {
         throw error;
     }
 };
+
+export const deleteExerciseSetsByRoutineId = async (db, routineId) => {
+    try {
+        // Find all routine_exercise_ids associated with the given routineId
+        const routineExerciseIds = await db.getAllAsync(
+            'SELECT id FROM RoutineExercises WHERE routine_id = ?',
+            [routineId]
+        );
+
+        // Extract the IDs into an array
+        const ids = routineExerciseIds.map(row => row.id);
+
+        if (ids.length > 0) {
+            // Delete all ExerciseSets with matching routine_exercise_ids
+            await db.runAsync(
+                `DELETE FROM ExerciseSets WHERE routine_exercise_id IN (${ids.join(',')})`
+            );
+            console.log(`Deleted ExerciseSets for routineId: ${routineId}`);
+        } else {
+            console.log(`No ExerciseSets found for routineId: ${routineId}`);
+        }
+    } catch (error) {
+        console.error('Error deleting ExerciseSets by routineId:', error);
+        throw error;
+    }
+};
+
+export const deleteExerciseSetsByExerciseId = async (db, exerciseId) => {
+    try {
+        // Find all routine_exercise_ids associated with the given exerciseId
+        const routineExerciseIds = await db.getAllAsync(
+            'SELECT id FROM RoutineExercises WHERE exercise_id = ?',
+            [exerciseId]
+        );
+
+        // Extract the IDs into an array
+        const ids = routineExerciseIds.map(row => row.id);
+
+        if (ids.length > 0) {
+            // Delete all ExerciseSets with matching routine_exercise_ids
+            await db.runAsync(
+                `DELETE FROM ExerciseSets WHERE routine_exercise_id IN (${ids.join(',')})`
+            );
+            console.log(`Deleted ExerciseSets for exerciseId: ${exerciseId}`);
+        } else {
+            console.log(`No ExerciseSets found for exerciseId: ${exerciseId}`);
+        }
+    } catch (error) {
+        console.error('Error deleting ExerciseSets by exerciseId:', error);
+        throw error;
+    }
+};

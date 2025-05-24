@@ -1,12 +1,12 @@
 // app/contexts/BetContext/BetContext.tsx
 import { getEquipment } from '@/db/general/Equipment';
-import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
-import { insertExercise } from '@/db/general/Exercises';
+import { deleteExerciseMuscleByExerciseId, insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
+import { deleteExercise, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
-import { insertExerciseSet } from '@/db/user/ExerciseSets';
-import { insertRoutineExercise } from '@/db/user/RoutineExercises';
-import { insertRoutine } from '@/db/user/Routines';
+import { deleteExerciseSetsByExerciseId, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
+import { deleteRoutineExerciseByRoutineId, insertRoutineExercise } from '@/db/user/RoutineExercises';
+import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
 import { getExerciseData } from '@/utils/exerciseHelpers';
 import { getRoutineData } from '@/utils/routineHelpers';
@@ -31,6 +31,8 @@ interface DBContextValue {
     routines: ActiveRoutine[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
+    deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
+    deleteRoutineFromDB: (routineId: number) => Promise<void>;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -51,6 +53,12 @@ export const DBContext = createContext<DBContextValue>({
     },
     addRoutineToDB: async () => {
         return undefined;
+    },
+    deleteExerciseFromDB: async () => {
+        return;
+    },
+    deleteRoutineFromDB: async () => {
+        return;
     },
 });
 
@@ -148,6 +156,44 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         return undefined; // Return undefined if the database is not available
     }
 
+    const deleteExerciseFromDB = async (exerciseId: number): Promise<void> => {
+        if (db) {
+            try {
+                // Delete the exercise from the database
+                await deleteExercise(db, exerciseId);
+                // also delete the associated ExerciseMuscles and ExerciseSets entries
+                await deleteExerciseMuscleByExerciseId(db, exerciseId);
+                await deleteExerciseSetsByExerciseId(db, exerciseId);
+
+                // Update the exercises state to remove the deleted exercise
+                setExercises((prevExercises) =>
+                    prevExercises.filter((exercise) => exercise.id !== exerciseId)
+                );
+            } catch (error) {
+                console.error('Error deleting exercise from DB:', error);
+            }
+        }
+    }
+
+    const deleteRoutineFromDB = async (routineId: number): Promise<void> => {
+        if (db) {
+            try {
+                // Delete the routine from the database
+                await deleteRoutine(db, routineId);
+                // also delete the associated RoutineExercises and ExerciseSets entries
+                await deleteRoutineExerciseByRoutineId(db, routineId);
+                await deleteExerciseSetsByRoutineId(db, routineId);
+
+                // Update the routines state to remove the deleted routine
+                setRoutines((prevRoutines) =>
+                    prevRoutines.filter((routine) => routine.id !== routineId)
+                );
+            } catch (error) {
+                console.error('Error deleting routine from DB:', error);
+            }
+        }
+    }
+
     useEffect(() => {
         if (db) {
             getUserById(db, 1).then((data) => {
@@ -197,6 +243,8 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         routines,
         addExerciseToDB,
         addRoutineToDB,
+        deleteExerciseFromDB,
+        deleteRoutineFromDB,
     };
 
     return (

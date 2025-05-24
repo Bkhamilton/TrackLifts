@@ -67,9 +67,17 @@ export const updateRoutineExercise = async (db, routineId, exerciseId, updates) 
 export const deleteRoutineExercise = async (db, routineId, exerciseId) => {
     try {
         await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?', [routineId, exerciseId]);
-        console.log('Routine exercise deleted');
     } catch (error) {
         console.error('Error deleting routine exercise:', error);
         throw error;
     }
 };
+
+export const deleteRoutineExerciseByRoutineId = async (db, routineId) => {
+    try {
+        await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ?', [routineId]);
+    } catch (error) {
+        console.error('Error deleting routine exercises by routine ID:', error);
+        throw error;
+    }
+}

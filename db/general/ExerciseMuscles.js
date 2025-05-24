@@ -62,3 +62,15 @@ export const deleteExerciseMuscle = async (db, exerciseId, muscleId) => {
         throw error;
     }
 };
+
+export const deleteExerciseMuscleByExerciseId = async (db, exerciseId) => {
+    try {
+        await db.runAsync(
+            'DELETE FROM ExerciseMuscles WHERE exercise_id = ?',
+            [exerciseId]
+        );
+    } catch (error) {
+        console.error('Error deleting exercise muscle by exercise ID:', error);
+        throw error;
+    }
+}
