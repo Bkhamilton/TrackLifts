@@ -14,6 +14,7 @@ export default function ActiveWorkoutScreen() {
     const { routine, startTime, setIsActiveWorkout } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
+    const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
 
@@ -24,8 +25,22 @@ export default function ActiveWorkoutScreen() {
         setModal(false);
     };
 
+    const toggleSetComplete = (exerciseId: number, setId: number) => {
+        setCompletedSets(prev => {
+            if (prev.includes(setId)) {
+                return prev.filter(id => id !== setId);
+            } else {
+                return [...prev, setId];
+            }
+        });
+    };
+
+    // Calculate total sets and completed sets
+    const totalSets = routine.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
+    const allSetsCompleted = completedSets.length === totalSets;
+
     // Function to handle stopping the workout
-    const stopWorkout = () => {
+    const handleWorkoutAction = () => {
         stopTimer();
         setIsActiveWorkout(false);
         router.replace('/(tabs)/workout/newWorkout');
@@ -37,9 +52,23 @@ export default function ActiveWorkoutScreen() {
                 title={routine.title}
                 leftContent={<Text>{formattedTime}</Text>}
                 rightContent={
-                    <TouchableOpacity onPress={stopWorkout} style={styles.endWorkoutButton}>
-                        <Text style={styles.title}>DONE</Text>
-                    </TouchableOpacity>
+                    <TouchableOpacity 
+                    onPress={handleWorkoutAction} 
+                    style={[
+                        styles.workoutActionButton,
+                        allSetsCompleted ? styles.completeButton : styles.cancelButton
+                    ]}
+                >
+                    <Text 
+                        style={
+                            allSetsCompleted 
+                                ? styles.doneButtonText 
+                                : styles.cancelButtonText
+                        }
+                    >
+                        {allSetsCompleted ? 'DONE' : 'CANCEL'}
+                    </Text>
+                </TouchableOpacity>
                 }
             />
             <AddToWorkoutModal
@@ -53,6 +82,8 @@ export default function ActiveWorkoutScreen() {
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
+                    onToggleComplete={toggleSetComplete}
+                    completedSets={completedSets}
                 />
             </ScrollView>
         </View>
@@ -69,13 +100,28 @@ const styles = StyleSheet.create({
         marginBottom: 83, // Add space for the button
         width: '100%', // Ensure the ScrollView takes the full width
     },
-    endWorkoutButton: {
-        backgroundColor: '#ff8787',
+    workoutActionButton: {
         borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 12,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    completeButton: {
+        backgroundColor: '#4CAF50',
+    },
+    cancelButton: {
+        backgroundColor: '#ff8787',
+    },
+    doneButtonText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    cancelButtonText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontSize: 14,
     },
     title: {
         fontSize: 16,

@@ -1,5 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import { ActiveRoutine } from '@/utils/types';
+import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import WorkoutInfo from './WorkoutInfo';
 
@@ -8,9 +9,18 @@ interface WorkoutProps {
     routine: ActiveRoutine;
     onUpdateSet: (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => void;
     onAddSet: (exerciseId: number) => void;
+    onToggleComplete: (exerciseId: number, setId: number) => void;
+    completedSets: number[];
 }
 
-export default function Workout({ open, routine, onUpdateSet, onAddSet }: WorkoutProps) {
+export default function Workout({ 
+    open, 
+    routine, 
+    onUpdateSet, 
+    onAddSet, 
+    onToggleComplete,
+    completedSets
+}: WorkoutProps) {
     return (
         <View style={styles.container}>
             {routine.exercises.map((exercise) => (
@@ -19,6 +29,8 @@ export default function Workout({ open, routine, onUpdateSet, onAddSet }: Workou
                     exercise={exercise}
                     onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
                     onAddSet={() => onAddSet(exercise.id)}
+                    onToggleComplete={onToggleComplete}
+                    completedSets={completedSets}
                 />
             ))}
             <TouchableOpacity onPress={open} style={styles.addExerciseButton}>
@@ -42,5 +54,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '600',
         fontSize: 14,
+    },
+    completeButton: {
+        marginTop: 20,
+        padding: 16,
+        backgroundColor: '#4CAF50',
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    disabledButton: {
+        backgroundColor: '#cccccc',
+    },
+    completeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
 });
