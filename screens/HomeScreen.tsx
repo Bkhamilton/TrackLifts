@@ -113,13 +113,11 @@ export default function HomeScreen() {
                 visible={routineOptionsModal}
                 close={closeRoutineOptionsModal}
                 routine={routine} 
-                onDelete={deleteRoutineFromDB}
             />
             <RoutinesModal
                 visible={routinesModal}
                 onClose={closeRoutinesModal}
-                openRoutine={openRoutineModal}
-                openRoutineOptions={openRoutineOptionsModal}
+                onStart={onStart}
                 favoriteRoutineIds={[1, 3]} // Example IDs
             />
             <Title 

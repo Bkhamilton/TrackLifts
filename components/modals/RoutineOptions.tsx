@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
+import { DBContext } from '@/contexts/DBContext';
 import { Routine } from '@/utils/types';
 import { Text, View } from '../Themed';
 
@@ -8,13 +9,14 @@ interface RoutineOptionsProps {
     visible: boolean;
     close: () => void;
     routine: Routine;
-    onDelete: (id: number) => void;
 }
 
-export default function RoutineOptions({ visible, close, routine, onDelete }: RoutineOptionsProps) {
+export default function RoutineOptions({ visible, close, routine }: RoutineOptionsProps) {
+
+    const { deleteRoutineFromDB } = useContext(DBContext);
 
     const handleDelete = () => {
-        onDelete(routine.id);
+        deleteRoutineFromDB(routine.id);
         close();
     };
 

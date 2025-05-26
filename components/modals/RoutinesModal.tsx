@@ -1,27 +1,51 @@
 import { Text, View } from '@/components/Themed';
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import { useRouter } from 'expo-router';
+import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineCard from '../Home/RoutineCard';
+import RoutineModal from './RoutineModal/RoutineModal';
+import RoutineOptions from './RoutineOptions';
 
 interface RoutinesModalProps {
     visible: boolean;
     onClose: () => void;
-    openRoutine: (routine: ActiveRoutine) => void;
-    openRoutineOptions: (routine: ActiveRoutine) => void;
+    onStart: (routine: ActiveRoutine) => void;
     favoriteRoutineIds: number[];
 }
 
 export default function RoutinesModal({
     visible,
     onClose,
-    openRoutine,
-    openRoutineOptions,
+    onStart,
     favoriteRoutineIds
 }: RoutinesModalProps) {
-    const { routines } = React.useContext(DBContext);
+    const { routines } = useContext(DBContext);
+
+    const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+
+    const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
+    const [routineModal, setRoutineModal] = useState(false);
+
+    const router = useRouter();
+
+    const [routine, setSelectRoutine] = useState<ActiveRoutine>({
+        id: 0,
+        title: 'Test Routine',
+        exercises: []
+    });
+
+    const openRoutine = (routine: ActiveRoutine) => {
+        setSelectRoutine(routine);
+        setRoutineModal(true);
+    }
+    const openRoutineOptions = (routine: ActiveRoutine) => {
+        setSelectRoutine(routine);
+        setRoutineOptionsModal(true);
+    }
 
     return (
         <Modal
@@ -30,6 +54,17 @@ export default function RoutinesModal({
             animationType="slide"
             onRequestClose={onClose}
         >
+            <RoutineOptions
+                visible={routineOptionsModal}
+                close={() => setRoutineOptionsModal(false)}
+                routine={routine}
+            />
+            <RoutineModal
+                visible={routineModal}
+                close={() => setRoutineModal(false)}
+                start={() => onStart(routine)}
+                routine={routine}
+            />
             <View style={styles.modalContainer}>
                 {/* Header with close button */}
                 <View style={styles.header}>
@@ -108,6 +143,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
         paddingTop: 10,
+        backgroundColor: 'transparent'
     },
     title: {
         fontSize: 24,
@@ -138,6 +174,7 @@ const styles = StyleSheet.create({
     sectionHeader: {
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: 'transparent',
         marginBottom: 12,
         marginTop: 8,
     },
@@ -149,6 +186,7 @@ const styles = StyleSheet.create({
     },
     routineItem: {
         paddingVertical: 6,
+        backgroundColor: 'transparent',
     },
     listContent: {
         paddingBottom: 20,
