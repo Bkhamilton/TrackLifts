@@ -10,7 +10,7 @@ interface TitleProps {
 
 export default function Title({ title, leftContent, rightContent }: TitleProps) {
     return (
-        <View style={{ paddingTop: 60 }}>
+        <View style={styles.outerContainer}>
             <View style={styles.container}>
                 {/* Render leftContent */}
                 <View style={styles.leftContent}>
@@ -33,6 +33,9 @@ export default function Title({ title, leftContent, rightContent }: TitleProps) 
 }
 
 const styles = StyleSheet.create({
+    outerContainer: {
+        paddingTop: 60,
+    },
     container: {
         flexDirection: 'row',
         alignItems: 'center',
