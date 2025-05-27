@@ -6,16 +6,11 @@ import LottieView from 'lottie-react-native';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, TouchableOpacity } from 'react-native';
 
-interface FinishWorkoutParams {
-    routine: string; // JSON string of ActiveRoutine
-    totalTime: string;
-    totalWorkoutsCompleted: string;
-}
-
 export default function FinishWorkoutScreen() {
     const router = useRouter();
 
-    const { routine, totalTime } = useContext(ActiveWorkoutContext);
+    const { routine } = useContext(ActiveWorkoutContext);
+    const totalTime = '00:00:00'; // Placeholder, replace with actual time calculation logic
     const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
 
     // Calculate workout statistics

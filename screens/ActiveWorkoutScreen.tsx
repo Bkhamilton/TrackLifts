@@ -41,20 +41,19 @@ export default function ActiveWorkoutScreen() {
 
     // Function to handle stopping the workout
     const handleWorkoutAction = (isFinished: boolean) => {
+        stopTimer();
+        setIsActiveWorkout(false);
         if (isFinished) {
             // Save the workout to the database and update the current routine to match the completed workout
+            // save formattedTime            
             // saveWorkoutToDatabase(routine);
             // Display a success modal and navigate to the home page
             // openSuccessModal(routine, 'Workout completed successfully!');
-            stopTimer();
-            setIsActiveWorkout(false);
-            router.replace('/(tabs)');
+            router.replace('/finishWorkout')
         } else {
             // Return the user to the newWorkout page without saving
             // Reset the routine to its initial state
             resetRoutine();
-            stopTimer();
-            setIsActiveWorkout(false);
             router.replace('/(tabs)/workout/newWorkout');
         }
     };
