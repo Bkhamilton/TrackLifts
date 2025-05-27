@@ -40,12 +40,22 @@ export default function ActiveWorkoutScreen() {
     const allSetsCompleted = completedSets.length === totalSets;
 
     // Function to handle stopping the workout
-    const handleWorkoutAction = () => {
-        stopTimer();
-        setIsActiveWorkout(false);
-        router.replace('/(tabs)/workout/newWorkout');
+    const handleWorkoutAction = (isFinished: boolean) => {
+        if (isFinished) {
+            // Save the workout to the database and update the current routine to match the completed workout
+            // Display a success modal and navigate to the home page
+            stopTimer();
+            setIsActiveWorkout(false);
+            router.replace('/(tabs)');
+        } else {
+            // Return the user to the newWorkout page without saving
+            // Reset the routine to its initial state
+            stopTimer();
+            setIsActiveWorkout(false);
+            router.replace('/(tabs)/workout/newWorkout');
+        }
     };
-
+    
     return (
         <View style={styles.container}>
             <Title
@@ -53,22 +63,22 @@ export default function ActiveWorkoutScreen() {
                 leftContent={<Text>{formattedTime}</Text>}
                 rightContent={
                     <TouchableOpacity 
-                    onPress={handleWorkoutAction} 
-                    style={[
-                        styles.workoutActionButton,
-                        allSetsCompleted ? styles.completeButton : styles.cancelButton
-                    ]}
-                >
-                    <Text 
-                        style={
-                            allSetsCompleted 
-                                ? styles.doneButtonText 
-                                : styles.cancelButtonText
-                        }
+                        onPress={allSetsCompleted ? () => handleWorkoutAction(true) : () => handleWorkoutAction(false)} 
+                        style={[
+                            styles.workoutActionButton,
+                            allSetsCompleted ? styles.completeButton : styles.cancelButton
+                        ]}
                     >
-                        {allSetsCompleted ? 'DONE' : 'CANCEL'}
-                    </Text>
-                </TouchableOpacity>
+                        <Text 
+                            style={
+                                allSetsCompleted 
+                                    ? styles.doneButtonText 
+                                    : styles.cancelButtonText
+                            }
+                        >
+                            {allSetsCompleted ? 'DONE' : 'CANCEL'}
+                        </Text>
+                    </TouchableOpacity>
                 }
             />
             <AddToWorkoutModal
