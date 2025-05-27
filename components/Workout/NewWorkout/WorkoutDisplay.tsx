@@ -31,6 +31,13 @@ export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
                     ))}
                 </View>
             ))}
+            {
+                routine.exercises.length === 0 && (
+                    <Text style={{ textAlign: 'center', color: '#888', paddingVertical: 20 }}>
+                        No exercises added yet. Tap the button below to add your first exercise.
+                    </Text>
+                )
+            }
             <TouchableOpacity onPress={open} style={styles.addExerciseButton}>
                 <Text style={styles.addExerciseButtonText}>+ Add Exercise</Text>
             </TouchableOpacity>

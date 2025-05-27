@@ -48,3 +48,14 @@ export const fillExerciseData = async (db, exercises) => {
 
     return exercisesWithDetails; // Return the updated exercises array
 }
+
+export const updateRoutineData = async (db, routineId, updatedData) => {
+    // Need to update RoutineExercises and ExerciseSets based on updatedData
+    for (const exercise of updatedData.exercises) {
+        // Update each exercise in the routine
+        const exerciseId = exercise.id;
+        const sets = exercise.sets || [];
+
+    }
+    return updatedData;
+}
