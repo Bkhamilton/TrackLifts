@@ -1,21 +1,36 @@
 import { Text, View } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
 import sampleSplit from '@/data/SampleSplit.json';
+import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SplitComponentProps {
     curDay: { day: number; routine: string };
     setDay: (dayObj: { day: number; routine: string }) => void;
     close: () => void;
+    onStart: (routine: ActiveRoutine) => void;
 }
 
-export default function SplitComponent({ curDay, setDay, close }: SplitComponentProps) {
+export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
+
+    const { routines } = useContext(DBContext)
     // Get the unique routine names (excluding Rest)
     const uniqueDays = [...new Set(sampleSplit.routines
         .filter(routine => routine.routine !== "Rest")
         .map(routine => routine.routine)
     )];
+
+    const handleStartWorkout = (title: string) => {
+        const routine = routines.find(r => r.title === title);
+        if (routine) {
+            onStart(routine);
+            close();
+        } else {
+            console.error("Routine not found:", title);
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -64,7 +79,7 @@ export default function SplitComponent({ curDay, setDay, close }: SplitComponent
             {curDay.routine !== "Rest" && (
                 <TouchableOpacity
                     style={styles.startButton}
-                    onPress={close}
+                    onPress={() => handleStartWorkout(curDay.routine)}
                 >
                     <Text style={styles.startButtonText}>Start {curDay.routine} Workout</Text>
                     <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
