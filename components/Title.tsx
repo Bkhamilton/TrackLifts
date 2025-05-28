@@ -34,7 +34,7 @@ export default function Title({ title, leftContent, rightContent }: TitleProps) 
 
 const styles = StyleSheet.create({
     outerContainer: {
-        paddingTop: 60,
+        paddingTop: 48,
         alignItems: 'center',
         justifyContent: 'center',
     },
