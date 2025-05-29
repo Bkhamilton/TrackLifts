@@ -13,7 +13,7 @@ export const insertSplit = async (db, split) => {
 };
 
 // Function to get all splits for a user
-export const getSplitsByUserId = async (db, userId) => {
+export const getSplits = async (db, userId) => {
     try {
         const query = `
             SELECT 

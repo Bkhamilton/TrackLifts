@@ -13,7 +13,7 @@ export const insertSplitRoutine = async (db, splitRoutine) => {
 };
 
 // Function to get all SplitRoutines for a split
-export const getSplitRoutinesBySplitId = async (db, splitId) => {
+export const getSplitRoutines = async (db, splitId) => {
     try {
         const query = `
             SELECT 
