@@ -3,6 +3,7 @@ import exercises from '@/data/Exercises.json';
 import muscleGroups from '@/data/MuscleGroups.json';
 import muscles from '@/data/Muscles.json';
 import sampleRoutines from '@/data/SampleRoutines.json';
+import sampleSplit from '@/data/SampleSplit.json';
 import { insertEquipment } from '@/db/general/Equipment';
 import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { getExerciseIdByTitleAndEquipment, insertExercise } from '@/db/general/Exercises';
@@ -10,7 +11,9 @@ import { getMuscleGroupIdByName, insertMuscleGroup } from '@/db/general/MuscleGr
 import { insertMuscle } from '@/db/general/Muscles';
 import { insertExerciseSet } from '@/db/user/ExerciseSets';
 import { insertRoutineExercise } from '@/db/user/RoutineExercises';
-import { insertRoutine } from '@/db/user/Routines';
+import { getRoutineByTitle, insertRoutine } from '@/db/user/Routines';
+import { insertSplitRoutine } from '@/db/user/SplitRoutines';
+import { insertSplit } from '@/db/user/Splits';
 
 export const syncTables = async (db) => {
     await syncMuscleGroups(db);
@@ -18,6 +21,7 @@ export const syncTables = async (db) => {
     await syncEquipment(db);
     await syncExercises(db);
     await syncRoutines(db);
+    await syncSplits(db);
 }
 
 const syncMuscleGroups = async (db) => {
@@ -127,3 +131,28 @@ const syncRoutines = async (db) => {
         }
     }
 };
+
+const syncSplits = async (db) => {
+    // Insert sample split routines
+    const splitId = await insertSplit(db, {
+        title: sampleSplit.title,
+        user_id: 1
+    });
+
+    // Insert each routine in the split
+    for (const split of sampleSplit.routines) {
+        const routine = await getRoutineByTitle(db, split.title);
+        if (!routine) {
+            console.warn(`Routine "${split.title}" not found for split "${sampleSplit.title}"`);
+            continue;
+        }
+        await insertSplitRoutine(db, {
+            split_id: splitId,
+            split_order: split.day,
+            routine_id: routine.id,
+        });
+        
+        // You would need to implement the logic to handle the split routines
+        console.log(`Syncing split routine: ${split.title}`);
+    }
+}

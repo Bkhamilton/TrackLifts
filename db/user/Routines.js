@@ -38,6 +38,17 @@ export const getRoutineById = async (db, id) => {
     }
 };
 
+// Function to get routine by title
+export const getRoutineByTitle = async (db, title) => {
+    try {
+        const rows = await db.getAllAsync('SELECT * FROM Routines WHERE title = ?', [title]);
+        return rows[0];
+    } catch (error) {
+        console.error('Error getting routine by title:', error);
+        throw error;
+    }
+}
+
 // Function to update a routine by ID
 export const updateRoutine = async (db, routine) => {
     try {
