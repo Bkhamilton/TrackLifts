@@ -81,8 +81,15 @@ export const createUserTables = async (db) => {
         CREATE TABLE IF NOT EXISTS Splits (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            split_order TEXT NOT NULL,
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES Users(id)
+        );
+        CREATE TABLE IF NOT EXISTS SplitRoutines (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            split_id INTEGER,
+            split_order INTEGER NOT NULL,
             routine_id INTEGER,
+            FOREIGN KEY (split_id) REFERENCES Split(id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id)
         );
     `);

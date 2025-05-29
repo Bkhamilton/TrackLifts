@@ -18,8 +18,6 @@ import React, { useContext } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
-    const { addRoutineToDB } = useContext(DBContext);
-
     const { 
         addRoutineModal,
         openAddRoutineModal,
@@ -44,7 +42,7 @@ export default function HomeScreen() {
         setDay,
     } = useHookHome();
 
-    const { routines, deleteRoutineFromDB } = useContext(DBContext) 
+    const { routines, addRoutineToDB } = useContext(DBContext) 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 

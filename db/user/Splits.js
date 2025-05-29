@@ -2,8 +2,8 @@
 export const insertSplit = async (db, split) => {
     try {
         const result = await db.runAsync(
-            'INSERT INTO Splits (name, split_order, routine_id) VALUES (?, ?, ?)',
-            [split.name, split.split_order, split.routine_id]
+            'INSERT INTO Splits (name, user_id) VALUES (?, ?)',
+            [split.name, split.user_id]
         );
         return result.lastInsertRowId;
     } catch (error) {
@@ -17,32 +17,15 @@ export const getSplitsByUserId = async (db, userId) => {
     try {
         const query = `
             SELECT 
-                Splits.id, Splits.name, Splits.routine_id
+                Splits.id, Splits.name, Splits.user_id
             FROM 
                 Splits
-            JOIN 
-                Routines ON Splits.routine_id = Routines.id
             WHERE 
-                Routines.user_id = ?`;
+                Splits.user_id = ?`;
         const rows = await db.getAllAsync(query, [userId]);
         return rows;
     } catch (error) {
         console.error('Error getting splits by user ID:', error);
-        throw error;
-    }
-}
-
-// Function to get all splits for a routine
-export const getSplitsByRoutineId = async (db, routineId) => {
-    try {
-        const query = `
-            SELECT Splits.id, Splits.name, Splits.routine_id
-            FROM Splits
-            WHERE Splits.routine_id = ?`;
-        const rows = await db.getAllAsync(query, [routineId]);
-        return rows;
-    } catch (error) {
-        console.error('Error getting splits by routine ID:', error);
         throw error;
     }
 };
@@ -62,8 +45,8 @@ export const getSplitById = async (db, id) => {
 export const updateSplit = async (db, split) => {
     try {
         await db.runAsync(
-            'UPDATE Splits SET name = ?, routine_id = ? WHERE id = ?',
-            [split.name, split.routine_id, split.id]
+            'UPDATE Splits SET name = ?, user_id = ? WHERE id = ?',
+            [split.name, split.user_id, split.id]
         );
         console.log('Split updated');
     } catch (error) {
