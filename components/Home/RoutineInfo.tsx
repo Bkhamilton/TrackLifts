@@ -23,7 +23,7 @@ export default function RoutineInfo({
     openRoutinesModal 
 }: RoutineInfoProps) {
     // Hardcoded favorite routine IDs for now
-    const favoriteRoutineIds = [1, 3]; // Replace with your actual favorite IDs
+    const favoriteRoutineIds = [2, 3]; // Replace with your actual favorite IDs
     
     // Separate routines into favorites and others
     const favoriteRoutines = routines.filter(routine => 

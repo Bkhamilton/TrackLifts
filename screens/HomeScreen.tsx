@@ -116,7 +116,7 @@ export default function HomeScreen() {
                 visible={routinesModal}
                 onClose={closeRoutinesModal}
                 onStart={onStart}
-                favoriteRoutineIds={[1, 3]} // Example IDs
+                favoriteRoutineIds={[2, 3]} // Example IDs
             />
             <Title 
                 title="TrackLifts"

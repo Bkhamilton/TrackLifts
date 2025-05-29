@@ -89,7 +89,7 @@ export const createUserTables = async (db) => {
             split_id INTEGER,
             split_order INTEGER NOT NULL,
             routine_id INTEGER,
-            FOREIGN KEY (split_id) REFERENCES Split(id),
+            FOREIGN KEY (split_id) REFERENCES Splits(id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id)
         );
     `);

@@ -135,15 +135,15 @@ const syncRoutines = async (db) => {
 const syncSplits = async (db) => {
     // Insert sample split routines
     const splitId = await insertSplit(db, {
-        title: sampleSplit.title,
+        name: sampleSplit.name,
         user_id: 1
     });
 
     // Insert each routine in the split
     for (const split of sampleSplit.routines) {
-        const routine = await getRoutineByTitle(db, split.title);
+        const routine = await getRoutineByTitle(db, split.routine);
         if (!routine) {
-            console.warn(`Routine "${split.title}" not found for split "${sampleSplit.title}"`);
+            console.warn(`Routine "${split.routine}" not found for split "${sampleSplit.name}"`);
             continue;
         }
         await insertSplitRoutine(db, {
@@ -153,6 +153,6 @@ const syncSplits = async (db) => {
         });
         
         // You would need to implement the logic to handle the split routines
-        console.log(`Syncing split routine: ${split.title}`);
+        console.log(`Syncing split routine: ${split.routine}`);
     }
 }

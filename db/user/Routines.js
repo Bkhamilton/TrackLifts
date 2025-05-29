@@ -18,7 +18,7 @@ export const getRoutinesByUserId = async (db, userId) => {
         const query = `
             SELECT Routines.id, Routines.title, Routines.user_id
             FROM Routines
-            WHERE Routines.user_id = ?`
+            WHERE Routines.user_id = ? AND Routines.title != 'Rest'`
         const rows = await db.getAllAsync(query, [userId]);
         return rows;
     } catch (error) {
