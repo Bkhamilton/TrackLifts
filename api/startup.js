@@ -6,6 +6,7 @@ export const createTables = async (db) => {
     // Your table creation logic here
     await createGeneralTables(db);
     await createUserTables(db);
+    await createWorkoutTables(db);
 };
 
 export const createGeneralTables = async (db) => {
@@ -88,6 +89,39 @@ export const createUserTables = async (db) => {
     `);
 }
 
+export const createWorkoutTables = async (db) => {
+    await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS WorkoutSessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            routine_id INTEGER,
+            start_time DATETIME NOT NULL,
+            end_time DATETIME,
+            notes TEXT,
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (routine_id) REFERENCES Routines(id)
+        );
+        CREATE TABLE IF NOT EXISTS SessionExercises (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id INTEGER,
+            exercise_id INTEGER,
+            FOREIGN KEY (session_id) REFERENCES WorkoutSessions(id),
+            FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
+        );
+        CREATE TABLE IF NOT EXISTS SessionSets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_exercise_id INTEGER,
+            set_order INTEGER NOT NULL,
+            weight REAL NOT NULL,
+            reps INTEGER NOT NULL,
+            completed BOOLEAN DEFAULT 1,
+            rest_time INTEGER,
+            notes TEXT,
+            FOREIGN KEY (session_exercise_id) REFERENCES SessionExercises(id)
+        );
+    `);
+}
+
 export const dropTables = async (db) => {
     // Your table deletion logic here
     await db.execAsync(`
@@ -101,6 +135,9 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS Muscles;
         DROP TABLE IF EXISTS MuscleGroups;
         DROP TABLE IF EXISTS Splits;
+        DROP TABLE IF EXISTS WorkoutSessions;
+        DROP TABLE IF EXISTS SessionExercises;
+        DROP TABLE IF EXISTS SessionSets;
     `);
 };
 
