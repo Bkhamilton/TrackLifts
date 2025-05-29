@@ -109,7 +109,6 @@ const syncRoutines = async (db) => {
                 const routineExerciseId = await insertRoutineExercise(db, {
                     routine_id: routineId,
                     exercise_id: exerciseId,
-                    sets: exercise.sets.length, // Total number of sets
                 });
 
                 // Insert each set into the ExerciseSets table

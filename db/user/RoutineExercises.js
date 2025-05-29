@@ -2,8 +2,8 @@
 export const insertRoutineExercise = async (db, routineExercise) => {
     try {
         const result = await db.runAsync(
-            'INSERT INTO RoutineExercises (routine_id, exercise_id, sets) VALUES (?, ?, ?)', 
-            [routineExercise.routine_id, routineExercise.exercise_id, routineExercise.sets]
+            'INSERT INTO RoutineExercises (routine_id, exercise_id) VALUES (?, ?)', 
+            [routineExercise.routine_id, routineExercise.exercise_id]
         );
         return result.lastInsertRowId;
     } catch (error) {
@@ -11,6 +11,31 @@ export const insertRoutineExercise = async (db, routineExercise) => {
         throw error;
     }
 };
+
+export const getRoutineExercise = async (db, routineId, exerciseId) => {
+    try {
+        const query = `
+            SELECT 
+                re.*, 
+                e.title, 
+                eq.name as equipment,
+                mg.name as muscleGroup
+            FROM 
+                RoutineExercises re
+            LEFT JOIN 
+                Exercises e ON re.exercise_id = e.id
+            LEFT JOIN 
+                Equipment eq ON e.equipment_id = eq.id
+            LEFT JOIN
+                MuscleGroups mg ON e.muscle_group_id = mg.id
+            WHERE re.routine_id = ? AND re.exercise_id = ?`;
+        const row = await db.getAsync(query, [routineId, exerciseId]);
+        return row;
+    } catch (error) {
+        console.error('Error getting routine exercise:', error);
+        throw error;
+    }
+}
 
 // Read routine exercises by routine ID
 export const getRoutineExercises = async (db, routineId) => {
@@ -78,6 +103,16 @@ export const deleteRoutineExerciseByRoutineId = async (db, routineId) => {
         await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ?', [routineId]);
     } catch (error) {
         console.error('Error deleting routine exercises by routine ID:', error);
+        throw error;
+    }
+}
+
+export const clearRoutineExercises = async (db, routineId) => {
+    try {
+        await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ?', [routineId]);
+        console.log('Routine exercises cleared');
+    } catch (error) {
+        console.error('Error clearing routine exercises:', error);
         throw error;
     }
 }

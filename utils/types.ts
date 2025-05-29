@@ -12,7 +12,18 @@ export interface History {
     date: string;
     routine: ActiveRoutine;
     lengthMin: string;
+    notes: string;
     totalWeight: number;
+}
+
+export interface Workout {
+    id: number;
+    date: string;
+    routine: ActiveRoutine;
+    startTime: string;
+    endTime: string;
+    lengthMin: string;
+    notes: string;
 }
 
 export interface Routine {

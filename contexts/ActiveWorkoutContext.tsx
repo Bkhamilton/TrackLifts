@@ -1,5 +1,10 @@
 // app/contexts/BetContext/BetContext.tsx
-import { ActiveRoutine, Exercise } from '@/utils/types';
+import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
+import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
+import { insertSessionExercise } from '@/db/workout/SessionExercises';
+import { insertSessionSet } from '@/db/workout/SessionSets';
+import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
+import { ActiveRoutine, Exercise, Workout } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
@@ -15,7 +20,7 @@ interface ActiveWorkoutContextValue {
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
     startTime: number | null;
     startWorkout: () => void;
-    addWorkoutToDatabase: (routine: ActiveRoutine) => Promise<void>;
+    saveWorkoutToDatabase: (workout: Workout) => Promise<number>;
     resetRoutine: () => void;
     // activeWorkout: Workout | null;
     // setActiveWorkout: (workout: Workout) => void;
@@ -36,7 +41,9 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     setIsActiveWorkout: () => {},
     startTime: null,
     startWorkout: () => {},
-    addWorkoutToDatabase: async () => {},
+    saveWorkoutToDatabase: async () => {
+        return 0; // Placeholder return value
+    },
     resetRoutine: () => {},
     // activeWorkout: null,
     // setActiveWorkout: () => {},
@@ -92,25 +99,69 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         setStartTime(Date.now());
     };
 
-    const addWorkoutToDatabase = async (routine: ActiveRoutine) => {
-        if (db) {
-            try {
-                // Update the routine in the database to match the current routine state
-                // await updateRoutineData(db, routine.id, routine);
+    const saveWorkoutToDatabase = async (workout: Workout) => {
+        // 1. Update RoutineExercises if structure changed
+        await db.runAsync('BEGIN TRANSACTION');
+        try {
+            // Clear existing routine exercises
+            await clearRoutineExercises(db, workout.routine.id);
+            
+            // Recreate with current structure
+            for (const exercise of workout.routine.exercises) {
+                await insertRoutineExercise(db, {
+                    routine_id: workout.routine.id,
+                    exercise_id: exercise.id
+                });
+            }
+            await db.runAsync('COMMIT');
+        } catch (error) {
+            await db.runAsync('ROLLBACK');
+            throw error;
+        }
+    
+        // 2. Create WorkoutSession entry
+        const sessionId = await insertWorkoutSession(db, {
+            routineId: workout.routine.id,
+            startTime: workout.startTime,
+            endTime: workout.endTime,
+            durationMinutes: workout.lengthMin,
+            notes: workout.notes || null,
+        });
+    
+        // 3. Process each exercise and its sets
+        await db.runAsync('BEGIN TRANSACTION');
+        try {
+            for (const exercise of workout.routine.exercises) {
+                // Create SessionExercise entry
+                const sessionExerciseId = await insertSessionExercise(db, {
+                    sessionId: sessionId,
+                    exerciseId: exercise.id,
+                });
+    
+                // Insert all sets
+                for (let i = 0; i < exercise.sets.length; i++) {
+                    const set = exercise.sets[i];
 
-                // For each exercise in the routine, insert a RoutineExercise entry
-                /*
-                for (const exercise of routine.exercises) {
-                    const routineExerciseId = await insertRoutineExercise(db, {
-                        routine_id: routine.id,
-                        exercise_id: exercise.id,
-                        sets: exercise.sets.length,
+                    await insertSessionSet(db, {
+                        sessionExerciseId: sessionExerciseId,
+                        setOrder: set.set_order,
+                        weight: set.weight,
+                        reps: set.reps,
+                        restTime: set.restTime || null,
+                        completed: true,
                     });
+                }
 
-                    // Add each set to ExerciseSets
-                    for (const set of exercise.sets) {
+                // 4. Update ExerciseSets with most recent data (optional)
+                await clearExerciseSets(db, workout.routine.id, exercise.id);
+
+                const routineExercise = await getRoutineExercise(db, workout.routine.id, exercise.id);
+
+                if (routineExercise) {
+                    for (let i = 0; i < exercise.sets.length; i++) {
+                        const set = exercise.sets[i];
                         await insertExerciseSet(db, {
-                            routine_exercise_id: routineExerciseId,
+                            routine_exercise_id: routineExercise.id,
                             set_order: set.set_order,
                             weight: set.weight,
                             reps: set.reps,
@@ -118,12 +169,15 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         });
                     }
                 }
-                */
-            } catch (error) {
-                console.error('Error adding workout to database:', error);
             }
+            await db.runAsync('COMMIT');
+        } catch (error) {
+            await db.runAsync('ROLLBACK');
+            throw error;
         }
-    }
+    
+        return sessionId;
+    };
 
     const resetRoutine = () => {
         const defaultRoutine = {
@@ -150,7 +204,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         setIsActiveWorkout,
         startTime,
         startWorkout,
-        addWorkoutToDatabase,
+        saveWorkoutToDatabase,
         resetRoutine,
         // activeWorkout,
         // setActiveWorkout,

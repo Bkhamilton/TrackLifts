@@ -130,3 +130,17 @@ export const deleteExerciseSetsByExerciseId = async (db, exerciseId) => {
         throw error;
     }
 };
+
+export const clearExerciseSets = async (db, routineId, exerciseId) => {
+    try {
+        // Delete all ExerciseSets for the given routineId and exerciseId
+        await db.runAsync(
+            'DELETE FROM ExerciseSets WHERE routine_exercise_id IN (SELECT id FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?)',
+            [routineId, exerciseId]
+        );
+        console.log('Exercise sets cleared');
+    } catch (error) {
+        console.error('Error clearing exercise sets:', error);
+        throw error;
+    }
+}
