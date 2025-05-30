@@ -59,50 +59,50 @@ export default function TabLayout() {
                     default: {},
                 }),
         }}>
-        <Tabs.Screen
-            name="index"
-            options={{
-                title: 'Home',
-                tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-            }}
-        />
-        <Tabs.Screen
-            name="exercises"
-            options={{
-                title: 'Exercises',
-                tabBarIcon: ({ color }) => <IconSymbol size={28} name="figure.strengthtraining.traditional" color={color} />,
-            }}
-        />
-        <Tabs.Screen
-            name="workout"
-            options={{
-                title: 'New Workout',
-                tabBarIcon: ({ color }) => <IconSymbol name="figure.strengthtraining.traditional" color={color} />,
-                tabBarButton: (props) => (
-                    <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
-                        <TabBarButton 
-                            name="arm-flex"    
-                            color={Colors[colorScheme ?? 'light'].text}
-                        />
-                    </View>
-                ),
-                headerShown: false,
-            }}
-        />
-        <Tabs.Screen
-            name="history"
-            options={{
-                title: 'History',
-                tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
-            }}
-        />                
-        <Tabs.Screen
-            name="profile"
-            options={{
-                title: 'Profile',
-                tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar.fill" color={color} />,
-            }}
-        />
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: 'Home',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="exercises"
+                options={{
+                    title: 'Exercises',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="figure.strengthtraining.traditional" color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="workout"
+                options={{
+                    title: 'New Workout',
+                    tabBarIcon: ({ color }) => <IconSymbol name="figure.strengthtraining.traditional" color={color} />,
+                    tabBarButton: (props) => (
+                        <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
+                            <TabBarButton 
+                                name="arm-flex"    
+                                color={Colors[colorScheme ?? 'light'].text}
+                            />
+                        </View>
+                    ),
+                    headerShown: false,
+                }}
+            />
+            <Tabs.Screen
+                name="history"
+                options={{
+                    title: 'History',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
+                }}
+            />                
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: 'Profile',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar.fill" color={color} />,
+                }}
+            />
         </Tabs>
     );
 }

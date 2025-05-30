@@ -13,23 +13,33 @@ interface SplitComponentProps {
 }
 
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
+    const { routines, splits } = useContext(DBContext);
 
-    const { routines, splits } = useContext(DBContext)
-    // Get the unique routine names (excluding Rest)
-    const uniqueDays = [...new Set(
-        splits[0].routines
-            .filter(routine => routine.routine !== "Rest")
-            .map(routine => routine.routine)
-    )];
+    // Ensure splits[0] exists before accessing its properties
+    const uniqueDays = splits?.[0]?.routines
+        ? [...new Set(
+            splits[0].routines
+                .filter(routine => routine.routine !== "Rest")
+                .map(routine => routine.routine)
+        )]
+        : []; // Fallback to an empty array if splits[0] or routines are undefined
 
     const handleStartWorkout = (title: string) => {
-        const routine = routines.find(r => r.title === title);
+        const routine = routines?.find(r => r.title === title);
         if (routine) {
             onStart(routine);
             close();
         } else {
             console.error("Routine not found:", title);
         }
+    };
+
+    if (!splits || splits.length === 0) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.headerText}>No splits available</Text>
+            </View>
+        );
     }
 
     return (
@@ -37,7 +47,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
             {/* Header Row */}
             <View style={styles.headerRow}>
                 <Text style={styles.headerText}>SPLIT: {splits[0].name}</Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.editButton}
                     onPress={() => console.log('Edit split')}
                 >
@@ -46,7 +56,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
             </View>
 
             {/* Horizontal Scrollable Days */}
-            <ScrollView 
+            <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.daysScrollContainer}
@@ -62,7 +72,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                         ]}
                         onPress={() => setDay({ day: routine.day, routine: routine.routine })}
                     >
-                        <Text 
+                        <Text
                             style={[
                                 styles.dayText,
                                 routine.day === curDay.day && routine.routine === curDay.routine && styles.activeDayText,
