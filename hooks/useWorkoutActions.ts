@@ -56,5 +56,20 @@ export const useWorkoutActions = () => {
         });
     };
 
-    return { addExercise, updateSet, addSet };
+    const deleteSet = (exerciseId: number, setId: number) => {
+        updateRoutine({
+            ...routine,
+            exercises: routine.exercises.map(exercise => {
+                if (exercise.id === exerciseId) {
+                    return {
+                        ...exercise,
+                        sets: exercise.sets.filter(set => set.id !== setId)
+                    };
+                }
+                return exercise;
+            })
+        });
+    }
+
+    return { addExercise, updateSet, addSet, deleteSet };
 };

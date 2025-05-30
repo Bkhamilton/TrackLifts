@@ -12,7 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function ActiveWorkoutScreen() {
     const [modal, setModal] = useState(false);
     const { routine, startTime, setIsActiveWorkout, resetRoutine } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet } = useWorkoutActions();
+    const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
@@ -33,6 +33,14 @@ export default function ActiveWorkoutScreen() {
                 return [...prev, setId];
             }
         });
+    };
+
+    // Function to handle deleting a set
+    const handleDeleteSet = (exerciseId: number, setId: number) => {
+        console.log(`Deleting set ${setId} from exercise ${exerciseId}`);
+        deleteSet(exerciseId, setId);
+        // Remove the set from completed sets if it was there
+        setCompletedSets(prev => prev.filter(id => id !== setId));
     };
 
     // Calculate total sets and completed sets
@@ -94,6 +102,7 @@ export default function ActiveWorkoutScreen() {
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
+                    onDeleteSet={handleDeleteSet} // Add this prop
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
                 />

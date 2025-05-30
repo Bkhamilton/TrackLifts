@@ -9,6 +9,7 @@ interface WorkoutInfoProps {
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
     onAddSet: (exerciseId: number) => void;
     onToggleComplete: (exerciseId: number, setId: number) => void;
+    onDeleteSet: (exerciseId: number, setId: number) => void;
     completedSets: number[];
 }
 
@@ -17,6 +18,7 @@ export default function WorkoutInfo({
     onUpdateSet, 
     onAddSet,
     onToggleComplete,
+    onDeleteSet,
     completedSets 
 }: WorkoutInfoProps) {
     const [editingSet, setEditingSet] = useState<number | null>(null);
@@ -42,6 +44,7 @@ export default function WorkoutInfo({
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}
                     onToggleComplete={(setId) => onToggleComplete(exercise.id, setId)}
+                    onDeleteSet={(setId) => onDeleteSet(exercise.id, setId)}
                     isCompleted={completedSets.includes(set.id)}
                 />
             ))}

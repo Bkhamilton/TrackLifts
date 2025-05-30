@@ -29,7 +29,6 @@ export const getSplitRoutines = async (db, splitId) => {
             WHERE 
                 SplitRoutines.split_id = ?`;
         const rows = await db.getAllAsync(query, [splitId]);
-        console.log('SplitRoutines retrieved:', rows);
         return rows;
     } catch (error) {
         console.error('Error getting SplitRoutines by split ID with routine titles:', error);

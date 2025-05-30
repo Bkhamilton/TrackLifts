@@ -9,6 +9,7 @@ interface WorkoutProps {
     routine: ActiveRoutine;
     onUpdateSet: (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => void;
     onAddSet: (exerciseId: number) => void;
+    onDeleteSet: (exerciseId: number, setId: number) => void;
     onToggleComplete: (exerciseId: number, setId: number) => void;
     completedSets: number[];
 }
@@ -18,6 +19,7 @@ export default function Workout({
     routine, 
     onUpdateSet, 
     onAddSet, 
+    onDeleteSet,
     onToggleComplete,
     completedSets
 }: WorkoutProps) {
@@ -29,6 +31,7 @@ export default function Workout({
                     exercise={exercise}
                     onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
                     onAddSet={() => onAddSet(exercise.id)}
+                    onDeleteSet={(setId) => onDeleteSet(exercise.id, setId)}
                     onToggleComplete={onToggleComplete}
                     completedSets={completedSets}
                 />
