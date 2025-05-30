@@ -141,6 +141,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS Muscles;
         DROP TABLE IF EXISTS MuscleGroups;
         DROP TABLE IF EXISTS Splits;
+        DROP TABLE IF EXISTS SplitRoutines;
         DROP TABLE IF EXISTS WorkoutSessions;
         DROP TABLE IF EXISTS SessionExercises;
         DROP TABLE IF EXISTS SessionSets;

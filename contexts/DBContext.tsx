@@ -241,7 +241,6 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         if (db && user.id !== 0) {
             const fetchSplits = async () => {
                 const data = await getSplitData(db, user.id);
-                console.log('Fetched splits:', JSON.stringify(data, null, 2));
                 setSplits(data || []);
             }
 
