@@ -19,11 +19,6 @@ export default function ProfileScreen() {
             memberSince: 'Jan 2023',
             goals: 'Build muscle & endurance'
         },
-        achievements: [
-            '3 Week Streak',
-            '100 Workouts',
-            'Early Bird (5am workouts)'
-        ]
     };
 
     return (

@@ -1,7 +1,6 @@
 import RoutineInfo from '@/components/Home/RoutineInfo';
 import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
-import ProfileModal from '@/components/modals/ProfileModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import RoutinesModal from '@/components/modals/RoutinesModal';
@@ -22,9 +21,6 @@ export default function HomeScreen() {
         addRoutineModal,
         openAddRoutineModal,
         closeAddRoutineModal,
-        profileModal,
-        openProfileModal,
-        closeProfileModal,
         settingsModal,
         openSettingsModal,
         closeSettingsModal,
@@ -83,10 +79,6 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
-            <ProfileModal
-                visible={profileModal}
-                close={closeProfileModal}
-            />
             <SettingsModal
                 visible={settingsModal}
                 close={closeSettingsModal}
@@ -122,7 +114,7 @@ export default function HomeScreen() {
                 title="TrackLifts"
                 rightContent={
                     <View style={styles.rightContent}>
-                        <TouchableOpacity onPress={openProfileModal}>
+                        <TouchableOpacity onPress={() => router.replace('/(tabs)/profile')}>
                             <Ionicons name="person" size={20} color="#ff8787" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={openSettingsModal}>
@@ -131,7 +123,7 @@ export default function HomeScreen() {
                     </View>                        
                 }
             /> 
-            <ScrollView style={{ paddingTop: 10, marginBottom: 83 }}>
+            <ScrollView style={styles.scrollView}>
                 <SplitComponent
                     curDay={curDay} 
                     setDay={setDay} 
@@ -161,5 +153,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4, // Add spacing between the icons
-    },  
+    }, 
+    scrollView: {
+        paddingTop: 10, 
+        marginBottom: 83
+    } 
 });
