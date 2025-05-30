@@ -1,6 +1,5 @@
 import { getSplitRoutines } from '@/db/user/SplitRoutines';
 import { getSplits } from '@/db/user/Splits';
-import { fillRoutineData } from './routineHelpers';
 
 export const getSplitData = async (db, userId) => {
     // Fetch all routines for the user
@@ -21,13 +20,11 @@ export const fillSplitData = async (db, splits) => {
         // Fetch details for the current exercise
         const routines = await getSplitRoutines(db, split.id);
 
-        const filledRoutines = await fillRoutineData(db, routines);
-
         splitWithRoutines.push({
             ...split, // Spread the existing split fields
-            routines: filledRoutines,  // Add the routines field
+            routines: routines,  // Add the routines field
         });
     }
 
-    return exercisesWithDetails; // Return the updated exercises array
+    return splitWithRoutines; // Return the updated exercises array
 }

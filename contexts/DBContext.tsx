@@ -10,6 +10,7 @@ import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
 import { getUserById } from '@/db/user/Users';
 import { getExerciseData } from '@/utils/exerciseHelpers';
 import { getRoutineData } from '@/utils/routineHelpers';
+import { getSplitData } from '@/utils/splitHelpers';
 import { ActiveRoutine, Exercise, MuscleGroup, Routine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ interface DBContextValue {
     muscles: any[];
     muscleGroups: MuscleGroup[];
     routines: ActiveRoutine[];
+    splits: any[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
@@ -48,6 +50,7 @@ export const DBContext = createContext<DBContextValue>({
     muscles: [],
     muscleGroups: [],
     routines: [],
+    splits: [],
     addExerciseToDB: async () => {
         return undefined;
     },
@@ -83,6 +86,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
     const [routines, setRoutines] = useState<ActiveRoutine[]>([]);
+    const [splits, setSplits] = useState<any[]>([]);
 
     const addExerciseToDB = async (exercise: Exercise): Promise<number | undefined> => {
         if (db) {
@@ -233,6 +237,18 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         }
     }, [db, user]);
 
+    useEffect(() => {
+        if (db && user.id !== 0) {
+            const fetchSplits = async () => {
+                const data = await getSplitData(db, user.id);
+                console.log('Fetched splits:', JSON.stringify(data, null, 2));
+                setSplits(data || []);
+            }
+
+            fetchSplits();
+        }
+    }, [db, user]);
+
     const value = {
         db,
         user,
@@ -241,6 +257,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         muscles,
         muscleGroups,
         routines,
+        splits,
         addExerciseToDB,
         addRoutineToDB,
         deleteExerciseFromDB,

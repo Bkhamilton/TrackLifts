@@ -12,20 +12,27 @@ export const insertSplitRoutine = async (db, splitRoutine) => {
     }
 };
 
-// Function to get all SplitRoutines for a split
+// Function to get all SplitRoutines for a split with routine titles
 export const getSplitRoutines = async (db, splitId) => {
     try {
         const query = `
             SELECT 
-                SplitRoutines.id, SplitRoutines.split_id, SplitRoutines.split_order, SplitRoutines.routine_id
+                SplitRoutines.id, 
+                SplitRoutines.split_id, 
+                SplitRoutines.split_order, 
+                SplitRoutines.routine_id, 
+                Routines.title AS title
             FROM 
                 SplitRoutines
+            JOIN 
+                Routines ON SplitRoutines.routine_id = Routines.id
             WHERE 
                 SplitRoutines.split_id = ?`;
         const rows = await db.getAllAsync(query, [splitId]);
+        console.log('SplitRoutines retrieved:', rows);
         return rows;
     } catch (error) {
-        console.error('Error getting SplitRoutines by split ID:', error);
+        console.error('Error getting SplitRoutines by split ID with routine titles:', error);
         throw error;
     }
 };
