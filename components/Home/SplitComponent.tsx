@@ -1,6 +1,5 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
-import sampleSplit from '@/data/SampleSplit.json';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
@@ -15,11 +14,12 @@ interface SplitComponentProps {
 
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
 
-    const { routines } = useContext(DBContext)
+    const { routines, splits } = useContext(DBContext)
     // Get the unique routine names (excluding Rest)
-    const uniqueDays = [...new Set(sampleSplit.routines
-        .filter(routine => routine.routine !== "Rest")
-        .map(routine => routine.routine)
+    const uniqueDays = [...new Set(
+        splits[0].routines
+            .filter(routine => routine.routine !== "Rest")
+            .map(routine => routine.routine)
     )];
 
     const handleStartWorkout = (title: string) => {
@@ -36,7 +36,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
         <View style={styles.container}>
             {/* Header Row */}
             <View style={styles.headerRow}>
-                <Text style={styles.headerText}>SPLIT: {sampleSplit.name}</Text>
+                <Text style={styles.headerText}>SPLIT: {splits[0].name}</Text>
                 <TouchableOpacity 
                     style={styles.editButton}
                     onPress={() => console.log('Edit split')}
@@ -51,7 +51,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.daysScrollContainer}
             >
-                {sampleSplit.routines.map((routine) => (
+                {splits[0].routines.map((routine) => (
                     <TouchableOpacity
                         key={`${routine.routine}-${routine.day}`}
                         style={[

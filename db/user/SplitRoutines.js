@@ -19,9 +19,9 @@ export const getSplitRoutines = async (db, splitId) => {
             SELECT 
                 SplitRoutines.id, 
                 SplitRoutines.split_id, 
-                SplitRoutines.split_order, 
+                SplitRoutines.split_order as day, 
                 SplitRoutines.routine_id, 
-                Routines.title AS title
+                Routines.title AS routine
             FROM 
                 SplitRoutines
             JOIN 

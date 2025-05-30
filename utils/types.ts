@@ -77,3 +77,15 @@ export interface Equipment {
     id: number;
     name: string;
 }
+
+export interface Splits {
+    id: number;
+    name: string;
+    routines: {
+        id: number;
+        split_id: number;
+        day: number;
+        routine_id: number;
+        routine: string;
+    }[];
+}

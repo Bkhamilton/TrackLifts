@@ -11,7 +11,7 @@ import { getUserById } from '@/db/user/Users';
 import { getExerciseData } from '@/utils/exerciseHelpers';
 import { getRoutineData } from '@/utils/routineHelpers';
 import { getSplitData } from '@/utils/splitHelpers';
-import { ActiveRoutine, Exercise, MuscleGroup, Routine } from '@/utils/types';
+import { ActiveRoutine, Exercise, MuscleGroup, Routine, Splits } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
@@ -30,7 +30,7 @@ interface DBContextValue {
     muscles: any[];
     muscleGroups: MuscleGroup[];
     routines: ActiveRoutine[];
-    splits: any[];
+    splits: Splits[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
@@ -86,7 +86,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
     const [routines, setRoutines] = useState<ActiveRoutine[]>([]);
-    const [splits, setSplits] = useState<any[]>([]);
+    const [splits, setSplits] = useState<Splits[]>([]);
 
     const addExerciseToDB = async (exercise: Exercise): Promise<number | undefined> => {
         if (db) {
