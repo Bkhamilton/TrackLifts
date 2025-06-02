@@ -52,37 +52,37 @@ const MuscleIntensityVisualization = () => {
     // More anatomically accurate SVG paths
     const musclePaths: MusclePaths = {
         front: {
-            // Chest (pectoralis major)
-            chest: "M150,120 C170,100 190,100 200,120 C190,140 170,140 150,140 Z",
+            // Chest (pectoralis major) - Adjusted to fit the torso curve
+            chest: "M130,120 C150,100 190,100 210,120 C200,140 180,140 160,140 C150,135 140,130 130,120 Z",
             
-            // Shoulders (deltoids)
-            shoulders: "M120,120 C130,100 170,100 180,120 C170,140 130,140 120,120 Z",
+            // Shoulders (deltoids) - Aligned with head position
+            shoulders: "M110,110 C130,90 190,90 210,110 C200,120 180,120 160,120 C150,115 140,115 130,120 C125,115 115,110 110,110 Z",
             
-            // Arms (biceps/triceps)
-            arms: "M100,140 C90,160 90,200 100,220 C120,200 120,160 110,140 Z " +
-                    "M200,140 C210,160 210,200 200,220 C180,200 180,160 190,140 Z",
+            // Arms (biceps/triceps) - Matched to arm paths
+            arms: "M90,130 C80,160 70,210 90,240 C100,230 110,190 100,160 Z " +
+                "M220,130 C230,160 240,210 220,240 C210,230 200,190 210,160 Z",
             
-            // Core (abdominals)
-            core: "M140,150 C150,170 160,170 170,150 C160,200 150,200 140,180 Z",
+            // Core (abdominals) - Fitted to torso shape
+            core: "M140,150 C150,170 170,170 180,150 C170,210 160,210 150,190 C145,180 140,170 140,150 Z",
             
-            // Legs (quadriceps)
-            legs: "M140,200 C140,220 130,250 140,280 C150,260 160,260 160,240 Z " +
-                    "M160,200 C160,220 170,250 160,280 C150,260 140,260 140,240 Z"
+            // Legs (quadriceps) - Aligned with leg paths
+            legs: "M120,250 C115,280 110,330 125,360 C135,340 140,300 140,270 Z " +
+                "M190,250 C195,280 200,330 185,360 C175,340 170,300 170,270 Z"
         },
         back: {
-            // Back (latissimus dorsi)
-            back: "M150,120 C170,100 190,100 200,120 C190,180 170,180 150,150 Z",
+            // Back (latissimus dorsi) - Wider to match back shape
+            back: "M130,120 C150,100 190,100 210,120 C200,180 180,180 150,160 C140,150 135,140 130,120 Z",
             
             // Shoulders (rear deltoids)
-            shoulders: "M120,120 C130,100 170,100 180,120 C170,140 130,140 120,120 Z",
+            shoulders: "M110,110 C130,90 190,90 210,110 C200,120 180,120 160,120 C150,115 140,115 130,120 C125,115 115,110 110,110 Z",
             
-            // Arms (triceps)
-            arms: "M100,140 C90,160 90,200 100,220 C120,200 120,160 110,140 Z " +
-                    "M200,140 C210,160 210,200 200,220 C180,200 180,160 190,140 Z",
+            // Arms (triceps) - More defined triceps area
+            arms: "M90,130 C85,150 80,200 95,230 C105,220 110,180 105,150 Z " +
+                "M220,130 C225,150 230,200 215,230 C205,220 200,180 205,150 Z",
             
-            // Legs (hamstrings/glutes)
-            legs: "M140,200 C140,220 130,250 140,280 C150,260 160,260 160,240 Z " +
-                    "M160,200 C160,220 170,250 160,280 C150,260 140,260 140,240 Z"
+            // Legs (hamstrings/glutes) - Adjusted for hamstring curve
+            legs: "M120,250 C115,280 105,330 125,350 C135,340 140,300 140,270 Z " +
+                "M190,250 C195,280 205,330 185,350 C175,340 170,300 170,270 Z"
         }
     };
 
@@ -109,52 +109,69 @@ const MuscleIntensityVisualization = () => {
             {/* Body Visualization */}
             <View style={styles.bodyContainer}>
                 <Svg width={300} height={400} viewBox="0 0 300 400">
-                    {/* Body outline - your existing torso */}
-                    <Path 
-                        d="M150,54 C180,40 220,40 240,60 C260,80 260,120 250,160 C216,195 230,240 220,280 C210,320 180,340 150,340 C120,340 90,320 80,280 C70,240 80,198 50,160 C40,120 40,80 60,60 C80,40 120,40 150,54 Z" 
-                        fill="#f8f8f8" 
-                        stroke="#ccc" 
-                        strokeWidth="2"
-                    />
-                    
-                    {/* Head - added above torso */}
+                    {/* Torso */}
                     <Path
-                        d="M130,30 C150,10 180,10 200,30 C210,50 210,70 200,90 C180,100 150,100 130,90 C120,70 120,50 130,30 Z"
-                        fill="#f8f8f8"
+                        transform="rotate(0.0271671 159.485 190.063)"
                         stroke="#ccc"
                         strokeWidth="2"
+                        fill="#f8f8f8"
+                        d="m159.4846,95.86142c20.57139,-9.55146 47.9999,-9.55146 61.71416,4.09348c13.71426,13.64494 13.71426,40.93483 6.85713,68.22472c-23.31424,23.87865 -13.71426,54.57977 -20.57139,81.86966c-6.85713,27.28989 -27.42852,40.93483 -47.9999,40.93483c-20.57139,0 -41.14277,-13.64494 -47.9999,-40.93483c-6.85713,-27.28989 0,-55.94427 -20.57139,-81.86966c-6.85713,-27.28989 -6.85713,-54.57977 6.85713,-68.22472c13.71426,-13.64494 41.14277,-13.64494 61.71416,-4.09348z"
                     />
                     
-                    {/* Arms - attached at shoulders */}
+                    {/* Head */}
                     <Path
-                        d="M90,120 C70,150 60,200 80,230 C100,220 110,180 100,150 Z
-                        M210,120 C230,150 240,200 220,230 C200,220 190,180 200,150 Z"
-                        fill="#f8f8f8"
-                        stroke="#ccc"
                         strokeWidth="2"
+                        stroke="#ccc"
+                        fill="#f8f8f8"
+                        d="m123,23c20,-20 50,-20 70,0c10,20 10,40 0,60c-20,10 -50,10 -70,0c-10,-20 -10,-40 0,-60z"
                     />
                     
-                    {/* Legs - extending from hips */}
+                    {/* Left Arm */}
                     <Path
-                        d="M120,340 C110,380 100,430 120,460 C140,450 150,400 140,370 Z
-                        M180,340 C190,380 200,430 180,460 C160,450 150,400 160,370 Z"
-                        fill="#f8f8f8"
+                        transform="rotate(7.60753 77.5107 170)"
                         stroke="#ccc"
                         strokeWidth="2"
+                        fill="#f8f8f8"
+                        d="m81.60118,104c-23.44583,36 -35.16874,96 -11.72291,132c23.44583,-12 35.16874,-60 23.44583,-96l-11.72291,-36z"
+                    />
+                    
+                    {/* Right Arm */}
+                    <Path
+                        transform="rotate(-5.296 236.489 168)"
+                        stroke="#ccc"
+                        strokeWidth="2"
+                        fill="#f8f8f8"
+                        d="m232.79961,99c21.14861,37.63636 31.72291,100.36364 10.5743,138c-21.14861,-12.54545 -31.72291,-62.72727 -21.14861,-100.36364l10.5743,-37.63636z"
+                    />
+                    
+                    {/* Left Leg */}
+                    <Path
+                        stroke="#ccc"
+                        strokeWidth="2"
+                        fill="#f8f8f8"
+                        d="m100.60434,246c-12.25542,45 -24.51085,101.25 0,135c24.51085,-11.25 36.76627,-67.5 24.51085,-101.25l-24.51085,-33.75z"
+                    />
+                    
+                    {/* Right Leg */}
+                    <Path
+                        stroke="#ccc"
+                        strokeWidth="2"
+                        fill="#f8f8f8"
+                        d="m218.37229,246c11.40964,43 22.81928,96.75 0,129.00001c-22.81928,-10.75 -34.22892,-64.5 -22.81928,-96.75l22.81928,-32.25z"
                     />
                     
                     {/* Now add your muscle groups as before */}
                     {Object.entries(musclePaths[view]).map(([group, path]) => {
                         const muscle = muscleData.find(m => m.id === group) || { value: 0 };
                         return (
-                        <Path 
-                            key={group}
-                            d={path} 
-                            fill={getColor(muscle.value)} 
-                            stroke="#555" 
-                            strokeWidth="1.5"
-                            opacity={0.85}
-                        />
+                            <Path 
+                                key={group}
+                                d={path} 
+                                fill={getColor(muscle.value)} 
+                                stroke="#555" 
+                                strokeWidth="1.5"
+                                opacity={0.85}
+                            />
                         );
                     })}
                 </Svg>
@@ -180,11 +197,11 @@ const MuscleIntensityVisualization = () => {
                 <View style={styles.legendBar}>
                     {[...Array(10)].map((_, i) => (
                         <View 
-                        key={i} 
-                        style={[
-                            styles.legendSegment, 
-                            { backgroundColor: getColor(i / 9) }
-                        ]} 
+                            key={i} 
+                            style={[
+                                styles.legendSegment, 
+                                { backgroundColor: getColor(i / 9) }
+                            ]} 
                         />
                     ))}
                 </View>
