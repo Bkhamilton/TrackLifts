@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
         flex: 1, // Allow the ScrollView to take up available space
         marginBottom: 83, // Add space for the button
         width: '100%', // Ensure the ScrollView takes the full width
+        paddingHorizontal: 12,
     },
     workoutActionButton: {
         borderRadius: 8,

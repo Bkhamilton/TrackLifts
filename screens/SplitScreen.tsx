@@ -141,13 +141,14 @@ export default function SplitScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 12,
     },
     currentWeekContainer: {
         marginBottom: 24,
+        paddingHorizontal: 12,
     },
     splitsContainer: {
         flex: 1,
+        paddingHorizontal: 12,
     },
     sectionHeader: {
         flexDirection: 'row',

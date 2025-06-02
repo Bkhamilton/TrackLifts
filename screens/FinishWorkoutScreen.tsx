@@ -51,7 +51,7 @@ export default function FinishWorkoutScreen() {
     }, []);
 
     const handleDone = () => {
-        router.replace('/(tabs)');
+        router.replace('/(tabs)/(index)');
     };
 
     return (
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         padding: 20,
+        paddingTop: 60,
         paddingBottom: 100, // Space for the button
     },
     celebrationContainer: {
