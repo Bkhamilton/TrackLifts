@@ -1,3 +1,4 @@
+import MuscleIntensity from '@/components/Profile/MuscleIntensity';
 import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -32,6 +33,7 @@ export default function ProfileScreen() {
                     avatar={profileData.avatar}
                     stats={profileData.stats}
                 />
+                <MuscleIntensity/>
             </ScrollView>
         </View>
     );
