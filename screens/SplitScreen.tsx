@@ -1,104 +1,41 @@
-import { ScrollView, Text, TextInput, View } from '@/components/Themed';
+import CreateSplitModal from '@/components/modals/Splits/CreateSplitModal';
+import EditSplitModal from '@/components/modals/Splits/EditSplitModal';
+import { ScrollView, Text, View } from '@/components/Themed';
+import Title from '@/components/Title';
+import useHookSplits from '@/hooks/useHookSplits';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
-import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-
-interface RoutineDay {
-    day: number;
-    routine: string;
-    routine_id?: number;
-}
-
-interface Split {
-    id: number;
-    name: string;
-    routines: RoutineDay[];
-    isPrimary?: boolean;
-}
-
-// Sample data - replace with your actual data source
-const sampleSplits: Split[] = [
-    {
-        id: 1,
-        name: 'Weekly Cycle',
-        isPrimary: true,
-        routines: [
-            { day: 1, routine: 'Push' },
-            { day: 2, routine: 'Pull' },
-            { day: 3, routine: 'Legs' },
-            { day: 4, routine: 'Rest' },
-            { day: 5, routine: 'Push' },
-            { day: 6, routine: 'Pull' },
-            { day: 7, routine: 'Legs' }
-        ]
-    },
-    {
-        id: 2,
-        name: 'Upper/Lower',
-        routines: [
-            { day: 1, routine: 'Upper' },
-            { day: 2, routine: 'Lower' },
-            { day: 3, routine: 'Rest' },
-            { day: 4, routine: 'Upper' },
-            { day: 5, routine: 'Lower' },
-            { day: 6, routine: 'Rest' },
-            { day: 7, routine: 'Rest' }
-        ]
-    }
-];
-
-const availableRoutines = ['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body', 'Rest'];
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function SplitScreen() {
-    const [splits, setSplits] = useState<Split[]>(sampleSplits);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [newSplitName, setNewSplitName] = useState('');
-    const [editingSplit, setEditingSplit] = useState<Split | null>(null);
-    const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(sampleSplits[0].routines);
+    const {
+        splits,
+        currentWeek,
+        showCreateModal,
+        newSplitName,
+        editingSplit,
+        setShowCreateModal,
+        setNewSplitName,
+        setEditingSplit,
+        setAsPrimary,
+        createNewSplit,
+        updateSplitDay,
+    } = useHookSplits();
 
-    const setAsPrimary = (id: number) => {
-        setSplits(prev => prev.map(split => ({
-            ...split,
-            isPrimary: split.id === id
-        })));
-        const primarySplit = splits.find(s => s.id === id);
-        if (primarySplit) {
-            setCurrentWeek(primarySplit.routines);
-        }
-    };
-
-    const createNewSplit = () => {
-        const newSplit: Split = {
-            id: splits.length + 1,
-            name: newSplitName,
-            routines: Array(7).fill(null).map((_, i) => ({
-                day: i + 1,
-                routine: 'Rest' // Default to rest days
-            }))
-        };
-        setSplits([...splits, newSplit]);
-        setNewSplitName('');
-        setShowCreateModal(false);
-    };
-
-    const updateSplitDay = (splitId: number, day: number, routine: string) => {
-        setSplits(prev => prev.map(split => {
-            if (split.id === splitId) {
-                return {
-                    ...split,
-                    routines: split.routines.map(d => 
-                        d.day === day ? { ...d, routine } : d
-                    )
-                };
-            }
-            return split;
-        }));
-    };
+    const router = useRouter();
 
     return (
         <View style={styles.container}>
             {/* Current Week Display */}
+            <Title 
+                title="Your Splits" 
+                leftContent={
+                    <TouchableOpacity onPress={() => router.replace('/(tabs)/(index)')}>
+                        <MaterialCommunityIcons name="chevron-left" size={24} color="#ff8787" />
+                    </TouchableOpacity>
+                }
+            />
             <View style={styles.currentWeekContainer}>
                 <Text style={styles.sectionTitle}>CURRENT SPLIT</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -179,85 +116,23 @@ export default function SplitScreen() {
             </View>
 
             {/* Create New Split Modal */}
-            <Modal
+            <CreateSplitModal
                 visible={showCreateModal}
-                transparent={true}
-                animationType="slide"
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Create New Split</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Split Name"
-                            value={newSplitName}
-                            onChangeText={setNewSplitName}
-                        />
-                        
-                        <View style={styles.modalButtons}>
-                            <TouchableOpacity
-                                style={styles.cancelButton}
-                                onPress={() => setShowCreateModal(false)}
-                            >
-                                <Text style={styles.buttonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.createButton}
-                                onPress={createNewSplit}
-                                disabled={!newSplitName}
-                            >
-                                <Text style={styles.buttonText}>Create</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+                onClose={() => setShowCreateModal(false)}
+                onCreate={createNewSplit}
+                splitName={newSplitName}
+                setSplitName={setNewSplitName}
+            />
 
             {/* Edit Split Modal */}
             {editingSplit && (
-                <Modal
+                <EditSplitModal
                     visible={!!editingSplit}
-                    transparent={true}
-                    animationType="slide"
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalTitle}>Edit {editingSplit.name}</Text>
-                            
-                            {editingSplit.routines.map((day, index) => (
-                                <View key={index} style={styles.dayRow}>
-                                    <Text style={styles.dayLabel}>
-                                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.day - 1]}
-                                    </Text>
-                                    <Picker
-                                        selectedValue={day.routine}
-                                        style={styles.picker}
-                                        onValueChange={(value) => updateSplitDay(editingSplit.id, day.day, value)}
-                                    >
-                                        {availableRoutines.map((routine, i) => (
-                                            <Picker.Item key={i} label={routine} value={routine} />
-                                        ))}
-                                    </Picker>
-                                </View>
-                            ))}
-                            
-                            <View style={styles.modalButtons}>
-                                <TouchableOpacity
-                                    style={styles.cancelButton}
-                                    onPress={() => setEditingSplit(null)}
-                                >
-                                    <Text style={styles.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.saveButton}
-                                    onPress={() => setEditingSplit(null)}
-                                >
-                                    <Text style={styles.buttonText}>Save</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
+                    editingSplit={editingSplit}
+                    availableRoutines={['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body', 'Rest']}
+                    onUpdateSplitDay={updateSplitDay}
+                    onClose={() => setEditingSplit(null)}
+                />
             )}
         </View>
     );
@@ -266,7 +141,7 @@ export default function SplitScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        paddingHorizontal: 12,
     },
     currentWeekContainer: {
         marginBottom: 24,
@@ -361,70 +236,5 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '500',
         color: '#333',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    modalContent: {
-        width: '90%',
-        backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 20,
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 16,
-    },
-    dayRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    picker: {
-        flex: 1,
-        height: 40,
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 16,
-    },
-    cancelButton: {
-        flex: 1,
-        padding: 12,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
-        marginRight: 8,
-        alignItems: 'center',
-    },
-    createButton: {
-        flex: 1,
-        padding: 12,
-        backgroundColor: '#ff8787',
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    saveButton: {
-        flex: 1,
-        padding: 12,
-        backgroundColor: '#4CAF50',
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '600',
     },
 });
