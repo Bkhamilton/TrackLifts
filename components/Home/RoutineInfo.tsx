@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineCard from './RoutineCard';
@@ -11,7 +12,6 @@ interface RoutineInfoProps {
     openAddRoutine: () => void;
     routines: ActiveRoutine[];
     openRoutineOptions: (routine: ActiveRoutine) => void;
-    openRoutinesModal: () => void; // Add this prop
 }
 
 export default function RoutineInfo({ 
@@ -20,7 +20,6 @@ export default function RoutineInfo({
     openAddRoutine, 
     routines, 
     openRoutineOptions,
-    openRoutinesModal 
 }: RoutineInfoProps) {
     // Hardcoded favorite routine IDs for now
     const favoriteRoutineIds = [2, 3]; // Replace with your actual favorite IDs
@@ -34,6 +33,8 @@ export default function RoutineInfo({
     // Display only first 3 of other routines (adjust as needed)
     const displayedOtherRoutines = otherRoutines.slice(0, 3);
     const hasMoreRoutines = otherRoutines.length > 3;
+
+    const router = useRouter();
 
     return (
         <View style={styles.container}>
@@ -86,7 +87,7 @@ export default function RoutineInfo({
                 ))}
                 
                 {/* Show All Button if there are more routines */}
-                <TouchableOpacity onPress={openRoutinesModal} style={styles.showAllButton}>
+                <TouchableOpacity onPress={() => router.replace('/(tabs)/(index)/routines')} style={styles.showAllButton}>
                     <Text style={styles.showAllButtonText}>Show All Routines ({otherRoutines.length})</Text>
                 </TouchableOpacity>
             </View>

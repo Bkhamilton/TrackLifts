@@ -3,7 +3,6 @@ import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
-import RoutinesModal from '@/components/modals/RoutinesModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -30,9 +29,6 @@ export default function HomeScreen() {
         routineOptionsModal,
         openRoutineOptionsModal,
         closeRoutineOptionsModal,
-        routinesModal,
-        openRoutinesModal,
-        closeRoutinesModal,
         routine,
         curDay,
         setDay,
@@ -104,12 +100,6 @@ export default function HomeScreen() {
                 close={closeRoutineOptionsModal}
                 routine={routine} 
             />
-            <RoutinesModal
-                visible={routinesModal}
-                onClose={closeRoutinesModal}
-                onStart={onStart}
-                favoriteRoutineIds={[2, 3]} // Example IDs
-            />
             <Title 
                 title="TrackLifts"
                 rightContent={
@@ -136,7 +126,6 @@ export default function HomeScreen() {
                     openAddRoutine={openAddRoutineModal} 
                     routines={routines} 
                     openRoutineOptions={openRoutineOptionsModal}
-                    openRoutinesModal={openRoutinesModal}
                 />
             </ScrollView>
         </View>
