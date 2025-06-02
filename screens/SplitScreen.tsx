@@ -45,7 +45,7 @@ export default function SplitScreen() {
                             day.routine === 'Rest' && styles.restDayPill
                         ]}>
                             <Text style={styles.dayText}>
-                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][index]}
+                                {['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'][index]}
                             </Text>
                             <Text style={[
                                 styles.routineText,
@@ -102,7 +102,7 @@ export default function SplitScreen() {
                                 {item.routines.map((day, index) => (
                                     <View key={index} style={styles.splitDayItem}>
                                         <Text style={styles.dayLabel}>
-                                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.day - 1]}
+                                            {['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'][day.day - 1]}
                                         </Text>
                                         <Text style={styles.routineLabel}>
                                             {day.routine}
