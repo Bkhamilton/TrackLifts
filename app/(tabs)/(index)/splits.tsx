@@ -1,8 +1,8 @@
-import HomeScreen from "@/screens/HomeScreen";
+import SplitScreen from "@/screens/SplitScreen";
 import React from "react";
 
 export default function Home() {
     return (
-        <HomeScreen />
+        <SplitScreen />
     );
 }

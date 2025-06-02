@@ -2,6 +2,7 @@ import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -14,6 +15,8 @@ interface SplitComponentProps {
 
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
     const { routines, splits } = useContext(DBContext);
+
+    const router = useRouter();
 
     // Ensure splits[0] exists before accessing its properties
     const uniqueDays = splits?.[0]?.routines
@@ -42,6 +45,10 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
         );
     }
 
+    const onEditSplit = () => {
+        router.replace('/(tabs)/(index)/splits');
+    }  
+
     return (
         <View style={styles.container}>
             {/* Header Row */}
@@ -49,7 +56,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                 <Text style={styles.headerText}>SPLIT: {splits[0].name}</Text>
                 <TouchableOpacity
                     style={styles.editButton}
-                    onPress={() => console.log('Edit split')}
+                    onPress={onEditSplit}
                 >
                     <MaterialCommunityIcons name="pencil" size={20} color="#666" />
                 </TouchableOpacity>
