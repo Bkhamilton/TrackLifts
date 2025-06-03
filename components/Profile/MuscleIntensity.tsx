@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Svg, { Path, PathProps } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 type MuscleGroup = {
   id: string;
   name: string;
   value: number;
+  description: string;
+  exercises: string[];
 };
 
 type MusclePaths = {
@@ -13,23 +15,54 @@ type MusclePaths = {
   back: Record<string, string>;
 };
 
-type CircleProps = {
-  cx: string | number;
-  cy: string | number;
-  r: string | number;
-} & PathProps;
-
 const MuscleIntensityVisualization = () => {
     const [view, setView] = useState<'front' | 'back'>('front');
+    const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null);
     
-    // Mock data for muscle group intensities
+    // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
-        { id: 'chest', name: 'Chest', value: 0.8 },
-        { id: 'back', name: 'Back', value: 0.6 },
-        { id: 'arms', name: 'Arms', value: 0.7 },
-        { id: 'shoulders', name: 'Shoulders', value: 0.5 },
-        { id: 'core', name: 'Core', value: 0.9 },
-        { id: 'legs', name: 'Legs', value: 0.75 },
+        { 
+            id: 'chest', 
+            name: 'Chest', 
+            value: 0.8,
+            description: 'The chest muscles (pectoralis major) are responsible for pushing movements and shoulder adduction.',
+            exercises: ['Bench Press', 'Push-ups', 'Chest Fly', 'Incline Dumbbell Press']
+        },
+        { 
+            id: 'back', 
+            name: 'Back', 
+            value: 0.6,
+            description: 'Back muscles (latissimus dorsi, trapezius, rhomboids) are crucial for pulling movements and posture.',
+            exercises: ['Pull-ups', 'Bent-over Rows', 'Deadlifts', 'Lat Pulldowns']
+        },
+        { 
+            id: 'arms', 
+            name: 'Arms', 
+            value: 0.7,
+            description: 'Arm muscles (biceps, triceps, forearms) control elbow flexion/extension and grip strength.',
+            exercises: ['Bicep Curls', 'Tricep Extensions', 'Hammer Curls', 'Dips']
+        },
+        { 
+            id: 'shoulders', 
+            name: 'Shoulders', 
+            value: 0.5,
+            description: 'Shoulder muscles (deltoids) enable arm rotation and lifting movements.',
+            exercises: ['Shoulder Press', 'Lateral Raises', 'Front Raises', 'Upright Rows']
+        },
+        { 
+            id: 'core', 
+            name: 'Core', 
+            value: 0.9,
+            description: 'Core muscles (abdominals, obliques) stabilize the torso and transfer force between upper/lower body.',
+            exercises: ['Planks', 'Russian Twists', 'Leg Raises', 'Crunches']
+        },
+        { 
+            id: 'legs', 
+            name: 'Legs', 
+            value: 0.75,
+            description: 'Leg muscles (quadriceps, hamstrings, glutes, calves) power locomotion and lower body movements.',
+            exercises: ['Squats', 'Lunges', 'Deadlifts', 'Calf Raises']
+        },
     ];
     
     // Improved color gradient: green (0) → yellow (0.5) → red (1)
@@ -52,39 +85,44 @@ const MuscleIntensityVisualization = () => {
     // More anatomically accurate SVG paths
     const musclePaths: MusclePaths = {
         front: {
-            // Chest (pectoralis major) - Adjusted to fit the torso curve
-            chest: "M130,120 C150,100 190,100 210,120 C200,140 180,140 160,140 C150,135 140,130 130,120 Z",
+            // Chest now with two distinct pecs (left and right)
+            chest: "M 107 110 C 121 101 151 101 153 107 C 170 112 167 137 157 145 C 151 153 112 150 109 146 C 103 147 97 121 107 110 Z M 216 103 C 207 99 170 100 167 106 C 165 108 164 140 171 144 C 184 150 218 143 218 141 C 231 124 224 111 221 106 Z",
             
-            // Shoulders (deltoids) - Aligned with head position
-            shoulders: "M110,110 C130,90 190,90 210,110 C200,120 180,120 160,120 C150,115 140,115 130,120 C125,115 115,110 110,110 Z",
+            // Shoulders - unchanged
+            shoulders: "M 97 110 C 118 91 134 91 159 99 C 176 91 193 91 217 109 C 215 114 172 115 160 115 C 150 115 98 115 97 110 Z",
             
-            // Arms (biceps/triceps) - Matched to arm paths
-            arms: "M90,130 C80,160 70,210 90,240 C100,230 110,190 100,160 Z " +
-                "M220,130 C230,160 240,210 220,240 C210,230 200,190 210,160 Z",
+            // Arms - unchanged
+            arms: "M 85 115 C 52 153 48 203 61 223 C 78 218 97 189 92 149 Z " +
+                "M 229 109 C 245 135 263 191 249 224 C 234 210 219 181 221 141 Z",
             
-            // Core (abdominals) - Fitted to torso shape
-            core: "M140,150 C150,170 170,170 180,150 C170,210 160,210 150,190 C145,180 140,170 140,150 Z",
+            // Core - unchanged
+            core: "M 134 192 C 154 201 172 197 191 186 C 202 240 186 267 165 268 C 139 268 117 245 123 186 Z",
             
-            // Legs (quadriceps) - Aligned with leg paths
-            legs: "M120,250 C115,280 110,330 125,360 C135,340 140,300 140,270 Z " +
-                "M190,250 C195,280 200,330 185,360 C175,340 170,300 170,270 Z"
+            // Legs - spaced further apart (increased x-values by 15 on each side)
+            legs: "M95,260 C90,290 85,340 105,370 C115,350 120,310 120,280 Z " +
+                "M225,260 C230,290 235,340 215,370 C205,350 200,310 200,280 Z"
         },
         back: {
-            // Back (latissimus dorsi) - Wider to match back shape
-            back: "M130,120 C150,100 190,100 210,120 C200,180 180,180 150,160 C140,150 135,140 130,120 Z",
+            // Back - unchanged
+            back: "M 99 120 C 120 103 196 102 215 120 C 207 158 202 235 163 230 C 124 235 110 160 99 120 Z",
             
-            // Shoulders (rear deltoids)
-            shoulders: "M110,110 C130,90 190,90 210,110 C200,120 180,120 160,120 C150,115 140,115 130,120 C125,115 115,110 110,110 Z",
+            // Shoulders - unchanged
+            shoulders: "M 97 110 C 118 91 134 91 159 99 C 176 91 193 91 217 109 C 215 114 172 115 160 115 C 150 115 98 115 97 110 Z",
             
-            // Arms (triceps) - More defined triceps area
-            arms: "M90,130 C85,150 80,200 95,230 C105,220 110,180 105,150 Z " +
-                "M220,130 C225,150 230,200 215,230 C205,220 200,180 205,150 Z",
+            // Arms - unchanged
+            arms: "M 85 115 C 52 153 48 203 61 223 C 78 218 97 189 92 149 Z " +
+                "M 229 109 C 245 135 263 191 249 224 C 234 210 219 181 221 141 Z",
             
-            // Legs (hamstrings/glutes) - Adjusted for hamstring curve
-            legs: "M120,250 C115,280 105,330 125,350 C135,340 140,300 140,270 Z " +
-                "M190,250 C195,280 205,330 185,350 C175,340 170,300 170,270 Z"
+            // Legs - spaced further apart to match front changes
+            legs: "M95,260 C90,290 80,340 105,360 C115,345 120,310 120,280 Z " +
+                "M225,260 C230,290 240,340 215,360 C205,345 200,310 200,280 Z"
         }
     };
+
+    // Get currently selected muscle data
+    const selectedMuscleData = selectedMuscle 
+        ? muscleData.find(m => m.id === selectedMuscle) 
+        : null;
 
     return (
         <View style={styles.container}>
@@ -106,89 +144,144 @@ const MuscleIntensityVisualization = () => {
                 </TouchableOpacity>
             </View>
             
-            {/* Body Visualization */}
-            <View style={styles.bodyContainer}>
-                <Svg width={300} height={400} viewBox="0 0 300 400">
-                    {/* Torso */}
-                    <Path
-                        transform="rotate(0.0271671 159.485 190.063)"
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        fill="#f8f8f8"
-                        d="m159.4846,95.86142c20.57139,-9.55146 47.9999,-9.55146 61.71416,4.09348c13.71426,13.64494 13.71426,40.93483 6.85713,68.22472c-23.31424,23.87865 -13.71426,54.57977 -20.57139,81.86966c-6.85713,27.28989 -27.42852,40.93483 -47.9999,40.93483c-20.57139,0 -41.14277,-13.64494 -47.9999,-40.93483c-6.85713,-27.28989 0,-55.94427 -20.57139,-81.86966c-6.85713,-27.28989 -6.85713,-54.57977 6.85713,-68.22472c13.71426,-13.64494 41.14277,-13.64494 61.71416,-4.09348z"
-                    />
-                    
-                    {/* Head */}
-                    <Path
-                        strokeWidth="2"
-                        stroke="#ccc"
-                        fill="#f8f8f8"
-                        d="m123,23c20,-20 50,-20 70,0c10,20 10,40 0,60c-20,10 -50,10 -70,0c-10,-20 -10,-40 0,-60z"
-                    />
-                    
-                    {/* Left Arm */}
-                    <Path
-                        transform="rotate(7.60753 77.5107 170)"
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        fill="#f8f8f8"
-                        d="m81.60118,104c-23.44583,36 -35.16874,96 -11.72291,132c23.44583,-12 35.16874,-60 23.44583,-96l-11.72291,-36z"
-                    />
-                    
-                    {/* Right Arm */}
-                    <Path
-                        transform="rotate(-5.296 236.489 168)"
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        fill="#f8f8f8"
-                        d="m232.79961,99c21.14861,37.63636 31.72291,100.36364 10.5743,138c-21.14861,-12.54545 -31.72291,-62.72727 -21.14861,-100.36364l10.5743,-37.63636z"
-                    />
-                    
-                    {/* Left Leg */}
-                    <Path
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        fill="#f8f8f8"
-                        d="m100.60434,246c-12.25542,45 -24.51085,101.25 0,135c24.51085,-11.25 36.76627,-67.5 24.51085,-101.25l-24.51085,-33.75z"
-                    />
-                    
-                    {/* Right Leg */}
-                    <Path
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        fill="#f8f8f8"
-                        d="m218.37229,246c11.40964,43 22.81928,96.75 0,129.00001c-22.81928,-10.75 -34.22892,-64.5 -22.81928,-96.75l22.81928,-32.25z"
-                    />
-                    
-                    {/* Now add your muscle groups as before */}
-                    {Object.entries(musclePaths[view]).map(([group, path]) => {
-                        const muscle = muscleData.find(m => m.id === group) || { value: 0 };
-                        return (
-                            <Path 
-                                key={group}
-                                d={path} 
-                                fill={getColor(muscle.value)} 
-                                stroke="#555" 
-                                strokeWidth="1.5"
-                                opacity={0.85}
-                            />
-                        );
-                    })}
-                </Svg>
+            {/* Body and Info Container */}
+            <View style={styles.bodyInfoContainer}>
+                {/* Body Visualization */}
+                <View style={styles.bodyContainer}>
+                    <Svg width={300} height={400} viewBox="0 0 300 400">
+                        {/* Torso */}
+                        <Path
+                            transform="rotate(0.0271671 159.485 190.063)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m159.4846,95.86142c20.57139,-9.55146 47.9999,-9.55146 61.71416,4.09348c13.71426,13.64494 13.71426,40.93483 6.85713,68.22472c-23.31424,23.87865 -13.71426,54.57977 -20.57139,81.86966c-6.85713,27.28989 -27.42852,40.93483 -47.9999,40.93483c-20.57139,0 -41.14277,-13.64494 -47.9999,-40.93483c-6.85713,-27.28989 0,-55.94427 -20.57139,-81.86966c-6.85713,-27.28989 -6.85713,-54.57977 6.85713,-68.22472c13.71426,-13.64494 41.14277,-13.64494 61.71416,-4.09348z"
+                        />
+                        
+                        {/* Head */}
+                        <Path
+                            strokeWidth="2"
+                            stroke="#ccc"
+                            fill="#f8f8f8"
+                            d="m123,23c20,-20 50,-20 70,0c10,20 10,40 0,60c-20,10 -50,10 -70,0c-10,-20 -10,-40 0,-60z"
+                        />
+                        
+                        {/* Left Arm */}
+                        <Path
+                            transform="rotate(7.60753 77.5107 170)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m81.60118,104c-23.44583,36 -35.16874,96 -11.72291,132c23.44583,-12 35.16874,-60 23.44583,-96l-11.72291,-36z"
+                        />
+                        
+                        {/* Right Arm */}
+                        <Path
+                            transform="rotate(-5.296 236.489 168)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m232.79961,99c21.14861,37.63636 31.72291,100.36364 10.5743,138c-21.14861,-12.54545 -31.72291,-62.72727 -21.14861,-100.36364l10.5743,-37.63636z"
+                        />
+                        
+                        {/* Left Leg */}
+                        <Path
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m100.60434,246c-12.25542,45 -24.51085,101.25 0,135c24.51085,-11.25 36.76627,-67.5 24.51085,-101.25l-24.51085,-33.75z"
+                        />
+                        
+                        {/* Right Leg */}
+                        <Path
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m218.37229,246c11.40964,43 22.81928,96.75 0,129.00001c-22.81928,-10.75 -34.22892,-64.5 -22.81928,-96.75l22.81928,-32.25z"
+                        />
+                        
+                        {/* Muscle groups with selectable highlighting */}
+                        {Object.entries(musclePaths[view]).map(([group, path]) => {
+                            const muscle = muscleData.find(m => m.id === group) || { value: 0 };
+                            const isSelected = selectedMuscle === group;
+                            
+                            return (
+                                <Path 
+                                    key={group}
+                                    d={path} 
+                                    fill={getColor(muscle.value)} 
+                                    stroke={isSelected ? "#4a86e8" : "#555"}
+                                    strokeWidth={isSelected ? 3 : 1.5}
+                                    opacity={0.85}
+                                />
+                            );
+                        })}
+                    </Svg>
+                </View>
+                
+                {/* Muscle Info Panel */}
+                <View style={styles.infoContainer}>
+                    {selectedMuscleData ? (
+                        <View style={styles.infoCard}>
+                            <Text style={styles.infoTitle}>{selectedMuscleData.name}</Text>
+                            <Text style={styles.infoValue}>
+                                Intensity: <Text style={styles.highlightValue}>{Math.round(selectedMuscleData.value * 100)}%</Text>
+                            </Text>
+                            
+                            <Text style={styles.infoDescription}>
+                                {selectedMuscleData.description}
+                            </Text>
+                            
+                            <Text style={styles.sectionTitle}>Targeted Exercises:</Text>
+                            <View style={styles.exercisesContainer}>
+                                {selectedMuscleData.exercises.map((exercise, index) => (
+                                    <View key={index} style={styles.exercisePill}>
+                                        <Text style={styles.exerciseText}>{exercise}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    ) : (
+                        <View style={styles.placeholder}>
+                            <Text style={styles.placeholderText}>
+                                Select a muscle group to see detailed information
+                            </Text>
+                        </View>
+                    )}
+                </View>
             </View>
             
             {/* Muscle Group Labels */}
             <View style={styles.labelsContainer}>
-                {muscleData.map((muscle) => (
-                    <View key={muscle.id} style={styles.labelItem}>
-                        <View 
-                            style={[styles.colorBox, { backgroundColor: getColor(muscle.value) }]} 
-                        />
-                            <Text style={styles.labelText}>
-                            {muscle.name}: <Text style={styles.valueText}>{Math.round(muscle.value * 100)}%</Text>
+                {muscleData.map((muscle) => {
+                    const isSelected = selectedMuscle === muscle.id;
+                    
+                    return (
+                        <TouchableOpacity
+                            key={muscle.id}
+                            style={[
+                                styles.labelItem,
+                                isSelected && styles.selectedLabelItem
+                            ]}
+                            onPress={() => setSelectedMuscle(
+                                isSelected ? null : muscle.id
+                            )}
+                        >
+                            <View 
+                                style={[
+                                    styles.colorBox, 
+                                    { backgroundColor: getColor(muscle.value) }
+                                ]} 
+                            />
+                            <Text style={[
+                                styles.labelText,
+                                isSelected && styles.selectedLabelText
+                            ]}>
+                                {muscle.name}
                             </Text>
-                    </View>
-                ))}
+                        </TouchableOpacity>
+                    );
+                })}
             </View>
             
             {/* Intensity Legend */}
@@ -215,20 +308,10 @@ const MuscleIntensityVisualization = () => {
     );
 };
 
-// Helper components
-const Circle = ({ cx, cy, r, ...props }: CircleProps) => (
-    <Path 
-        d={`M${cx},${cy} m${-r},0 a${r},${r} 0 1,0 ${Number(r)*2},0 a${r},${r} 0 1,0 ${-r*2},0`}
-        {...props}
-    />
-);
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        padding: 20,
-        backgroundColor: '#fff',
     },
     title: {
         fontSize: 24,
@@ -260,68 +343,153 @@ const styles = StyleSheet.create({
     inactiveText: {
         color: '#666',
     },
+    // New layout for body and info
+    bodyInfoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 20,
+    },
     bodyContainer: {
-        marginVertical: 15,
+        width: '50%',
         alignItems: 'center',
+        backgroundColor: 'transparent',
+        borderRadius: 10,
+        padding: 15,
+        elevation: 2,
+    },
+    infoContainer: {
+        width: '45%',
         backgroundColor: '#fafafa',
         borderRadius: 10,
         padding: 15,
         elevation: 2,
     },
+    infoCard: {
+        flex: 1,
+    },
+    placeholder: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    placeholderText: {
+        fontSize: 16,
+        color: '#888',
+        textAlign: 'center',
+        fontStyle: 'italic',
+    },
+    infoTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#4a86e8',
+    },
+    infoValue: {
+        fontSize: 18,
+        marginBottom: 15,
+        color: '#333',
+    },
+    highlightValue: {
+        fontWeight: 'bold',
+        color: '#e74c3c',
+    },
+    infoDescription: {
+        fontSize: 16,
+        marginBottom: 20,
+        color: '#555',
+        lineHeight: 22,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#333',
+    },
+    exercisesContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    exercisePill: {
+        backgroundColor: '#e3f2fd',
+        borderRadius: 20,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        margin: 4,
+    },
+    exerciseText: {
+        fontSize: 14,
+        color: '#1976d2',
+    },
     labelsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        marginVertical: 15,
+        marginVertical: 10,
+        paddingHorizontal: 10,
     },
     labelItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        margin: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 15,
+        margin: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 10,
         backgroundColor: '#f9f9f9',
-        borderRadius: 20,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: '#eee',
     },
+    selectedLabelItem: {
+        backgroundColor: '#e3f2fd',
+        borderColor: '#4a86e8',
+        borderWidth: 2,
+    },
     colorBox: {
-        width: 22,
-        height: 22,
-        borderRadius: 5,
-        marginRight: 10,
+        width: 16,
+        height: 16,
+        borderRadius: 4,
+        marginRight: 6,
         borderWidth: 1,
         borderColor: '#ddd',
     },
     labelText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '500',
         color: '#444',
     },
-    valueText: {
+    selectedLabelText: {
         fontWeight: 'bold',
-        color: '#222',
+        color: '#1976d2',
     },
     legendContainer: {
         alignItems: 'center',
-        marginTop: 15,
-        width: '90%',
+        marginTop: 10,
+        width: '80%',
         backgroundColor: '#f9f9f9',
-        borderRadius: 10,
-        padding: 15,
+        borderRadius: 8, 
+        padding: 10,
     },
     legendTitle: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 6,
         color: '#555',
     },
     legendBar: {
         flexDirection: 'row',
-        height: 25,
+        height: 18,
         width: '100%',
-        borderRadius: 5,
+        borderRadius: 4,
         overflow: 'hidden',
+    },
+    legendLabel: {
+        fontSize: 12,
+        fontWeight: '500',
+        color: '#555',
+    },
+    valueText: {
+        fontWeight: 'bold',
+        color: '#222',
     },
     legendSegment: {
         flex: 1,
@@ -331,11 +499,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         marginTop: 8,
-    },
-    legendLabel: {
-        fontSize: 14,
-        fontWeight: '500',
-        color: '#555',
     },
 });
 
