@@ -28,16 +28,6 @@ const MuscleInfoPanel = ({
         );
     }
 
-    // Truncate text if it exceeds container height
-    const truncateText = (text: string, maxLines: number) => {
-        const lines = text.split('\n');
-        if (lines.length > maxLines) {
-            return lines.slice(0, maxLines).join('\n') + '...';
-        }
-        return text;
-    };
-
-    const truncatedDescription = truncateText(selectedMuscleData.description, 3);
     const truncatedExercises = selectedMuscleData.exercises.slice(0, 4); // Show max 4 exercises
 
     return (
@@ -90,7 +80,7 @@ const MuscleInfoPanel = ({
 const styles = StyleSheet.create({
     infoCard: {
         flex: 1,
-        padding: 8,
+        padding: 4,
     },
     placeholder: {
         flex: 1,

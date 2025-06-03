@@ -60,18 +60,6 @@ export default function ProfileMainInfo({
                         <Text style={styles.statLabel}>Workouts</Text>
                     </View>
                 </View>
-
-                {/* Compact Exercise & Goals Row */}
-                <View style={styles.metaRow}>
-                    <View style={styles.metaItem}>
-                        <Text style={styles.metaLabel}>Favorite:</Text>
-                        <Text style={styles.metaValue} numberOfLines={1}>{stats.favoriteExercise}</Text>
-                    </View>
-                    <View style={styles.metaItem}>
-                        <Text style={styles.metaLabel}>Goals:</Text>
-                        <Text style={styles.metaValue} numberOfLines={1}>{stats.goals}</Text>
-                    </View>
-                </View>
             </View>
         </View>
     );
