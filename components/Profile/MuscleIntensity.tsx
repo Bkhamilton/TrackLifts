@@ -52,7 +52,7 @@ const MuscleIntensityVisualization = () => {
         { 
             id: 'core', 
             name: 'Core', 
-            value: 0.9,
+            value: 0.2,
             description: 'Core muscles (abdominals, obliques) stabilize the torso and transfer force between upper/lower body.',
             exercises: ['Planks', 'Russian Twists', 'Leg Raises', 'Crunches']
         },
