@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import IntensityLegend from './IntensityLegend';
+import MuscleInfoPanel from './MuscleInfoPanel';
+import MuscleLabels from './MuscleLabels';
 
 type MuscleGroup = {
   id: string;
@@ -121,7 +124,7 @@ const MuscleIntensityVisualization = () => {
 
     // Get currently selected muscle data
     const selectedMuscleData = selectedMuscle 
-        ? muscleData.find(m => m.id === selectedMuscle) 
+        ? muscleData.find(m => m.id === selectedMuscle) ?? null
         : null;
 
     return (
@@ -221,89 +224,20 @@ const MuscleIntensityVisualization = () => {
                 
                 {/* Muscle Info Panel */}
                 <View style={styles.infoContainer}>
-                    {selectedMuscleData ? (
-                        <View style={styles.infoCard}>
-                            <Text style={styles.infoTitle}>{selectedMuscleData.name}</Text>
-                            <Text style={styles.infoValue}>
-                                Intensity: <Text style={styles.highlightValue}>{Math.round(selectedMuscleData.value * 100)}%</Text>
-                            </Text>
-                            
-                            <Text style={styles.infoDescription}>
-                                {selectedMuscleData.description}
-                            </Text>
-                            
-                            <Text style={styles.sectionTitle}>Targeted Exercises:</Text>
-                            <View style={styles.exercisesContainer}>
-                                {selectedMuscleData.exercises.map((exercise, index) => (
-                                    <View key={index} style={styles.exercisePill}>
-                                        <Text style={styles.exerciseText}>{exercise}</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    ) : (
-                        <View style={styles.placeholder}>
-                            <Text style={styles.placeholderText}>
-                                Select a muscle group to see detailed information
-                            </Text>
-                        </View>
-                    )}
+                    <MuscleInfoPanel selectedMuscleData={selectedMuscleData} />
                 </View>
             </View>
             
             {/* Muscle Group Labels */}
-            <View style={styles.labelsContainer}>
-                {muscleData.map((muscle) => {
-                    const isSelected = selectedMuscle === muscle.id;
-                    
-                    return (
-                        <TouchableOpacity
-                            key={muscle.id}
-                            style={[
-                                styles.labelItem,
-                                isSelected && styles.selectedLabelItem
-                            ]}
-                            onPress={() => setSelectedMuscle(
-                                isSelected ? null : muscle.id
-                            )}
-                        >
-                            <View 
-                                style={[
-                                    styles.colorBox, 
-                                    { backgroundColor: getColor(muscle.value) }
-                                ]} 
-                            />
-                            <Text style={[
-                                styles.labelText,
-                                isSelected && styles.selectedLabelText
-                            ]}>
-                                {muscle.name}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
+            <MuscleLabels
+                muscleData={muscleData}
+                selectedMuscle={selectedMuscle}
+                setSelectedMuscle={setSelectedMuscle}
+                getColor={getColor}
+            />
             
             {/* Intensity Legend */}
-            <View style={styles.legendContainer}>
-                <Text style={styles.legendTitle}>Intensity Scale:</Text>
-                <View style={styles.legendBar}>
-                    {[...Array(10)].map((_, i) => (
-                        <View 
-                            key={i} 
-                            style={[
-                                styles.legendSegment, 
-                                { backgroundColor: getColor(i / 9) }
-                            ]} 
-                        />
-                    ))}
-                </View>
-                <View style={styles.legendLabels}>
-                    <Text style={styles.legendLabel}>Low</Text>
-                    <Text style={styles.legendLabel}>Medium</Text>
-                    <Text style={styles.legendLabel}>High</Text>
-                </View>
-            </View>
+            <IntensityLegend getColor={getColor} />
         </View>
     );
 };

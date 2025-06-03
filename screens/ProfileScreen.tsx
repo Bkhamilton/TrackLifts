@@ -1,4 +1,4 @@
-import MuscleIntensity from '@/components/Profile/MuscleIntensity';
+import MuscleIntensity from '@/components/Profile/MuscleIntensity/MuscleIntensity';
 import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
