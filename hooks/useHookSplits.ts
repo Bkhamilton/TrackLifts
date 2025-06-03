@@ -65,10 +65,9 @@ export default function useHookSplits() {
         const newSplit: Split = {
             id: splits.length + 1,
             name: newSplitName,
-            routines: Array(7).fill(null).map((_, i) => ({
-                day: i + 1,
-                routine: 'Rest' // Default to rest days
-            }))
+            routines: [
+                { day: 1, routine: 'Rest' } // Start with just one day by default
+            ]
         };
         setSplits([...splits, newSplit]);
         setNewSplitName('');
@@ -89,6 +88,43 @@ export default function useHookSplits() {
         }));
     };
 
+    const addDayToSplit = (splitId: number) => {
+        setSplits(prev => prev.map(split => {
+            if (split.id === splitId) {
+                const newDayNumber = split.routines.length > 0 
+                    ? Math.max(...split.routines.map(d => d.day)) + 1 
+                    : 1;
+                return {
+                    ...split,
+                    routines: [
+                        ...split.routines,
+                        { day: newDayNumber, routine: 'Rest' }
+                    ]
+                };
+            }
+            return split;
+        }));
+    };
+
+    const removeDayFromSplit = (splitId: number, dayNumber: number) => {
+        setSplits(prev => prev.map(split => {
+            if (split.id === splitId) {
+                const newRoutines = split.routines.filter(d => d.day !== dayNumber);
+                
+                // If this is the primary split, update currentWeek
+                if (split.isPrimary) {
+                    setCurrentWeek(newRoutines);
+                }
+                
+                return {
+                    ...split,
+                    routines: newRoutines
+                };
+            }
+            return split;
+        }));
+    };
+
     return {
         splits,
         currentWeek,
@@ -101,5 +137,7 @@ export default function useHookSplits() {
         setAsPrimary,
         createNewSplit,
         updateSplitDay,
+        addDayToSplit,
+        removeDayFromSplit,
     };
 }

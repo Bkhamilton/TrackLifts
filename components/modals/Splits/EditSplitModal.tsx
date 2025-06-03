@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { Picker } from '@react-native-picker/picker';
-import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface RoutineDay {
     day: number;
@@ -19,6 +19,8 @@ interface EditSplitModalProps {
     editingSplit: Split;
     availableRoutines: string[];
     onUpdateSplitDay: (splitId: number, day: number, routine: string) => void;
+    onAddDay: (splitId: number) => void;
+    onRemoveDay: (splitId: number, day: number) => void;
     onClose: () => void;
 }
 
@@ -27,30 +29,78 @@ export default function EditSplitModal({
     editingSplit,
     availableRoutines,
     onUpdateSplitDay,
+    onAddDay,
+    onRemoveDay,
     onClose,
 }: EditSplitModalProps) {
+    const [activePicker, setActivePicker] = useState<number | null>(null);
+    const [expandedPicker, setExpandedPicker] = useState<number | null>(null);
+
+    const handleDayPress = (dayNumber: number) => {
+        if (expandedPicker === dayNumber) {
+            setExpandedPicker(null);
+        } else {
+            setExpandedPicker(dayNumber);
+        }
+    };
+
+    const handleAddDay = () => {
+        onAddDay(editingSplit.id);
+    };
+
+    const handleRemoveDay = (dayNumber: number) => {
+        onRemoveDay(editingSplit.id, dayNumber);
+    };
+
     return (
         <Modal visible={visible} transparent={true} animationType="slide">
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>Edit {editingSplit.name}</Text>
 
-                    {editingSplit.routines.map((day, index) => (
-                        <View key={index} style={styles.dayRow}>
-                            <Text style={styles.dayLabel}>
-                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.day - 1]}
-                            </Text>
-                            <Picker
-                                selectedValue={day.routine}
-                                style={styles.picker}
-                                onValueChange={(value) => onUpdateSplitDay(editingSplit.id, day.day, value)}
-                            >
-                                {availableRoutines.map((routine, i) => (
-                                    <Picker.Item key={i} label={routine} value={routine} />
-                                ))}
-                            </Picker>
+                    {editingSplit.routines.map((day) => (
+                        <View key={day.day} style={styles.dayRow}>
+                            <Text style={styles.dayLabel}>Day {day.day}</Text>
+                            
+                            {expandedPicker === day.day ? (
+                                <Picker
+                                    selectedValue={day.routine}
+                                    style={styles.picker}
+                                    onValueChange={(value) => {
+                                        onUpdateSplitDay(editingSplit.id, day.day, value);
+                                        setExpandedPicker(null);
+                                    }}
+                                >
+                                    {availableRoutines.map((routine, i) => (
+                                        <Picker.Item key={i} label={routine} value={routine} />
+                                    ))}
+                                </Picker>
+                            ) : (
+                                <TouchableOpacity 
+                                    style={styles.routineValue}
+                                    onPress={() => handleDayPress(day.day)}
+                                >
+                                    <Text>{day.routine}</Text>
+                                </TouchableOpacity>
+                            )}
+                            
+                            {editingSplit.routines.length > 1 && (
+                                <TouchableOpacity 
+                                    style={styles.removeButton}
+                                    onPress={() => handleRemoveDay(day.day)}
+                                >
+                                    <Text style={styles.removeButtonText}>×</Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
                     ))}
+
+                    <TouchableOpacity 
+                        style={styles.addDayButton}
+                        onPress={handleAddDay}
+                    >
+                        <Text style={styles.addDayButtonText}>+ Add Day</Text>
+                    </TouchableOpacity>
 
                     <View style={styles.modalButtons}>
                         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
@@ -88,15 +138,26 @@ const styles = StyleSheet.create({
     dayRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom: 12,
+        justifyContent: 'space-between',
     },
     dayLabel: {
-        fontSize: 12,
-        color: '#666',
+        fontSize: 14,
+        fontWeight: '500',
+        width: 60,
+    },
+    routineValue: {
+        flex: 1,
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 4,
+        marginHorizontal: 8,
     },
     picker: {
         flex: 1,
-        height: 40,
+        height: Platform.OS === 'ios' ? 120 : 40,
+        marginHorizontal: 8,
     },
     modalButtons: {
         flexDirection: 'row',
@@ -121,5 +182,23 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontWeight: '600',
+    },
+    addDayButton: {
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 4,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    addDayButtonText: {
+        color: '#333',
+    },
+    removeButton: {
+        padding: 4,
+        marginLeft: 8,
+    },
+    removeButtonText: {
+        fontSize: 18,
+        color: 'red',
     },
 });

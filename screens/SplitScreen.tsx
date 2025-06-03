@@ -21,6 +21,8 @@ export default function SplitScreen() {
         setAsPrimary,
         createNewSplit,
         updateSplitDay,
+        addDayToSplit,
+        removeDayFromSplit,
     } = useHookSplits();
 
     const router = useRouter();
@@ -131,6 +133,8 @@ export default function SplitScreen() {
                     editingSplit={editingSplit}
                     availableRoutines={['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body', 'Rest']}
                     onUpdateSplitDay={updateSplitDay}
+                    onAddDay={addDayToSplit}
+                    onRemoveDay={removeDayFromSplit}
                     onClose={() => setEditingSplit(null)}
                 />
             )}
