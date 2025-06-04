@@ -37,7 +37,6 @@ export default function ActiveWorkoutScreen() {
 
     // Function to handle deleting a set
     const handleDeleteSet = (exerciseId: number, setId: number) => {
-        console.log(`Deleting set ${setId} from exercise ${exerciseId}`);
         deleteSet(exerciseId, setId);
         // Remove the set from completed sets if it was there
         setCompletedSets(prev => prev.filter(id => id !== setId));

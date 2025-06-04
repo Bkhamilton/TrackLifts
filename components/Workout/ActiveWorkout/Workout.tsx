@@ -23,6 +23,11 @@ export default function Workout({
     onToggleComplete,
     completedSets
 }: WorkoutProps) {
+
+    const handleDeleteSet = (exerciseId: number, setId: number) => {
+        onDeleteSet(exerciseId, setId);
+    }
+
     return (
         <View style={styles.container}>
             {routine.exercises.map((exercise) => (
@@ -31,7 +36,7 @@ export default function Workout({
                     exercise={exercise}
                     onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
                     onAddSet={() => onAddSet(exercise.id)}
-                    onDeleteSet={(setId) => onDeleteSet(exercise.id, setId)}
+                    onDeleteSet={(exerciseId, setId) => handleDeleteSet(exerciseId, setId)}
                     onToggleComplete={onToggleComplete}
                     completedSets={completedSets}
                 />

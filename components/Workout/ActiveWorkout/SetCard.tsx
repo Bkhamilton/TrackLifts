@@ -2,7 +2,7 @@ import { Text, TextInput, View } from '@/components/Themed';
 import { ActiveSet } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, PanResponder, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SetCardProps {
     set: ActiveSet;
@@ -23,42 +23,11 @@ export default function SetCard({
     isCompleted,
     onDeleteSet
 }: SetCardProps) {
-    const pan = React.useRef(new Animated.ValueXY()).current;
-    const SWIPE_THRESHOLD = -60;
-
-    const panResponder = React.useRef(
-        PanResponder.create({
-            onMoveShouldSetPanResponder: () => true,
-            onPanResponderMove: Animated.event(
-                [null, { dx: pan.x }],
-                { useNativeDriver: false }
-            ),
-            onPanResponderRelease: (e, gestureState) => {
-                if (gestureState.dx < SWIPE_THRESHOLD) {
-                    Animated.timing(pan, {
-                        toValue: { x: -200, y: 0 },
-                        duration: 200,
-                        useNativeDriver: false
-                    }).start(() => onDeleteSet(set.id));
-                } else {
-                    Animated.spring(pan, {
-                        toValue: { x: 0, y: 0 },
-                        useNativeDriver: false
-                    }).start();
-                }
-            },
-        })
-    ).current;
-
     return (
-        <Animated.View 
-            style={[
-                styles.setContainer,
-                isCompleted && styles.completedSet,
-                { transform: [{ translateX: pan.x }] }
-            ]}
-            {...panResponder.panHandlers}
-        >
+        <View style={[
+            styles.setContainer,
+            isCompleted && styles.completedSet,
+        ]}>
             <View style={styles.contentContainer}>
                 <Text style={styles.setNumber}>#{set.set_order}</Text>
                 
@@ -88,29 +57,30 @@ export default function SetCard({
                     <Text style={styles.unit}>reps</Text>
                 </View>
 
-                <TouchableOpacity 
-                    onPress={() => onToggleComplete(set.id)}
-                    style={styles.checkContainer}
-                >
-                    <MaterialCommunityIcons
-                        name={isCompleted ? "check-circle" : (editingSet === set.id ? "pencil" : "circle-outline")}
-                        size={24}
-                        color={isCompleted ? "green" : (editingSet === set.id ? "#007AFF" : "#aaa")}
-                    />
-                </TouchableOpacity>
+                <View style={styles.actionsContainer}>
+                    <TouchableOpacity 
+                        onPress={() => onToggleComplete(set.id)}
+                        style={styles.checkButton}
+                    >
+                        <MaterialCommunityIcons
+                            name={isCompleted ? "check-circle" : (editingSet === set.id ? "pencil" : "circle-outline")}
+                            size={24}
+                            color={isCompleted ? "green" : (editingSet === set.id ? "#007AFF" : "#aaa")}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={() => onDeleteSet(set.id)}
+                        style={styles.deleteButton}
+                    >
+                        <MaterialCommunityIcons
+                            name="trash-can-outline"
+                            size={20}
+                            color="#ff6b6b"
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
-            
-            <TouchableOpacity 
-                style={styles.deleteButton}
-                onPress={() => onDeleteSet(set.id)}
-            >
-                <MaterialCommunityIcons
-                    name="trash-can-outline"
-                    size={24}
-                    color="white"
-                />
-            </TouchableOpacity>
-        </Animated.View>
+        </View>
     );
 }
 
@@ -121,7 +91,6 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
-        overflow: 'hidden',
     },
     contentContainer: {
         flexDirection: 'row',
@@ -164,17 +133,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#e0ffe0',
         color: '#555',
     },
-    checkContainer: {
-        width: 24,
-        alignItems: 'center',
-    },
-    deleteButton: {
-        backgroundColor: 'red',
-        justifyContent: 'center',
+    actionsContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
         width: 80,
-        height: '100%',
-        position: 'absolute',
-        right: -80,
+        justifyContent: 'flex-end',
+    },
+    checkButton: {
+        marginRight: 12,
+    },
+    deleteButton: {
+        padding: 4,
     },
 });
