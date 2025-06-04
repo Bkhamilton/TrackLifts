@@ -17,11 +17,9 @@ export interface History {
 }
 
 export interface Workout {
-    id: number;
-    date: string;
     routine: ActiveRoutine;
-    startTime: string;
-    endTime: string;
+    startTime: number | null;
+    endTime: number | null;
     lengthMin: string;
     notes: string;
 }

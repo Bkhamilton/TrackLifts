@@ -11,7 +11,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
     const [modal, setModal] = useState(false);
-    const { routine, startTime, setIsActiveWorkout, resetRoutine } = useContext(ActiveWorkoutContext);
+    const { routine, startTime, setIsActiveWorkout, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
@@ -52,9 +52,16 @@ export default function ActiveWorkoutScreen() {
         stopTimer();
         setIsActiveWorkout(false);
         if (isFinished) {
-            // Save the workout to the database and update the current routine to match the completed workout
-            // save formattedTime            
-            // saveWorkoutToDatabase(routine);
+            // Save the workout to the database and update the current routine to match the completed workou  
+            // build Workout object using routine
+            const workout = {       
+                routine: routine,
+                startTime: startTime,
+                endTime: Date.now(),
+                lengthMin: formattedTime,
+                notes: 'Workout completed successfully!' // Add any notes if needed
+            };
+            saveWorkoutToDatabase(workout);
             // Display a success modal and navigate to the home page
             // openSuccessModal(routine, 'Workout completed successfully!');
             router.replace('/finishWorkout')

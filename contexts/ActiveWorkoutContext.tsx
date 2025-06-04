@@ -121,10 +121,10 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     
         // 2. Create WorkoutSession entry
         const sessionId = await insertWorkoutSession(db, {
+            userId: 1, // Assuming a user ID of 1 for now
             routineId: workout.routine.id,
             startTime: workout.startTime,
             endTime: workout.endTime,
-            durationMinutes: workout.lengthMin,
             notes: workout.notes || null,
         });
     
@@ -149,6 +149,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         reps: set.reps,
                         restTime: set.restTime || null,
                         completed: true,
+                        notes: null,
                     });
                 }
 
