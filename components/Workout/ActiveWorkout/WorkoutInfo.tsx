@@ -36,10 +36,11 @@ export default function WorkoutInfo({
             </View>
             
             {/* Sets List */}
-            {exercise.sets.map((set) => (
+            {exercise.sets.map((set, index) => (
                 <SetCard 
                     key={set.id} 
-                    set={set} 
+                    set={set}
+                    index={index} 
                     onUpdateSet={onUpdateSet} 
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}

@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SetCardProps {
     set: ActiveSet;
+    index: number; // Add this prop
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
     editingSet: number | null;
     setEditingSet: React.Dispatch<React.SetStateAction<number | null>>;
@@ -16,6 +17,7 @@ interface SetCardProps {
 
 export default function SetCard({ 
     set, 
+    index, // Add this to destructuring
     onUpdateSet, 
     editingSet, 
     setEditingSet,
@@ -29,8 +31,9 @@ export default function SetCard({
             isCompleted && styles.completedSet,
         ]}>
             <View style={styles.contentContainer}>
-                <Text style={styles.setNumber}>#{set.set_order}</Text>
+                <Text style={styles.setNumber}>#{index + 1}</Text>
                 
+                {/* Rest of the component remains the same */}
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={[styles.input, isCompleted && styles.completedInput]}
