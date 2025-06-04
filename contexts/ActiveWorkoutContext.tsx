@@ -58,7 +58,7 @@ interface ActiveWorkoutContextValueProviderProps {
 export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextValueProviderProps) => {
     const db = useSQLiteContext();
 
-    const { routines } = useContext(DBContext);
+    const { routines, user } = useContext(DBContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
 
@@ -121,7 +121,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     
         // 2. Create WorkoutSession entry
         const sessionId = await insertWorkoutSession(db, {
-            userId: 1, // Assuming a user ID of 1 for now
+            userId: user.id,
             routineId: workout.routine.id,
             startTime: workout.startTime,
             endTime: workout.endTime,
@@ -144,7 +144,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
                     await insertSessionSet(db, {
                         sessionExerciseId: sessionExerciseId,
-                        setOrder: set.set_order,
+                        setOrder: i + 1, // Set order starts from 1
                         weight: set.weight,
                         reps: set.reps,
                         restTime: set.restTime || null,
@@ -163,7 +163,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         const set = exercise.sets[i];
                         await insertExerciseSet(db, {
                             routine_exercise_id: routineExercise.id,
-                            set_order: set.set_order,
+                            set_order: i + 1, // Set order starts from 1
                             weight: set.weight,
                             reps: set.reps,
                             date: new Date().toISOString(),

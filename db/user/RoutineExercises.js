@@ -29,7 +29,7 @@ export const getRoutineExercise = async (db, routineId, exerciseId) => {
             LEFT JOIN
                 MuscleGroups mg ON e.muscle_group_id = mg.id
             WHERE re.routine_id = ? AND re.exercise_id = ?`;
-        const row = await db.getAsync(query, [routineId, exerciseId]);
+        const row = await db.getAllAsync(query, [routineId, exerciseId]);
         return row;
     } catch (error) {
         console.error('Error getting routine exercise:', error);
