@@ -35,6 +35,7 @@ interface DBContextValue {
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
     deleteRoutineFromDB: (routineId: number) => Promise<void>;
+    refreshRoutines: () => void;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -62,6 +63,9 @@ export const DBContext = createContext<DBContextValue>({
     },
     deleteRoutineFromDB: async () => {
         return;
+    },
+    refreshRoutines: () => {
+        // This function can be used to refresh routines if needed
     },
 });
 
@@ -198,6 +202,14 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         }
     }
 
+    const refreshRoutines = () => {
+        if (db && user.id !== 0) {
+            getRoutineData(db, user.id).then((data) => {
+                setRoutines(data || []);
+            });
+        }
+    };
+
     useEffect(() => {
         if (db) {
             getUserById(db, 1).then((data) => {
@@ -261,6 +273,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         addRoutineToDB,
         deleteExerciseFromDB,
         deleteRoutineFromDB,
+        refreshRoutines,
     };
 
     return (

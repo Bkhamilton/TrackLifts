@@ -58,7 +58,7 @@ interface ActiveWorkoutContextValueProviderProps {
 export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextValueProviderProps) => {
     const db = useSQLiteContext();
 
-    const { routines, user } = useContext(DBContext);
+    const { routines, user, refreshRoutines } = useContext(DBContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
 
@@ -176,6 +176,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
             await db.runAsync('ROLLBACK');
             throw error;
         }
+        refreshRoutines();
     
         return sessionId;
     };

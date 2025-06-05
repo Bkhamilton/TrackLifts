@@ -83,10 +83,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
         paddingBottom: 12,
+        backgroundColor: 'transparent',
     },
     headerText: {
         fontSize: 18,
@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     },
     exercisesContainer: {
         marginBottom: 16,
+        paddingTop: 16,
+        backgroundColor: 'transparent',
     },
     exercisesContent: {
         paddingBottom: 8,
