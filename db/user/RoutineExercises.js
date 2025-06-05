@@ -30,7 +30,7 @@ export const getRoutineExercise = async (db, routineId, exerciseId) => {
                 MuscleGroups mg ON e.muscle_group_id = mg.id
             WHERE re.routine_id = ? AND re.exercise_id = ?`;
         const row = await db.getAllAsync(query, [routineId, exerciseId]);
-        return row;
+        return row.length > 0 ? row[0] : null;
     } catch (error) {
         console.error('Error getting routine exercise:', error);
         throw error;
@@ -81,7 +81,6 @@ export const updateRoutineExercise = async (db, routineId, exerciseId, updates) 
             'UPDATE RoutineExercises SET sets = ?, reps = ? WHERE routine_id = ? AND exercise_id = ?',
             [updates.sets, updates.reps, routineId, exerciseId]
         );
-        console.log('Routine exercise updated');
     } catch (error) {
         console.error('Error updating routine exercise:', error);
         throw error;
@@ -110,7 +109,6 @@ export const deleteRoutineExerciseByRoutineId = async (db, routineId) => {
 export const clearRoutineExercises = async (db, routineId) => {
     try {
         await db.runAsync('DELETE FROM RoutineExercises WHERE routine_id = ?', [routineId]);
-        console.log('Routine exercises cleared');
     } catch (error) {
         console.error('Error clearing routine exercises:', error);
         throw error;

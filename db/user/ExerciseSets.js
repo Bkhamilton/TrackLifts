@@ -138,7 +138,6 @@ export const clearExerciseSets = async (db, routineId, exerciseId) => {
             'DELETE FROM ExerciseSets WHERE routine_exercise_id IN (SELECT id FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?)',
             [routineId, exerciseId]
         );
-        console.log('Exercise sets cleared');
     } catch (error) {
         console.error('Error clearing exercise sets:', error);
         throw error;
