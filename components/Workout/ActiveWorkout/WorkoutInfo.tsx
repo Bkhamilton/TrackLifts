@@ -1,3 +1,4 @@
+import ExerciseOptionsModal from '@/components/modals/ExerciseOptionsModal';
 import { ClearView, Text, View } from '@/components/Themed';
 import { ActiveExercise } from '@/utils/types';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -12,6 +13,8 @@ interface WorkoutInfoProps {
     onToggleComplete: (exerciseId: number, setId: number) => void;
     onDeleteSet: (exerciseId: number, setId: number) => void;
     completedSets: number[];
+    onReplaceExercise?: (exerciseId: number) => void;
+    onRemoveExercise?: (exerciseId: number) => void;
 }
 
 export default function WorkoutInfo({ 
@@ -20,16 +23,37 @@ export default function WorkoutInfo({
     onAddSet,
     onToggleComplete,
     onDeleteSet,
-    completedSets 
+    completedSets,
+    onReplaceExercise,
+    onRemoveExercise
 }: WorkoutInfoProps) {
     const [editingSet, setEditingSet] = useState<number | null>(null);
+    const [optionsModalVisible, setOptionsModalVisible] = useState(false); // Add this state
+
+    const handleOptionSelect = (option: 'replace' | 'remove') => {
+        setOptionsModalVisible(false);
+        console.log(`Selected option: ${option} for exercise ${exercise.id}`);
+        
+        // Call the appropriate handler
+        if (option === 'replace' && onReplaceExercise) {
+            onReplaceExercise(exercise.id);
+        } else if (option === 'remove' && onRemoveExercise) {
+            onRemoveExercise(exercise.id);
+        }
+    };
 
     return (
         <View style={styles.exerciseContainer}>
+            <ExerciseOptionsModal
+                visible={optionsModalVisible}
+                onClose={() => setOptionsModalVisible(false)}
+                onSelectOption={handleOptionSelect}
+            />
+            {/* Exercise Title and Options Button */}
             <ClearView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text style={styles.exerciseTitle}>{exercise.title}</Text>
                 <TouchableOpacity 
-                    onPress={() => setEditingSet(exercise.id)}
+                    onPress={() => setOptionsModalVisible(true)}
                     style={{ marginBottom: 12, }}
                 >
                     <SimpleLineIcons name="options" size={20} color="#ff8787" />

@@ -111,6 +111,8 @@ export default function ActiveWorkoutScreen() {
                     onDeleteSet={handleDeleteSet} // Add this prop
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
+                    onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
+                    onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
                 />
             </ScrollView>
         </View>

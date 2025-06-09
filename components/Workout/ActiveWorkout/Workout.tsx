@@ -12,6 +12,8 @@ interface WorkoutProps {
     onDeleteSet: (exerciseId: number, setId: number) => void;
     onToggleComplete: (exerciseId: number, setId: number) => void;
     completedSets: number[];
+    onReplaceExercise?: (exerciseId: number) => void; // Add this prop
+    onRemoveExercise?: (exerciseId: number) => void; // Add this prop
 }
 
 export default function Workout({ 
@@ -21,7 +23,9 @@ export default function Workout({
     onAddSet, 
     onDeleteSet,
     onToggleComplete,
-    completedSets
+    completedSets,
+    onReplaceExercise,
+    onRemoveExercise
 }: WorkoutProps) {
 
     const handleDeleteSet = (exerciseId: number, setId: number) => {
@@ -39,6 +43,8 @@ export default function Workout({
                     onDeleteSet={(exerciseId, setId) => handleDeleteSet(exerciseId, setId)}
                     onToggleComplete={onToggleComplete}
                     completedSets={completedSets}
+                    onReplaceExercise={onReplaceExercise}
+                    onRemoveExercise={onRemoveExercise}
                 />
             ))}
             {
