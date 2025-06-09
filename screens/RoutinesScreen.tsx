@@ -5,10 +5,9 @@ import RoutineListSection from '@/components/Routines/RoutineListSection';
 import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 import useHookRoutines from '@/hooks/useHookRoutines';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function RoutinesScreen() {
@@ -23,15 +22,12 @@ export default function RoutinesScreen() {
         openRoutine,
         openRoutineOptions,
         onStart,
+        searchModalVisible,
+        setSearchModalVisible,
+        handleSearchSelect
     } = useHookRoutines();
 
-    const [searchModalVisible, setSearchModalVisible] = useState(false); // Add this state
     const router = useRouter();
-
-    const handleSearchSelect = (selectedRoutine: ActiveRoutine) => {
-        setSearchModalVisible(false);
-        openRoutine(selectedRoutine);
-    };
 
     return (
         <View style={styles.container}>

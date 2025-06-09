@@ -9,6 +9,7 @@ export default function useHookRoutines() {
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
     const [routineModal, setRoutineModal] = useState(false);
+    const [searchModalVisible, setSearchModalVisible] = useState(false);
     const [routine, setSelectRoutine] = useState<ActiveRoutine>({
         id: 0,
         title: 'Test Routine',
@@ -41,6 +42,11 @@ export default function useHookRoutines() {
         }
     };
 
+    const handleSearchSelect = (selectedRoutine: ActiveRoutine) => {
+        setSearchModalVisible(false);
+        openRoutine(selectedRoutine);
+    };
+
     return {
         routines,
         favoriteRoutineIds,
@@ -52,5 +58,8 @@ export default function useHookRoutines() {
         openRoutine,
         openRoutineOptions,
         onStart,
+        searchModalVisible,
+        setSearchModalVisible,
+        handleSearchSelect
     };
 }
