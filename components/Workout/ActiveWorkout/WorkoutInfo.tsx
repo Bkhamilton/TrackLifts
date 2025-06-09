@@ -1,5 +1,6 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
 import { ActiveExercise } from '@/utils/types';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import SetCard from './SetCard';
@@ -25,14 +26,22 @@ export default function WorkoutInfo({
 
     return (
         <View style={styles.exerciseContainer}>
-            <Text style={styles.exerciseTitle}>{exercise.title}</Text>
+            <ClearView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={styles.exerciseTitle}>{exercise.title}</Text>
+                <TouchableOpacity 
+                    onPress={() => setEditingSet(exercise.id)}
+                    style={{ marginBottom: 12, }}
+                >
+                    <SimpleLineIcons name="options" size={20} color="#ff8787" />
+                </TouchableOpacity>
+            </ClearView>
             
             {/* Header Row */}
             <View style={styles.headerRow}>
                 <Text style={styles.headerText}>Set</Text>
                 <Text style={styles.headerText}>Weight</Text>
                 <Text style={styles.headerText}>Reps</Text>
-                <View style={{ width: 24 }}></View>
+                <View style={{ width: 80 }}></View>
             </View>
             
             {/* Sets List */}
@@ -78,9 +87,10 @@ const styles = StyleSheet.create({
     },
     headerRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         marginBottom: 8,
-        paddingHorizontal: 4,
+        paddingHorizontal: 0,
     },
     headerText: {
         fontSize: 14,
