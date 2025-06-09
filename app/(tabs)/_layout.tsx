@@ -32,7 +32,7 @@ function TabBarButton({ name, color }: TabBarButtonProps) {
                     alignItems: 'center',
                     bottom: 12,
                     elevation: 5,  
-                    backgroundColor: '#FF6347',
+                    backgroundColor: '#ff8787',
                 }}
             >
                 <MaterialCommunityIcons size={44} name={name} color={color} />

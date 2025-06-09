@@ -1,0 +1,56 @@
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { DBContext } from '@/contexts/DBContext';
+import { ActiveRoutine } from '@/utils/types';
+import { useRouter } from 'expo-router';
+import { useContext, useState } from 'react';
+
+export default function useHookRoutines() {
+    const { routines } = useContext(DBContext);
+    const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+    const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
+    const [routineModal, setRoutineModal] = useState(false);
+    const [routine, setSelectRoutine] = useState<ActiveRoutine>({
+        id: 0,
+        title: 'Test Routine',
+        exercises: []
+    });
+
+    const favoriteRoutineIds = [2, 4]; // Example favorite routine IDs, replace with actual logic to fetch favorites
+
+    const router = useRouter();
+
+    const openRoutine = (routine: ActiveRoutine) => {
+        setSelectRoutine(routine);
+        setRoutineModal(true);
+    };
+    const openRoutineOptions = (routine: ActiveRoutine) => {
+        setSelectRoutine(routine);
+        setRoutineOptionsModal(true);
+    };
+
+    const onStart = (routine: ActiveRoutine) => {
+        setRoutine(routine);
+        setRoutineModal(false);
+        if (isActiveWorkout) {
+            alert('You already have an active workout. Please finish it before starting a new one.');
+            setTimeout(() => {
+                router.replace('/(tabs)/workout/activeWorkout');
+            }, 500);
+        } else {
+            router.replace('/(tabs)/workout/newWorkout');
+        }
+    };
+
+    return {
+        routines,
+        favoriteRoutineIds,
+        routine,
+        routineModal,
+        routineOptionsModal,
+        setRoutineModal,
+        setRoutineOptionsModal,
+        openRoutine,
+        openRoutineOptions,
+        onStart,
+    };
+}
