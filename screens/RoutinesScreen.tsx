@@ -1,12 +1,14 @@
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
+import SearchRoutineModal from '@/components/modals/SearchRoutineModal';
 import RoutineListSection from '@/components/Routines/RoutineListSection';
-import { Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 import useHookRoutines from '@/hooks/useHookRoutines';
+import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function RoutinesScreen() {
@@ -23,10 +25,21 @@ export default function RoutinesScreen() {
         onStart,
     } = useHookRoutines();
 
+    const [searchModalVisible, setSearchModalVisible] = useState(false); // Add this state
     const router = useRouter();
+
+    const handleSearchSelect = (selectedRoutine: ActiveRoutine) => {
+        setSearchModalVisible(false);
+        openRoutine(selectedRoutine);
+    };
 
     return (
         <View style={styles.container}>
+            <SearchRoutineModal
+                visible={searchModalVisible}
+                onClose={() => setSearchModalVisible(false)}
+                onSelect={handleSearchSelect}
+            />
             <RoutineOptions
                 visible={routineOptionsModal}
                 close={() => setRoutineOptionsModal(false)}
@@ -47,19 +60,21 @@ export default function RoutinesScreen() {
                     </TouchableOpacity>
                 }
                 rightContent={
-                    <TouchableOpacity onPress={() => setRoutineModal(true)}>
-                        <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
-                    </TouchableOpacity>
+                    <View style={styles.headerRight}>
+                        <TouchableOpacity 
+                            onPress={() => setSearchModalVisible(true)}
+                            style={styles.searchButton}
+                        >
+                            <MaterialCommunityIcons name="magnify" size={24} color="#ff8787" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setRoutineModal(true)}>
+                            <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
+                        </TouchableOpacity>
+                    </View>
                 }
             />
             
             <View>
-                {/* Search bar (optional - you can implement search functionality later) */}
-                <View style={styles.searchContainer}>
-                    <MaterialCommunityIcons name="magnify" size={20} color="#999" style={styles.searchIcon} />
-                    <Text style={styles.searchPlaceholder}>Search routines...</Text>
-                </View>
-                
                 <RoutineListSection
                     title="Favorites"
                     icon="star"
@@ -90,22 +105,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    searchContainer: {
+    headerRight: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        marginBottom: 16,
-        borderWidth: 1,
-        borderColor: '#eee',
     },
-    searchIcon: {
+    searchButton: {
         marginRight: 8,
-    },
-    searchPlaceholder: {
-        color: '#999',
-        fontSize: 16,
     },
 });
