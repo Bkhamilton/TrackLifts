@@ -87,6 +87,28 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                 },
             ],
         };
+
+        // If title is Empty Workout, set a title based on the day and time ('Monday Morning Workout', etc.)
+        if (routine.title === 'Empty Workout') {
+            const date = new Date();
+            const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+            const hour = date.getHours();
+            let timeOfDay = '';
+            if (hour >= 5 && hour < 12) {
+                timeOfDay = 'Morning';
+            } else if (hour >= 12 && hour < 18) {
+                timeOfDay = 'Afternoon';
+            } else {
+                timeOfDay = 'Night';
+            }
+
+            const formattedTitle = `${weekday} ${timeOfDay} Workout`;
+            setRoutine((prevRoutine) => ({
+                ...prevRoutine,
+                title: formattedTitle,
+            }));
+        }
     
         setRoutine((prevRoutine) => ({
             ...prevRoutine,

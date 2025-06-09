@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 20,
         backgroundColor: '#f5f5f5',
-        borderRadius: 25,
+        borderRadius: 12,
         overflow: 'hidden',
         borderWidth: 1,
         borderColor: '#e0e0e0',
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
     },
     activeToggle: {
-        backgroundColor: '#4a86e8',
+        backgroundColor: '#ff8787',
     },
     activeText: {
         color: '#fff',
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
         width: '45%',
         backgroundColor: '#fafafa',
         borderRadius: 10,
-        padding: 15,
+        padding: 8,
         elevation: 2,
     },
 });

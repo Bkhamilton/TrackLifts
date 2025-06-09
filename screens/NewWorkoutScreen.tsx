@@ -2,14 +2,17 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
+import OptionsModal from '@/components/modals/OptionsModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function NewWorkoutScreen() {
-    const [modal, setModal] = useState(false);
+    const [addWorkoutModal, setAddWorkoutModal] = useState(false);
+    const [optionsModal, setOptionsModal] = useState(false);
     const { routine, startWorkout } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet } = useWorkoutActions();
 
@@ -21,10 +24,10 @@ export default function NewWorkoutScreen() {
     }
 
     const openModal = () => {
-        setModal(true);
+        setAddWorkoutModal(true);
     }
     const closeModal = () => {
-        setModal(false);
+        setAddWorkoutModal(false);
     }
 
     return (
@@ -36,11 +39,25 @@ export default function NewWorkoutScreen() {
                         <Text style={styles.title}>START</Text>
                     </TouchableOpacity>
                 }
+                leftContent={
+                    routine.title !== 'Empty Workout' ? (
+                        <TouchableOpacity 
+                            onPress={() => setOptionsModal(true)}
+                        >
+                            <SimpleLineIcons name="options" size={20} color="#ff8787" />
+                        </TouchableOpacity>
+                    ) : null
+                }
             />
             <AddToWorkoutModal 
-                visible={modal} 
+                visible={addWorkoutModal} 
                 close={closeModal} 
                 add={addExercise}
+            />
+            <OptionsModal
+                visible={optionsModal} 
+                close={() => setOptionsModal(false)} 
+                routine={routine}
             />
             <ScrollView style={styles.scrollView}>
                 <WorkoutDisplay 

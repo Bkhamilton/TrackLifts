@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from '@/components/Themed';
+import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -71,22 +71,22 @@ export default function FinishWorkoutScreen() {
 
                 {/* Summary stats */}
                 <View style={styles.statsContainer}>
-                    <View style={styles.statRow}>
+                    <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="clock-outline" size={24} color="#666" />
                         <Text style={styles.statText}>Time: {totalTime}</Text>
-                    </View>
-                    <View style={styles.statRow}>
+                    </ClearView>
+                    <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="weight-lifter" size={24} color="#666" />
                         <Text style={styles.statText}>Total Sets: {totalSets}</Text>
-                    </View>
-                    <View style={styles.statRow}>
+                    </ClearView>
+                    <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="weight-kilogram" size={24} color="#666" />
                         <Text style={styles.statText}>Total Weight Moved: {totalWeightMoved} kg</Text>
-                    </View>
-                    <View style={styles.statRow}>
+                    </ClearView>
+                    <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="trophy" size={24} color="#666" />
                         <Text style={styles.statText}>Highest Weight: {highestWeight} kg</Text>
-                    </View>
+                    </ClearView>
                 </View>
 
                 {/* Exercise breakdown */}

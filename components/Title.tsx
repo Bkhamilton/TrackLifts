@@ -9,6 +9,15 @@ interface TitleProps {
 }
 
 export default function Title({ title, leftContent, rightContent }: TitleProps) {
+    // Determine font size based on title length
+    const getFontSize = (length: number) => {
+        if (length <= 18) return 18;      // Large
+        if (length <= 32) return 14;      // Medium
+        return 12;                        // Small
+    };
+
+    const fontSize = getFontSize(title.length);
+
     return (
         <View style={styles.outerContainer}>
             <View style={styles.container}>
@@ -19,7 +28,7 @@ export default function Title({ title, leftContent, rightContent }: TitleProps) 
 
                 {/* Centered Title */}
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={[styles.title, { fontSize }]}>{title}</Text>
                 </View>
 
                 {/* Render rightContent */}
@@ -61,7 +70,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 18,
         fontWeight: 'bold',
     },
     separator: {
