@@ -22,6 +22,7 @@ interface ActiveWorkoutContextValue {
     startWorkout: () => void;
     saveWorkoutToDatabase: (workout: Workout) => Promise<number>;
     resetRoutine: () => void;
+    clearRoutine: () => void;
     // activeWorkout: Workout | null;
     // setActiveWorkout: (workout: Workout) => void;
     // addExerciseToWorkout: (exercise: Exercise) => void;
@@ -45,6 +46,7 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
         return 0; // Placeholder return value
     },
     resetRoutine: () => {},
+    clearRoutine: () => {},
     // activeWorkout: null,
     // setActiveWorkout: () => {},
     // addExerciseToWorkout: () => {},
@@ -219,6 +221,14 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         }
     };
 
+    const clearRoutine = () => {
+        setRoutine({
+            id: 0,
+            title: 'Empty Workout',
+            exercises: [],
+        } as ActiveRoutine);
+    }
+
     const value = {
         routine,
         setRoutine,
@@ -230,6 +240,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         startWorkout,
         saveWorkoutToDatabase,
         resetRoutine,
+        clearRoutine,
         // activeWorkout,
         // setActiveWorkout,
         // addExerciseToWorkout,

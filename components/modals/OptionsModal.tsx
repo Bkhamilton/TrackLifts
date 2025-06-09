@@ -12,10 +12,15 @@ interface RoutineOptionsProps {
 
 export default function OptionsModal({ visible, close, routine }: RoutineOptionsProps) {
 
-    const { resetRoutine } = useContext(ActiveWorkoutContext);
+    const { resetRoutine, clearRoutine } = useContext(ActiveWorkoutContext);
+
+    const handleResetRoutine = () => {
+        resetRoutine();
+        close();
+    };
 
     const handleClearRoutine = () => {
-        resetRoutine();
+        clearRoutine();
         close();
     };
 
@@ -32,6 +37,15 @@ export default function OptionsModal({ visible, close, routine }: RoutineOptions
                             <View style={{ paddingHorizontal: 6 }}>
                                 <Text style={{ fontSize: 18, fontWeight: '700' }}>{routine.title}</Text>
                             </View>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={handleResetRoutine}
+                            >
+                                <View style={styles.optionButtons}>
+                                    <Text style={styles.optionText}>Reset Routine</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                         <View>
                             <TouchableOpacity
