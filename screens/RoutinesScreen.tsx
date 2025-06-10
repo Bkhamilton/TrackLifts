@@ -1,3 +1,4 @@
+import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import SearchRoutineModal from '@/components/modals/SearchRoutineModal';
@@ -6,6 +7,7 @@ import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DBContext } from '@/contexts/DBContext';
 import useHookRoutines from '@/hooks/useHookRoutines';
+import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
@@ -18,8 +20,10 @@ export default function RoutinesScreen() {
         routine,
         routineModal,
         routineOptionsModal,
+        addRoutineModal,
         setRoutineModal,
         setRoutineOptionsModal,
+        setAddRoutineModal,
         openRoutine,
         openRoutineOptions,
         onStart,
@@ -30,7 +34,7 @@ export default function RoutinesScreen() {
 
     const router = useRouter();
 
-    const { deleteRoutineFromDB } = useContext(DBContext);
+    const { deleteRoutineFromDB, addRoutineToDB } = useContext(DBContext);
 
     const onSelectOption = (option: string) => {
         switch (option) {
@@ -56,6 +60,26 @@ export default function RoutinesScreen() {
         setRoutineOptionsModal(false);
     }
 
+    const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
+        const newRoutine = {
+            ...routine,
+            id: 0, // ID will be auto-incremented by the database
+        };
+        addRoutineToDB(newRoutine)
+            .then((id) => {
+                if (id) {
+                    console.log('Routine added with ID:', id);
+                } else {
+                    console.log('Failed to add routine');
+                }
+            })
+            .catch((error) => {
+                console.error('Error adding routine:', error);
+            });
+        setAddRoutineModal(false);
+    }
+    
+
     return (
         <View style={styles.container}>
             <SearchRoutineModal
@@ -75,6 +99,11 @@ export default function RoutinesScreen() {
                 start={() => onStart(routine)}
                 routine={routine}
             />
+            <AddRoutineModal
+                visible={addRoutineModal}
+                close={() => setAddRoutineModal(false)}
+                add={onAdd}
+            />
             {/* Header with close button */}
             <Title
                 title="Your Routines"
@@ -91,7 +120,7 @@ export default function RoutinesScreen() {
                         >
                             <MaterialCommunityIcons name="magnify" size={24} color="#ff8787" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setRoutineModal(true)}>
+                        <TouchableOpacity onPress={() => setAddRoutineModal(true)}>
                             <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
                         </TouchableOpacity>
                     </View>
@@ -108,6 +137,7 @@ export default function RoutinesScreen() {
                     openRoutine={openRoutine}
                     openRoutineOptions={openRoutineOptions}
                     emptyText="No favorite routines"
+                    listHeight={2 * 90 + 8}
                 />
 
                 <RoutineListSection
@@ -119,6 +149,7 @@ export default function RoutinesScreen() {
                     openRoutine={openRoutine}
                     openRoutineOptions={openRoutineOptions}
                     emptyText="No routines found"
+                    listHeight={4 * 90 + 3 * 8}
                 />
             </View>
         </View>
