@@ -76,7 +76,7 @@ export default function HomeScreen() {
     const onSelectOption = (option: string) => {
         switch (option) {
             case 'edit':
-                router.replace('/(tabs)/(index)/editRoutine')
+                router.push('/(tabs)/(index)/editRoutine')
                 break;
             case 'delete':
                 // Handle delete routine logic here

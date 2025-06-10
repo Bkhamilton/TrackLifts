@@ -1,8 +1,10 @@
 import { ActiveExercise, History } from '@/utils/types'; // Adjust import path as needed
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
+import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
+import OptionsModal from './OptionsModal';
 
 interface HistoryModalProps {
     visible: boolean;
@@ -11,6 +13,31 @@ interface HistoryModalProps {
 }
 
 export default function HistoryModal({ visible, close, history }: HistoryModalProps) {
+
+    const router = useRouter();
+
+    const [optionsModalVisible, setOptionsModalVisible] = useState(false);
+    const handleOptionSelect = (option: string) => {
+        switch (option) {
+            case 'edit':
+                // Handle edit action here
+                console.log('Edit workout');
+                router.push('/(tabs)/history/editHistory')
+                setOptionsModalVisible(false);
+                close();
+                break;
+            case 'delete':
+                // Handle delete action here
+                console.log('Delete workout');
+                setOptionsModalVisible(false);
+                close();
+                break;
+            default:
+                console.log('Unknown option selected');
+                break;
+        }
+    }
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -50,14 +77,35 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
             transparent={true}
             animationType='fade'
         >
+            <OptionsModal
+                visible={optionsModalVisible}
+                close={() => setOptionsModalVisible(false)}
+                title="Options"
+                options={[
+                    { label: 'Edit Workout', value: 'edit' },
+                    { label: 'Delete Workout', value: 'delete', destructive: true }
+                ]}
+                onSelect={handleOptionSelect}
+            />
             <View style={styles.modalBackdrop}>
                 <View style={styles.modalContainer}>
                     {/* Header */}
                     <View style={styles.header}>
                         <Text style={styles.headerText}>Workout Details</Text>
-                        <TouchableOpacity onPress={close} style={styles.closeButton}>
-                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity 
+                                onPress={() => setOptionsModalVisible(true)} 
+                                style={[styles.closeButton, { marginRight: 8 }]}
+                            >
+                                <SimpleLineIcons name="options" size={24} color="#ff8787" />
+                            </TouchableOpacity>                            
+                            <TouchableOpacity 
+                                onPress={close} 
+                                style={styles.closeButton}
+                            >
+                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     {/* Summary */}

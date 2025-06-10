@@ -46,7 +46,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
     }
 
     const onEditSplit = () => {
-        router.replace('/(tabs)/(index)/splits');
+        router.push('/(tabs)/(index)/splits');
     }  
 
     return (

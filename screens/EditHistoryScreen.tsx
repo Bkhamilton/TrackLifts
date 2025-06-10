@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function EditRoutineScreen() {
+export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const { routine, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
@@ -62,7 +62,7 @@ export default function EditRoutineScreen() {
                     <TouchableOpacity
                         onPress={() => {
                             resetRoutine();
-                            router.back();
+                            router.replace('/(tabs)/(index)');
                         }}
                         style={{ marginRight: 12 }}
                     >
