@@ -1,17 +1,30 @@
+import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function FinishWorkoutScreen() {
     const router = useRouter();
 
-    const { routine } = useContext(ActiveWorkoutContext);
-    const totalTime = '00:00:00'; // Placeholder, replace with actual time calculation logic
+    const { routine, finalTime } = useContext(ActiveWorkoutContext);
     const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
+
+    const [showSaveModal, setShowSaveModal] = useState(false);
+
+    useEffect(() => {
+        if (routine.id === 0) {
+            setShowSaveModal(true);
+        }
+    }, [routine.id]);
+
+    const handleSaveRoutine = (name: string) => {
+        // Your logic to save the routine with the given name
+        setShowSaveModal(false);
+    };
 
     // Calculate workout statistics
     const totalSets = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
@@ -56,6 +69,11 @@ export default function FinishWorkoutScreen() {
 
     return (
         <View style={styles.container}>
+            <SaveRoutineModal
+                visible={showSaveModal}
+                onClose={() => setShowSaveModal(false)}
+                onSave={handleSaveRoutine}
+            />
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* Celebration animation */}
                 <View style={styles.celebrationContainer}>
@@ -73,7 +91,7 @@ export default function FinishWorkoutScreen() {
                 <View style={styles.statsContainer}>
                     <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="clock-outline" size={24} color="#666" />
-                        <Text style={styles.statText}>Time: {totalTime}</Text>
+                        <Text style={styles.statText}>Time: {finalTime}</Text>
                     </ClearView>
                     <ClearView style={styles.statRow}>
                         <MaterialCommunityIcons name="weight-lifter" size={24} color="#666" />

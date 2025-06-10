@@ -19,14 +19,12 @@ interface ActiveWorkoutContextValue {
     isActiveWorkout: boolean;
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
     startTime: number | null;
+    finalTime: string | null;
+    setFinalTime: React.Dispatch<React.SetStateAction<string | null>>;
     startWorkout: () => void;
     saveWorkoutToDatabase: (workout: Workout) => Promise<number>;
     resetRoutine: () => void;
     clearRoutine: () => void;
-    // activeWorkout: Workout | null;
-    // setActiveWorkout: (workout: Workout) => void;
-    // addExerciseToWorkout: (exercise: Exercise) => void;
-    // removeExerciseFromWorkout: (exerciseId: number) => void;
 }
 
 export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
@@ -41,16 +39,14 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     isActiveWorkout: false,
     setIsActiveWorkout: () => {},
     startTime: null,
+    finalTime: null,
+    setFinalTime: () => {},
     startWorkout: () => {},
     saveWorkoutToDatabase: async () => {
         return 0; // Placeholder return value
     },
     resetRoutine: () => {},
     clearRoutine: () => {},
-    // activeWorkout: null,
-    // setActiveWorkout: () => {},
-    // addExerciseToWorkout: () => {},
-    // removeExerciseFromWorkout: () => {},
 });
 
 interface ActiveWorkoutContextValueProviderProps {
@@ -63,6 +59,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     const { routines, user, refreshRoutines } = useContext(DBContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
+    const [finalTime, setFinalTime] = useState<string | null>(null);
 
     const [routine, setRoutine] = useState<ActiveRoutine>({
         id: 0,
@@ -237,14 +234,12 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         isActiveWorkout,
         setIsActiveWorkout,
         startTime,
+        finalTime,
+        setFinalTime,
         startWorkout,
         saveWorkoutToDatabase,
         resetRoutine,
         clearRoutine,
-        // activeWorkout,
-        // setActiveWorkout,
-        // addExerciseToWorkout,
-        // removeExerciseFromWorkout,
     };
 
     return (

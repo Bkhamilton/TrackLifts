@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from '@/components/Themed';
+import { ClearView, Text, TextInput, View } from '@/components/Themed';
 import { ActiveSet } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -60,7 +60,7 @@ export default function SetCard({
                     <Text style={styles.unit}>reps</Text>
                 </View>
 
-                <View style={styles.actionsContainer}>
+                <ClearView style={styles.actionsContainer}>
                     <TouchableOpacity 
                         onPress={() => onToggleComplete(set.id)}
                         style={styles.checkButton}
@@ -81,7 +81,7 @@ export default function SetCard({
                             color="#ff6b6b"
                         />
                     </TouchableOpacity>
-                </View>
+                </ClearView>
             </View>
         </View>
     );

@@ -11,7 +11,14 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
     const [modal, setModal] = useState(false);
-    const { routine, startTime, setIsActiveWorkout, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
+    const { 
+        routine, 
+        startTime,
+        setFinalTime, 
+        setIsActiveWorkout, 
+        resetRoutine, 
+        saveWorkoutToDatabase 
+    } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
@@ -60,6 +67,7 @@ export default function ActiveWorkoutScreen() {
                 lengthMin: formattedTime,
                 notes: 'Workout completed successfully!' // Add any notes if needed
             };
+            setFinalTime(formattedTime);
             saveWorkoutToDatabase(workout);
             // Display a success modal and navigate to the home page
             // openSuccessModal(routine, 'Workout completed successfully!');
