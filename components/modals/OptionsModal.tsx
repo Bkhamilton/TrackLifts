@@ -1,61 +1,65 @@
-import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { Routine } from '@/utils/types';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../Themed';
 
-interface RoutineOptionsProps {
-    visible: boolean;
-    close: () => void;
-    routine: Routine;
+interface Option {
+    label: string;
+    value: string;
+    destructive?: boolean;
 }
 
-export default function OptionsModal({ visible, close, routine }: RoutineOptionsProps) {
+interface OptionsModalProps {
+    visible: boolean;
+    close: () => void;
+    title: string;
+    options: Option[];
+    onSelect: (value: string) => void;
+}
 
-    const { resetRoutine, clearRoutine } = useContext(ActiveWorkoutContext);
-
-    const handleResetRoutine = () => {
-        resetRoutine();
-        close();
-    };
-
-    const handleClearRoutine = () => {
-        clearRoutine();
+export default function OptionsModal({
+    visible,
+    close,
+    title,
+    options,
+    onSelect,
+}: OptionsModalProps) {
+    const handleSelect = (value: string) => {
+        onSelect(value);
         close();
     };
 
     return (
         <Modal
-            visible = {visible}
-            transparent = {true}
-            animationType = 'fade'
+            visible={visible}
+            transparent={true}
+            animationType="fade"
         >
             <TouchableWithoutFeedback onPress={close}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalPopup}>
                         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', paddingVertical: 10 }}>
                             <View style={{ paddingHorizontal: 6 }}>
-                                <Text style={{ fontSize: 18, fontWeight: '700' }}>{routine.title}</Text>
+                                <Text style={{ fontSize: 18, fontWeight: '700' }}>{title}</Text>
                             </View>
                         </View>
-                        <View>
-                            <TouchableOpacity
-                                onPress={handleResetRoutine}
-                            >
-                                <View style={styles.optionButtons}>
-                                    <Text style={styles.optionText}>Reset Routine</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <TouchableOpacity
-                                onPress={handleClearRoutine}
-                            >
-                                <View style={styles.optionButtons}>
-                                    <Text style={styles.optionText}>Clear Routine</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                        {options.map((option) => (
+                            <View key={option.value}>
+                                <TouchableOpacity
+                                    onPress={() => handleSelect(option.value)}
+                                >
+                                    <View style={styles.optionButtons}>
+                                        <Text
+                                            style={[
+                                                styles.optionText,
+                                                option.destructive && { color: 'red' }
+                                            ]}
+                                        >
+                                            {option.label}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        ))}
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -64,7 +68,7 @@ export default function OptionsModal({ visible, close, routine }: RoutineOptions
 }
 
 const styles = StyleSheet.create({
-    modalPopup:{
+    modalPopup: {
         width: '70%',
         bottom: '10%',
         elevation: 30,
@@ -85,5 +89,5 @@ const styles = StyleSheet.create({
     optionText: {
         fontSize: 16,
         fontWeight: '500',
-    } 
+    }
 });

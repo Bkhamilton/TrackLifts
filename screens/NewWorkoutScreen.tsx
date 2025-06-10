@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
-import OptionsModal from '@/components/modals/OptionsModal';
+import WorkoutOptionsModal from '@/components/modals/WorkoutOptionsModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -54,7 +54,7 @@ export default function NewWorkoutScreen() {
                 close={closeModal} 
                 add={addExercise}
             />
-            <OptionsModal
+            <WorkoutOptionsModal
                 visible={optionsModal} 
                 close={() => setOptionsModal(false)} 
                 routine={routine}

@@ -34,7 +34,7 @@ export default function HomeScreen() {
         setDay,
     } = useHookHome();
 
-    const { routines, addRoutineToDB } = useContext(DBContext) 
+    const { routines, addRoutineToDB, deleteRoutineFromDB } = useContext(DBContext) 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
@@ -80,6 +80,13 @@ export default function HomeScreen() {
                 break;
             case 'delete':
                 // Handle delete routine logic here
+                deleteRoutineFromDB(routine.id)
+                    .then(() => {
+                        console.log('Routine deleted successfully');
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting routine:', error);
+                    });
                 break;
             case 'start':
                 onStart(routine);

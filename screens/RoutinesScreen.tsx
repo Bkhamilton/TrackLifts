@@ -4,10 +4,11 @@ import SearchRoutineModal from '@/components/modals/SearchRoutineModal';
 import RoutineListSection from '@/components/Routines/RoutineListSection';
 import { View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { DBContext } from '@/contexts/DBContext';
 import useHookRoutines from '@/hooks/useHookRoutines';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function RoutinesScreen() {
@@ -29,6 +30,32 @@ export default function RoutinesScreen() {
 
     const router = useRouter();
 
+    const { deleteRoutineFromDB } = useContext(DBContext);
+
+    const onSelectOption = (option: string) => {
+        switch (option) {
+            case 'edit':
+                router.replace('/(tabs)/(index)/editRoutine')
+                break;
+            case 'delete':
+                // Handle delete routine logic here
+                deleteRoutineFromDB(routine.id)
+                    .then(() => {
+                        console.log('Routine deleted successfully');
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting routine:', error);
+                    });
+                break;
+            case 'start':
+                onStart(routine);
+                break;
+            default:
+                console.warn('Unknown option selected:', option);
+        }
+        setRoutineOptionsModal(false);
+    }
+
     return (
         <View style={styles.container}>
             <SearchRoutineModal
@@ -40,6 +67,7 @@ export default function RoutinesScreen() {
                 visible={routineOptionsModal}
                 close={() => setRoutineOptionsModal(false)}
                 routine={routine}
+                onSelect={onSelectOption}
             />
             <RoutineModal
                 visible={routineModal}

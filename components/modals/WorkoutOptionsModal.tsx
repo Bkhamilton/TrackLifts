@@ -1,20 +1,26 @@
-import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { Routine } from '@/utils/types';
+import React, { useContext } from 'react';
+import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../Themed';
 
 interface RoutineOptionsProps {
     visible: boolean;
     close: () => void;
     routine: Routine;
-    onSelect: (option: string) => void;
 }
 
-export default function RoutineOptions({ visible, close, routine, onSelect }: RoutineOptionsProps) {
+export default function OptionsModal({ visible, close, routine }: RoutineOptionsProps) {
 
-    const handleSelect = (option: string) => {
-        onSelect(option);
+    const { resetRoutine, clearRoutine } = useContext(ActiveWorkoutContext);
+
+    const handleResetRoutine = () => {
+        resetRoutine();
+        close();
+    };
+
+    const handleClearRoutine = () => {
+        clearRoutine();
         close();
     };
 
@@ -34,28 +40,19 @@ export default function RoutineOptions({ visible, close, routine, onSelect }: Ro
                         </View>
                         <View>
                             <TouchableOpacity
-                                onPress={() => handleSelect('start')}
+                                onPress={handleResetRoutine}
                             >
                                 <View style={styles.optionButtons}>
-                                    <Text style={styles.optionText}>Start Workout</Text>
+                                    <Text style={styles.optionText}>Reset Routine</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                         <View>
                             <TouchableOpacity
-                                onPress={() => handleSelect('edit')}
+                                onPress={handleClearRoutine}
                             >
                                 <View style={styles.optionButtons}>
-                                    <Text style={styles.optionText}>Edit Routine</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => handleSelect('delete')}
-                            >
-                                <View style={styles.optionButtons}>
-                                    <Text style={styles.optionText}>Delete Routine</Text>
+                                    <Text style={styles.optionText}>Clear Routine</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
