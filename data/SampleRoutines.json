@@ -163,5 +163,37 @@
                 ]
             }
         ]
+    },
+    {
+        "title": "Arms",
+        "exercises": [
+            {
+                "title": "Bicep Curl",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 30, "reps": 12, "order": 1 },
+                    { "weight": 35, "reps": 10, "order": 2 },
+                    { "weight": 40, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Tricep Extension",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 40, "reps": 12, "order": 1 },
+                    { "weight": 45, "reps": 10, "order": 2 },
+                    { "weight": 50, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Hammer Curl",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 25, "reps": 12, "order": 1 },
+                    { "weight": 30, "reps": 10, "order": 2 },
+                    { "weight": 35, "reps": 8, "order": 3 }
+                ]
+            }
+        ]
     }
 ]

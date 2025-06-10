@@ -247,5 +247,33 @@
             { "name": "Biceps", "value": 0.5 }
         ],
         "equipment": "Barbell"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe4",
+        "title": "Tricep Extension",
+        "muscleGroup": "Arms",
+        "muscles": [
+            { "name": "Triceps", "value": 1 }
+        ],
+        "equipment": "Cable"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe5",
+        "title": "Hammer Curl",
+        "muscleGroup": "Arms",
+        "muscles": [
+            { "name": "Biceps", "value": 1 },
+            { "name": "Brachialis", "value": 0.5 }
+        ],
+        "equipment": "Dumbbell"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe6",
+        "title": "Bicep Curl",
+        "muscleGroup": "Arms",
+        "muscles": [
+            { "name": "Biceps", "value": 1 }
+        ],
+        "equipment": "Dumbbell"
     }
 ]
