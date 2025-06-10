@@ -1,12 +1,27 @@
-{
-    "name": "Weekly Cycle",
-    "routines": [
-        { "day": 1, "routine": "Push" },
-        { "day": 2, "routine": "Pull" },
-        { "day": 3, "routine": "Legs" },
-        { "day": 4, "routine": "Rest" },
-        { "day": 5, "routine": "Push" },
-        { "day": 6, "routine": "Pull" },
-        { "day": 7, "routine": "Legs" }
-    ]
-}
+[
+    {
+        "name": "Weekly Cycle",
+        "routines": [
+            { "day": 1, "routine": "Push" },
+            { "day": 2, "routine": "Pull" },
+            { "day": 3, "routine": "Legs" },
+            { "day": 4, "routine": "Rest" },
+            { "day": 5, "routine": "Push" },
+            { "day": 6, "routine": "Pull" },
+            { "day": 7, "routine": "Legs" }
+        ]
+    },
+    {
+        "name": "Upper/Lower Split",
+        "routines": [
+            { "day": 1, "routine": "Upper Body Workout" },
+            { "day": 2, "routine": "Legs" },
+            { "day": 3, "routine": "Rest" },
+            { "day": 4, "routine": "Upper Body Workout" },
+            { "day": 5, "routine": "Full Body Workout" },
+            { "day": 6, "routine": "Rest" },
+            { "day": 7, "routine": "Legs" },
+            { "day": 8, "routine": "Rest" }
+        ]
+    }
+]

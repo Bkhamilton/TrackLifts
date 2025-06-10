@@ -133,26 +133,29 @@ const syncRoutines = async (db) => {
 };
 
 const syncSplits = async (db) => {
-    // Insert sample split routines
-    const splitId = await insertSplit(db, {
-        name: sampleSplit.name,
-        user_id: 1
-    });
-
-    // Insert each routine in the split
-    for (const split of sampleSplit.routines) {
-        const routine = await getRoutineByTitle(db, split.routine);
-        if (!routine) {
-            console.warn(`Routine "${split.routine}" not found for split "${sampleSplit.name}"`);
-            continue;
-        }
-        await insertSplitRoutine(db, {
-            split_id: splitId,
-            split_order: split.day,
-            routine_id: routine.id,
+    // Handle sampleSplit as an array of split objects
+    for (const splitObj of sampleSplit) {
+        // Insert each split
+        const splitId = await insertSplit(db, {
+            name: splitObj.name,
+            user_id: 1
         });
-        
-        // You would need to implement the logic to handle the split routines
-        console.log(`Syncing split routine: ${split.routine}`);
+
+        // Insert each routine in the split
+        for (const split of splitObj.routines) {
+            const routine = await getRoutineByTitle(db, split.routine);
+            if (!routine) {
+                console.warn(`Routine "${split.routine}" not found for split "${splitObj.name}"`);
+                continue;
+            }
+            await insertSplitRoutine(db, {
+                split_id: splitId,
+                split_order: split.day,
+                routine_id: routine.id,
+            });
+
+            // You would need to implement the logic to handle the split routines
+            console.log(`Syncing split routine: ${split.routine} for split: ${splitObj.name}`);
+        }
     }
 }
