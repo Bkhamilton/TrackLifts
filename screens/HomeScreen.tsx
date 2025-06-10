@@ -73,6 +73,23 @@ export default function HomeScreen() {
         
     }
 
+    const onSelectOption = (option: string) => {
+        switch (option) {
+            case 'edit':
+                router.replace('/(tabs)/(index)/editRoutine')
+                break;
+            case 'delete':
+                // Handle delete routine logic here
+                break;
+            case 'start':
+                onStart(routine);
+                break;
+            default:
+                console.warn('Unknown option selected:', option);
+        }
+        closeRoutineOptionsModal();
+    }
+
     return (
         <View style={styles.container}>
             <SettingsModal
@@ -99,12 +116,13 @@ export default function HomeScreen() {
                 visible={routineOptionsModal}
                 close={closeRoutineOptionsModal}
                 routine={routine} 
+                onSelect={onSelectOption}
             />
             <Title 
-                title="TrackLifts"
+                title="Home"
                 rightContent={
                     <View style={styles.rightContent}>
-                        <TouchableOpacity onPress={() => router.replace('/(tabs)/profile')}>
+                        <TouchableOpacity onPress={() => router.replace('/(tabs)/profile/main')}>
                             <Ionicons name="person" size={20} color="#ff8787" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={openSettingsModal}>

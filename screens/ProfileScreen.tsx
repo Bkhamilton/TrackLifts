@@ -25,7 +25,7 @@ export default function ProfileScreen() {
     return (
         <View style={styles.container}>
             <Title 
-                title="Profile"
+                title="TrackLifts"
             />
             <ScrollView style={styles.scrollContainer}>
                 <ProfileMainInfo 

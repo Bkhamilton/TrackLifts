@@ -9,14 +9,20 @@ interface RoutineOptionsProps {
     visible: boolean;
     close: () => void;
     routine: Routine;
+    onSelect: (option: string) => void;
 }
 
-export default function RoutineOptions({ visible, close, routine }: RoutineOptionsProps) {
+export default function RoutineOptions({ visible, close, routine, onSelect }: RoutineOptionsProps) {
 
     const { deleteRoutineFromDB } = useContext(DBContext);
 
     const handleDelete = () => {
         deleteRoutineFromDB(routine.id);
+        close();
+    };
+
+    const handleSelect = (option: string) => {
+        onSelect(option);
         close();
     };
 
@@ -35,7 +41,18 @@ export default function RoutineOptions({ visible, close, routine }: RoutineOptio
                             </View>
                         </View>
                         <View>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => handleSelect('start')}
+                            >
+                                <View style={styles.optionButtons}>
+                                    <Text style={styles.optionText}>Start Workout</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => handleSelect('edit')}
+                            >
                                 <View style={styles.optionButtons}>
                                     <Text style={styles.optionText}>Edit Routine</Text>
                                 </View>

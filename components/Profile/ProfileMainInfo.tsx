@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
@@ -28,6 +29,13 @@ export default function ProfileMainInfo({
         goals: 'Build muscle & endurance'
     }
 }: ProfileMainInfoProps) {
+
+    const router = useRouter();
+
+    const handleEditProfile = () => {
+        router.replace('/(tabs)/profile/profileInfo');
+    };
+
     return (
         <View style={styles.container}>
             {/* Profile Header Row */}
@@ -39,7 +47,9 @@ export default function ProfileMainInfo({
                     <Text style={styles.username}>{username}</Text>
                     <Text style={styles.memberSince}>Member since {stats.memberSince}</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleEditProfile}
+                >
                     <MaterialCommunityIcons name="chevron-right" size={24} color="#666" />
                 </TouchableOpacity>
             </View>

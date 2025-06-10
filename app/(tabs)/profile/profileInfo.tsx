@@ -1,8 +1,8 @@
-import ProfileScreen from "@/screens/ProfileScreen";
+import ProfileInfoScreen from "@/screens/ProfileInfoScreen";
 import React from "react";
 
-export default function Profile() {
+export default function ProfileInfo() {
     return (
-        <ProfileScreen />
+        <ProfileInfoScreen />
     );
 }
