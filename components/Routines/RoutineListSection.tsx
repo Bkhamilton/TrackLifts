@@ -15,6 +15,7 @@ type Props = {
     openRoutine: (routine: ActiveRoutine) => void;
     openRoutineOptions: (routine: ActiveRoutine) => void;
     emptyText: string;
+    listHeight?: number;
 };
 
 export default function RoutineListSection({
@@ -26,6 +27,7 @@ export default function RoutineListSection({
     openRoutine,
     openRoutineOptions,
     emptyText,
+    listHeight,
 }: Props) {
     return (
         <View>
@@ -49,6 +51,7 @@ export default function RoutineListSection({
                 ListEmptyComponent={
                     <Text style={styles.emptyText}>{emptyText}</Text>
                 }
+                style={listHeight ? [{ height: listHeight }] : undefined}
                 contentContainerStyle={styles.listContent}
             />
         </View>

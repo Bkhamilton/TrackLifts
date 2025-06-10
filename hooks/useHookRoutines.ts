@@ -10,6 +10,7 @@ export default function useHookRoutines() {
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
     const [routineModal, setRoutineModal] = useState(false);
     const [searchModalVisible, setSearchModalVisible] = useState(false);
+    const [addRoutineModal, setAddRoutineModal] = useState(false);
     const [routine, setSelectRoutine] = useState<ActiveRoutine>({
         id: 0,
         title: 'Test Routine',
@@ -53,8 +54,10 @@ export default function useHookRoutines() {
         routine,
         routineModal,
         routineOptionsModal,
+        addRoutineModal,
         setRoutineModal,
         setRoutineOptionsModal,
+        setAddRoutineModal,
         openRoutine,
         openRoutineOptions,
         onStart,
