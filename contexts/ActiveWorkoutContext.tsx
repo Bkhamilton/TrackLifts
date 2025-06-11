@@ -22,6 +22,8 @@ interface ActiveWorkoutContextValue {
     finalTime: string | null;
     setFinalTime: React.Dispatch<React.SetStateAction<string | null>>;
     startWorkout: () => void;
+    finalWorkout: Workout;
+    setFinalWorkout: React.Dispatch<React.SetStateAction<Workout>>;
     saveWorkoutToDatabase: (workout: Workout) => Promise<number>;
     resetRoutine: () => void;
     clearRoutine: () => void;
@@ -42,6 +44,18 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     finalTime: null,
     setFinalTime: () => {},
     startWorkout: () => {},
+    finalWorkout: {
+        startTime: null,
+        endTime: null,
+        notes: '',
+        lengthMin: '',
+        routine: {
+            id: 0,
+            title: 'Empty Workout',
+            exercises: [],
+        },
+    } as Workout, // Initialize with a default Workout object
+    setFinalWorkout: () => {},
     saveWorkoutToDatabase: async () => {
         return 0; // Placeholder return value
     },
@@ -66,6 +80,17 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         title: 'Empty Workout',
         exercises: [],
     } as ActiveRoutine);
+    const [finalWorkout, setFinalWorkout] = useState<Workout>({
+        startTime: null,
+        endTime: null,
+        lengthMin: '',
+        notes: '',
+        routine: {
+            id: 0,
+            title: 'Empty Workout',
+            exercises: [],
+        },
+    } as Workout);
 
     const [isActiveWorkout, setIsActiveWorkout] = useState(false);
 
@@ -121,51 +146,47 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     };
 
     const saveWorkoutToDatabase = async (workout: Workout) => {
-        // 1. Update RoutineExercises if structure changed
-        await db.runAsync('BEGIN TRANSACTION');
-        try {
-            // Clear existing routine exercises
-            await clearRoutineExercises(db, workout.routine.id);
-            
-            // Recreate with current structure
-            for (const exercise of workout.routine.exercises) {
-                await insertRoutineExercise(db, {
-                    routine_id: workout.routine.id,
-                    exercise_id: exercise.id
-                });
+        // Only update RoutineExercises if routineId is valid (not 0)
+        if (workout.routine.id && workout.routine.id !== 0) {
+            await db.runAsync('BEGIN TRANSACTION');
+            try {
+                await clearRoutineExercises(db, workout.routine.id);
+                for (const exercise of workout.routine.exercises) {
+                    await insertRoutineExercise(db, {
+                        routine_id: workout.routine.id,
+                        exercise_id: exercise.id
+                    });
+                }
+                await db.runAsync('COMMIT');
+            } catch (error) {
+                await db.runAsync('ROLLBACK');
+                throw error;
             }
-            await db.runAsync('COMMIT');
-        } catch (error) {
-            await db.runAsync('ROLLBACK');
-            throw error;
         }
-    
-        // 2. Create WorkoutSession entry
+
+        // Insert WorkoutSession (allow routineId to be 0 or null for ad-hoc workouts)
         const sessionId = await insertWorkoutSession(db, {
             userId: user.id,
-            routineId: workout.routine.id,
+            routineId: workout.routine.id !== 0 ? workout.routine.id : null, // or 0 if your schema requires
             startTime: workout.startTime,
             endTime: workout.endTime,
             notes: workout.notes || null,
         });
-    
-        // 3. Process each exercise and its sets
+
+        // Insert session exercises and sets as usual
         await db.runAsync('BEGIN TRANSACTION');
         try {
             for (const exercise of workout.routine.exercises) {
-                // Create SessionExercise entry
                 const sessionExerciseId = await insertSessionExercise(db, {
                     sessionId: sessionId,
                     exerciseId: exercise.id,
                 });
-    
-                // Insert all sets
+
                 for (let i = 0; i < exercise.sets.length; i++) {
                     const set = exercise.sets[i];
-
                     await insertSessionSet(db, {
                         sessionExerciseId: sessionExerciseId,
-                        setOrder: i + 1, // Set order starts from 1
+                        setOrder: i + 1,
                         weight: set.weight,
                         reps: set.reps,
                         restTime: set.restTime || null,
@@ -174,21 +195,21 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                     });
                 }
 
-                // 4. Update ExerciseSets with most recent data (optional)
-                await clearExerciseSets(db, workout.routine.id, exercise.id);
-
-                const routineExercise = await getRoutineExercise(db, workout.routine.id, exercise.id);
-
-                if (routineExercise) {
-                    for (let i = 0; i < exercise.sets.length; i++) {
-                        const set = exercise.sets[i];
-                        await insertExerciseSet(db, {
-                            routine_exercise_id: routineExercise.id,
-                            set_order: i + 1, // Set order starts from 1
-                            weight: set.weight,
-                            reps: set.reps,
-                            date: new Date().toISOString(),
-                        });
+                // Only update ExerciseSets if routineId is valid
+                if (workout.routine.id && workout.routine.id !== 0) {
+                    await clearExerciseSets(db, workout.routine.id, exercise.id);
+                    const routineExercise = await getRoutineExercise(db, workout.routine.id, exercise.id);
+                    if (routineExercise) {
+                        for (let i = 0; i < exercise.sets.length; i++) {
+                            const set = exercise.sets[i];
+                            await insertExerciseSet(db, {
+                                routine_exercise_id: routineExercise.id,
+                                set_order: i + 1,
+                                weight: set.weight,
+                                reps: set.reps,
+                                date: new Date().toISOString(),
+                            });
+                        }
                     }
                 }
             }
@@ -198,7 +219,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
             throw error;
         }
         refreshRoutines();
-    
+
         return sessionId;
     };
 
@@ -237,6 +258,8 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         finalTime,
         setFinalTime,
         startWorkout,
+        finalWorkout,
+        setFinalWorkout,
         saveWorkoutToDatabase,
         resetRoutine,
         clearRoutine,

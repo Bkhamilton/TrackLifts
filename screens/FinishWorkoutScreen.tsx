@@ -1,6 +1,7 @@
 import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { DBContext } from '@/contexts/DBContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -11,6 +12,8 @@ export default function FinishWorkoutScreen() {
     const router = useRouter();
 
     const { routine, finalTime } = useContext(ActiveWorkoutContext);
+    const { addRoutineToDB } = useContext(DBContext);
+    const { finalWorkout, saveWorkoutToDatabase, setFinalWorkout, setRoutine } = useContext(ActiveWorkoutContext);
     const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
 
     const [showSaveModal, setShowSaveModal] = useState(false);
@@ -21,9 +24,38 @@ export default function FinishWorkoutScreen() {
         }
     }, [routine.id]);
 
-    const handleSaveRoutine = (name: string) => {
-        // Your logic to save the routine with the given name
+    const handleSaveRoutine = async (name: string) => {
+        const newRoutineId = await addRoutineToDB({
+            id: 0,
+            title: name,
+            exercises: routine.exercises,
+        });
+
+        if (typeof newRoutineId !== 'number') {
+            return;
+        }
+
+        const updatedRoutine = { ...routine, id: newRoutineId, title: name };
+
+        // Ensure startTime and endTime are never undefined
+        const safeFinalWorkout = {
+            ...finalWorkout,
+            routine: updatedRoutine,
+            startTime: finalWorkout.startTime ?? null,
+            endTime: finalWorkout.endTime ?? null,
+        };
+
+        setRoutine(updatedRoutine);
+        setFinalWorkout(safeFinalWorkout);
+        await saveWorkoutToDatabase(safeFinalWorkout);
         setShowSaveModal(false);
+    };
+
+    const handleSkipSaveRoutine = async () => {
+        // Save workout as ad-hoc (routineId will be null/0)
+        await saveWorkoutToDatabase(finalWorkout);
+        setShowSaveModal(false);
+        // Optionally, show a success message or navigate away
     };
 
     // Calculate workout statistics
@@ -71,7 +103,7 @@ export default function FinishWorkoutScreen() {
         <View style={styles.container}>
             <SaveRoutineModal
                 visible={showSaveModal}
-                onClose={() => setShowSaveModal(false)}
+                onClose={handleSkipSaveRoutine}
                 onSave={handleSaveRoutine}
             />
             <ScrollView contentContainerStyle={styles.scrollContent}>

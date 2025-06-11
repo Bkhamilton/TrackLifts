@@ -17,7 +17,7 @@ export default function ActiveWorkoutScreen() {
         setFinalTime, 
         setIsActiveWorkout, 
         resetRoutine, 
-        saveWorkoutToDatabase 
+        setFinalWorkout,
     } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
@@ -58,8 +58,6 @@ export default function ActiveWorkoutScreen() {
         stopTimer();
         setIsActiveWorkout(false);
         if (isFinished) {
-            // Save the workout to the database and update the current routine to match the completed workou  
-            // build Workout object using routine
             const workout = {       
                 routine: routine,
                 startTime: startTime,
@@ -68,9 +66,7 @@ export default function ActiveWorkoutScreen() {
                 notes: 'Workout completed successfully!' // Add any notes if needed
             };
             setFinalTime(formattedTime);
-            saveWorkoutToDatabase(workout);
-            // Display a success modal and navigate to the home page
-            // openSuccessModal(routine, 'Workout completed successfully!');
+            setFinalWorkout(workout);
             router.replace('/finishWorkout')
         } else {
             // Return the user to the newWorkout page without saving
