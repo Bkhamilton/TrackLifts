@@ -62,7 +62,7 @@ export default function EditHistoryScreen() {
                     <TouchableOpacity
                         onPress={() => {
                             resetRoutine();
-                            router.replace('/(tabs)/(index)');
+                            router.replace('/(tabs)/history/main');
                         }}
                         style={{ marginRight: 12 }}
                     >

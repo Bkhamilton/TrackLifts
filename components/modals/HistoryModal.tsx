@@ -22,9 +22,9 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
             case 'edit':
                 // Handle edit action here
                 console.log('Edit workout');
-                router.push('/(tabs)/history/editHistory')
                 setOptionsModalVisible(false);
                 close();
+                router.replace('/(tabs)/history/editHistory')
                 break;
             case 'delete':
                 // Handle delete action here
