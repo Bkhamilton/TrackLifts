@@ -62,6 +62,14 @@ export const createUserTables = async (db) => {
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES Users(id)
         );
+        CREATE TABLE IF NOT EXISTS RoutineFavorites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            routine_id INTEGER,
+            UNIQUE(user_id, routine_id),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (routine_id) REFERENCES Routines(id)
+        );
         CREATE TABLE IF NOT EXISTS RoutineExercises (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             routine_id INTEGER,

@@ -1,7 +1,9 @@
 import { ScrollView, Text, View } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
+import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import ExerciseHeader from './ExerciseHeader';
 
@@ -13,6 +15,28 @@ interface RoutineModalProps {
 }
 
 export default function RoutineModal({ visible, close, start, routine }: RoutineModalProps) {
+    const { db, user } = useContext(DBContext);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useEffect(() => {
+        if (db && routine?.id) {
+            getFavoriteRoutineIds(db, user.id).then(ids => {
+                setIsFavorite(ids.includes(routine.id));
+            });
+        }
+    }, [db, routine, user.id]);
+
+    const toggleFavorite = async () => {
+        if (!db) return;
+        if (isFavorite) {
+            await removeFavoriteRoutine(db, user.id, routine.id);
+            setIsFavorite(false);
+        } else {
+            await addFavoriteRoutine(db, user.id, routine.id);
+            setIsFavorite(true);
+        }
+    };
+
     return (
         <Modal
             visible={visible}
@@ -24,9 +48,18 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
                     {/* Header */}
                     <View style={styles.header}>
                         <Text style={styles.headerText}>{routine.title}</Text>
-                        <TouchableOpacity onPress={close} style={styles.closeButton}>
-                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={toggleFavorite} style={{ marginRight: 8 }}>
+                                <MaterialCommunityIcons
+                                    name={isFavorite ? "star" : "star-outline"}
+                                    size={24}
+                                    color="#ff8787"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={close} style={styles.closeButton}>
+                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     {/* Exercises List */}
