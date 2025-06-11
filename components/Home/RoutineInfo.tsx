@@ -1,4 +1,6 @@
 import { Text, View } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
+import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -7,22 +9,26 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineCard from './RoutineCard';
 
 interface RoutineInfoProps {
-    close: () => void;
     open: (routine: ActiveRoutine) => void;
     openAddRoutine: () => void;
-    routines: ActiveRoutine[];
     openRoutineOptions: (routine: ActiveRoutine) => void;
+    favoritesRefreshKey?: number; 
 }
 
 export default function RoutineInfo({ 
-    close, 
     open, 
     openAddRoutine, 
-    routines, 
     openRoutineOptions,
+    favoritesRefreshKey = 0,
 }: RoutineInfoProps) {
-    // Hardcoded favorite routine IDs for now
-    const favoriteRoutineIds = [2, 3]; // Replace with your actual favorite IDs
+    const { db, user, routines } = React.useContext(DBContext);
+    const [favoriteRoutineIds, setFavoriteRoutineIds] = React.useState<number[]>([]);
+
+    React.useEffect(() => {
+        if (db && user?.id) {
+            getFavoriteRoutineIds(db, user.id).then(setFavoriteRoutineIds);
+        }
+    }, [db, user, routines, favoritesRefreshKey]); // re-fetch if routines/user/db changes
     
     // Separate routines into favorites and others
     const favoriteRoutines = routines.filter(routine => 

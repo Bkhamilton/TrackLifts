@@ -10,10 +10,13 @@ import useHookRoutines from '@/hooks/useHookRoutines';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function RoutinesScreen() {
+    const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
+    const refreshFavorites = () => setFavoritesRefreshKey(k => k + 1);
+
     const {
         routines,
         favoriteRoutineIds,
@@ -30,7 +33,7 @@ export default function RoutinesScreen() {
         searchModalVisible,
         setSearchModalVisible,
         handleSearchSelect
-    } = useHookRoutines();
+    } = useHookRoutines({ favoritesRefreshKey });
 
     const router = useRouter();
 
@@ -98,6 +101,7 @@ export default function RoutinesScreen() {
                 close={() => setRoutineModal(false)}
                 start={() => onStart(routine)}
                 routine={routine}
+                onFavoriteChange={refreshFavorites}
             />
             <AddRoutineModal
                 visible={addRoutineModal}

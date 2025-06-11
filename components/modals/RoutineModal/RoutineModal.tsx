@@ -12,9 +12,10 @@ interface RoutineModalProps {
     close: () => void;
     start: (routine: ActiveRoutine) => void;
     routine: ActiveRoutine;
+    onFavoriteChange?: () => void;
 }
 
-export default function RoutineModal({ visible, close, start, routine }: RoutineModalProps) {
+export default function RoutineModal({ visible, close, start, routine, onFavoriteChange }: RoutineModalProps) {
     const { db, user } = useContext(DBContext);
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -35,6 +36,7 @@ export default function RoutineModal({ visible, close, start, routine }: Routine
             await addFavoriteRoutine(db, user.id, routine.id);
             setIsFavorite(true);
         }
+        if (onFavoriteChange) onFavoriteChange(); // Notify parent
     };
 
     return (

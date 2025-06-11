@@ -12,7 +12,7 @@ import useHookHome from '@/hooks/useHookHome';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
@@ -34,9 +34,13 @@ export default function HomeScreen() {
         setDay,
     } = useHookHome();
 
-    const { routines, addRoutineToDB, deleteRoutineFromDB } = useContext(DBContext) 
+    const { addRoutineToDB, deleteRoutineFromDB } = useContext(DBContext) 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+
+    const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
+
+    const refreshFavorites = () => setFavoritesRefreshKey(k => k + 1);
 
     const router = useRouter();
 
@@ -113,6 +117,7 @@ export default function HomeScreen() {
                 close={closeRoutineModal}
                 start={onStart}
                 routine={routine}
+                onFavoriteChange={refreshFavorites}
             />
             <AddRoutineModal
                 visible={addRoutineModal}
@@ -146,11 +151,10 @@ export default function HomeScreen() {
                     onStart={onStart}
                 />
                 <RoutineInfo 
-                    close={closeRoutineModal} 
                     open={openRoutineModal} 
                     openAddRoutine={openAddRoutineModal} 
-                    routines={routines} 
                     openRoutineOptions={openRoutineOptionsModal}
+                    favoritesRefreshKey={favoritesRefreshKey}
                 />
             </ScrollView>
         </View>

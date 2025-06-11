@@ -141,6 +141,7 @@ export const dropTables = async (db) => {
     await db.execAsync(`
         DROP TABLE IF EXISTS ExerciseSets;
         DROP TABLE IF EXISTS RoutineExercises;
+        DROP TABLE IF EXISTS RoutineFavorites;
         DROP TABLE IF EXISTS Routines;
         DROP TABLE IF EXISTS Users;
         DROP TABLE IF EXISTS ExerciseMuscles;
