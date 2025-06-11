@@ -21,6 +21,14 @@ export default function FinishWorkoutScreen() {
     useEffect(() => {
         if (routine.id === 0) {
             setShowSaveModal(true);
+        } else {
+            saveWorkoutToDatabase(finalWorkout);
+            setFinalWorkout({
+                ...finalWorkout,
+                routine: { ...routine, id: routine.id, title: routine.title },
+                startTime: finalWorkout.startTime ?? null,
+                endTime: finalWorkout.endTime ?? null,
+            });
         }
     }, [routine.id]);
 
