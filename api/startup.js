@@ -90,6 +90,7 @@ export const createUserTables = async (db) => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             user_id INTEGER,
+            is_active INTEGER DEFAULT 0,
             FOREIGN KEY (user_id) REFERENCES Users(id)
         );
         CREATE TABLE IF NOT EXISTS SplitRoutines (

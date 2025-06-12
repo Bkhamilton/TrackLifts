@@ -2,8 +2,8 @@
 export const insertSplit = async (db, split) => {
     try {
         const result = await db.runAsync(
-            'INSERT INTO Splits (name, user_id) VALUES (?, ?)',
-            [split.name, split.user_id]
+            'INSERT INTO Splits (name, user_id, is_active) VALUES (?, ?, ?)',
+            [split.name, split.user_id, split.is_active]
         );
         return result.lastInsertRowId;
     } catch (error) {
@@ -17,7 +17,7 @@ export const getSplits = async (db, userId) => {
     try {
         const query = `
             SELECT 
-                Splits.id, Splits.name, Splits.user_id
+                Splits.id, Splits.name, Splits.user_id, Splits.is_active
             FROM 
                 Splits
             WHERE 
@@ -39,6 +39,17 @@ export const getSplitById = async (db, id) => {
         console.error('Error getting split by ID:', error);
         throw error;
     }
+};
+
+export const setActiveSplit = async (db, splitId) => {
+    await db.runAsync('UPDATE Splits SET is_active = 0');
+    await db.runAsync('UPDATE Splits SET is_active = 1 WHERE id = ?', [splitId]);
+};
+
+// Get the active split
+export const getActiveSplit = async (db, userId) => {
+    const rows = await db.getAllAsync('SELECT * FROM Splits WHERE user_id = ? AND is_active = 1', [userId]);
+    return rows[0];
 };
 
 // Function to update a split by ID

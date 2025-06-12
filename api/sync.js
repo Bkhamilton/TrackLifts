@@ -138,7 +138,8 @@ const syncSplits = async (db) => {
         // Insert each split
         const splitId = await insertSplit(db, {
             name: splitObj.name,
-            user_id: 1
+            user_id: 1,
+            is_active: splitObj.is_active || 0, // Default to inactive if not specified
         });
 
         // Insert each routine in the split
