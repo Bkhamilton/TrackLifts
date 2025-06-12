@@ -14,7 +14,7 @@ import YourSplits from '@/components/Split/YourSplits';
 
 export default function SplitScreen() {
     const {
-        splits,
+        dislpaySplits,
         currentWeek,
         showCreateModal,
         newSplitName,
@@ -47,7 +47,7 @@ export default function SplitScreen() {
 
             {/* Your Splits Section */}
             <YourSplits
-                splits={splits}
+                splits={dislpaySplits}
                 setShowCreateModal={setShowCreateModal}
                 setAsPrimary={setAsPrimary}
                 setEditingSplit={setEditingSplit}

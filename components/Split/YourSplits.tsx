@@ -1,26 +1,14 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
+import { Splits } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
-interface RoutineDay {
-    day: number;
-    routine: string;
-    routine_id?: number;
-}
-
-interface Split {
-    id: number;
-    name: string;
-    routines: RoutineDay[];
-    isPrimary?: boolean;
-}
-
 interface Props {
-    splits: Split[];
+    splits: Splits[];
     setShowCreateModal: (show: boolean) => void;
     setAsPrimary: (id: number) => void;
-    setEditingSplit: (split: Split) => void;
+    setEditingSplit: (split: Splits) => void;
 }
 
 const YourSplits: React.FC<Props> = ({
@@ -46,12 +34,12 @@ const YourSplits: React.FC<Props> = ({
             renderItem={({ item }) => (
                 <View style={[
                     styles.splitCard,
-                    item.isPrimary && styles.primarySplitCard
+                    item.is_active && styles.primarySplitCard
                 ]}>
                     <View style={styles.splitHeader}>
                         <Text style={styles.splitName}>{item.name}</Text>
                         <View style={styles.splitActions}>
-                            {!item.isPrimary && (
+                            {!item.is_active && (
                                 <TouchableOpacity
                                     style={styles.actionButton}
                                     onPress={() => setAsPrimary(item.id)}
@@ -68,18 +56,18 @@ const YourSplits: React.FC<Props> = ({
                         </View>
                     </View>
                     
-                    <View style={styles.splitDays}>
+                    <ClearView style={styles.splitDays}>
                         {item.routines.map((day, index) => (
-                            <View key={index} style={styles.splitDayItem}>
+                            <ClearView key={index} style={styles.splitDayItem}>
                                 <Text style={styles.dayLabel}>
                                     {['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'][day.day - 1]}
                                 </Text>
                                 <Text style={styles.routineLabel}>
                                     {day.routine}
                                 </Text>
-                            </View>
+                            </ClearView>
                         ))}
-                    </View>
+                    </ClearView>
                 </View>
             )}
         />

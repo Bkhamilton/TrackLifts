@@ -86,4 +86,5 @@ export interface Splits {
         routine_id: number;
         routine: string;
     }[];
+    is_active?: boolean;
 }

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { DBContext } from '@/contexts/DBContext';
+import { Splits } from '@/utils/types';
+import { useContext, useState } from 'react';
 
 interface RoutineDay {
     day: number;
@@ -6,76 +8,46 @@ interface RoutineDay {
     routine_id?: number;
 }
 
-interface Split {
-    id: number;
-    name: string;
-    routines: RoutineDay[];
-    isPrimary?: boolean;
-}
-
-const sampleSplits: Split[] = [
-    {
-        id: 1,
-        name: 'Weekly Cycle',
-        isPrimary: true,
-        routines: [
-            { day: 1, routine: 'Push' },
-            { day: 2, routine: 'Pull' },
-            { day: 3, routine: 'Legs' },
-            { day: 4, routine: 'Rest' },
-            { day: 5, routine: 'Push' },
-            { day: 6, routine: 'Pull' },
-            { day: 7, routine: 'Legs' }
-        ]
-    },
-    {
-        id: 2,
-        name: 'Upper/Lower',
-        routines: [
-            { day: 1, routine: 'Upper' },
-            { day: 2, routine: 'Lower' },
-            { day: 3, routine: 'Rest' },
-            { day: 4, routine: 'Upper' },
-            { day: 5, routine: 'Lower' },
-            { day: 6, routine: 'Rest' },
-            { day: 7, routine: 'Rest' }
-        ]
-    }
-];
-
 export default function useHookSplits() {
-    const [splits, setSplits] = useState<Split[]>(sampleSplits);
+    const { splits, activeSplit } = useContext(DBContext);
+    const [dislpaySplits, setDisplaySplits] = useState<Splits[]>(splits);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newSplitName, setNewSplitName] = useState('');
-    const [editingSplit, setEditingSplit] = useState<Split | null>(null);
-    const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(sampleSplits[0].routines);
+    const [editingSplit, setEditingSplit] = useState<Splits | null>(null);
+    const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(activeSplit?.routines || []);
 
     const setAsPrimary = (id: number) => {
-        setSplits(prev => prev.map(split => ({
+        setDisplaySplits(prev => prev.map(split => ({
             ...split,
             isPrimary: split.id === id
         })));
-        const primarySplit = splits.find(s => s.id === id);
+        const primarySplit = dislpaySplits.find(s => s.id === id);
         if (primarySplit) {
             setCurrentWeek(primarySplit.routines);
         }
     };
 
     const createNewSplit = () => {
-        const newSplit: Split = {
-            id: splits.length + 1,
+        const newSplit: Splits = {
+            id: dislpaySplits.length + 1,
             name: newSplitName,
             routines: [
-                { day: 1, routine: 'Rest' } // Start with just one day by default
-            ]
+                {
+                    day: 1, routine: 'Rest',
+                    id: 0,
+                    split_id: 0,
+                    routine_id: 0
+                } // Start with just one day by default
+            ],
+            is_active: false
         };
-        setSplits([...splits, newSplit]);
+        setDisplaySplits([...dislpaySplits, newSplit]);
         setNewSplitName('');
         setShowCreateModal(false);
     };
 
     const updateSplitDay = (splitId: number, day: number, routine: string) => {
-        setSplits(prev => prev.map(split => {
+        setDisplaySplits(prev => prev.map(split => {
             if (split.id === splitId) {
                 return {
                     ...split,
@@ -89,7 +61,7 @@ export default function useHookSplits() {
     };
 
     const addDayToSplit = (splitId: number) => {
-        setSplits(prev => prev.map(split => {
+        setDisplaySplits(prev => prev.map(split => {
             if (split.id === splitId) {
                 const newDayNumber = split.routines.length > 0 
                     ? Math.max(...split.routines.map(d => d.day)) + 1 
@@ -98,7 +70,13 @@ export default function useHookSplits() {
                     ...split,
                     routines: [
                         ...split.routines,
-                        { day: newDayNumber, routine: 'Rest' }
+                        {
+                            day: newDayNumber,
+                            routine: 'Rest',
+                            id: Date.now(), // or another unique id generator
+                            split_id: splitId,
+                            routine_id: 0
+                        }
                     ]
                 };
             }
@@ -107,12 +85,12 @@ export default function useHookSplits() {
     };
 
     const removeDayFromSplit = (splitId: number, dayNumber: number) => {
-        setSplits(prev => prev.map(split => {
+        setDisplaySplits(prev => prev.map(split => {
             if (split.id === splitId) {
                 const newRoutines = split.routines.filter(d => d.day !== dayNumber);
                 
                 // If this is the primary split, update currentWeek
-                if (split.isPrimary) {
+                if (split.is_active) {
                     setCurrentWeek(newRoutines);
                 }
                 
@@ -126,7 +104,8 @@ export default function useHookSplits() {
     };
 
     return {
-        splits,
+        dislpaySplits,
+        activeSplit,
         currentWeek,
         showCreateModal,
         newSplitName,
