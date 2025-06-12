@@ -37,8 +37,8 @@ export default function RoutineInfo({
         !favoriteRoutineIds.includes(routine.id));
     
     // Display only first 3 of other routines (adjust as needed)
-    const displayedOtherRoutines = otherRoutines.slice(0, 3);
-    const hasMoreRoutines = otherRoutines.length > 3;
+    const displayedOtherRoutines = otherRoutines.slice(0, 4);
+    const hasMoreRoutines = otherRoutines.length > 4;
 
     const router = useRouter();
 
