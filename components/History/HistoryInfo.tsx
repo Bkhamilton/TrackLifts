@@ -20,7 +20,7 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
 
     // Group by month
     const groupedData = data.reduce((acc, history) => {
-        const monthYear = getMonthYear(history.date);
+        const monthYear = getMonthYear(history.startTime);
         if (!acc[monthYear]) {
             acc[monthYear] = [];
         }

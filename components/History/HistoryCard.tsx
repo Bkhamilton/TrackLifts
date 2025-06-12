@@ -32,7 +32,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
         <TouchableOpacity onPress={() => open(history)}>
             <View style={styles.cardContainer}>
                 <View style={styles.dateContainer}>
-                    <Text style={styles.dateText}>{formatDate(history.date)}</Text>
+                    <Text style={styles.dateText}>{formatDate(history.startTime)}</Text>
                 </View>
                 
                 <View style={styles.contentContainer}>
