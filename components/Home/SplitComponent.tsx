@@ -14,18 +14,18 @@ interface SplitComponentProps {
 }
 
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
-    const { routines, splits } = useContext(DBContext);
+    const { routines, activeSplit, splits } = useContext(DBContext);
 
     const router = useRouter();
 
-    // Ensure splits[0] exists before accessing its properties
-    const uniqueDays = splits?.[0]?.routines
+    // Ensure activeSplit exists before accessing its properties
+    const uniqueDays = activeSplit?.routines
         ? [...new Set(
-            splits[0].routines
+            activeSplit.routines
                 .filter(routine => routine.routine !== "Rest")
                 .map(routine => routine.routine)
         )]
-        : []; // Fallback to an empty array if splits[0] or routines are undefined
+        : []; // Fallback to an empty array if activeSplit or routines are undefined
 
     const handleStartWorkout = (title: string) => {
         const routine = routines?.find(r => r.title === title);
@@ -37,7 +37,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
         }
     };
 
-    if (!splits || splits.length === 0) {
+    if (!activeSplit || splits.length === 0) {
         return (
             <View style={styles.container}>
                 <Text style={styles.headerText}>No splits available</Text>
@@ -53,7 +53,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
         <View style={styles.container}>
             {/* Header Row */}
             <View style={styles.headerRow}>
-                <Text style={styles.headerText}>SPLIT: {splits[0].name}</Text>
+                <Text style={styles.headerText}>SPLIT: {activeSplit.name}</Text>
                 <TouchableOpacity
                     style={styles.editButton}
                     onPress={onEditSplit}
@@ -68,7 +68,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.daysScrollContainer}
             >
-                {splits[0].routines.map((routine) => (
+                {activeSplit.routines.map((routine) => (
                     <TouchableOpacity
                         key={`${routine.routine}-${routine.day}`}
                         style={[

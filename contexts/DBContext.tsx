@@ -31,6 +31,7 @@ interface DBContextValue {
     muscleGroups: MuscleGroup[];
     routines: ActiveRoutine[];
     splits: Splits[];
+    activeSplit: Splits | null;
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
@@ -52,6 +53,7 @@ export const DBContext = createContext<DBContextValue>({
     muscleGroups: [],
     routines: [],
     splits: [],
+    activeSplit: null,
     addExerciseToDB: async () => {
         return undefined;
     },
@@ -91,6 +93,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
     const [routines, setRoutines] = useState<ActiveRoutine[]>([]);
     const [splits, setSplits] = useState<Splits[]>([]);
+    const [activeSplit, setActiveSplit] = useState<Splits | null>(null);
 
     const addExerciseToDB = async (exercise: Exercise): Promise<number | undefined> => {
         if (db) {
@@ -254,6 +257,12 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             const fetchSplits = async () => {
                 const data = await getSplitData(db, user.id);
                 setSplits(data || []);
+                for (const split of data || []) {
+                    if (split.is_active) {
+                        setActiveSplit(split);
+                        break;
+                    }
+                }
             }
 
             fetchSplits();
@@ -269,6 +278,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         muscleGroups,
         routines,
         splits,
+        activeSplit,
         addExerciseToDB,
         addRoutineToDB,
         deleteExerciseFromDB,
