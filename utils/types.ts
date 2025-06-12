@@ -9,7 +9,7 @@ export interface Exercise {
 
 export interface History {
     id: number;
-    date: string;
+    startTime: string;
     routine: ActiveRoutine;
     lengthMin: string;
     notes: string;

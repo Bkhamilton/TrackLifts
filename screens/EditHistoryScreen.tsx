@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { HistoryContext } from '@/contexts/HistoryContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -11,6 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
+    const { history } = useContext(HistoryContext);
     const { routine, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const [completedSets, setCompletedSets] = useState<number[]>([]);
@@ -57,11 +59,10 @@ export default function EditHistoryScreen() {
     return (
         <View style={styles.container}>
             <Title
-                title={routine.title}
+                title={history.routine.title}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
-                            resetRoutine();
                             router.replace('/(tabs)/history/main');
                         }}
                         style={{ marginRight: 12 }}
@@ -89,7 +90,7 @@ export default function EditHistoryScreen() {
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
-                    routine={routine}
+                    routine={history.routine}
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}

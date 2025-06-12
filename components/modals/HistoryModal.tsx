@@ -1,7 +1,8 @@
+import { HistoryContext } from '@/contexts/HistoryContext';
 import { ActiveExercise, History } from '@/utils/types'; // Adjust import path as needed
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 import OptionsModal from './OptionsModal';
@@ -15,6 +16,7 @@ interface HistoryModalProps {
 export default function HistoryModal({ visible, close, history }: HistoryModalProps) {
 
     const router = useRouter();
+    const { setHistory } = useContext(HistoryContext);
 
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const handleOptionSelect = (option: string) => {
@@ -23,6 +25,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                 // Handle edit action here
                 console.log('Edit workout');
                 setOptionsModalVisible(false);
+                setHistory(history);
                 close();
                 router.replace('/(tabs)/history/editHistory')
                 break;
@@ -111,7 +114,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     {/* Summary */}
                     <View style={styles.summaryContainer}>
                         <Text style={styles.routineTitle}>{history.routine.title}</Text>
-                        <Text style={styles.dateText}>{formatDate(history.date)}</Text>
+                        <Text style={styles.dateText}>{formatDate(history.startTime)}</Text>
                         
                         <View style={styles.statsContainer}>
                             <View style={styles.statItem}>
