@@ -3,7 +3,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
-import { useWorkoutActions } from '@/hooks/useWorkoutActions';
+import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
@@ -12,7 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
     const { routineToEdit } = useContext(HomeContext);
-    const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
+    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(routineToEdit);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();

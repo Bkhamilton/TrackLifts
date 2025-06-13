@@ -2,9 +2,8 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
-import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HistoryContext } from '@/contexts/HistoryContext';
-import { useWorkoutActions } from '@/hooks/useWorkoutActions';
+import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
@@ -13,8 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const { history } = useContext(HistoryContext);
-    const { routine, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
+    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(history.routine);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
