@@ -18,6 +18,7 @@ import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface User {
     id: number;
+    username: string;
     name: string;
     email: string;
     password: string;
@@ -45,6 +46,7 @@ export const DBContext = createContext<DBContextValue>({
     db: null,
     user: {
         id: 0,
+        username: '',
         name: '',
         email: '',
         password: '',
@@ -92,6 +94,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
 
     const [user, setUser] = useState<User>({
         id: 0,
+        username: '',
         name: '',
         email: '',
         password: '',
@@ -267,7 +270,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             }
             const fetchUserStats = async () => {
                 const data = await getUserProfileStats(db, user.id);
-                setUserStats(data || userStats);
+                setUserStats(data);
             }
 
             fetchRoutines();

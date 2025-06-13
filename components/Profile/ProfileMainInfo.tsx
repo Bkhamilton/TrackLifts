@@ -1,6 +1,7 @@
+import { DBContext } from '@/contexts/DBContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 
@@ -8,12 +9,7 @@ interface ProfileMainInfoProps {
     username: string;
     avatar: string;
     stats: {
-        height: string;
-        weight: string;
         workoutsCompleted: number;
-        memberSince: string;
-        favoriteExercise: string;
-        goals: string;
     };
 }
 
@@ -21,14 +17,11 @@ export default function ProfileMainInfo({
     username = 'benkhamilton',
     avatar = '👤',
     stats = {
-        height: '6\'0"',
-        weight: '200 lbs',
         workoutsCompleted: 128,
-        memberSince: 'Jan 2023',
-        favoriteExercise: 'Bench Press',
-        goals: 'Build muscle & endurance'
     }
 }: ProfileMainInfoProps) {
+
+    const { user, userStats } = useContext(DBContext);
 
     const router = useRouter();
 
@@ -44,8 +37,8 @@ export default function ProfileMainInfo({
                     <Text style={styles.avatar}>{avatar}</Text>
                 </View>
                 <View style={styles.profileText}>
-                    <Text style={styles.username}>{username}</Text>
-                    <Text style={styles.memberSince}>Member since {stats.memberSince}</Text>
+                    <Text style={styles.username}>{user.username}</Text>
+                    <Text style={styles.memberSince}>Member since {userStats.memberSince}</Text>
                 </View>
                 <TouchableOpacity
                     onPress={handleEditProfile}
@@ -58,11 +51,11 @@ export default function ProfileMainInfo({
                 {/* Stats Grid */}
                 <View style={styles.statsGrid}>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{stats.height}</Text>
+                        <Text style={styles.statValue}>{userStats.height}</Text>
                         <Text style={styles.statLabel}>Height</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{stats.weight}</Text>
+                        <Text style={styles.statValue}>{userStats.weight}</Text>
                         <Text style={styles.statLabel}>Weight</Text>
                     </View>
                     <View style={styles.statItem}>

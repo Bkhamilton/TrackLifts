@@ -159,6 +159,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS RoutineFavorites;
         DROP TABLE IF EXISTS Routines;
         DROP TABLE IF EXISTS Users;
+        DROP TABLE IF EXISTS UserProfileStats;
         DROP TABLE IF EXISTS ExerciseMuscles;
         DROP TABLE IF EXISTS Exercises;
         DROP TABLE IF EXISTS Equipment;
@@ -184,12 +185,12 @@ export const syncData = async (db) => {
 
     // Add User Profile Stats
     const userProfileStats = {
-        height: userData.height,
-        weight: userData.weight,
-        bodyFat: userData.bodyFat,
-        favoriteExercise: userData.favoriteExercise,
-        memberSince: userData.memberSince,
-        goals: userData.goals,
+        height: userData.stats.height,
+        weight: userData.stats.weight,
+        bodyFat: userData.stats.bodyFat,
+        favoriteExercise: userData.stats.favoriteExercise,
+        memberSince: userData.stats.memberSince,
+        goals: userData.stats.goals,
     };
     await insertUserProfileStats(db, userId, userProfileStats);
 

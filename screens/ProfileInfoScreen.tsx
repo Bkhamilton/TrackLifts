@@ -1,8 +1,10 @@
 import { Text, TextInput, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { DBContext } from '@/contexts/DBContext';
+import { updateUserProfileStats } from '@/db/user/UserProfileStats';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface ProfileData {
@@ -23,19 +25,22 @@ interface ProfileData {
 
 export default function ProfileInfoScreen() {
     const [isEditing, setIsEditing] = useState(false);
+
+    const { user, userStats } = useContext(DBContext);
+
     const [profile, setProfile] = useState<ProfileData>({
-        username: 'benkhamilton',
+        username: user.username || 'benkhamilton',
         avatar: '👤',
         stats: {
-            height: '6\'0"',
-            weight: '200 lbs',
-            bodyFat: '15%',
+            height: userStats.height || '6\'2"',
+            weight: userStats.weight || '180 lbs',
+            bodyFat: userStats.bodyFat || '15%',
             workoutsCompleted: 128,
             weeklyWorkouts: 5,
             weeklySets: 45,
-            favoriteExercise: 'Bench Press',
-            memberSince: 'Jan 2023',
-            goals: 'Build muscle & endurance'
+            favoriteExercise: userStats.favoriteExercise || 'Squats',
+            memberSince: userStats.memberSince || 'Jan 2022',
+            goals: userStats.goals || 'Build Strength'
         },
     });
 
@@ -44,6 +49,14 @@ export default function ProfileInfoScreen() {
     const handleSave = () => {
         setIsEditing(false);
         // Here you would typically save to your backend/database
+        updateUserProfileStats(user.id, {
+            height: profile.stats.height,
+            weight: profile.stats.weight,
+            bodyFat: profile.stats.bodyFat,
+            favoriteExercise: profile.stats.favoriteExercise,
+            memberSince: profile.stats.memberSince,
+            goals: profile.stats.goals
+        });
         console.log('Saved profile:', profile);
     };
 
