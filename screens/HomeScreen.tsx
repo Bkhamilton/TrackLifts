@@ -8,6 +8,7 @@ import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
+import { HomeContext } from '@/contexts/HomeContext';
 import useHookHome from '@/hooks/useHookHome';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +17,7 @@ import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
+    
     const { 
         addRoutineModal,
         openAddRoutineModal,
@@ -33,6 +35,8 @@ export default function HomeScreen() {
         curDay,
         setDay,
     } = useHookHome();
+
+    const { setRoutineToEdit } = useContext(HomeContext);
 
     const { addRoutineToDB, deleteRoutineFromDB } = useContext(DBContext) 
 
@@ -80,6 +84,7 @@ export default function HomeScreen() {
     const onSelectOption = (option: string) => {
         switch (option) {
             case 'edit':
+                setRoutineToEdit(routine);
                 router.push('/(tabs)/(index)/editRoutine')
                 break;
             case 'delete':
