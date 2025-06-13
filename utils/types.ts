@@ -88,3 +88,12 @@ export interface Splits {
     }[];
     is_active?: boolean;
 }
+
+export interface UserProfileStats {
+    height: string;
+    weight: string;
+    bodyFat: string;
+    favoriteExercise: string;
+    memberSince: string;
+    goals: string;
+}

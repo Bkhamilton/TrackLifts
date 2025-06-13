@@ -7,11 +7,12 @@ import { getMuscles } from '@/db/general/Muscles';
 import { deleteExerciseSetsByExerciseId, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { deleteRoutineExerciseByRoutineId, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
+import { getUserProfileStats } from '@/db/user/UserProfileStats';
 import { getUserById } from '@/db/user/Users';
 import { getExerciseData } from '@/utils/exerciseHelpers';
 import { getRoutineData } from '@/utils/routineHelpers';
 import { getSplitData } from '@/utils/splitHelpers';
-import { ActiveRoutine, Exercise, MuscleGroup, Routine, Splits } from '@/utils/types';
+import { ActiveRoutine, Exercise, MuscleGroup, Routine, Splits, UserProfileStats } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
@@ -25,6 +26,7 @@ interface User {
 interface DBContextValue {
     db: any;
     user: User;
+    userStats: UserProfileStats;
     exercises: Exercise[];
     equipment: any[];
     muscles: any[];
@@ -46,6 +48,14 @@ export const DBContext = createContext<DBContextValue>({
         name: '',
         email: '',
         password: '',
+    },
+    userStats: {
+        height: "0'0\"",
+        weight: "0 lbs",
+        bodyFat: "0%",
+        favoriteExercise: "Bench Press",
+        memberSince: "Jan 2023",
+        goals: "Build muscle & endurance"
     },
     exercises: [],
     equipment: [],
@@ -85,6 +95,14 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         name: '',
         email: '',
         password: '',
+    });
+    const [userStats, setUserStats] = useState<UserProfileStats>({
+        height: "0'0\"",
+        weight: "0 lbs",
+        bodyFat: "0%",
+        favoriteExercise: "Bench Press",
+        memberSince: "Jan 2023",
+        goals: "Build muscle & endurance"
     });
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -247,8 +265,13 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
                 const data = await getRoutineData(db, user.id);
                 setRoutines(data || []);
             }
+            const fetchUserStats = async () => {
+                const data = await getUserProfileStats(db, user.id);
+                setUserStats(data || userStats);
+            }
 
             fetchRoutines();
+            fetchUserStats();
         }
     }, [db, user]);
 
@@ -272,6 +295,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const value = {
         db,
         user,
+        userStats,
         exercises,
         equipment,
         muscles,
