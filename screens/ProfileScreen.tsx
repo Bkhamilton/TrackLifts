@@ -10,15 +10,7 @@ export default function ProfileScreen() {
         username: 'benkhamilton',
         avatar: '👤',
         stats: {
-            height: '6\'0"',
-            weight: '200 lbs',
-            bodyFat: '15%',
             workoutsCompleted: 128,
-            weeklyWorkouts: 5,
-            weeklySets: 45,
-            favoriteExercise: 'Bench Press',
-            memberSince: 'Jan 2023',
-            goals: 'Build muscle & endurance'
         },
     };
 
