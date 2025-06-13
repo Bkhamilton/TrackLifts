@@ -1,9 +1,10 @@
-import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { ActiveExercise, ActiveRoutine, Exercise } from '@/utils/types';
-import { useContext } from 'react';
+import React from 'react';
 
-export const useEditWorkoutActions = (routine: ActiveRoutine) => {
-    const { updateRoutine } = useContext(ActiveWorkoutContext);
+export const useEditWorkoutActions = (
+    routine: ActiveRoutine,
+    setRoutine: React.Dispatch<React.SetStateAction<ActiveRoutine>>
+) => {
 
     const addExercise = (exercise: Exercise) => {
         const exerciseWithSets: ActiveExercise = {
@@ -18,7 +19,7 @@ export const useEditWorkoutActions = (routine: ActiveRoutine) => {
                 },
             ],
         };
-        updateRoutine({
+        setRoutine({
             ...routine,
             exercises: [...routine.exercises, exerciseWithSets],
         });
@@ -26,7 +27,7 @@ export const useEditWorkoutActions = (routine: ActiveRoutine) => {
 
     const updateSet = (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => {
         const numericValue = parseFloat(value) || 0;
-        updateRoutine({
+        setRoutine({
             ...routine,
             exercises: routine.exercises.map(exercise => {
                 if (exercise.id === exerciseId) {
@@ -46,7 +47,7 @@ export const useEditWorkoutActions = (routine: ActiveRoutine) => {
     };
 
     const addSet = (exerciseId: number) => {
-        updateRoutine({
+        setRoutine({
             ...routine,
             exercises: routine.exercises.map(exercise => {
                 if (exercise.id === exerciseId) {
@@ -72,7 +73,7 @@ export const useEditWorkoutActions = (routine: ActiveRoutine) => {
     };
 
     const deleteSet = (exerciseId: number, setId: number) => {
-        updateRoutine({
+        setRoutine({
             ...routine,
             exercises: routine.exercises.map(exercise => {
                 if (exercise.id === exerciseId) {

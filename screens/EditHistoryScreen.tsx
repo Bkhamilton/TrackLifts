@@ -12,7 +12,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const { history } = useContext(HistoryContext);
-    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(history.routine);
+    const [editedRoutine, setEditedRoutine] = useState(history.routine);
+    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
@@ -57,7 +58,7 @@ export default function EditHistoryScreen() {
     return (
         <View style={styles.container}>
             <Title
-                title={history.routine.title}
+                title={editedRoutine.title}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
@@ -88,7 +89,7 @@ export default function EditHistoryScreen() {
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
-                    routine={history.routine}
+                    routine={editedRoutine}
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}

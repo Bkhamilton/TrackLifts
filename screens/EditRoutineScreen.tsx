@@ -12,7 +12,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
     const { routineToEdit } = useContext(HomeContext);
-    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(routineToEdit);
+    const [editedRoutine, setEditedRoutine] = useState(routineToEdit);
+    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
@@ -57,7 +58,7 @@ export default function EditRoutineScreen() {
     return (
         <View style={styles.container}>
             <Title
-                title={routineToEdit.title}
+                title={editedRoutine.title}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
@@ -88,7 +89,7 @@ export default function EditRoutineScreen() {
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
-                    routine={routineToEdit}
+                    routine={editedRoutine}
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
