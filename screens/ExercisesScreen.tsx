@@ -1,3 +1,4 @@
+import SearchExerciseModal from '@/components/modals/SearchExerciseModal';
 import { DBContext } from '@/contexts/DBContext';
 import useHookExercises from '@/hooks/useHookExercises';
 import { sortList } from '@/utils/exerciseUtils';
@@ -19,6 +20,9 @@ export default function ExercisesScreen() {
         openAddExerciseModal,
         closeAddExerciseModal,
         exerciseModal,
+        searchModalVisible,
+        openSearchModal,
+        closeSearchModal,
         exercise,
         openExerciseModal,
         closeExerciseModal,
@@ -30,6 +34,14 @@ export default function ExercisesScreen() {
 
     return (
         <View style={styles.container}>
+            <SearchExerciseModal
+                visible={searchModalVisible} 
+                onClose={closeSearchModal} 
+                onSelect={(exercise) => {
+                    openExerciseModal(exercise);
+                    closeSearchModal();
+                }}
+            />
             <AddExerciseModal 
                 visible={addExerciseModal} 
                 close={closeAddExerciseModal} 
@@ -44,7 +56,13 @@ export default function ExercisesScreen() {
             <Title 
                 title="Exercises"
                 rightContent={
-                    <View>
+                    <View style={styles.headerRight}>
+                        <TouchableOpacity 
+                            onPress={openSearchModal}
+                            style={styles.searchButton}
+                        >
+                            <MaterialCommunityIcons name="magnify" size={24} color="#ff8787" />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             onPress={openAddExerciseModal}
                         >
@@ -75,5 +93,12 @@ const styles = StyleSheet.create({
     exerciseContainer: {
         width: '100%',
         padding: 10,
-    }
+    },
+    headerRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    searchButton: {
+        marginRight: 8,
+    },
 });

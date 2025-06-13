@@ -12,6 +12,7 @@ const useHookExercises = () => {
 
     const [addExerciseModal, setAddExerciseModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
+    const [searchModalVisible, setSearchModalVisible] = useState(false);
     const [exercise, setExercise] = useState({
         id: 0,
         title: '',
@@ -31,6 +32,9 @@ const useHookExercises = () => {
     const closeExerciseModal = () => {
         setExerciseModal(false);
     }
+
+    const openSearchModal = () => setSearchModalVisible(true);
+    const closeSearchModal = () => setSearchModalVisible(false);
 
     const onAdd = async (exercise: { title: string, equipment: Equipment, muscleGroup: MuscleGroup, muscleIntensities: any[] }) => {
         const { title, equipment, muscleGroup, muscleIntensities } = exercise;
@@ -70,6 +74,9 @@ const useHookExercises = () => {
         openAddExerciseModal,
         closeAddExerciseModal,
         exerciseModal,
+        searchModalVisible,
+        openSearchModal,
+        closeSearchModal,
         exercise,
         openExerciseModal,
         closeExerciseModal,
