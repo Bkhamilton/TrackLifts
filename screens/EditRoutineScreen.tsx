@@ -2,7 +2,7 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
-import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { HomeContext } from '@/contexts/HomeContext';
 import { useWorkoutActions } from '@/hooks/useWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -11,7 +11,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
-    const { routine, resetRoutine, saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
+    const { routineToEdit } = useContext(HomeContext);
     const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
@@ -57,11 +57,10 @@ export default function EditRoutineScreen() {
     return (
         <View style={styles.container}>
             <Title
-                title={routine.title}
+                title={routineToEdit.title}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
-                            resetRoutine();
                             router.back();
                         }}
                         style={{ marginRight: 12 }}
@@ -89,7 +88,7 @@ export default function EditRoutineScreen() {
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
-                    routine={routine}
+                    routine={routineToEdit}
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
