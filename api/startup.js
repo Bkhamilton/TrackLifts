@@ -1,4 +1,6 @@
 import { syncTables } from '@/api/sync';
+import userData from '@/data/UserData.json';
+import { insertUserProfileStats } from '@/db/user/UserProfileStats';
 import { insertUser } from '@/db/user/Users';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -55,6 +57,21 @@ export const createUserTables = async (db) => {
             email TEXT,
             password TEXT NOT NULL,
             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE TABLE IF NOT EXISTS UserProfileStats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            height TEXT,
+            weight TEXT,
+            bodyFat TEXT,
+            workoutsCompleted INTEGER DEFAULT 0,
+            weeklyWorkouts INTEGER DEFAULT 0,
+            weeklySets INTEGER DEFAULT 0,
+            favoriteExercise TEXT,
+            memberSince TEXT,
+            goals TEXT,
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            UNIQUE(user_id)
         );
         CREATE TABLE IF NOT EXISTS Routines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -166,7 +183,21 @@ export const syncData = async (db) => {
         email: '',
         password: 'password123',
     };
-    await insertUser(db, user);
+    const userId = await insertUser(db, user);
+
+    // Add User Profile Stats
+    const userProfileStats = {
+        height: userData.height,
+        weight: userData.weight,
+        bodyFat: userData.bodyFat,
+        workoutsCompleted: userData.workoutsCompleted,
+        weeklyWorkouts: userData.weeklyWorkouts,
+        weeklySets: userData.weeklySets,
+        favoriteExercise: userData.favoriteExercise,
+        memberSince: userData.memberSince,
+        goals: userData.goals,
+    };
+    await insertUserProfileStats(db, userId, userProfileStats);
 
     // SYNC WORKOUT DATA
     /*

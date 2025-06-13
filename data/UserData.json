@@ -1,9 +1,15 @@
 {
-    "User" : {
-        "username" : "benkhamilton",
-        "total workouts" : 4,
-        "height" : 72,
-        "weight" : 205.0,
-        "body fat" : "15%" 
+    "username": "benkhamilton",
+    "avatar": "👤",
+    "stats": {
+        "height": "6'0\"",
+        "weight": "200 lbs",
+        "bodyFat": "15%",
+        "workoutsCompleted": 128,
+        "weeklyWorkouts": 5,
+        "weeklySets": 45,
+        "favoriteExercise": "Bench Press",
+        "memberSince": "Jan 2023",
+        "goals": "Build muscle & endurance"
     }
 }
