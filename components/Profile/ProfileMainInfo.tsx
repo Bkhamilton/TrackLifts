@@ -6,7 +6,6 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 
 interface ProfileMainInfoProps {
-    username: string;
     avatar: string;
     stats: {
         workoutsCompleted: number;
@@ -14,7 +13,6 @@ interface ProfileMainInfoProps {
 }
 
 export default function ProfileMainInfo({
-    username = 'benkhamilton',
     avatar = '👤',
     stats = {
         workoutsCompleted: 128,

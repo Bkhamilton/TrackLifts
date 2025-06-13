@@ -7,7 +7,6 @@ import { StyleSheet } from 'react-native';
 export default function ProfileScreen() {
 
     const profileData = {
-        username: 'benkhamilton',
         avatar: '👤',
         stats: {
             workoutsCompleted: 128,
@@ -21,7 +20,6 @@ export default function ProfileScreen() {
             />
             <ScrollView style={styles.scrollContainer}>
                 <ProfileMainInfo 
-                    username={profileData.username}
                     avatar={profileData.avatar}
                     stats={profileData.stats}
                 />
