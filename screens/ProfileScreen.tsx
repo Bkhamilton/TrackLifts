@@ -1,4 +1,5 @@
 import MuscleIntensity from '@/components/Profile/MuscleIntensity/MuscleIntensity';
+import ProfileInsightsCard from '@/components/Profile/ProfileInsights/ProfileInsightsCard';
 import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -24,6 +25,7 @@ export default function ProfileScreen() {
                     stats={profileData.stats}
                 />
                 <MuscleIntensity/>
+                <ProfileInsightsCard/>
             </ScrollView>
         </View>
     );
@@ -32,6 +34,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         alignItems: 'center',
     },
     scrollContainer: {
