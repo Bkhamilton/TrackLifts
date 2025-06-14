@@ -1,4 +1,5 @@
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
@@ -11,6 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
+    const [confirmModal, setConfirmModal] = useState(false);
     const { routineToEdit } = useContext(HomeContext);
     const [editedRoutine, setEditedRoutine] = useState(routineToEdit);
     const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
@@ -43,16 +45,12 @@ export default function EditRoutineScreen() {
     };
 
     const handleSaveRoutine = () => {
-        // Save the routine to the database
-        // saveEditedRoutine(routine)
-        //     .then(() => {
-        //         console.log('Routine saved successfully');
-        //         resetRoutine(); // Reset the routine after saving
-        //         router.back(); // Navigate back to the previous screen
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error saving routine:', error);
-        //     });
+        // If editedRoutine is different from routineToEdit, show confirmation modal
+        if (JSON.stringify(editedRoutine) !== JSON.stringify(routineToEdit)) {
+            setConfirmModal(true);
+        } else {
+            router.back();
+        }
     }
     
     return (
@@ -86,6 +84,17 @@ export default function EditRoutineScreen() {
                 visible={modal}
                 close={closeModal}
                 add={addExercise}
+            />
+            <ConfirmationModal
+                visible={confirmModal}
+                message="Confirm changes?"
+                onClose={() => setConfirmModal(false)}
+                onSelect={(choice) => {
+                    if (choice === 'yes') {
+                        // Handle the confirmation action here
+                    }
+                    setConfirmModal(false);
+                }}
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
