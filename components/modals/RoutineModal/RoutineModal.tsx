@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from '@/components/Themed';
+import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
@@ -50,7 +50,7 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
                     {/* Header */}
                     <View style={styles.header}>
                         <Text style={styles.headerText}>{routine.title}</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <TouchableOpacity onPress={toggleFavorite} style={{ marginRight: 8 }}>
                                 <MaterialCommunityIcons
                                     name={isFavorite ? "star" : "star-outline"}
@@ -61,7 +61,7 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
                             <TouchableOpacity onPress={close} style={styles.closeButton}>
                                 <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
                             </TouchableOpacity>
-                        </View>
+                        </ClearView>
                     </View>
 
                     {/* Exercises List */}

@@ -1,4 +1,4 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface ConfirmationModalProps {
@@ -25,7 +25,7 @@ export default function ConfirmationModal({
                 <View style={styles.modalContent}>
                     <Text style={styles.message}>{message}</Text>
                     
-                    <View style={styles.buttonContainer}>
+                    <ClearView style={styles.buttonContainer}>
                         <TouchableOpacity 
                             style={[styles.button, styles.noButton]}
                             onPress={() => {
@@ -33,7 +33,7 @@ export default function ConfirmationModal({
                                 onClose();
                             }}
                         >
-                            <Text style={styles.buttonText}>No</Text>
+                            <Text style={[styles.buttonText, { color: 'black' }]}>No</Text>
                         </TouchableOpacity>
                         
                         <TouchableOpacity 
@@ -45,7 +45,7 @@ export default function ConfirmationModal({
                         >
                             <Text style={styles.buttonText}>Yes</Text>
                         </TouchableOpacity>
-                    </View>
+                    </ClearView>
                 </View>
             </View>
         </Modal>

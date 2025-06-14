@@ -1,3 +1,4 @@
+import { ClearView, Text, TextInput, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -5,7 +6,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
-import { Text, TextInput, View } from '../../Themed';
 import { ExerciseComponent } from './ExerciseComponent';
 import { NewExerciseModal } from './NewExerciseModal';
 
@@ -108,7 +108,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                 <View style={styles.modalBackdrop}>
                     <View style={styles.modalContainer}>
                         {/* Header */}
-                        <View style={styles.header}>
+                        <ClearView style={styles.header}>
                             <TouchableOpacity onPress={closeMain} style={styles.closeButton}>
                                 <MaterialCommunityIcons name="close" size={24} color="#666" />
                             </TouchableOpacity>
@@ -116,10 +116,10 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                             <TouchableOpacity onPress={addRoutine} style={styles.addButton}>
                                 <Text style={styles.addButtonText}>SAVE</Text>
                             </TouchableOpacity>
-                        </View>
+                        </ClearView>
 
                         {/* Title Input */}
-                        <View style={styles.inputContainer}>
+                        <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Routine Title</Text>
                             <TextInput
                                 style={styles.textInput}
@@ -128,7 +128,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                                 placeholder="Enter routine name"
                                 placeholderTextColor="#999"
                             />
-                        </View>
+                        </ClearView>
 
                         <FlatList
                             data={routineExercises}
