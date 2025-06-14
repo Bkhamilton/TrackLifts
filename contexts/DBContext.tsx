@@ -40,6 +40,7 @@ interface DBContextValue {
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
     deleteRoutineFromDB: (routineId: number) => Promise<void>;
     refreshRoutines: () => void;
+    updateUser: (user: User) => void;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -80,6 +81,9 @@ export const DBContext = createContext<DBContextValue>({
     },
     refreshRoutines: () => {
         // This function can be used to refresh routines if needed
+    },
+    updateUser: () => {
+        // This function can be used to update the user if needed
     },
 });
 
@@ -234,6 +238,10 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         }
     };
 
+    const updateUser = (newUser: User) => {
+        setUser(newUser);
+    }
+
     useEffect(() => {
         if (db) {
             getUserById(db, 1).then((data) => {
@@ -311,6 +319,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         deleteExerciseFromDB,
         deleteRoutineFromDB,
         refreshRoutines,
+        updateUser,
     };
 
     return (

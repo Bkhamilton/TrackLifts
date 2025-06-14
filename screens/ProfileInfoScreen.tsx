@@ -1,103 +1,22 @@
-import { Text, TextInput, View } from '@/components/Themed';
+import AboutSection from '@/components/Profile/ProfileInfo/AboutSection';
+import AvatarUsernameSection from '@/components/Profile/ProfileInfo/AvatarUsernameSection';
+import BodyMetricsSection from '@/components/Profile/ProfileInfo/BodyMetricsSection';
+import WorkoutStatsSection from '@/components/Profile/ProfileInfo/WorkoutStatsSection';
+import { Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import { DBContext } from '@/contexts/DBContext';
-import { updateUserProfileStats } from '@/db/user/UserProfileStats';
-import { updateUsername } from '@/db/user/Users';
+import useHookProfileInfo from '@/hooks/useHookProfileInfo';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useContext, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
-interface ProfileData {
-    username: string;
-    avatar: string;
-    stats: {
-        height: string;
-        weight: string;
-        bodyFat: string;
-        workoutsCompleted: number;
-        weeklyWorkouts: number;
-        weeklySets: number;
-        favoriteExercise: string;
-        memberSince: string;
-        goals: string;
-    };
-}
-
 export default function ProfileInfoScreen() {
-    const [isEditing, setIsEditing] = useState(false);
-
-    const { db, user, userStats } = useContext(DBContext);
-
-    const [profile, setProfile] = useState<ProfileData>({
-        username: user.username || 'benkhamilton',
-        avatar: '👤',
-        stats: {
-            height: userStats.height || '6\'2"',
-            weight: userStats.weight || '180 lbs',
-            bodyFat: userStats.bodyFat || '15%',
-            workoutsCompleted: 128,
-            weeklyWorkouts: 5,
-            weeklySets: 45,
-            favoriteExercise: userStats.favoriteExercise || 'Squats',
-            memberSince: userStats.memberSince || 'Jan 2022',
-            goals: userStats.goals || 'Build Strength'
-        },
-    });
-
     const router = useRouter();
-
-    const handleSave = () => {
-        setIsEditing(false);
-        // Here you would typically save to your backend/database
-
-        if (profile.username !== user.username) {
-            // Update username in the database
-            updateUsername(db, user.id, profile.username);
-        }
-
-        updateUserProfileStats(db, user.id, {
-            height: profile.stats.height,
-            weight: profile.stats.weight,
-            bodyFat: profile.stats.bodyFat,
-            favoriteExercise: profile.stats.favoriteExercise,
-            memberSince: profile.stats.memberSince,
-            goals: profile.stats.goals
-        });
-        console.log('Saved profile:', profile);
-    };
-
-    const handleEditToggle = () => {
-        if (isEditing) {
-            handleSave();
-        } else {
-            setIsEditing(true);
-        }
-    };
-
-    const handleChange = (field: string, value: string) => {
-        setProfile(prev => {
-            if (field.includes('.')) {
-                const [parent, child] = field.split('.');
-                const parentValue = prev[parent as keyof ProfileData];
-                if (typeof parentValue === 'object' && parentValue !== null) {
-                    return {
-                        ...prev,
-                        [parent]: {
-                            ...parentValue,
-                            [child]: value
-                        }
-                    };
-                }
-                // fallback: don't update if not an object
-                return prev;
-            }
-            return {
-                ...prev,
-                [field]: value
-            };
-        });
-    };
+    const {
+        profile,
+        isEditing,
+        handleEditToggle,
+        handleChange,
+    } = useHookProfileInfo();
 
     return (
         <View style={styles.container}>
@@ -118,153 +37,28 @@ export default function ProfileInfoScreen() {
             />
             
             <ScrollView style={styles.scrollContainer}>
-                {/* Avatar & Username Section */}
-                <View style={styles.section}>
-                    <View style={styles.avatarContainer}>
-                        <Text style={styles.avatar}>{profile.avatar}</Text>
-                    </View>
-                    {isEditing ? (
-                        <TextInput
-                            style={styles.editableUsername}
-                            value={profile.username}
-                            onChangeText={(value) => handleChange('username', value)}
-                        />
-                    ) : (
-                        <Text style={styles.username}>{profile.username}</Text>
-                    )}
-                </View>
-                
-                {/* Basic Stats Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Body Metrics</Text>
-                    <View style={styles.statsGrid}>
-                        <EditableStatCard 
-                            label="Height" 
-                            value={profile.stats.height} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.height', value)}
-                        />
-                        <EditableStatCard 
-                            label="Weight" 
-                            value={profile.stats.weight} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.weight', value)}
-                        />
-                        <EditableStatCard 
-                            label="Body Fat" 
-                            value={profile.stats.bodyFat} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.bodyFat', value)}
-                        />
-                    </View>
-                </View>
-                
-                {/* Workout Stats Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Workout Stats</Text>
-                    <View style={styles.statsGrid}>
-                        <EditableStatCard 
-                            label="Workouts" 
-                            value={profile.stats.workoutsCompleted.toString()} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.workoutsCompleted', value)}
-                        />
-                        <EditableStatCard 
-                            label="Weekly Workouts" 
-                            value={profile.stats.weeklyWorkouts.toString()} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.weeklyWorkouts', value)}
-                        />
-                        <EditableStatCard 
-                            label="Weekly Sets" 
-                            value={profile.stats.weeklySets.toString()} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.weeklySets', value)}
-                        />
-                        <EditableStatCard 
-                            label="Favorite Exercise" 
-                            value={profile.stats.favoriteExercise} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.favoriteExercise', value)}
-                        />
-                    </View>
-                </View>
-                
-                {/* Membership & Goals Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>About</Text>
-                    <View style={styles.infoCard}>
-                        <EditableInfoRow 
-                            label="Member Since" 
-                            value={profile.stats.memberSince} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.memberSince', value)}
-                        />
-                        <EditableInfoRow 
-                            label="Goals" 
-                            value={profile.stats.goals} 
-                            isEditing={isEditing}
-                            onChange={(value) => handleChange('stats.goals', value)}
-                        />
-                    </View>
-                </View>
+                <AvatarUsernameSection
+                    avatar={profile.avatar}
+                    username={profile.username}
+                    isEditing={isEditing}
+                    onChange={handleChange}
+                />
+                <BodyMetricsSection
+                    stats={profile.stats}
+                    isEditing={isEditing}
+                    onChange={handleChange}
+                />
+                <WorkoutStatsSection
+                    stats={profile.stats}
+                    isEditing={isEditing}
+                    onChange={handleChange}
+                />
+                <AboutSection
+                    stats={profile.stats}
+                    isEditing={isEditing}
+                    onChange={handleChange}
+                />
             </ScrollView>
-        </View>
-    );
-}
-
-// Updated Stat Card Component with Edit Support
-function EditableStatCard({ 
-    label, 
-    value, 
-    isEditing, 
-    onChange 
-}: { 
-    label: string; 
-    value: string; 
-    isEditing: boolean;
-    onChange: (value: string) => void;
-}) {
-    return (
-        <View style={styles.statCard}>
-            {isEditing ? (
-                <TextInput
-                    style={styles.editableStatValue}
-                    value={value}
-                    onChangeText={onChange}
-                />
-            ) : (
-                <Text style={styles.statValue}>{value}</Text>
-            )}
-            <Text style={styles.statLabel}>{label}</Text>
-        </View>
-    );
-}
-
-// Updated Info Row Component with Edit Support
-function EditableInfoRow({ 
-    label, 
-    value, 
-    isEditing, 
-    onChange 
-}: { 
-    label: string; 
-    value: string; 
-    isEditing: boolean;
-    onChange: (value: string) => void;
-}) {
-    return (
-        <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{label}</Text>
-            {isEditing ? (
-                <TextInput
-                    style={styles.editableInfoValue}
-                    value={value}
-                    onChangeText={onChange}
-                />
-            ) : (
-                <Text style={styles.infoValue}>{value}</Text>
-            )}
         </View>
     );
 }
