@@ -6,21 +6,13 @@ import { Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 interface SettingsModalProps {
     visible: boolean;
     close: () => void;
-    onEditProfile: () => void;
-    onEditGoals: () => void;
-    onNotificationSettings: () => void;
-    onAppearanceSettings: () => void;
-    onPrivacySettings: () => void;
+    onSelect: (option: string) => void
 }
 
 export default function SettingsModal({ 
     visible, 
     close, 
-    onEditProfile, 
-    onEditGoals,
-    onNotificationSettings,
-    onAppearanceSettings,
-    onPrivacySettings
+    onSelect,
 }: SettingsModalProps) {
     return (
         <Modal
@@ -43,7 +35,7 @@ export default function SettingsModal({
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Profile Settings</Text>
                             <TouchableOpacity 
-                                onPress={onEditProfile}
+                                onPress={() => onSelect('editProfile')}
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
@@ -54,7 +46,7 @@ export default function SettingsModal({
                             </TouchableOpacity>
                             
                             <TouchableOpacity 
-                                onPress={onEditGoals}
+                                onPress={() => onSelect('editGoals')}
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
@@ -69,7 +61,7 @@ export default function SettingsModal({
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>App Settings</Text>
                             <TouchableOpacity 
-                                onPress={onNotificationSettings}
+                                onPress={() => onSelect('notificationSettings')}
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
@@ -80,7 +72,7 @@ export default function SettingsModal({
                             </TouchableOpacity>
                             
                             <TouchableOpacity 
-                                onPress={onAppearanceSettings}
+                                onPress={() => onSelect('appearanceSettings')}
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
@@ -95,7 +87,7 @@ export default function SettingsModal({
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Privacy & Security</Text>
                             <TouchableOpacity 
-                                onPress={onPrivacySettings}
+                                onPress={() => onSelect('privacySettings')}
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>

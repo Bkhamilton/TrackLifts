@@ -106,16 +106,35 @@ export default function HomeScreen() {
         closeRoutineOptionsModal();
     }
 
+    const onSelectSetting = (option: string) => {
+        switch (option) {
+            case 'editProfile':
+                router.push('/(tabs)/profile/profileInfo');
+                break;
+            case 'editGoals':
+                router.push('/(tabs)/profile/profileInfo');
+                break;
+            case 'notificationSettings':
+                // router.push('/(tabs)/settings/notifications');
+                break;
+            case 'appearanceSettings':
+                // router.push('/(tabs)/settings/appearance');
+                break;
+            case 'privacySettings':
+                // router.push('/(tabs)/settings/privacy');
+                break;
+            default:
+                console.warn('Unknown setting selected:', option);
+        }
+        closeSettingsModal();
+    }
+
     return (
         <View style={styles.container}>
             <SettingsModal
                 visible={settingsModal}
                 close={closeSettingsModal}
-                onEditProfile={closeSettingsModal}
-                onEditGoals={closeSettingsModal}
-                onNotificationSettings={closeSettingsModal}
-                onAppearanceSettings={closeSettingsModal}
-                onPrivacySettings={closeSettingsModal}
+                onSelect={onSelectSetting}
             />
             <RoutineModal
                 visible={routineModal}
