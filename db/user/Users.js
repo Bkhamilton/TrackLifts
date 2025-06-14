@@ -30,18 +30,28 @@ export const updateUser = async (db, user) => {
             'UPDATE Users SET username = ?, name = ?, email = ?, password = ? WHERE id = ?',
             [user.username, user.name, user.email, user.password, user.id]
         );
-        console.log('User updated');
     } catch (error) {
         console.error('Error updating user:', error);
         throw error;
     }
 };
 
+export const updateUsername = async (db, userId, newUsername) => {
+    try {
+        await db.runAsync(
+            'UPDATE Users SET username = ? WHERE id = ?',
+            [newUsername, userId]
+        );
+    } catch (error) {
+        console.error('Error updating username:', error);
+        throw error;
+    }
+}
+
 // Function to delete a user by ID
 export const deleteUser = async (db, userId) => {
     try {
         await db.runAsync('DELETE FROM Users WHERE id = ?', [userId]);
-        console.log('User deleted');
     } catch (error) {
         console.error('Error deleting user:', error);
         throw error;

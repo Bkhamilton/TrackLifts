@@ -2,6 +2,7 @@ import { Text, TextInput, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DBContext } from '@/contexts/DBContext';
 import { updateUserProfileStats } from '@/db/user/UserProfileStats';
+import { updateUsername } from '@/db/user/Users';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
@@ -26,7 +27,7 @@ interface ProfileData {
 export default function ProfileInfoScreen() {
     const [isEditing, setIsEditing] = useState(false);
 
-    const { user, userStats } = useContext(DBContext);
+    const { db, user, userStats } = useContext(DBContext);
 
     const [profile, setProfile] = useState<ProfileData>({
         username: user.username || 'benkhamilton',
@@ -49,7 +50,13 @@ export default function ProfileInfoScreen() {
     const handleSave = () => {
         setIsEditing(false);
         // Here you would typically save to your backend/database
-        updateUserProfileStats(user.id, {
+
+        if (profile.username !== user.username) {
+            // Update username in the database
+            updateUsername(db, user.id, profile.username);
+        }
+
+        updateUserProfileStats(db, user.id, {
             height: profile.stats.height,
             weight: profile.stats.weight,
             bodyFat: profile.stats.bodyFat,
