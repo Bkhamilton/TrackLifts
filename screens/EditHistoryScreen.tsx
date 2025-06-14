@@ -49,7 +49,19 @@ export default function EditHistoryScreen() {
         if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine)) {
             setConfirmModal(true);
         } else {
-            router.back();
+            router.replace('/(tabs)/history/main');
+        }
+    }
+
+    const handleConfirmSave = (option: 'yes' | 'no') => {
+        if (option === 'yes') {
+            // Save the changes to the routine
+            // This is where you would typically update your context or state with the new routine
+            // For example: updateRoutine(editedRoutine);
+            router.replace('/(tabs)/history/main');
+        } else {
+            // Discard changes and go back
+            router.replace('/(tabs)/history/main');
         }
     }
     
@@ -89,12 +101,7 @@ export default function EditHistoryScreen() {
                 visible={confirmModal}
                 message="Confirm changes?"
                 onClose={() => setConfirmModal(false)}
-                onSelect={(option) => {
-                    if (option === 'yes') {
-                        // Handle the confirmation action here
-                    }
-                    setConfirmModal(false);
-                }}
+                onSelect={(option) => handleConfirmSave(option)}
             />
             <ScrollView style={styles.scrollView}>
                 <Workout

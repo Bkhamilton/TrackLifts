@@ -52,6 +52,18 @@ export default function EditRoutineScreen() {
             router.back();
         }
     }
+
+    const handleConfirmSave = (option: 'yes' | 'no') => {
+        if (option === 'yes') {
+            // Save the changes to the routine
+            // This is where you would typically update your context or state with the new routine
+            // For example: updateRoutine(editedRoutine);
+            router.back();
+        } else {
+            // Discard changes and go back
+            router.back();
+        }
+    }
     
     return (
         <View style={styles.container}>
@@ -89,12 +101,7 @@ export default function EditRoutineScreen() {
                 visible={confirmModal}
                 message="Confirm changes?"
                 onClose={() => setConfirmModal(false)}
-                onSelect={(choice) => {
-                    if (choice === 'yes') {
-                        // Handle the confirmation action here
-                    }
-                    setConfirmModal(false);
-                }}
+                onSelect={(choice) => handleConfirmSave(choice)}
             />
             <ScrollView style={styles.scrollView}>
                 <Workout
