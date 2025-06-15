@@ -1,5 +1,6 @@
 import CelebrationSection from '@/components/FinishWorkout/CelebrationSection';
 import ExerciseBreakdownSection from '@/components/FinishWorkout/ExerciseBreakdownSection';
+import NotesInput from '@/components/FinishWorkout/NotesInput';
 import SummaryStatsSection from '@/components/FinishWorkout/SummaryStatsSection';
 import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ScrollView, Text, View } from '@/components/Themed';
@@ -28,9 +29,15 @@ export default function FinishWorkoutScreen() {
         finalWorkout,
     } = useHookFinishWorkout();
 
+    const [notes, setNotes] = React.useState(finalWorkout?.notes || '');
+
     const handleDone = async () => {
-        // Save workout to database when Done is pressed
-        await saveWorkoutToDatabase(finalWorkout);
+        // Build safeFinalWorkout with notes
+        const safeFinalWorkout = {
+            ...finalWorkout,
+            notes: notes,
+        };
+        await saveWorkoutToDatabase(safeFinalWorkout);
         router.replace('/(tabs)/(index)');
     };
 
@@ -43,7 +50,9 @@ export default function FinishWorkoutScreen() {
             />
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* Celebration animation */}
-                <CelebrationSection totalWorkoutsCompleted={totalWorkoutsCompleted} />
+                <CelebrationSection 
+                    totalWorkoutsCompleted={totalWorkoutsCompleted} 
+                />
 
                 {/* Summary stats */}
                 <SummaryStatsSection
@@ -54,7 +63,15 @@ export default function FinishWorkoutScreen() {
                 />
 
                 {/* Exercise breakdown */}
-                <ExerciseBreakdownSection exerciseStats={exerciseStats} />
+                <ExerciseBreakdownSection 
+                    exerciseStats={exerciseStats} 
+                />
+
+                {/* Notes input */}
+                <NotesInput 
+                    value={notes} 
+                    onChangeText={setNotes} 
+                />
             </ScrollView>
 
             {/* Done button */}

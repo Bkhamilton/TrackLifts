@@ -63,7 +63,7 @@ export default function ActiveWorkoutScreen() {
                 startTime: startTime,
                 endTime: Date.now(),
                 lengthMin: formattedTime,
-                notes: 'Workout completed successfully!' // Add any notes if needed
+                notes: '',
             };
             setFinalTime(formattedTime);
             setFinalWorkout(workout);

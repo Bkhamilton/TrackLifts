@@ -146,7 +146,6 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     };
 
     const saveWorkoutToDatabase = async (workout: Workout) => {
-        console.log('Saving workout to database:', workout);
         // Only update RoutineExercises if routineId is valid (not 0)
         if (workout.routine.id && workout.routine.id !== 0) {
             await db.runAsync('BEGIN TRANSACTION');
