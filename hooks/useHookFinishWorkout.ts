@@ -6,7 +6,7 @@ import { Animated, Easing } from 'react-native';
 export default function useHookFinishWorkout() {
     const { routine, finalTime } = useContext(ActiveWorkoutContext);
     const { addRoutineToDB } = useContext(DBContext);
-    const { finalWorkout, saveWorkoutToDatabase, setFinalWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+    const { finalWorkout, setFinalWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
     const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
 
@@ -15,14 +15,6 @@ export default function useHookFinishWorkout() {
     useEffect(() => {
         if (routine.id === 0) {
             setShowSaveModal(true);
-        } else {
-            saveWorkoutToDatabase(finalWorkout);
-            setFinalWorkout({
-                ...finalWorkout,
-                routine: { ...routine, id: routine.id, title: routine.title },
-                startTime: finalWorkout.startTime ?? null,
-                endTime: finalWorkout.endTime ?? null,
-            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routine.id]);
@@ -50,13 +42,10 @@ export default function useHookFinishWorkout() {
 
         setRoutine(updatedRoutine);
         setFinalWorkout(safeFinalWorkout);
-        await saveWorkoutToDatabase(safeFinalWorkout);
         setShowSaveModal(false);
     };
 
     const handleSkipSaveRoutine = async () => {
-        // Save workout as ad-hoc (routineId will be null/0)
-        await saveWorkoutToDatabase(finalWorkout);
         setShowSaveModal(false);
         // Optionally, show a success message or navigate away
     };
@@ -108,8 +97,10 @@ export default function useHookFinishWorkout() {
         totalWeightMoved,
         highestWeight,
         exerciseStats,
-        // Optionally export animation refs if needed
-        // scaleValue,
-        // opacityValue,
+        routine,
+        finalWorkout,
+        setFinalWorkout,
+        setRoutine,
+        addRoutineToDB,
     };
 }

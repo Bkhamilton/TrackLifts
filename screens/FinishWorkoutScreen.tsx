@@ -3,14 +3,16 @@ import ExerciseBreakdownSection from '@/components/FinishWorkout/ExerciseBreakdo
 import SummaryStatsSection from '@/components/FinishWorkout/SummaryStatsSection';
 import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ScrollView, Text, View } from '@/components/Themed';
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import useHookFinishWorkout from '@/hooks/useHookFinishWorkout';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function FinishWorkoutScreen() {
     
     const router = useRouter();
+    const { saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
 
     const {
         showSaveModal,
@@ -22,9 +24,13 @@ export default function FinishWorkoutScreen() {
         totalWeightMoved,
         highestWeight,
         exerciseStats,
+        routine,
+        finalWorkout,
     } = useHookFinishWorkout();
 
-    const handleDone = () => {
+    const handleDone = async () => {
+        // Save workout to database when Done is pressed
+        await saveWorkoutToDatabase(finalWorkout);
         router.replace('/(tabs)/(index)');
     };
 
