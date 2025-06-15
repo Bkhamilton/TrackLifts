@@ -9,14 +9,14 @@ export default function MiniSparkline({ data }: { data: { x: number, y: number }
         data={data}
         padding={0} 
         xKey={'x'} 
-        yKeys={[]} 
+        yKeys={["y"]} 
       >
-        {() => (
+        {({ points }) => (
           <Line
             color="#ff8787"
             strokeWidth={2}
             animate={{ type: "timing", duration: 1000 }} 
-            points={[]}          
+            points={points.y}          
           />
         )}
       </CartesianChart>

@@ -25,6 +25,15 @@ export default function DataScreen() {
                         <MaterialCommunityIcons name="chevron-left" size={24} color="#666" />
                     </TouchableOpacity>
                 }
+                rightContent={
+                    <MiniSparkline data={[
+                        { x: 1, y: 2 },
+                        { x: 2, y: 3 },
+                        { x: 3, y: 5 },
+                        { x: 4, y: 4 },
+                        { x: 5, y: 6 }
+                    ]} />
+                }
             />
         <ScrollView style={{ flex: 1, padding: 16 }}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>
@@ -39,16 +48,6 @@ export default function DataScreen() {
             <View style={{ marginBottom: 24 }}>
                 <Text style={{ fontWeight: '600', marginBottom: 8 }}>Bench Press Progress</Text>
                 <StrengthProgressChart />
-            </View>
-
-            <View style={{ marginBottom: 24 }}>
-                <MiniSparkline data={[
-                    { x: 1, y: 2 },
-                    { x: 2, y: 3 },
-                    { x: 3, y: 5 },
-                    { x: 4, y: 4 },
-                    { x: 5, y: 6 }
-                ]} />
             </View>
         </ScrollView>
         </View>

@@ -4,6 +4,7 @@ import { Bar, CartesianChart } from 'victory-native';
 export default function WorkoutFrequencyChart() {
   // Hardcoded weekly workout data
   const data = [
+    { day: 'None', workouts: 0 },
     { day: 'Mon', workouts: 2 },
     { day: 'Tue', workouts: 1 },
     { day: 'Wed', workouts: 3 },
@@ -17,27 +18,16 @@ export default function WorkoutFrequencyChart() {
     <View style={{ height: 250, padding: 16 }}>
       <CartesianChart
         data={data}
-        padding={20} 
         xKey={'day'} 
-        yKeys={[]} 
+        yKeys={["workouts"]} 
       >
-        {() => (
-          <>
-            <Bar
-              color="#ff8787"
-              animate={{
-                type: "timing",
-                duration: 1000
-              }} 
-              points={[]} 
-              chartBounds={{
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0
-              }}            
-            />
-          </>
+        {({ points, chartBounds }) => (
+          <Bar
+            color="#ff8787"
+            points={points.workouts} 
+            chartBounds={chartBounds}  
+            
+          />
         )}
       </CartesianChart>
     </View>
