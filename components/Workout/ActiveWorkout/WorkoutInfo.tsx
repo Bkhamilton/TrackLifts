@@ -71,7 +71,7 @@ export default function WorkoutInfo({
             {/* Sets List */}
             {exercise.sets.map((set, index) => (
                 <SetCard 
-                    key={set.id} 
+                    key={index} 
                     set={set}
                     index={index} 
                     onUpdateSet={onUpdateSet} 
