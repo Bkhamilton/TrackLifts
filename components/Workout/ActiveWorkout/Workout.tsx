@@ -34,9 +34,9 @@ export default function Workout({
 
     return (
         <View style={styles.container}>
-            {routine.exercises.map((exercise) => (
+            {routine.exercises.map((exercise, index) => (
                 <WorkoutInfo
-                    key={exercise.id}
+                    key={index}
                     exercise={exercise}
                     onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
                     onAddSet={() => onAddSet(exercise.id)}

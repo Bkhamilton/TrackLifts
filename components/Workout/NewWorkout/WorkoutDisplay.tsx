@@ -10,8 +10,8 @@ interface WorkoutProps {
 export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
     return (
         <View style={styles.container}>
-            {routine.exercises.map((exercise) => (
-                <View key={exercise.id} style={styles.exerciseContainer}>
+            {routine.exercises.map((exercise, index) => (
+                <View key={index} style={styles.exerciseContainer}>
                     <Text style={styles.exerciseTitle}>{exercise.title}</Text>
                     
                     {/* Header Row */}
