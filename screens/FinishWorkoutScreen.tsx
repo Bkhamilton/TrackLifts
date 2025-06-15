@@ -13,7 +13,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function FinishWorkoutScreen() {
     
     const router = useRouter();
-    const { saveWorkoutToDatabase } = useContext(ActiveWorkoutContext);
+    const { saveWorkoutToDatabase, clearRoutine } = useContext(ActiveWorkoutContext);
 
     const {
         showSaveModal,
@@ -38,6 +38,7 @@ export default function FinishWorkoutScreen() {
             notes: notes,
         };
         await saveWorkoutToDatabase(safeFinalWorkout);
+        clearRoutine();
         router.replace('/(tabs)/(index)');
     };
 
