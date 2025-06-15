@@ -110,7 +110,7 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 8,
-        height: '88%',
+        height: '90%',
     },
     sortButtons: {
         width: 120,
