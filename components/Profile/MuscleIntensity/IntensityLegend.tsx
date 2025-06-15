@@ -32,10 +32,9 @@ const styles = StyleSheet.create({
     legendContainer: {
         alignItems: 'center',
         marginTop: 10,
-        width: '80%',
-        backgroundColor: '#f9f9f9',
+        width: '100%',
         borderRadius: 8,
-        padding: 10,
+        padding: 8,
     },
     legendTitle: {
         fontSize: 14,

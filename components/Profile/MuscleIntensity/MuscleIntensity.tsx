@@ -250,13 +250,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 10,
         color: '#333',
         textAlign: 'center',
     },
     toggleContainer: {
         flexDirection: 'row',
-        marginBottom: 20,
+        marginBottom: 10,
         backgroundColor: '#f5f5f5',
         borderRadius: 12,
         overflow: 'hidden',
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     bodyContainer: {
         width: '50%',

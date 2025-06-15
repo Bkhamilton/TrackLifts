@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     statsGrid: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 12,
         backgroundColor: 'transparent',
     },
     statItem: {
