@@ -31,11 +31,12 @@ const YourSplits: React.FC<Props> = ({
         <FlatList
             data={splits}
             keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ paddingBottom: 85 }}
+            contentContainerStyle={{ paddingBottom: 85, paddingTop: 12 }}
             renderItem={({ item }) => (
                 <View style={[
                     styles.splitCard,
-                    item.is_active && styles.primarySplitCard
+                    item.is_active && styles.primarySplitCard,
+                    !item.is_active && { borderColor: '#ccc', borderWidth: 1 }
                 ]}>
                     <View style={styles.splitHeader}>
                         <View>
@@ -85,7 +86,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 16,
     },
     sectionTitle: {
         fontSize: 18,

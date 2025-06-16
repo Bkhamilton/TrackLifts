@@ -5,12 +5,13 @@ import Title from '@/components/Title';
 import useHookSplits from '@/hooks/useHookSplits';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 // New imports
 import CurrentSplit from '@/components/Split/CurrentSplit';
 import YourSplits from '@/components/Split/YourSplits';
+import { RoutineContext } from '@/contexts/RoutineContext';
 
 export default function SplitScreen() {
     const {
@@ -29,7 +30,10 @@ export default function SplitScreen() {
         updateSplitDay,
         addDayToSplit,
         removeDayFromSplit,
+        createSplit
     } = useHookSplits();
+
+    const { routines } = useContext(RoutineContext);
 
     const router = useRouter();
 
@@ -66,9 +70,8 @@ export default function SplitScreen() {
             <CreateSplitModal
                 visible={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
-                onCreate={createNewSplit}
-                splitName={newSplitName}
-                setSplitName={setNewSplitName}
+                onCreate={createSplit}
+                availableRoutines={routines.map(r => r.title)}
             />
 
             {/* Edit Split Modal */}
@@ -76,7 +79,7 @@ export default function SplitScreen() {
                 <EditSplitModal
                     visible={!!editingSplit}
                     editingSplit={editingSplit}
-                    availableRoutines={['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body', 'Rest']}
+                    availableRoutines={routines.map(r => r.title)}
                     onUpdateSplitDay={updateSplitDay}
                     onAddDay={addDayToSplit}
                     onRemoveDay={removeDayFromSplit}

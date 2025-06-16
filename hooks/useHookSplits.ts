@@ -111,6 +111,22 @@ export default function useHookSplits() {
         }));
     };
 
+    const createSplit = (name: string, routines: RoutineDay[]) => {
+        const newSplit: Splits = {
+            id: dislpaySplits.length + 1,
+            name,
+            routines: routines.map((r, i) => ({
+                ...r,
+                id: Date.now() + i,
+                split_id: dislpaySplits.length + 1,
+                routine_id: 0
+            })),
+            is_active: false
+        };
+        setDisplaySplits([...dislpaySplits, newSplit]);
+        setShowCreateModal(false);
+    };
+
     return {
         dislpaySplits,
         activeSplit,
@@ -129,5 +145,6 @@ export default function useHookSplits() {
         updateSplitDay,
         addDayToSplit,
         removeDayFromSplit,
+        createSplit
     };
 }
