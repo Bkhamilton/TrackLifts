@@ -9,7 +9,7 @@ interface RoutineDay {
 }
 
 export default function useHookSplits() {
-    const { splits, activeSplit } = useContext(SplitContext);
+    const { splits, activeSplit, updateActiveSplit } = useContext(SplitContext);
     const [dislpaySplits, setDisplaySplits] = useState<Splits[]>(splits);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newSplitName, setNewSplitName] = useState('');
@@ -17,9 +17,10 @@ export default function useHookSplits() {
     const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(activeSplit?.routines || []);
 
     const setAsPrimary = (id: number) => {
+        updateActiveSplit(id);
         setDisplaySplits(prev => prev.map(split => ({
             ...split,
-            isPrimary: split.id === id
+            is_active: split.id === id
         })));
         const primarySplit = dislpaySplits.find(s => s.id === id);
         if (primarySplit) {

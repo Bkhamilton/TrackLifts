@@ -41,9 +41,9 @@ export const getSplitById = async (db, id) => {
     }
 };
 
-export const setActiveSplit = async (db, splitId) => {
-    await db.runAsync('UPDATE Splits SET is_active = 0');
-    await db.runAsync('UPDATE Splits SET is_active = 1 WHERE id = ?', [splitId]);
+export const setNewActiveSplit = async (db, userId, splitId) => {
+    await db.runAsync('UPDATE Splits SET is_active = 0 WHERE user_id = ?', [userId]);
+    await db.runAsync('UPDATE Splits SET is_active = 1 WHERE id = ? AND user_id = ?', [splitId, userId]);
 };
 
 // Get the active split
