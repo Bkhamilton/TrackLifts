@@ -92,17 +92,6 @@ export default function EditHistoryScreen() {
                     </TouchableOpacity>
                 }
             />
-            <AddToWorkoutModal
-                visible={modal}
-                close={closeModal}
-                add={addExercise}
-            />
-            <ConfirmationModal
-                visible={confirmModal}
-                message="Confirm changes?"
-                onClose={() => setConfirmModal(false)}
-                onSelect={(option) => handleConfirmSave(option)}
-            />
             <ScrollView style={styles.scrollView}>
                 <Workout
                     routine={editedRoutine}
@@ -116,6 +105,17 @@ export default function EditHistoryScreen() {
                     onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
                 />
             </ScrollView>
+            <AddToWorkoutModal
+                visible={modal}
+                close={closeModal}
+                add={addExercise}
+            />
+            <ConfirmationModal
+                visible={confirmModal}
+                message="Confirm changes?"
+                onClose={() => setConfirmModal(false)}
+                onSelect={(option) => handleConfirmSave(option)}
+            />
         </View>
     );
 }

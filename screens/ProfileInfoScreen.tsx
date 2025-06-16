@@ -8,19 +8,20 @@ import Title from '@/components/Title';
 import useHookProfileInfo from '@/hooks/useHookProfileInfo';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ProfileInfoScreen() {
     const router = useRouter();
     const {
+        aboutModalVisible,
+        openAboutModal,
+        closeAboutModal,
         profile,
         isEditing,
         handleEditToggle,
         handleChange,
     } = useHookProfileInfo();
-
-    const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -59,12 +60,12 @@ export default function ProfileInfoScreen() {
                 />
                 <AboutSection
                     stats={profile.stats}
-                    onPress={() => setAboutModalVisible(true)}
+                    onPress={openAboutModal}
                 />
             </ScrollView>
             <AboutModal
                 visible={aboutModalVisible}
-                onClose={() => setAboutModalVisible(false)}
+                onClose={closeAboutModal}
                 stats={profile.stats}
                 onChange={handleChange}
             />

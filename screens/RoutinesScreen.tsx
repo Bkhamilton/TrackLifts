@@ -85,29 +85,6 @@ export default function RoutinesScreen() {
 
     return (
         <View style={styles.container}>
-            <SearchRoutineModal
-                visible={searchModalVisible}
-                onClose={() => setSearchModalVisible(false)}
-                onSelect={handleSearchSelect}
-            />
-            <RoutineOptions
-                visible={routineOptionsModal}
-                close={() => setRoutineOptionsModal(false)}
-                routine={routine}
-                onSelect={onSelectOption}
-            />
-            <RoutineModal
-                visible={routineModal}
-                close={() => setRoutineModal(false)}
-                start={() => onStart(routine)}
-                routine={routine}
-                onFavoriteChange={refreshFavorites}
-            />
-            <AddRoutineModal
-                visible={addRoutineModal}
-                close={() => setAddRoutineModal(false)}
-                add={onAdd}
-            />
             {/* Header with close button */}
             <Title
                 title="Your Routines"
@@ -156,6 +133,29 @@ export default function RoutinesScreen() {
                     listHeight={4 * 90 + 3 * 8}
                 />
             </View>
+            <SearchRoutineModal
+                visible={searchModalVisible}
+                onClose={() => setSearchModalVisible(false)}
+                onSelect={handleSearchSelect}
+            />
+            <RoutineOptions
+                visible={routineOptionsModal}
+                close={() => setRoutineOptionsModal(false)}
+                routine={routine}
+                onSelect={onSelectOption}
+            />
+            <RoutineModal
+                visible={routineModal}
+                close={() => setRoutineModal(false)}
+                start={() => onStart(routine)}
+                routine={routine}
+                onFavoriteChange={refreshFavorites}
+            />
+            <AddRoutineModal
+                visible={addRoutineModal}
+                close={() => setAddRoutineModal(false)}
+                add={onAdd}
+            />
         </View>
     );
 }

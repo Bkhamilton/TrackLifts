@@ -48,11 +48,6 @@ export default function FinishWorkoutScreen() {
 
     return (
         <View style={styles.container}>
-            <SaveRoutineModal
-                visible={showSaveModal}
-                onClose={handleSkipSaveRoutine}
-                onSave={handleSaveRoutine}
-            />
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* Celebration animation */}
                 <CelebrationSection 
@@ -83,6 +78,12 @@ export default function FinishWorkoutScreen() {
             <TouchableOpacity onPress={handleDone} style={styles.doneButton}>
                 <Text style={styles.doneButtonText}>Awesome! Let's Celebrate</Text>
             </TouchableOpacity>
+
+            <SaveRoutineModal
+                visible={showSaveModal}
+                onClose={handleSkipSaveRoutine}
+                onSave={handleSaveRoutine}
+            />
         </View>
     );
 }

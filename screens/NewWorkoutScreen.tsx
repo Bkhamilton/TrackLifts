@@ -49,6 +49,12 @@ export default function NewWorkoutScreen() {
                     ) : null
                 }
             />
+            <ScrollView style={styles.scrollView}>
+                <WorkoutDisplay 
+                    routine={routine} 
+                    open={openModal}
+                />
+            </ScrollView>
             <AddToWorkoutModal 
                 visible={addWorkoutModal} 
                 close={closeModal} 
@@ -58,13 +64,7 @@ export default function NewWorkoutScreen() {
                 visible={optionsModal} 
                 close={() => setOptionsModal(false)} 
                 routine={routine}
-            />
-            <ScrollView style={styles.scrollView}>
-                <WorkoutDisplay 
-                    routine={routine} 
-                    open={openModal}
-                />
-            </ScrollView>
+            />            
         </View>
     );
 }

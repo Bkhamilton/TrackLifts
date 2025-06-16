@@ -34,25 +34,6 @@ export default function ExercisesScreen() {
 
     return (
         <View style={styles.container}>
-            <SearchExerciseModal
-                visible={searchModalVisible} 
-                onClose={closeSearchModal} 
-                onSelect={(exercise) => {
-                    openExerciseModal(exercise);
-                    closeSearchModal();
-                }}
-            />
-            <AddExerciseModal 
-                visible={addExerciseModal} 
-                close={closeAddExerciseModal} 
-                add={onAdd}
-            />
-            <ExerciseModal 
-                visible={exerciseModal} 
-                close={closeExerciseModal} 
-                exercise={exercise} 
-                onDelete={deleteExerciseFromDB}
-            />
             <Title 
                 title="Exercises"
                 rightContent={
@@ -81,6 +62,25 @@ export default function ExercisesScreen() {
                     clearSort={clearSort}
                 />
             </View>
+            <SearchExerciseModal
+                visible={searchModalVisible} 
+                onClose={closeSearchModal} 
+                onSelect={(exercise) => {
+                    openExerciseModal(exercise);
+                    closeSearchModal();
+                }}
+            />
+            <AddExerciseModal 
+                visible={addExerciseModal} 
+                close={closeAddExerciseModal} 
+                add={onAdd}
+            />
+            <ExerciseModal 
+                visible={exerciseModal} 
+                close={closeExerciseModal} 
+                exercise={exercise} 
+                onDelete={deleteExerciseFromDB}
+            />
         </View>
     );
 }

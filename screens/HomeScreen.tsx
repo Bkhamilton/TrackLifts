@@ -149,6 +149,33 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <Title 
+                title="Home"
+                rightContent={
+                    <View style={styles.rightContent}>
+                        <TouchableOpacity onPress={() => router.replace('/(tabs)/profile/main')}>
+                            <Ionicons name="person" size={20} color="#ff8787" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={openSettingsModal}>
+                            <Ionicons name="settings" size={20} color="#ff8787" />
+                        </TouchableOpacity>
+                    </View>                        
+                }
+            /> 
+            <ScrollView style={styles.scrollView}>
+                <SplitComponent
+                    curDay={curDay} 
+                    setDay={setDay} 
+                    close={closeRoutineModal}
+                    onStart={onStart}
+                />
+                <RoutineInfo 
+                    open={openRoutineModal} 
+                    openAddRoutine={openAddRoutineModal} 
+                    openRoutineOptions={openRoutineOptionsModal}
+                    favoritesRefreshKey={favoritesRefreshKey}
+                />
+            </ScrollView>
             <NotificationSettingsModal
                 visible={notificationModal}
                 close={closeNotificationModal}
@@ -183,34 +210,7 @@ export default function HomeScreen() {
                 close={closeRoutineOptionsModal}
                 routine={routine} 
                 onSelect={onSelectOption}
-            />
-            <Title 
-                title="Home"
-                rightContent={
-                    <View style={styles.rightContent}>
-                        <TouchableOpacity onPress={() => router.replace('/(tabs)/profile/main')}>
-                            <Ionicons name="person" size={20} color="#ff8787" />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={openSettingsModal}>
-                            <Ionicons name="settings" size={20} color="#ff8787" />
-                        </TouchableOpacity>
-                    </View>                        
-                }
-            /> 
-            <ScrollView style={styles.scrollView}>
-                <SplitComponent
-                    curDay={curDay} 
-                    setDay={setDay} 
-                    close={closeRoutineModal}
-                    onStart={onStart}
-                />
-                <RoutineInfo 
-                    open={openRoutineModal} 
-                    openAddRoutine={openAddRoutineModal} 
-                    openRoutineOptions={openRoutineOptionsModal}
-                    favoritesRefreshKey={favoritesRefreshKey}
-                />
-            </ScrollView>
+            />            
         </View>
     );
 }

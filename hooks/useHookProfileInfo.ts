@@ -24,6 +24,10 @@ export default function useHookProfileInfo() {
     const [isEditing, setIsEditing] = useState(false);
     const { db } = useContext(DBContext);
     const { user, userStats, updateUser } = useContext(UserContext);
+    const [aboutModalVisible, setAboutModalVisible] = useState(false);
+
+    const openAboutModal = () => setAboutModalVisible(true);
+    const closeAboutModal = () => setAboutModalVisible(false);
 
     const [profile, setProfile] = useState<ProfileData>({
         username: user.username || 'benkhamilton',
@@ -90,6 +94,9 @@ export default function useHookProfileInfo() {
     };
 
     return {
+        aboutModalVisible,
+        openAboutModal,
+        closeAboutModal,
         profile,
         isEditing,
         handleEditToggle,

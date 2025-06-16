@@ -101,11 +101,6 @@ export default function ActiveWorkoutScreen() {
                     </TouchableOpacity>
                 }
             />
-            <AddToWorkoutModal
-                visible={modal}
-                close={closeModal}
-                add={addExercise}
-            />
             <ScrollView style={styles.scrollView}>
                 <Workout
                     routine={routine}
@@ -119,6 +114,11 @@ export default function ActiveWorkoutScreen() {
                     onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
                 />
             </ScrollView>
+            <AddToWorkoutModal
+                visible={modal}
+                close={closeModal}
+                add={addExercise}
+            />            
         </View>
     );
 }

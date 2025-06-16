@@ -95,17 +95,6 @@ export default function EditRoutineScreen() {
                     </TouchableOpacity>
                 }
             />
-            <AddToWorkoutModal
-                visible={modal}
-                close={closeModal}
-                add={addExercise}
-            />
-            <ConfirmationModal
-                visible={confirmModal}
-                message="Confirm changes?"
-                onClose={() => setConfirmModal(false)}
-                onSelect={(choice) => handleConfirmSave(choice)}
-            />
             <ScrollView style={styles.scrollView}>
                 <Workout
                     routine={editedRoutine}
@@ -119,6 +108,17 @@ export default function EditRoutineScreen() {
                     onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
                 />
             </ScrollView>
+            <AddToWorkoutModal
+                visible={modal}
+                close={closeModal}
+                add={addExercise}
+            />
+            <ConfirmationModal
+                visible={confirmModal}
+                message="Confirm changes?"
+                onClose={() => setConfirmModal(false)}
+                onSelect={(choice) => handleConfirmSave(choice)}
+            />
         </View>
     );
 }
