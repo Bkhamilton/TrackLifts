@@ -1,4 +1,4 @@
-import { ClearView, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import { Splits } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -19,55 +19,57 @@ const YourSplits: React.FC<Props> = ({
 }) => (
     <View style={styles.splitsContainer}>
         <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>YOUR SPLITS</Text>
+            <Text style={styles.sectionTitle}>Your Splits</Text>
             <TouchableOpacity 
                 style={styles.addButton}
                 onPress={() => setShowCreateModal(true)}
             >
-                <MaterialCommunityIcons name="plus" size={20} color="#ff8787" />
+                <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
             </TouchableOpacity>
         </View>
 
         <FlatList
             data={splits}
             keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ paddingBottom: 85 }}
             renderItem={({ item }) => (
                 <View style={[
                     styles.splitCard,
                     item.is_active && styles.primarySplitCard
                 ]}>
                     <View style={styles.splitHeader}>
-                        <Text style={styles.splitName}>{item.name}</Text>
+                        <View>
+                            <Text style={styles.splitName}>{item.name}</Text>
+                            <Text style={styles.dayCount}>
+                                {item.routines.length} day{item.routines.length !== 1 ? 's' : ''}
+                            </Text>
+                        </View>
                         <View style={styles.splitActions}>
                             {!item.is_active && (
                                 <TouchableOpacity
                                     style={styles.actionButton}
                                     onPress={() => setAsPrimary(item.id)}
                                 >
-                                    <Text style={styles.actionText}>Set as Primary</Text>
+                                    <Text style={styles.actionText}>Set Primary</Text>
                                 </TouchableOpacity>
                             )}
                             <TouchableOpacity
                                 style={styles.actionButton}
                                 onPress={() => setEditingSplit(item)}
                             >
-                                <MaterialCommunityIcons name="pencil" size={18} color="#666" />
+                                <MaterialCommunityIcons name="pencil" size={20} color="#666" />
                             </TouchableOpacity>
                         </View>
                     </View>
                     
-                    <ClearView style={styles.splitDays}>
-                        {item.routines.map((day, index) => (
-                            <ClearView key={index} style={styles.splitDayItem}>
-                                <Text style={styles.dayLabel}>
-                                    {['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'][day.day - 1]}
-                                </Text>
-                                <Text style={styles.routineLabel}>
-                                    {day.routine}
-                                </Text>
-                            </ClearView>
+                    <View style={styles.daysContainer}>
+                        {item.routines.map((day) => (
+                            <View key={day.day} style={styles.dayItem}>
+                                <Text style={styles.dayLabel}>Day {day.day}</Text>
+                                <Text style={styles.routineLabel}>{day.routine}</Text>
+                            </View>
                         ))}
-                    </ClearView>
+                    </View>
                 </View>
             )}
         />
@@ -77,13 +79,13 @@ const YourSplits: React.FC<Props> = ({
 const styles = StyleSheet.create({
     splitsContainer: {
         flex: 1,
-        paddingHorizontal: 12,
+        paddingHorizontal: 16,
     },
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12,
+        marginBottom: 16,
     },
     sectionTitle: {
         fontSize: 18,
@@ -94,51 +96,65 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     splitCard: {
-        backgroundColor: '#f9f9f9',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 12,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
     },
     primarySplitCard: {
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: '#ff8787',
     },
     splitHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom: 12,
     },
     splitName: {
         fontSize: 16,
         fontWeight: '600',
         color: '#333',
     },
+    dayCount: {
+        fontSize: 12,
+        color: '#666',
+        marginTop: 2,
+    },
     splitActions: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     actionButton: {
-        marginLeft: 12,
+        marginLeft: 16,
     },
     actionText: {
         color: '#ff8787',
-        fontSize: 12,
+        fontSize: 14,
+        fontWeight: '500',
     },
-    splitDays: {
+    daysContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginHorizontal: -4,
     },
-    splitDayItem: {
-        width: '14%',
-        marginBottom: 8,
+    dayItem: {
+        width: '33.33%',
+        padding: 8,
+        paddingHorizontal: 4,
     },
     dayLabel: {
         fontSize: 12,
         color: '#666',
+        marginBottom: 2,
     },
     routineLabel: {
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: '500',
         color: '#333',
     },

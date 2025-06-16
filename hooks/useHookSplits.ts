@@ -15,6 +15,7 @@ export default function useHookSplits() {
     const [newSplitName, setNewSplitName] = useState('');
     const [editingSplit, setEditingSplit] = useState<Splits | null>(null);
     const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(activeSplit?.routines || []);
+    const [currentSplit, setCurrentSplit] = useState<Splits | null>(activeSplit || null);
 
     const setAsPrimary = (id: number) => {
         updateActiveSplit(id);
@@ -24,6 +25,7 @@ export default function useHookSplits() {
         })));
         const primarySplit = dislpaySplits.find(s => s.id === id);
         if (primarySplit) {
+            setCurrentSplit(primarySplit);
             setCurrentWeek(primarySplit.routines);
         }
     };
@@ -92,6 +94,10 @@ export default function useHookSplits() {
                 
                 // If this is the primary split, update currentWeek
                 if (split.is_active) {
+                    setCurrentSplit({
+                        ...split,
+                        routines: newRoutines
+                    });
                     setCurrentWeek(newRoutines);
                 }
                 
@@ -108,6 +114,7 @@ export default function useHookSplits() {
         dislpaySplits,
         activeSplit,
         currentWeek,
+        currentSplit,
         showCreateModal,
         newSplitName,
         editingSplit,

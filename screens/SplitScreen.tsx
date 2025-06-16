@@ -16,6 +16,7 @@ export default function SplitScreen() {
     const {
         dislpaySplits,
         currentWeek,
+        currentSplit,
         showCreateModal,
         newSplitName,
         editingSplit,
@@ -43,7 +44,10 @@ export default function SplitScreen() {
             />
 
             {/* Current Week Display */}
-            <CurrentSplit currentWeek={currentWeek} />
+            <CurrentSplit 
+                currentWeek={currentWeek} 
+                splitName={currentSplit?.name || 'No active split'} 
+            />
 
             {/* Your Splits Section */}
             <YourSplits
