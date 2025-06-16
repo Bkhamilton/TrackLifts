@@ -1,6 +1,6 @@
 // app/contexts/RoutineContext.tsx
-import { deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
-import { deleteRoutineExerciseByRoutineId, insertRoutineExercise } from '@/db/user/RoutineExercises';
+import { clearExerciseSets, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
+import { clearRoutineExercises, deleteRoutineExerciseByRoutineId, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
 import { getRoutineData } from '@/utils/routineHelpers';
 import { ActiveRoutine, Routine } from '@/utils/types';
@@ -11,7 +11,7 @@ interface RoutineContextValue {
     routines: ActiveRoutine[];
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteRoutineFromDB: (routineId: number) => Promise<void>;
-    updateRoutineInDB: (routine: Routine) => Promise<void>;
+    updateRoutineInDB: (routine: ActiveRoutine) => Promise<void>;
     refreshRoutines: () => void;
 }
 
@@ -101,42 +101,50 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
         }
     }
 
-    const updateRoutineInDB = async (routine: Routine): Promise<void> => {
-        console.log('Updating routine in DB:', JSON.stringify(routine, null, 2));
-        // if (db) {
-        //     try {
-        //         // Update the routine in the database
-        //         await deleteRoutineExerciseByRoutineId(db, routine.id);
-        //         await deleteExerciseSetsByRoutineId(db, routine.id);
+    const updateRoutineInDB = async (routine: ActiveRoutine): Promise<void> => {
+        if (!db) return;
+        if (!routine.id || routine.id === 0) {
+            throw new Error('Routine ID is required to update a routine.');
+        }
 
-        //         // For each exercise in the routine, insert a RoutineExercise entry
-        //         for (const exercise of routine.exercises) {
-        //             const routineExerciseId = await insertRoutineExercise(db, {
-        //                 routine_id: routine.id,
-        //                 exercise_id: exercise.id,
-        //                 sets: 1,
-        //             });
+        await db.runAsync('BEGIN TRANSACTION');
+        try {
+            // 1. Clear existing RoutineExercises for this routine
+            await clearRoutineExercises(db, routine.id);
 
-        //             // Add Default Set to ExerciseSets (routine_exercise_id, set_order, weight, reps, date)
-        //             await insertExerciseSet(db, {
-        //                 routine_exercise_id: routineExerciseId,
-        //                 set_order: 1,
-        //                 weight: 0,
-        //                 reps: 8,
-        //                 date: new Date().toISOString(),
-        //             })
-        //         }
+            // 2. Insert new RoutineExercises and update ExerciseSets
+            for (const exercise of routine.exercises) {
+                await insertRoutineExercise(db, {
+                    routine_id: routine.id,
+                    exercise_id: exercise.id,
+                });
 
-        //         // Update the routines state with the updated routine
-        //         getRoutineData(db, user.id).then((data) => {
-        //             setRoutines(data || []);
-        //         });
-        //     } catch (error) {
-        //         console.error('Error updating routine in DB:', error);
-        //     }
-        // }
-    }
+                // Clear existing ExerciseSets for this routine/exercise
+                await clearExerciseSets(db, routine.id, exercise.id);
 
+                // Get the routine_exercise row just inserted
+                const routineExercise = await getRoutineExercise(db, routine.id, exercise.id);
+                if (routineExercise) {
+                    for (let i = 0; i < exercise.sets.length; i++) {
+                        const set = exercise.sets[i];
+                        await insertExerciseSet(db, {
+                            routine_exercise_id: routineExercise.id,
+                            set_order: i + 1,
+                            weight: set.weight,
+                            reps: set.reps,
+                            date: new Date().toISOString(),
+                        });
+                    }
+                }
+            }
+
+            await db.runAsync('COMMIT');
+        } catch (error) {
+            await db.runAsync('ROLLBACK');
+            throw error;
+        }
+    };
+    
     const refreshRoutines = () => {
         if (db && user.id !== 0) {
             getRoutineData(db, user.id).then((data) => {
