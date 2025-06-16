@@ -2,6 +2,7 @@ import RoutineInfo from '@/components/Home/RoutineInfo';
 import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import HelpSupportModal from '@/components/modals/HelpSupportModal';
+import NotificationSettingsModal from '@/components/modals/NotificationSettingsModal';
 import PrivacySettingsModal from '@/components/modals/PrivacySettingsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
@@ -39,6 +40,9 @@ export default function HomeScreen() {
         privacySettingsModal,
         openPrivacySettingsModal,
         closePrivacySettingsModal,
+        notificationModal,
+        openNotificationModal,
+        closeNotificationModal,
         routine,
         curDay,
         setDay,
@@ -123,7 +127,7 @@ export default function HomeScreen() {
                 router.push('/(tabs)/profile/profileInfo');
                 break;
             case 'notificationSettings':
-                // router.push('/(tabs)/settings/notifications');
+                openNotificationModal();
                 break;
             case 'appearanceSettings':
                 // router.push('/(tabs)/settings/appearance');
@@ -145,6 +149,10 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <NotificationSettingsModal
+                visible={notificationModal}
+                close={closeNotificationModal}
+            />
             <HelpSupportModal
                 visible={helpSupportModal}
                 close={closeHelpSupportModal}

@@ -39,7 +39,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="account" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="account" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Edit Profile Information</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -50,7 +50,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="target" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="target" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Edit Fitness Goals</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -65,7 +65,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="bell" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="bell" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Notification Settings</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -76,7 +76,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="palette" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="palette" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Appearance</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -91,7 +91,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="lock" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="lock" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Privacy Settings</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -106,7 +106,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="export" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="export" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Export Workout Data</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
@@ -117,7 +117,7 @@ export default function SettingsModal({
                                 style={styles.settingButton}
                             >
                                 <View style={styles.buttonContent}>
-                                    <MaterialCommunityIcons name="help-circle" size={20} color="#007AFF" />
+                                    <MaterialCommunityIcons name="help-circle" size={20} color="#ff8787" />
                                     <Text style={styles.buttonText}>Help & Support</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />

@@ -9,6 +9,7 @@ const useHookHome = () => {
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
     const [helpSupportModal, setHelpSupportModal] = useState(false);
     const [privacySettingsModal, setPrivacySettingsModal] = useState(false);
+    const [notificationModal, setNotificationModal] = useState(false);
 
     const [routine, setRoutine] = useState<ActiveRoutine>({
         id: 0,
@@ -44,6 +45,9 @@ const useHookHome = () => {
     const openPrivacySettingsModal = () => setPrivacySettingsModal(true);
     const closePrivacySettingsModal = () => setPrivacySettingsModal(false);
 
+    const openNotificationModal = () => setNotificationModal(true);
+    const closeNotificationModal = () => setNotificationModal(false);
+
     return {
         addRoutineModal,
         openAddRoutineModal,
@@ -63,6 +67,9 @@ const useHookHome = () => {
         privacySettingsModal,
         openPrivacySettingsModal,
         closePrivacySettingsModal,
+        notificationModal,
+        openNotificationModal,
+        closeNotificationModal,
         routine,
         curDay,
         setDay,
