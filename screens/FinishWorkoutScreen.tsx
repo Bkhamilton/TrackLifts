@@ -33,12 +33,16 @@ export default function FinishWorkoutScreen() {
 
     const handleDone = async () => {
         // Build safeFinalWorkout with notes
-        const safeFinalWorkout = {
-            ...finalWorkout,
-            notes: notes,
-        };
-        await saveWorkoutToDatabase(safeFinalWorkout);
-        clearRoutine();
+        try {
+            const safeFinalWorkout = {
+                ...finalWorkout,
+                notes: notes,
+            };
+            await saveWorkoutToDatabase(safeFinalWorkout);
+            clearRoutine();
+        } catch (error) {
+            console.error('Error saving workout:', error);
+        }
         router.replace('/(tabs)/(index)');
     };
 
