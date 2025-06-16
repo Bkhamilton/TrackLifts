@@ -14,6 +14,7 @@ export default function useHookSplits() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newSplitName, setNewSplitName] = useState('');
     const [editingSplit, setEditingSplit] = useState<Splits | null>(null);
+    const [editingSplitId, setEditingSplitId] = useState<number | null>(null);
     const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(activeSplit?.routines || []);
     const [currentSplit, setCurrentSplit] = useState<Splits | null>(activeSplit || null);
 
@@ -118,6 +119,8 @@ export default function useHookSplits() {
         showCreateModal,
         newSplitName,
         editingSplit,
+        editingSplitId,
+        setEditingSplitId,
         setShowCreateModal,
         setNewSplitName,
         setEditingSplit,

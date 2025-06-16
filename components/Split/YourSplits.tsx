@@ -8,7 +8,7 @@ interface Props {
     splits: Splits[];
     setShowCreateModal: (show: boolean) => void;
     setAsPrimary: (id: number) => void;
-    setEditingSplit: (split: Splits) => void;
+    setEditingSplit: (split: number) => void;
 }
 
 const YourSplits: React.FC<Props> = ({
@@ -55,7 +55,7 @@ const YourSplits: React.FC<Props> = ({
                             )}
                             <TouchableOpacity
                                 style={styles.actionButton}
-                                onPress={() => setEditingSplit(item)}
+                                onPress={() => setEditingSplit(item.id)}
                             >
                                 <MaterialCommunityIcons name="pencil" size={20} color="#666" />
                             </TouchableOpacity>

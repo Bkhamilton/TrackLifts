@@ -19,7 +19,8 @@ export default function SplitScreen() {
         currentSplit,
         showCreateModal,
         newSplitName,
-        editingSplit,
+        editingSplitId,
+        setEditingSplitId,
         setShowCreateModal,
         setNewSplitName,
         setEditingSplit,
@@ -31,6 +32,10 @@ export default function SplitScreen() {
     } = useHookSplits();
 
     const router = useRouter();
+
+    const editingSplit = editingSplitId !== null
+        ? dislpaySplits.find(s => s.id === editingSplitId)
+        : null;
 
     return (
         <View style={styles.container}>
@@ -54,7 +59,7 @@ export default function SplitScreen() {
                 splits={dislpaySplits}
                 setShowCreateModal={setShowCreateModal}
                 setAsPrimary={setAsPrimary}
-                setEditingSplit={setEditingSplit}
+                setEditingSplit={setEditingSplitId}
             />
 
             {/* Create New Split Modal */}
@@ -75,7 +80,7 @@ export default function SplitScreen() {
                     onUpdateSplitDay={updateSplitDay}
                     onAddDay={addDayToSplit}
                     onRemoveDay={removeDayFromSplit}
-                    onClose={() => setEditingSplit(null)}
+                    onClose={() => setEditingSplitId(null)}
                 />
             )}
         </View>
