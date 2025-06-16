@@ -11,6 +11,7 @@ interface RoutineContextValue {
     routines: ActiveRoutine[];
     addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteRoutineFromDB: (routineId: number) => Promise<void>;
+    updateRoutineInDB: (routine: Routine) => Promise<void>;
     refreshRoutines: () => void;
 }
 
@@ -20,6 +21,9 @@ export const RoutineContext = createContext<RoutineContextValue>({
         return undefined;
     },
     deleteRoutineFromDB: async () => {
+        return;
+    },
+    updateRoutineInDB: async () => {
         return;
     },
     refreshRoutines: () => {
@@ -97,6 +101,42 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
         }
     }
 
+    const updateRoutineInDB = async (routine: Routine): Promise<void> => {
+        console.log('Updating routine in DB:', JSON.stringify(routine, null, 2));
+        // if (db) {
+        //     try {
+        //         // Update the routine in the database
+        //         await deleteRoutineExerciseByRoutineId(db, routine.id);
+        //         await deleteExerciseSetsByRoutineId(db, routine.id);
+
+        //         // For each exercise in the routine, insert a RoutineExercise entry
+        //         for (const exercise of routine.exercises) {
+        //             const routineExerciseId = await insertRoutineExercise(db, {
+        //                 routine_id: routine.id,
+        //                 exercise_id: exercise.id,
+        //                 sets: 1,
+        //             });
+
+        //             // Add Default Set to ExerciseSets (routine_exercise_id, set_order, weight, reps, date)
+        //             await insertExerciseSet(db, {
+        //                 routine_exercise_id: routineExerciseId,
+        //                 set_order: 1,
+        //                 weight: 0,
+        //                 reps: 8,
+        //                 date: new Date().toISOString(),
+        //             })
+        //         }
+
+        //         // Update the routines state with the updated routine
+        //         getRoutineData(db, user.id).then((data) => {
+        //             setRoutines(data || []);
+        //         });
+        //     } catch (error) {
+        //         console.error('Error updating routine in DB:', error);
+        //     }
+        // }
+    }
+
     const refreshRoutines = () => {
         if (db && user.id !== 0) {
             getRoutineData(db, user.id).then((data) => {
@@ -117,6 +157,7 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
         routines,
         addRoutineToDB,
         deleteRoutineFromDB,
+        updateRoutineInDB,
         refreshRoutines,
     };
 

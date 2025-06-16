@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
+import { RoutineContext } from '@/contexts/RoutineContext';
 import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -13,6 +14,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
+    const { updateRoutineInDB } = useContext(RoutineContext);
     const { routineToEdit } = useContext(HomeContext);
     const [editedRoutine, setEditedRoutine] = useState(routineToEdit);
     const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
@@ -58,6 +60,7 @@ export default function EditRoutineScreen() {
             // Save the changes to the routine
             // This is where you would typically update your context or state with the new routine
             // For example: updateRoutine(editedRoutine);
+            updateRoutineInDB(editedRoutine);
             router.back();
         } else {
             // Discard changes and go back
