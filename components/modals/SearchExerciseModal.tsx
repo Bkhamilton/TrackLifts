@@ -1,5 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext'; // Assuming DBContext provides routines
+import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
@@ -18,7 +18,7 @@ export default function SearchExerciseModal({
 }: SearchExerciseModalProps) {
     const [searchQuery, setSearchQuery] = useState('');
     
-    const { exercises } = useContext(DBContext); // Assuming DBContext provides routines
+    const { exercises } = useContext(ExerciseContext);
 
     const filteredExercises = exercises.filter(exercise =>
         exercise.title.toLowerCase().includes(searchQuery.toLowerCase())

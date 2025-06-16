@@ -1,5 +1,5 @@
 import SearchExerciseModal from '@/components/modals/SearchExerciseModal';
-import { DBContext } from '@/contexts/DBContext';
+import { ExerciseContext } from '@/contexts/ExerciseContext';
 import useHookExercises from '@/hooks/useHookExercises';
 import { sortList } from '@/utils/exerciseUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ import Title from '../components/Title';
 
 export default function ExercisesScreen() {
     
-    const { exercises, deleteExerciseFromDB } = useContext(DBContext);
+    const { exercises, deleteExerciseFromDB } = useContext(ExerciseContext);
     
     const {
         addExerciseModal,

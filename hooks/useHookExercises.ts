@@ -1,10 +1,10 @@
-import { DBContext } from '@/contexts/DBContext';
+import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { Equipment, Exercise, MuscleGroup } from '@/utils/types';
 import { useContext, useEffect, useState } from 'react';
 
 const useHookExercises = () => {
 
-    const { exercises, addExerciseToDB } = useContext(DBContext);
+    const { exercises, addExerciseToDB } = useContext(ExerciseContext);
 
     useEffect(() => {
         setSortedExercises(exercises);

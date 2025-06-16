@@ -1,4 +1,4 @@
-import { DBContext } from '@/contexts/DBContext';
+import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
@@ -26,7 +26,7 @@ const muscleGroupIcons = {
 };
 
 export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutModalProps) {
-    const { exercises } = useContext(DBContext);
+    const { exercises } = useContext(ExerciseContext);
 
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
         return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';

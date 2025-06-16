@@ -1,5 +1,5 @@
 import { ClearView, Text, TextInput, View } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext';
+import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react';
@@ -23,7 +23,7 @@ type Position = {
 export default function AddRoutineModal({ visible, close, add }: AddRoutineModalProps) {
     const [newModal, setNewModal] = useState(false);
     const [routineExercises, setRoutineExercises] = useState<Exercise[]>([]);
-    const { exercises } = useContext(DBContext);
+    const { exercises } = useContext(ExerciseContext);
     const [title, setTitle] = useState("");
 
     const [isDragging, setIsDragging] = useState(false);
