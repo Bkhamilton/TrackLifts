@@ -7,8 +7,8 @@ import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { DBContext } from '@/contexts/DBContext';
 import { HomeContext } from '@/contexts/HomeContext';
+import { RoutineContext } from '@/contexts/RoutineContext';
 import useHookHome from '@/hooks/useHookHome';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,7 +38,7 @@ export default function HomeScreen() {
 
     const { setRoutineToEdit } = useContext(HomeContext);
 
-    const { addRoutineToDB, deleteRoutineFromDB } = useContext(DBContext) 
+    const { addRoutineToDB, deleteRoutineFromDB } = useContext(RoutineContext); 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 

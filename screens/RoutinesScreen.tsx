@@ -5,7 +5,7 @@ import SearchRoutineModal from '@/components/modals/SearchRoutineModal';
 import RoutineListSection from '@/components/Routines/RoutineListSection';
 import { View } from '@/components/Themed';
 import Title from '@/components/Title';
-import { DBContext } from '@/contexts/DBContext';
+import { RoutineContext } from '@/contexts/RoutineContext';
 import useHookRoutines from '@/hooks/useHookRoutines';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -37,7 +37,7 @@ export default function RoutinesScreen() {
 
     const router = useRouter();
 
-    const { deleteRoutineFromDB, addRoutineToDB } = useContext(DBContext);
+    const { deleteRoutineFromDB, addRoutineToDB } = useContext(RoutineContext);
 
     const onSelectOption = (option: string) => {
         switch (option) {

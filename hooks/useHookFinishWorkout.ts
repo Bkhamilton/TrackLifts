@@ -1,11 +1,11 @@
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { DBContext } from '@/contexts/DBContext';
+import { RoutineContext } from '@/contexts/RoutineContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 
 export default function useHookFinishWorkout() {
     const { routine, finalTime } = useContext(ActiveWorkoutContext);
-    const { addRoutineToDB } = useContext(DBContext);
+    const { addRoutineToDB } = useContext(RoutineContext);
     const { finalWorkout, setFinalWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
     const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;

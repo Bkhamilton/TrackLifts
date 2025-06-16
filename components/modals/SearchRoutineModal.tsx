@@ -1,5 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext'; // Assuming DBContext provides routines
+import { RoutineContext } from '@/contexts/RoutineContext';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
@@ -18,7 +18,7 @@ export default function SearchRoutineModal({
 }: SearchRoutineModalProps) {
     const [searchQuery, setSearchQuery] = useState('');
     
-    const { routines } = useContext(DBContext); // Assuming DBContext provides routines
+    const { routines } = useContext(RoutineContext);
 
     const filteredRoutines = routines.filter(routine => 
         routine.title.toLowerCase().includes(searchQuery.toLowerCase())

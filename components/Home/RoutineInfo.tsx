@@ -1,10 +1,11 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { RoutineContext } from '@/contexts/RoutineContext';
 import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import * as React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineCard from './RoutineCard';
 
@@ -21,10 +22,11 @@ export default function RoutineInfo({
     openRoutineOptions,
     favoritesRefreshKey = 0,
 }: RoutineInfoProps) {
-    const { db, user, routines } = React.useContext(DBContext);
-    const [favoriteRoutineIds, setFavoriteRoutineIds] = React.useState<number[]>([]);
+    const { db, user } = useContext(DBContext);
+    const { routines } = useContext(RoutineContext);
+    const [favoriteRoutineIds, setFavoriteRoutineIds] = useState<number[]>([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (db && user?.id) {
             getFavoriteRoutineIds(db, user.id).then(setFavoriteRoutineIds);
         }

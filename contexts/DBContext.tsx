@@ -4,14 +4,11 @@ import { deleteExerciseMuscleByExerciseId, insertExerciseMuscle } from '@/db/gen
 import { deleteExercise, insertExercise } from '@/db/general/Exercises';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
-import { deleteExerciseSetsByExerciseId, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
-import { deleteRoutineExerciseByRoutineId, insertRoutineExercise } from '@/db/user/RoutineExercises';
-import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
+import { deleteExerciseSetsByExerciseId } from '@/db/user/ExerciseSets';
 import { getUserProfileStats } from '@/db/user/UserProfileStats';
 import { getUserById } from '@/db/user/Users';
 import { getExerciseData } from '@/utils/exerciseHelpers';
-import { getRoutineData } from '@/utils/routineHelpers';
-import { ActiveRoutine, Exercise, MuscleGroup, Routine, UserProfileStats } from '@/utils/types';
+import { Exercise, MuscleGroup, UserProfileStats } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 
@@ -31,12 +28,8 @@ interface DBContextValue {
     equipment: any[];
     muscles: any[];
     muscleGroups: MuscleGroup[];
-    routines: ActiveRoutine[];
     addExerciseToDB: (exercise: Exercise) => Promise<number | undefined>;
-    addRoutineToDB: (routine: Routine) => Promise<number | undefined>;
     deleteExerciseFromDB: (exerciseId: number) => Promise<void>;
-    deleteRoutineFromDB: (routineId: number) => Promise<void>;
-    refreshRoutines: () => void;
     updateUser: (user: User) => void;
 }
 
@@ -61,21 +54,11 @@ export const DBContext = createContext<DBContextValue>({
     equipment: [],
     muscles: [],
     muscleGroups: [],
-    routines: [],
     addExerciseToDB: async () => {
-        return undefined;
-    },
-    addRoutineToDB: async () => {
         return undefined;
     },
     deleteExerciseFromDB: async () => {
         return;
-    },
-    deleteRoutineFromDB: async () => {
-        return;
-    },
-    refreshRoutines: () => {
-        // This function can be used to refresh routines if needed
     },
     updateUser: () => {
         // This function can be used to update the user if needed
@@ -109,7 +92,6 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const [equipment, setEquipment] = useState<any[]>([]);
     const [muscles, setMuscles] = useState<any[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
-    const [routines, setRoutines] = useState<ActiveRoutine[]>([]);
 
     const addExerciseToDB = async (exercise: Exercise): Promise<number | undefined> => {
         if (db) {
@@ -142,47 +124,6 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         return undefined; // Return undefined if the database is not available
     };
 
-    const addRoutineToDB = async (routine: Routine): Promise<number | undefined> => {
-        if (db) {
-            try {
-                // Insert the routine into the database and get the inserted ID
-                const routineId = await insertRoutine(db, {
-                    title: routine.title,
-                    user_id: user.id,
-                });
-
-                // For each exercise in the routine, insert a RoutineExercise entry
-                for (const exercise of routine.exercises) {
-                    const routineExerciseId = await insertRoutineExercise(db, {
-                        routine_id: routineId,
-                        exercise_id: exercise.id,
-                        sets: 1,
-                    });
-
-                    // Add Default Set to ExerciseSets (routine_exercise_id, set_order, weight, reps, date)
-                    await insertExerciseSet(db, {
-                        routine_exercise_id: routineExerciseId,
-                        set_order: 1,
-                        weight: 0,
-                        reps: 8,
-                        date: new Date().toISOString(),
-                    })
-                }
-
-                // Update the routines state with the new routine, including the returned ID
-                getRoutineData(db, user.id).then((data) => {
-                    setRoutines(data || []);
-                });
-
-                return routineId; // Return the ID of the newly inserted routine
-            } catch (error) {
-                console.error('Error adding routine to DB:', error);
-                return undefined; // Return undefined in case of an error
-            }
-        }
-        return undefined; // Return undefined if the database is not available
-    }
-
     const deleteExerciseFromDB = async (exerciseId: number): Promise<void> => {
         if (db) {
             try {
@@ -201,33 +142,6 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
             }
         }
     }
-
-    const deleteRoutineFromDB = async (routineId: number): Promise<void> => {
-        if (db) {
-            try {
-                // Delete the routine from the database
-                await deleteRoutine(db, routineId);
-                // also delete the associated RoutineExercises and ExerciseSets entries
-                await deleteRoutineExerciseByRoutineId(db, routineId);
-                await deleteExerciseSetsByRoutineId(db, routineId);
-
-                // Update the routines state to remove the deleted routine
-                setRoutines((prevRoutines) =>
-                    prevRoutines.filter((routine) => routine.id !== routineId)
-                );
-            } catch (error) {
-                console.error('Error deleting routine from DB:', error);
-            }
-        }
-    }
-
-    const refreshRoutines = () => {
-        if (db && user.id !== 0) {
-            getRoutineData(db, user.id).then((data) => {
-                setRoutines(data || []);
-            });
-        }
-    };
 
     const updateUser = (newUser: User) => {
         setUser(newUser);
@@ -263,16 +177,10 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
 
     useEffect(() => {
         if (db && user.id !== 0) {
-            const fetchRoutines = async () => {
-                const data = await getRoutineData(db, user.id);
-                setRoutines(data || []);
-            }
             const fetchUserStats = async () => {
                 const data = await getUserProfileStats(db, user.id);
                 setUserStats(data);
             }
-
-            fetchRoutines();
             fetchUserStats();
         }
     }, [db, user]);
@@ -285,12 +193,8 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
         equipment,
         muscles,
         muscleGroups,
-        routines,
         addExerciseToDB,
-        addRoutineToDB,
         deleteExerciseFromDB,
-        deleteRoutineFromDB,
-        refreshRoutines,
         updateUser,
     };
 
