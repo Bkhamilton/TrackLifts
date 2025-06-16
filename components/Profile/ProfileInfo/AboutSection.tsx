@@ -1,34 +1,34 @@
-import { Text, View } from '@/components/Themed';
-import { StyleSheet } from 'react-native';
+import { ClearView, Text, View } from '@/components/Themed';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import EditableInfoRow from './EditableInfoRow';
 
 export default function AboutSection({
     stats,
-    isEditing,
-    onChange,
+    onPress,
 }: {
     stats: any;
-    isEditing: boolean;
-    onChange: (field: string, value: string) => void;
+    onPress?: () => void;
 }) {
     return (
-        <View style={styles.section}>
-            <Text style={styles.sectionTitle}>About</Text>
-            <View style={styles.infoCard}>
-                <EditableInfoRow 
-                    label="Member Since" 
-                    value={stats.memberSince} 
-                    isEditing={isEditing}
-                    onChange={value => onChange('stats.memberSince', value)}
-                />
-                <EditableInfoRow 
-                    label="Goals" 
-                    value={stats.goals} 
-                    isEditing={isEditing}
-                    onChange={value => onChange('stats.goals', value)}
-                />
+        <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.7 : 1}>
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>About</Text>
+                <ClearView style={styles.infoCard}>
+                    <EditableInfoRow 
+                        label="Member Since" 
+                        value={stats.memberSince} 
+                        isEditing={false}
+                        onChange={() => {}}
+                    />
+                    <EditableInfoRow 
+                        label="Goals" 
+                        value={stats.goals} 
+                        isEditing={false}
+                        onChange={() => {}}
+                    />
+                </ClearView>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 

@@ -1,3 +1,4 @@
+import AboutModal from '@/components/modals/AboutModal';
 import AboutSection from '@/components/Profile/ProfileInfo/AboutSection';
 import AvatarUsernameSection from '@/components/Profile/ProfileInfo/AvatarUsernameSection';
 import BodyMetricsSection from '@/components/Profile/ProfileInfo/BodyMetricsSection';
@@ -7,6 +8,7 @@ import Title from '@/components/Title';
 import useHookProfileInfo from '@/hooks/useHookProfileInfo';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ProfileInfoScreen() {
@@ -17,6 +19,8 @@ export default function ProfileInfoScreen() {
         handleEditToggle,
         handleChange,
     } = useHookProfileInfo();
+
+    const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -50,15 +54,20 @@ export default function ProfileInfoScreen() {
                 />
                 <WorkoutStatsSection
                     stats={profile.stats}
-                    isEditing={isEditing}
-                    onChange={handleChange}
+                    isEditing={false} // Not editable
+                    onChange={() => {}} // No-op
                 />
                 <AboutSection
                     stats={profile.stats}
-                    isEditing={isEditing}
-                    onChange={handleChange}
+                    onPress={() => setAboutModalVisible(true)}
                 />
             </ScrollView>
+            <AboutModal
+                visible={aboutModalVisible}
+                onClose={() => setAboutModalVisible(false)}
+                stats={profile.stats}
+                onChange={handleChange}
+            />
         </View>
     );
 }

@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from '@/components/Themed';
+import { ClearView, Text, TextInput } from '@/components/Themed';
 import { StyleSheet } from 'react-native';
 
 export default function EditableInfoRow({ 
@@ -13,7 +13,7 @@ export default function EditableInfoRow({
     onChange: (value: string) => void;
 }) {
     return (
-        <View style={styles.infoRow}>
+        <ClearView style={styles.infoRow}>
             <Text style={styles.infoLabel}>{label}</Text>
             {isEditing ? (
                 <TextInput
@@ -24,7 +24,7 @@ export default function EditableInfoRow({
             ) : (
                 <Text style={styles.infoValue}>{value}</Text>
             )}
-        </View>
+        </ClearView>
     );
 }
 
