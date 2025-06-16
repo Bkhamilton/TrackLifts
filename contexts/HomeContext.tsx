@@ -1,4 +1,4 @@
-// app/contexts/BetContext/BetContext.tsx
+// app/contexts/HomeContext.tsx
 import { ActiveRoutine } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode } from 'react';

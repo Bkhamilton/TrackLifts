@@ -1,4 +1,4 @@
-import { DBContext } from '@/contexts/DBContext';
+import { SplitContext } from '@/contexts/SplitContext';
 import { Splits } from '@/utils/types';
 import { useContext, useState } from 'react';
 
@@ -9,7 +9,7 @@ interface RoutineDay {
 }
 
 export default function useHookSplits() {
-    const { splits, activeSplit } = useContext(DBContext);
+    const { splits, activeSplit } = useContext(SplitContext);
     const [dislpaySplits, setDisplaySplits] = useState<Splits[]>(splits);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newSplitName, setNewSplitName] = useState('');

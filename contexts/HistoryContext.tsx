@@ -1,4 +1,4 @@
-// app/contexts/BetContext/BetContext.tsx
+// app/contexts/HistoryContext.tsx
 import { History } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useState } from 'react';

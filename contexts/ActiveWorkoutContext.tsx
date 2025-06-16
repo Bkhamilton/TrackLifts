@@ -1,4 +1,4 @@
-// app/contexts/BetContext/BetContext.tsx
+// app/contexts/ActiveWorkoutContext.tsx
 import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertSessionExercise } from '@/db/workout/SessionExercises';

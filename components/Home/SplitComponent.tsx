@@ -1,5 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { SplitContext } from '@/contexts/SplitContext';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -14,7 +15,8 @@ interface SplitComponentProps {
 }
 
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
-    const { routines, activeSplit, splits } = useContext(DBContext);
+    const { routines } = useContext(DBContext);
+    const { activeSplit, splits } = useContext(SplitContext);
 
     const router = useRouter();
 
