@@ -23,7 +23,7 @@ export default function HelpSupportModal({ visible, close }: HelpSupportModalPro
     };
 
     const handleContactSupport = () => {
-        Linking.openURL('mailto:support@yourfitnessapp.com');
+        Linking.openURL('mailto:hamiltondevstudios@gmail.com');
     };
 
     return (
