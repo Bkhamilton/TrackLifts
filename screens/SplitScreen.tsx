@@ -71,7 +71,7 @@ export default function SplitScreen() {
                 visible={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
                 onCreate={createSplit}
-                availableRoutines={routines.map(r => r.title)}
+                availableRoutines={[...routines.map(r => r.title), 'Rest']}
             />
 
             {/* Edit Split Modal */}
@@ -79,7 +79,7 @@ export default function SplitScreen() {
                 <EditSplitModal
                     visible={!!editingSplit}
                     editingSplit={editingSplit}
-                    availableRoutines={routines.map(r => r.title)}
+                    availableRoutines={[...routines.map(r => r.title), 'Rest']}
                     onUpdateSplitDay={updateSplitDay}
                     onAddDay={addDayToSplit}
                     onRemoveDay={removeDayFromSplit}
