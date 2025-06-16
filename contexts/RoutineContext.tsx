@@ -6,6 +6,7 @@ import { getRoutineData } from '@/utils/routineHelpers';
 import { ActiveRoutine, Routine } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
+import { UserContext } from './UserContext';
 
 interface RoutineContextValue {
     routines: ActiveRoutine[];
@@ -37,7 +38,8 @@ interface RoutineContextValueProviderProps {
 
 export const RoutineContextProvider = ({ children }: RoutineContextValueProviderProps) => {
 
-    const { db, user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
 
     const [routines, setRoutines] = useState<ActiveRoutine[]>([]);
 
@@ -144,7 +146,7 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
             throw error;
         }
     };
-    
+
     const refreshRoutines = () => {
         if (db && user.id !== 0) {
             getRoutineData(db, user.id).then((data) => {

@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
+import { UserContext } from '@/contexts/UserContext';
 import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -22,7 +23,8 @@ export default function RoutineInfo({
     openRoutineOptions,
     favoritesRefreshKey = 0,
 }: RoutineInfoProps) {
-    const { db, user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const { routines } = useContext(RoutineContext);
     const [favoriteRoutineIds, setFavoriteRoutineIds] = useState<number[]>([]);
 

@@ -1,13 +1,15 @@
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { DBContext } from '@/contexts/DBContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
+import { UserContext } from '@/contexts/UserContext';
 import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { useRouter } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
 
 export default function useHookRoutines({ favoritesRefreshKey = 0 }: { favoritesRefreshKey?: number } = {}) {
-    const { db, user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const { routines } = useContext(RoutineContext);
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);

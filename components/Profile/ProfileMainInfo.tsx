@@ -1,4 +1,4 @@
-import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
@@ -19,7 +19,7 @@ export default function ProfileMainInfo({
     }
 }: ProfileMainInfoProps) {
 
-    const { user, userStats } = useContext(DBContext);
+    const { user, userStats } = useContext(UserContext);
 
     const router = useRouter();
 

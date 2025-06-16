@@ -7,6 +7,14 @@ export interface Exercise {
     muscles?: any[];
 }
 
+export interface User {
+    id: number;
+    username: string;
+    name: string;
+    email: string;
+    password: string;
+}
+
 export interface History {
     id: number;
     startTime: string;

@@ -4,6 +4,7 @@ import { DBContextProvider } from '@/contexts/DBContext';
 import { ExerciseContextProvider } from '@/contexts/ExerciseContext';
 import { RoutineContextProvider } from '@/contexts/RoutineContext';
 import { SplitContextProvider } from '@/contexts/SplitContext';
+import { UserContextProvider } from '@/contexts/UserContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -25,15 +26,17 @@ export default function RootLayout() {
     return (
         <SQLiteProvider databaseName='workout-tracker.db' onInit={initializeDatabase} useSuspense>
             <DBContextProvider>
-                <ExerciseContextProvider>
-                    <RoutineContextProvider>
-                        <SplitContextProvider>
-                            <ActiveWorkoutContextProvider>
-                                <RootLayoutNav />
-                            </ActiveWorkoutContextProvider>
-                        </SplitContextProvider>
-                    </RoutineContextProvider>
-                </ExerciseContextProvider>
+                <UserContextProvider>
+                    <ExerciseContextProvider>
+                        <RoutineContextProvider>
+                            <SplitContextProvider>
+                                <ActiveWorkoutContextProvider>
+                                    <RootLayoutNav />
+                                </ActiveWorkoutContextProvider>
+                            </SplitContextProvider>
+                        </RoutineContextProvider>
+                    </ExerciseContextProvider>
+                </UserContextProvider>
             </DBContextProvider>
         </SQLiteProvider>
     );

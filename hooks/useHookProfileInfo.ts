@@ -1,4 +1,5 @@
 import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import { updateUserProfileStats } from '@/db/user/UserProfileStats';
 import { updateUsername } from '@/db/user/Users';
 import { useContext, useState } from 'react';
@@ -21,7 +22,8 @@ interface ProfileData {
 
 export default function useHookProfileInfo() {
     const [isEditing, setIsEditing] = useState(false);
-    const { db, user, userStats, updateUser } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user, userStats, updateUser } = useContext(UserContext);
 
     const [profile, setProfile] = useState<ProfileData>({
         username: user.username || 'benkhamilton',

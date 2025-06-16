@@ -4,6 +4,7 @@ import { getSplitData } from '@/utils/splitHelpers';
 import { Splits } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
+import { UserContext } from './UserContext';
 
 interface SplitContextValue {
     splits: Splits[];
@@ -25,7 +26,8 @@ interface SplitContextValueProviderProps {
 
 export const SplitContextProvider = ({ children }: SplitContextValueProviderProps) => {
 
-    const { db, user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
 
     const [splits, setSplits] = useState<Splits[]>([]);
     const [activeSplit, setActiveSplit] = useState<Splits | null>(null);

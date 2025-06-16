@@ -1,5 +1,6 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,7 +17,8 @@ interface RoutineModalProps {
 }
 
 export default function RoutineModal({ visible, close, start, routine, onFavoriteChange }: RoutineModalProps) {
-    const { db, user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {

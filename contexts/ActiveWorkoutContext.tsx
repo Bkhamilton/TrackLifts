@@ -5,10 +5,10 @@ import { insertSessionExercise } from '@/db/workout/SessionExercises';
 import { insertSessionSet } from '@/db/workout/SessionSets';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
 import { ActiveRoutine, Exercise, Workout } from '@/utils/types';
-import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
 import { RoutineContext } from './RoutineContext';
+import { UserContext } from './UserContext';
 
 interface ActiveWorkoutContextValue {
     // Define the properties and methods you want to expose in the context
@@ -69,9 +69,8 @@ interface ActiveWorkoutContextValueProviderProps {
 }
 
 export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextValueProviderProps) => {
-    const db = useSQLiteContext();
-
-    const { user } = useContext(DBContext);
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const { routines, refreshRoutines } = useContext(RoutineContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
