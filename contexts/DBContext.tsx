@@ -89,8 +89,6 @@ interface DBContextValueProviderProps {
 export const DBContextProvider = ({ children }: DBContextValueProviderProps) => {
     const db = useSQLiteContext();
 
-    const [isLoading, setIsLoading] = useState(true);
-
     const [user, setUser] = useState<User>({
         id: 0,
         username: '',
