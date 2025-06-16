@@ -101,7 +101,10 @@ export default function SettingsModal({
                         {/* Other Actions Section */}
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Actions</Text>
-                            <TouchableOpacity style={styles.settingButton}>
+                            <TouchableOpacity
+                                onPress={() => onSelect('exportData')} 
+                                style={styles.settingButton}
+                            >
                                 <View style={styles.buttonContent}>
                                     <MaterialCommunityIcons name="export" size={20} color="#007AFF" />
                                     <Text style={styles.buttonText}>Export Workout Data</Text>
@@ -109,7 +112,10 @@ export default function SettingsModal({
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
                             </TouchableOpacity>
                             
-                            <TouchableOpacity style={styles.settingButton}>
+                            <TouchableOpacity
+                                onPress={() => onSelect('helpSupport')}
+                                style={styles.settingButton}
+                            >
                                 <View style={styles.buttonContent}>
                                     <MaterialCommunityIcons name="help-circle" size={20} color="#007AFF" />
                                     <Text style={styles.buttonText}>Help & Support</Text>

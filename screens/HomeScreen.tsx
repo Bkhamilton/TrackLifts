@@ -1,6 +1,8 @@
 import RoutineInfo from '@/components/Home/RoutineInfo';
 import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
+import HelpSupportModal from '@/components/modals/HelpSupportModal';
+import PrivacySettingsModal from '@/components/modals/PrivacySettingsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import RoutineOptions from '@/components/modals/RoutineOptions';
 import SettingsModal from '@/components/modals/SettingsModal';
@@ -31,6 +33,12 @@ export default function HomeScreen() {
         routineOptionsModal,
         openRoutineOptionsModal,
         closeRoutineOptionsModal,
+        helpSupportModal,
+        openHelpSupportModal,
+        closeHelpSupportModal,
+        privacySettingsModal,
+        openPrivacySettingsModal,
+        closePrivacySettingsModal,
         routine,
         curDay,
         setDay,
@@ -121,7 +129,13 @@ export default function HomeScreen() {
                 // router.push('/(tabs)/settings/appearance');
                 break;
             case 'privacySettings':
-                // router.push('/(tabs)/settings/privacy');
+                openPrivacySettingsModal();
+                break;
+            case 'exportData':
+                // router.push('/(tabs)/settings/exportData');
+                break;
+            case 'helpSupport':
+                openHelpSupportModal();
                 break;
             default:
                 console.warn('Unknown setting selected:', option);
@@ -131,6 +145,14 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <HelpSupportModal
+                visible={helpSupportModal}
+                close={closeHelpSupportModal}
+            />
+            <PrivacySettingsModal
+                visible={privacySettingsModal}
+                close={closePrivacySettingsModal}
+            />
             <SettingsModal
                 visible={settingsModal}
                 close={closeSettingsModal}
