@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     infoTitle: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#4a86e8',
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     infoDescription: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#555',
         lineHeight: 22,
     },
