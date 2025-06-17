@@ -51,7 +51,7 @@ export default function EditRoutineScreen() {
         if (JSON.stringify(editedRoutine) !== JSON.stringify(routineToEdit)) {
             setConfirmModal(true);
         } else {
-            router.back();
+            router.replace('/(tabs)/(index)')
         }
     }
 
@@ -61,10 +61,10 @@ export default function EditRoutineScreen() {
             // This is where you would typically update your context or state with the new routine
             // For example: updateRoutine(editedRoutine);
             updateRoutineInDB(editedRoutine);
-            router.back();
+            router.replace('/(tabs)/(index)');
         } else {
             // Discard changes and go back
-            router.back();
+            router.replace('/(tabs)/(index)')
         }
     }
     
@@ -75,7 +75,7 @@ export default function EditRoutineScreen() {
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
-                            router.back();
+                            router.replace('/(tabs)/(index)')
                         }}
                         style={{ marginRight: 12 }}
                     >
