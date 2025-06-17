@@ -1,5 +1,7 @@
 // app/contexts/SplitContext.tsx
-import { setNewActiveSplit } from '@/db/user/Splits';
+import { getRoutineByTitle } from '@/db/user/Routines';
+import { insertSplitRoutine } from '@/db/user/SplitRoutines';
+import { insertSplit, setNewActiveSplit } from '@/db/user/Splits';
 import { getSplitData } from '@/utils/splitHelpers';
 import { Splits } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -10,6 +12,7 @@ interface SplitContextValue {
     splits: Splits[];
     activeSplit: Splits | null;
     updateActiveSplit: (splitId: number) => void;
+    createSplitInDb: (splitObj: Splits) => Promise<number>;
 }
 
 export const SplitContext = createContext<SplitContextValue>({
@@ -17,6 +20,9 @@ export const SplitContext = createContext<SplitContextValue>({
     activeSplit: null,
     updateActiveSplit: () => {
         return;
+    },
+    createSplitInDb: async () => {
+        return 0;
     },
 });
 
@@ -38,6 +44,27 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         }
         await refreshSplits();
     }
+
+    const createSplitInDb = async (splitObj: Splits): Promise<number> => {
+        const splitId = await insertSplit(db, {
+            name: splitObj.name,
+            user_id: user.id,
+            is_active: splitObj.is_active || 0,
+        });
+
+        for (const split of splitObj.routines) {
+            const routine = await getRoutineByTitle(db, split.routine);
+            if (!routine) continue;
+            await insertSplitRoutine(db, {
+                split_id: splitId,
+                split_order: split.day,
+                routine_id: routine.id,
+            });
+        }
+        await refreshSplits();
+
+        return splitId;
+    };    
 
     const refreshSplits = async () => {
         if (db && user.id !== 0) {
@@ -73,6 +100,7 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         splits,
         activeSplit,
         updateActiveSplit,
+        createSplitInDb,
     };
 
     return (
