@@ -1,4 +1,4 @@
-import ProfileInfoScreen from "@/screens/ProfileInfoScreen";
+import ProfileInfoScreen from "@/screens/profile/ProfileInfoScreen";
 import React from "react";
 
 export default function ProfileInfo() {

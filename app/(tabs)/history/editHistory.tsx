@@ -1,4 +1,4 @@
-import EditHistoryScreen from '@/screens/EditHistoryScreen';
+import EditHistoryScreen from '@/screens/history/EditHistoryScreen';
 import React from 'react';
 
 export default function History() {

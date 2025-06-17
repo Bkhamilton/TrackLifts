@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import HistoryInfo from '../components/History/HistoryInfo';
-import HistoryModal from '../components/modals/HistoryModal';
-import { ScrollView, View } from '../components/Themed';
-import Title from '../components/Title';
+import HistoryInfo from '@/components/History/HistoryInfo';
+import HistoryModal from '@/components/modals/HistoryModal';
+import { ScrollView, View } from '@/components/Themed';
+import Title from '@/components/Title';
 
 import exampleHistory from '@/data/ExampleHistory.json';
 

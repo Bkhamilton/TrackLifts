@@ -1,4 +1,4 @@
-import NewWorkoutScreen from "@/screens/NewWorkoutScreen";
+import NewWorkoutScreen from "@/screens/workout/NewWorkoutScreen";
 import React from "react";
 
 export default function NewWorkout() {
