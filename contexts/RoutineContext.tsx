@@ -140,6 +140,13 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
                 }
             }
 
+            // Use setRoutines to update the state with the new routine data
+            setRoutines((prevRoutines) =>
+                prevRoutines.map((r) =>
+                    r.id === routine.id ? { ...r, ...routine } : r
+                )
+            );
+
             await db.runAsync('COMMIT');
         } catch (error) {
             await db.runAsync('ROLLBACK');
