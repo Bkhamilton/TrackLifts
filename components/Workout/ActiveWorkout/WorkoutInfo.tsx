@@ -32,8 +32,6 @@ export default function WorkoutInfo({
 
     const handleOptionSelect = (option: 'replace' | 'remove') => {
         setOptionsModalVisible(false);
-        console.log(`Selected option: ${option} for exercise ${exercise.id}`);
-        
         // Call the appropriate handler
         if (option === 'replace' && onReplaceExercise) {
             onReplaceExercise(exercise.id);

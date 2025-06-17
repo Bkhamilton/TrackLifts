@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     splitCard: {
-        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 16,
         marginBottom: 16,

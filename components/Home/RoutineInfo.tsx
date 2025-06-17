@@ -53,10 +53,13 @@ export default function RoutineInfo({
                     <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
                         Routines
                     </Text>
-                    <TouchableOpacity onPress={openAddRoutine}>
-                        <View style={styles.addButton}>
-                            <Text style={styles.addButtonText}>ADD</Text>
-                        </View>
+                    <TouchableOpacity 
+                        onPress={openAddRoutine}
+                        style={styles.addButton}
+                    >
+                        <View>
+                            <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
+                        </View>  
                     </TouchableOpacity>
                 </View>
                 
@@ -125,11 +128,9 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     addButton: {
+        justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        width: 60,
-        borderRadius: 4,
-        paddingVertical: 2,
+        padding: 2
     },
     addButtonText: {
         fontSize: 16,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8,
-        marginTop: 12,
+        marginTop: 8,
     },
     sectionHeaderText: {
         fontSize: 16,
