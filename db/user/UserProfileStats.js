@@ -31,7 +31,6 @@ export const deleteUserProfileStats = async (db, userId) => {
 }
 
 export const updateUserProfileStats = async (db, userId, stats) => {
-    console.log("Updating stats for user:", userId, JSON.stringify(stats));
     await db.runAsync(
         `UPDATE UserProfileStats 
         SET height = ?, weight = ?, bodyFat = ?, favoriteExercise = ?, memberSince = ?, goals = ?

@@ -52,7 +52,6 @@ export default function useHookProfileInfo() {
     });
 
     const handleSave = () => {
-        console.log('Saving profile:', profile);
         setIsEditing(false);
         if (profile.username !== user.username) {
             updateUsername(db, user.id, profile.username);
