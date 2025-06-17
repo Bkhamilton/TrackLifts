@@ -1,7 +1,8 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MuscleInfoModal from './MuscleInfoModal';
+import MuscleLabels from './MuscleLabels';
 
 type MuscleGroup = {
     id: string;
@@ -11,27 +12,50 @@ type MuscleGroup = {
     exercises: string[];
 };
 
+type MuscleInfoPanelProps = {
+    selectedMuscleData: MuscleGroup | null;
+    muscleData: MuscleGroup[];
+    selectedMuscle: string | null;
+    setSelectedMuscle: (id: string | null) => void;
+    getColor: (intensity: number) => string;
+    view: 'front' | 'back';
+};
+
 const MuscleInfoPanel = ({
     selectedMuscleData,
-}: {
-    selectedMuscleData: MuscleGroup | null;
-}) => {
+    muscleData,
+    selectedMuscle,
+    setSelectedMuscle,
+    getColor,
+    view,
+}: MuscleInfoPanelProps) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     if (!selectedMuscleData) {
         return (
             <View style={styles.placeholder}>
-                <Text style={styles.placeholderText}>
-                    Select a muscle group to see detailed information
-                </Text>
+                <ClearView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={styles.placeholderText}>
+                        Select a muscle group to see detailed information
+                    </Text>
+                </ClearView>
+                {/* Show muscle labels even if nothing is selected */}
+                <MuscleLabels
+                    muscleData={muscleData}
+                    selectedMuscle={selectedMuscle}
+                    setSelectedMuscle={setSelectedMuscle}
+                    getColor={getColor}
+                    view={view}
+                />
             </View>
         );
     }
 
-    const truncatedExercises = selectedMuscleData.exercises.slice(0, 4); // Show max 4 exercises
+    const truncatedExercises = selectedMuscleData.exercises.slice(0, 4);
 
     return (
-        <>
+        <View style={{ flex: 1 }}>
+            {/* Info Card (clickable for modal) */}
             <TouchableOpacity 
                 style={styles.infoCard}
                 onPress={() => setModalVisible(true)}
@@ -67,20 +91,29 @@ const MuscleInfoPanel = ({
                 </View>
             </TouchableOpacity>
 
+            {/* Muscle Labels (buttons) */}
+            <MuscleLabels
+                muscleData={muscleData}
+                selectedMuscle={selectedMuscle}
+                setSelectedMuscle={setSelectedMuscle}
+                getColor={getColor}
+                view={view}
+            />
+
             {/* Detailed Info Modal */}
             <MuscleInfoModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 muscleData={selectedMuscleData}
             />
-        </>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     infoCard: {
-        flex: 1,
         padding: 4,
+        marginBottom: 8,
     },
     placeholder: {
         flex: 1,
@@ -93,6 +126,7 @@ const styles = StyleSheet.create({
         color: '#888',
         textAlign: 'center',
         fontStyle: 'italic',
+        marginBottom: 12,
     },
     infoTitle: {
         fontSize: 24,
@@ -110,7 +144,7 @@ const styles = StyleSheet.create({
         color: '#e74c3c',
     },
     descriptionContainer: {
-        height: 70, // Fixed height for description
+        height: 70,
         marginBottom: 20,
         backgroundColor: 'transparent',
     },
@@ -126,7 +160,7 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     exercisesContainer: {
-        height: 90, // Fixed height for exercises
+        height: 90,
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems: 'flex-start',

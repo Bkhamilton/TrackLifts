@@ -5,7 +5,6 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import IntensityLegend from './IntensityLegend';
 import MuscleInfoPanel from './MuscleInfoPanel';
-import MuscleLabels from './MuscleLabels';
 
 type MuscleGroup = {
   id: string;
@@ -240,18 +239,16 @@ const MuscleIntensityVisualization = () => {
                 
                 {/* Muscle Info Panel */}
                 <View style={styles.infoContainer}>
-                    <MuscleInfoPanel selectedMuscleData={selectedMuscleData} />
+                    <MuscleInfoPanel
+                        selectedMuscleData={selectedMuscleData}
+                        muscleData={muscleData}
+                        selectedMuscle={selectedMuscle}
+                        setSelectedMuscle={setSelectedMuscle}
+                        getColor={getColor}
+                        view={view}
+                    />
                 </View>
             </View>
-            
-            {/* Muscle Group Labels */}
-            <MuscleLabels
-                muscleData={muscleData}
-                selectedMuscle={selectedMuscle}
-                setSelectedMuscle={setSelectedMuscle}
-                getColor={getColor}
-                view={view} // <-- add this line
-            />
             
             {/* Intensity Legend */}
             <IntensityLegend getColor={getColor} />

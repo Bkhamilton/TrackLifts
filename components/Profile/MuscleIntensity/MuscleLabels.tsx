@@ -1,4 +1,4 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -33,7 +33,7 @@ const MuscleLabels = ({
     });
 
     return (
-        <View style={styles.labelsContainer}>
+        <ClearView style={styles.labelsContainer}>
             {filteredMuscleData.map((muscle) => {
                 const isSelected = selectedMuscle === muscle.id;
                 return (
@@ -60,7 +60,7 @@ const MuscleLabels = ({
                     </TouchableOpacity>
                 );
             })}
-        </View>
+        </ClearView>
     );
 };
 
@@ -68,14 +68,11 @@ const styles = StyleSheet.create({
     labelsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
-        paddingHorizontal: 10,
+        justifyContent: 'flex-start',
     },
     labelItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 4,
-        marginVertical: 2,
         paddingVertical: 4,
         paddingHorizontal: 10,
         backgroundColor: '#f9f9f9',
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
     },
     labelText: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '500',
         color: '#444',
     },
