@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
         color: '#444',
     },
     selectedLabelText: {
-        fontWeight: 'bold',
         color: '#1976d2',
     },
 });

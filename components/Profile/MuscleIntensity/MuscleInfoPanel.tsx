@@ -54,7 +54,7 @@ const MuscleInfoPanel = ({
     const truncatedExercises = selectedMuscleData.exercises.slice(0, 4);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
             {/* Info Card (clickable for modal) */}
             <TouchableOpacity 
                 style={styles.infoCard}
@@ -78,17 +78,7 @@ const MuscleInfoPanel = ({
                     </Text>
                 </View>
                 
-                <Text style={styles.sectionTitle}>Targeted Exercises:</Text>
-                <View style={styles.exercisesContainer}>
-                    {truncatedExercises.map((exercise, index) => (
-                        <View key={index} style={styles.exercisePill}>
-                            <Text style={styles.exerciseText}>{exercise}</Text>
-                        </View>
-                    ))}
-                    {selectedMuscleData.exercises.length > 4 && (
-                        <Text style={styles.moreText}>+{selectedMuscleData.exercises.length - 4} more</Text>
-                    )}
-                </View>
+
             </TouchableOpacity>
 
             {/* Muscle Labels (buttons) */}
@@ -112,8 +102,10 @@ const MuscleInfoPanel = ({
 
 const styles = StyleSheet.create({
     infoCard: {
+        flex: 1,
         padding: 4,
         marginBottom: 8,
+        backgroundColor: 'transparent',
     },
     placeholder: {
         flex: 1,
