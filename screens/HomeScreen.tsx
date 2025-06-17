@@ -3,9 +3,9 @@ import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import HelpSupportModal from '@/components/modals/HelpSupportModal';
 import NotificationSettingsModal from '@/components/modals/NotificationSettingsModal';
+import OptionsModal from '@/components/modals/OptionsModal';
 import PrivacySettingsModal from '@/components/modals/PrivacySettingsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
-import RoutineOptions from '@/components/modals/RoutineOptions';
 import SettingsModal from '@/components/modals/SettingsModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -204,13 +204,18 @@ export default function HomeScreen() {
                 visible={addRoutineModal}
                 close={closeAddRoutineModal}
                 add={onAdd}
-            />
-            <RoutineOptions
+            />          
+            <OptionsModal
                 visible={routineOptionsModal}
                 close={closeRoutineOptionsModal}
-                routine={routine} 
+                title={routine.title}
+                options={[
+                    { label: 'Start Workout', value: 'start' },
+                    { label: 'Edit Routine', value: 'edit' },
+                    { label: 'Delete Routine', value: 'delete', destructive: true }
+                ]}
                 onSelect={onSelectOption}
-            />            
+            />
         </View>
     );
 }

@@ -1,5 +1,7 @@
+import { Text, View } from '@/components/Themed';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import IntensityLegend from './IntensityLegend';
 import MuscleInfoPanel from './MuscleInfoPanel';
@@ -129,8 +131,22 @@ const MuscleIntensityVisualization = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Muscle Group Intensity</Text>
-            
+            <View style={styles.headerContainer}>
+                <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
+                    Muscle Intensity Visualization
+                </Text>
+                <TouchableOpacity 
+                    style={styles.addButton}
+                >
+                    <View>
+                        <MaterialCommunityIcons name="chevron-right" size={24} color="#ff8787" />
+                    </View>  
+                </TouchableOpacity>
+            </View>
+            <View style={{ width: '100%', paddingHorizontal: 16 }}>
+                <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
+            </View>
+
             {/* View Toggle */}
             <View style={styles.toggleContainer}>
                 <TouchableOpacity 
@@ -234,6 +250,7 @@ const MuscleIntensityVisualization = () => {
                 selectedMuscle={selectedMuscle}
                 setSelectedMuscle={setSelectedMuscle}
                 getColor={getColor}
+                view={view} // <-- add this line
             />
             
             {/* Intensity Legend */}
@@ -281,7 +298,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginBottom: 10,
+        marginBottom: 8,
     },
     bodyContainer: {
         width: '50%',
@@ -297,6 +314,28 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 8,
         elevation: 2,
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 16,
+    },
+    getStartedText: {
+        fontSize: 18,
+        fontWeight: '600',
+        lineHeight: 24,
+    },
+    separator: {
+        marginVertical: 12,
+        height: 1,
+        width: '100%',
+    },
+    addButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 2
     },
 });
 

@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        borderWidth: 1,
         borderRadius: 8,
         padding: 12,
         marginBottom: 8,

@@ -31,7 +31,7 @@ const IntensityLegend = ({
 const styles = StyleSheet.create({
     legendContainer: {
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 2,
         width: '100%',
         borderRadius: 8,
         padding: 8,

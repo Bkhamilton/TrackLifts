@@ -15,41 +15,54 @@ const MuscleLabels = ({
     selectedMuscle,
     setSelectedMuscle,
     getColor,
+    view, // <-- add view prop
 }: {
     muscleData: MuscleGroup[];
     selectedMuscle: string | null;
     setSelectedMuscle: (id: string | null) => void;
     getColor: (intensity: number) => string;
-}) => (
-    <View style={styles.labelsContainer}>
-        {muscleData.map((muscle) => {
-            const isSelected = selectedMuscle === muscle.id;
-            return (
-                <TouchableOpacity
-                    key={muscle.id}
-                    style={[
-                        styles.labelItem,
-                        isSelected && styles.selectedLabelItem
-                    ]}
-                    onPress={() => setSelectedMuscle(isSelected ? null : muscle.id)}
-                >
-                    <View
+    view: 'front' | 'back'; // <-- add view type
+}) => {
+    // Filter muscles based on view
+    const filteredMuscleData = muscleData.filter(muscle => {
+        if (view === 'front') {
+            return muscle.id !== 'back';
+        } else {
+            return muscle.id !== 'chest' && muscle.id !== 'core';
+        }
+    });
+
+    return (
+        <View style={styles.labelsContainer}>
+            {filteredMuscleData.map((muscle) => {
+                const isSelected = selectedMuscle === muscle.id;
+                return (
+                    <TouchableOpacity
+                        key={muscle.id}
                         style={[
-                        styles.colorBox,
-                        { backgroundColor: getColor(muscle.value) }
+                            styles.labelItem,
+                            isSelected && styles.selectedLabelItem
                         ]}
-                    />
-                    <Text style={[
-                        styles.labelText,
-                        isSelected && styles.selectedLabelText
-                    ]}>
-                        {muscle.name}
-                    </Text>
-                </TouchableOpacity>
-            );
-        })}
-    </View>
-);
+                        onPress={() => setSelectedMuscle(isSelected ? null : muscle.id)}
+                    >
+                        <View
+                            style={[
+                                styles.colorBox,
+                                { backgroundColor: getColor(muscle.value) }
+                            ]}
+                        />
+                        <Text style={[
+                            styles.labelText,
+                            isSelected && styles.selectedLabelText
+                        ]}>
+                            {muscle.name}
+                        </Text>
+                    </TouchableOpacity>
+                );
+            })}
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     labelsContainer: {
