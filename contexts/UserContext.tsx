@@ -9,6 +9,7 @@ interface UserContextValue {
     user: User;
     userStats: UserProfileStats;
     updateUser: (user: User) => void;
+    updateUserStats: (stats: UserProfileStats) => void;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -29,6 +30,9 @@ export const UserContext = createContext<UserContextValue>({
     },
     updateUser: () => {
         // This function can be used to update the user if needed
+    },
+    updateUserStats: () => {
+        // This function can be used to update the user stats if needed
     },
 });
 
@@ -60,6 +64,10 @@ export const UserContextProvider = ({ children }: UserContextValueProviderProps)
         setUser(newUser);
     };
 
+    const updateUserStats = (newStats: UserProfileStats) => {
+        setUserStats(newStats);
+    };
+
     useEffect(() => {
         if (db) {
             getUserById(db, 1).then((data) => {
@@ -82,6 +90,7 @@ export const UserContextProvider = ({ children }: UserContextValueProviderProps)
         user,
         userStats,
         updateUser,
+        updateUserStats,
     };
 
     return (

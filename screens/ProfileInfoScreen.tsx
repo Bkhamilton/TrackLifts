@@ -54,7 +54,7 @@ export default function ProfileInfoScreen() {
                     onChange={handleChange}
                 />
                 <WorkoutStatsSection
-                    stats={profile.stats}
+                    stats={profile.workoutStats}
                     isEditing={false} // Not editable
                     onChange={() => {}} // No-op
                 />

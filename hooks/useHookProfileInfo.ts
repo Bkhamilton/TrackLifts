@@ -11,19 +11,22 @@ interface ProfileData {
         height: string;
         weight: string;
         bodyFat: string;
-        workoutsCompleted: number;
-        weeklyWorkouts: number;
-        weeklySets: number;
         favoriteExercise: string;
         memberSince: string;
         goals: string;
     };
+    workoutStats: {
+        workoutsCompleted: number;
+        weeklyWorkouts: number;
+        weeklySets: number;
+        favoriteExercise: string;
+    }
 }
 
 export default function useHookProfileInfo() {
     const [isEditing, setIsEditing] = useState(false);
     const { db } = useContext(DBContext);
-    const { user, userStats, updateUser } = useContext(UserContext);
+    const { user, userStats, updateUser, updateUserStats } = useContext(UserContext);
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
     const openAboutModal = () => setAboutModalVisible(true);
@@ -33,25 +36,31 @@ export default function useHookProfileInfo() {
         username: user.username || 'benkhamilton',
         avatar: '👤',
         stats: {
-            height: userStats.height || '6\'2"',
-            weight: userStats.weight || '180 lbs',
-            bodyFat: userStats.bodyFat || '15%',
+            height: userStats.height,
+            weight: userStats.weight,
+            bodyFat: userStats.bodyFat,
+            favoriteExercise: userStats.favoriteExercise,
+            memberSince: userStats.memberSince,
+            goals: userStats.goals
+        },
+        workoutStats: {
             workoutsCompleted: 128,
             weeklyWorkouts: 5,
             weeklySets: 45,
-            favoriteExercise: userStats.favoriteExercise || 'Squats',
-            memberSince: userStats.memberSince || 'Jan 2022',
-            goals: userStats.goals || 'Build Strength'
-        },
+            favoriteExercise: userStats.favoriteExercise
+        }
     });
 
     const handleSave = () => {
+        console.log('Saving profile:', profile);
         setIsEditing(false);
         if (profile.username !== user.username) {
             updateUsername(db, user.id, profile.username);
             updateUser({ ...user, username: profile.username });
         }
-        updateUserProfileStats(db, user.id, {
+        updateUserProfileStats(db, user.id, profile.stats);
+        updateUserStats({
+            ...userStats,
             height: profile.stats.height,
             weight: profile.stats.weight,
             bodyFat: profile.stats.bodyFat,
@@ -64,7 +73,19 @@ export default function useHookProfileInfo() {
 
     const handleEditToggle = () => {
         if (isEditing) {
-            handleSave();
+            // If no changes were made, just toggle editing state
+            if (JSON.stringify(profile.stats) === JSON.stringify({
+                height: userStats.height,
+                weight: userStats.weight,
+                bodyFat: userStats.bodyFat,
+                favoriteExercise: userStats.favoriteExercise,
+                memberSince: userStats.memberSince,
+                goals: userStats.goals
+            })) {
+                setIsEditing(false);
+            } else {
+                handleSave();
+            }
         } else {
             setIsEditing(true);
         }
