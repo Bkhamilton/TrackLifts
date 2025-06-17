@@ -87,5 +87,12 @@ export const useEditWorkoutActions = (
         });
     };
 
-    return { addExercise, updateSet, addSet, deleteSet };
+    const deleteExercise = (exerciseId: number) => {
+        setRoutine({
+            ...routine,
+            exercises: routine.exercises.filter(exercise => exercise.id !== exerciseId),
+        });
+    }
+
+    return { addExercise, updateSet, addSet, deleteSet, deleteExercise };
 };

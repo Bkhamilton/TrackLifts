@@ -15,7 +15,7 @@ export default function EditHistoryScreen() {
     const [confirmModal, setConfirmModal] = useState(false);
     const { history } = useContext(HistoryContext);
     const [editedRoutine, setEditedRoutine] = useState(history.routine);
-    const { addExercise, updateSet, addSet, deleteSet } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
+    const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
@@ -102,7 +102,11 @@ export default function EditHistoryScreen() {
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
                     onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
-                    onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
+                    onRemoveExercise={(exerciseId) => {
+                        deleteExercise(exerciseId);
+                        // Remove all sets of the deleted exercise from completed sets
+                        setCompletedSets(prev => prev.filter(id => !editedRoutine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
+                    }}
                 />
             </ScrollView>
             <AddToWorkoutModal

@@ -19,7 +19,7 @@ export default function ActiveWorkoutScreen() {
         resetRoutine, 
         setFinalWorkout,
     } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet, deleteSet } = useWorkoutActions();
+    const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
@@ -75,6 +75,12 @@ export default function ActiveWorkoutScreen() {
             router.replace('/(tabs)/workout/newWorkout');
         }
     };
+
+    const handleDeleteExercise = (exerciseId: number) => {
+        deleteExercise(exerciseId);
+        // Remove all sets of the deleted exercise from completed sets
+        setCompletedSets(prev => prev.filter(id => !routine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
+    };
     
     return (
         <View style={styles.container}>
@@ -111,7 +117,7 @@ export default function ActiveWorkoutScreen() {
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
                     onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
-                    onRemoveExercise={(exerciseId) => console.log(`Remove exercise ${exerciseId}`)}
+                    onRemoveExercise={handleDeleteExercise}
                 />
             </ScrollView>
             <AddToWorkoutModal
