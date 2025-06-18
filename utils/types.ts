@@ -51,6 +51,7 @@ export interface ActiveExercise {
     muscleGroupId: number;
     muscleGroup: string;
     sets: ActiveSet[];
+    exercise_id?: number;
 }
 
 export interface ActiveSet {
