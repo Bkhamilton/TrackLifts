@@ -1,10 +1,11 @@
+import { useFont } from '@shopify/react-native-skia';
+import React from 'react';
 import { View } from 'react-native';
 import { Bar, CartesianChart } from 'victory-native';
 
 export default function WorkoutFrequencyChart() {
   // Hardcoded weekly workout data
   const data = [
-    { day: 'None', workouts: 0 },
     { day: 'Mon', workouts: 2 },
     { day: 'Tue', workouts: 1 },
     { day: 'Wed', workouts: 3 },
@@ -14,19 +15,37 @@ export default function WorkoutFrequencyChart() {
     { day: 'Sun', workouts: 0 },
   ];
 
+  const SpaceMono = require('../../assets/fonts/SpaceMono-Regular.ttf');
+
+  const font = useFont(SpaceMono, 16);
+
   return (
     <View style={{ height: 250, padding: 16 }}>
       <CartesianChart
         data={data}
         xKey={'day'} 
-        yKeys={["workouts"]} 
+        yKeys={["workouts"]}
+        domainPadding={{ left: 20, right: 20, top: 20 }}
+        axisOptions={{
+          font,
+          formatYLabel: (value) => {
+            // Only display the value if it doesn't end in 0.5
+            if (value % 1 === 0) {
+              return value.toString();
+            }
+            return "";
+          }
+        }} 
       >
         {({ points, chartBounds }) => (
           <Bar
             color="#ff8787"
             points={points.workouts} 
             chartBounds={chartBounds}  
-            
+            roundedCorners={{
+              topLeft: 5,
+              topRight: 5,
+            }}
           />
         )}
       </CartesianChart>

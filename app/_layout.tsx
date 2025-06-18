@@ -11,6 +11,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { LogBox } from 'react-native';
 import 'react-native-reanimated';
 
 export default function RootLayout() {
@@ -22,6 +24,10 @@ export default function RootLayout() {
         // Async font loading only occurs in development.
         return null;
     }
+
+    LogBox.ignoreLogs([
+        'Attempted to import the module "C:\\Users\\bkham\\Coding\\Mobile Apps\\workout-app\\node_modules\\victory-native"',
+    ]);
 
     return (
         <SQLiteProvider databaseName='workout-tracker.db' onInit={initializeDatabase} useSuspense>
