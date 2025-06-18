@@ -150,18 +150,25 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         // Only update RoutineExercises if routineId is valid (not 0)
         if (workout.routine.id && workout.routine.id !== 0) {
             await db.runAsync('BEGIN TRANSACTION');
-            try {
-                await clearRoutineExercises(db, workout.routine.id);
-                for (const exercise of workout.routine.exercises) {
-                    await insertRoutineExercise(db, {
-                        routine_id: workout.routine.id,
-                        exercise_id: exercise.id
-                    });
+            if (workout.routine.exercises.some(ex => ex.exercise_id === undefined)) {
+                try {
+                    await clearRoutineExercises(db, workout.routine.id);
+                    for (const exercise of workout.routine.exercises) {
+                        exercise.exercise_id ?
+                            await insertRoutineExercise(db, {
+                                routine_id: workout.routine.id,
+                                exercise_id: exercise.exercise_id
+                            }) :
+                            await insertRoutineExercise(db, {
+                                routine_id: workout.routine.id,
+                                exercise_id: exercise.id
+                            });
+                    }
+                    await db.runAsync('COMMIT');
+                } catch (error) {
+                    await db.runAsync('ROLLBACK');
+                    throw error;
                 }
-                await db.runAsync('COMMIT');
-            } catch (error) {
-                await db.runAsync('ROLLBACK');
-                throw error;
             }
         }
 
@@ -178,10 +185,15 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         await db.runAsync('BEGIN TRANSACTION');
         try {
             for (const exercise of workout.routine.exercises) {
-                const sessionExerciseId = await insertSessionExercise(db, {
-                    sessionId: sessionId,
-                    exerciseId: exercise.id,
-                });
+                const sessionExerciseId = exercise.exercise_id ?
+                    await insertSessionExercise(db, {
+                        sessionId: sessionId,
+                        exerciseId: exercise.exercise_id,
+                    }) :
+                    await insertSessionExercise(db, {
+                        sessionId: sessionId,
+                        exerciseId: exercise.id,
+                    }); 
 
                 for (let i = 0; i < exercise.sets.length; i++) {
                     const set = exercise.sets[i];
@@ -198,19 +210,21 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
                 // Only update ExerciseSets if routineId is valid
                 if (workout.routine.id && workout.routine.id !== 0) {
-                    await clearExerciseSets(db, workout.routine.id, exercise.id);
-                    const routineExercise = await getRoutineExercise(db, workout.routine.id, exercise.id);
-                    if (routineExercise) {
-                        for (let i = 0; i < exercise.sets.length; i++) {
-                            const set = exercise.sets[i];
-                            await insertExerciseSet(db, {
-                                routine_exercise_id: routineExercise.id,
-                                set_order: i + 1,
-                                weight: set.weight,
-                                reps: set.reps,
-                                date: new Date().toISOString(),
-                            });
-                        }
+                    exercise.exercise_id ?
+                        await clearExerciseSets(db, workout.routine.id, exercise.exercise_id) :
+                        await clearExerciseSets(db, workout.routine.id, exercise.id);
+
+                    for (let i = 0; i < exercise.sets.length; i++) {
+                        const set = exercise.sets[i];
+                        await insertExerciseSet(db, {
+                            routine_exercise_id: exercise.exercise_id
+                                ? (await getRoutineExercise(db, workout.routine.id, exercise.exercise_id))?.id
+                                : (await getRoutineExercise(db, workout.routine.id, exercise.id))?.id,
+                            set_order: i + 1,
+                            weight: set.weight,
+                            reps: set.reps,
+                            date: new Date().toISOString(),
+                        });
                     }
                 }
             }

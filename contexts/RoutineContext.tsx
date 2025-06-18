@@ -116,16 +116,22 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
 
             // 2. Insert new RoutineExercises and update ExerciseSets
             for (const exercise of routine.exercises) {
-                await insertRoutineExercise(db, {
-                    routine_id: routine.id,
-                    exercise_id: exercise.id,
-                });
-
+                if (!exercise.exercise_id) {
+                    await insertRoutineExercise(db, {
+                        routine_id: routine.id,
+                        exercise_id: exercise.id,
+                    });
+                } else {
+                    await insertRoutineExercise(db, {
+                        routine_id: routine.id,
+                        exercise_id: exercise.exercise_id,
+                    });
+                }
                 // Clear existing ExerciseSets for this routine/exercise
                 await clearExerciseSets(db, routine.id, exercise.id);
 
                 // Get the routine_exercise row just inserted
-                const routineExercise = await getRoutineExercise(db, routine.id, exercise.id);
+                const routineExercise = exercise.exercise_id ? await getRoutineExercise(db, routine.id, exercise.exercise_id) : await getRoutineExercise(db, routine.id, exercise.id);
                 if (routineExercise) {
                     for (let i = 0; i < exercise.sets.length; i++) {
                         const set = exercise.sets[i];

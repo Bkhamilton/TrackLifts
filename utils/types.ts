@@ -48,10 +48,11 @@ export interface ActiveExercise {
     id: number;
     title: string;
     equipment: string;
-    muscleGroupId: number;
+    muscleGroupId?: number;
     muscleGroup: string;
     sets: ActiveSet[];
     exercise_id?: number;
+    routine_id?: number;
 }
 
 export interface ActiveSet {
