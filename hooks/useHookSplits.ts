@@ -124,6 +124,7 @@ export default function useHookSplits() {
             is_active: false
         };
         setDisplaySplits([...dislpaySplits, newSplit]);
+        // add call to createSplitInDB
         setShowCreateModal(false);
     };
 
