@@ -1,7 +1,5 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext';
-import { UserContext } from '@/contexts/UserContext';
-import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
+import { SplitContext } from '@/contexts/SplitContext';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react';
@@ -17,29 +15,22 @@ interface RoutineModalProps {
 }
 
 export default function RoutineModal({ visible, close, start, routine, onFavoriteChange }: RoutineModalProps) {
-    const { db } = useContext(DBContext);
-    const { user } = useContext(UserContext);
+    const { isRoutineFavorite, toggleFavoriteRoutine } = useContext(SplitContext);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
-        if (db && routine?.id) {
-            getFavoriteRoutineIds(db, user.id).then(ids => {
-                setIsFavorite(ids.includes(routine.id));
-            });
+        if (routine?.id) {
+            isRoutineFavorite(routine.id).then(setIsFavorite);
         }
-    }, [db, routine, user.id]);
+    }, [routine, isRoutineFavorite]);
 
-    const toggleFavorite = async () => {
-        if (!db) return;
-        if (isFavorite) {
-            await removeFavoriteRoutine(db, user.id, routine.id);
-            setIsFavorite(false);
-        } else {
-            await addFavoriteRoutine(db, user.id, routine.id);
-            setIsFavorite(true);
-        }
-        if (onFavoriteChange) onFavoriteChange(); // Notify parent
+    const handleToggleFavorite = async () => {
+        await toggleFavoriteRoutine(routine.id);
+        const fav = await isRoutineFavorite(routine.id);
+        setIsFavorite(fav);
+        if (onFavoriteChange) onFavoriteChange();
     };
+
 
     return (
         <Modal
@@ -53,7 +44,7 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
                     <View style={styles.header}>
                         <Text style={styles.headerText}>{routine.title}</Text>
                         <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TouchableOpacity onPress={toggleFavorite} style={{ marginRight: 8 }}>
+                            <TouchableOpacity onPress={handleToggleFavorite} style={{ marginRight: 8 }}>
                                 <MaterialCommunityIcons
                                     name={isFavorite ? "star" : "star-outline"}
                                     size={24}

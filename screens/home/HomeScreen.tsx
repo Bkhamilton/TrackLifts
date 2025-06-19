@@ -12,6 +12,7 @@ import Title from '@/components/Title';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HomeContext } from '@/contexts/HomeContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
+import { SplitContext } from '@/contexts/SplitContext';
 import useHookHome from '@/hooks/useHookHome';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -54,6 +55,8 @@ export default function HomeScreen() {
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
+    const { toggleFavoriteRoutine } = useContext(SplitContext);
+
     const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
 
     const refreshFavorites = () => setFavoritesRefreshKey(k => k + 1);
@@ -93,7 +96,7 @@ export default function HomeScreen() {
         
     }
 
-    const onSelectOption = (option: string) => {
+    const onSelectOption = async (option: string) => {
         switch (option) {
             case 'edit':
                 setRoutineToEdit(routine);
@@ -111,6 +114,12 @@ export default function HomeScreen() {
                 break;
             case 'start':
                 onStart(routine);
+                break;
+            case 'favorite':
+                if (routine?.id) {
+                    await toggleFavoriteRoutine(routine.id);
+                    refreshFavorites();
+                }
                 break;
             default:
                 console.warn('Unknown option selected:', option);
@@ -215,6 +224,7 @@ export default function HomeScreen() {
                 options={[
                     { label: 'Start Workout', value: 'start' },
                     { label: 'Edit Routine', value: 'edit' },
+                    { label: 'Favorite Routine', value: 'favorite' },
                     { label: 'Delete Routine', value: 'delete', destructive: true }
                 ]}
                 onSelect={onSelectOption}

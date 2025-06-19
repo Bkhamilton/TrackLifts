@@ -1,4 +1,5 @@
 // app/contexts/SplitContext.tsx
+import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { getRoutineByTitle } from '@/db/user/Routines';
 import { insertSplitRoutine } from '@/db/user/SplitRoutines';
 import { insertSplit, setNewActiveSplit } from '@/db/user/Splits';
@@ -13,6 +14,8 @@ interface SplitContextValue {
     activeSplit: Splits | null;
     updateActiveSplit: (splitId: number) => void;
     createSplitInDb: (splitObj: Splits) => Promise<number>;
+    isRoutineFavorite: (routineId: number) => Promise<boolean>;
+    toggleFavoriteRoutine: (routineId: number) => Promise<void>;    
 }
 
 export const SplitContext = createContext<SplitContextValue>({
@@ -24,6 +27,8 @@ export const SplitContext = createContext<SplitContextValue>({
     createSplitInDb: async () => {
         return 0;
     },
+    isRoutineFavorite: async () => false,
+    toggleFavoriteRoutine: async () => {},    
 });
 
 interface SplitContextValueProviderProps {
@@ -79,6 +84,22 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         }
     }
 
+    const isRoutineFavorite = async (routineId: number): Promise<boolean> => {
+        if (!db || !user?.id) return false;
+        const ids = await getFavoriteRoutineIds(db, user.id);
+        return ids.includes(routineId);
+    };
+
+    const toggleFavoriteRoutine = async (routineId: number) => {
+        if (!db || !user?.id) return;
+        const favorite = await isRoutineFavorite(routineId);
+        if (favorite) {
+            await removeFavoriteRoutine(db, user.id, routineId);
+        } else {
+            await addFavoriteRoutine(db, user.id, routineId);
+        }
+    };
+
     useEffect(() => {
         if (db && user.id !== 0) {
             const fetchSplits = async () => {
@@ -101,6 +122,8 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         activeSplit,
         updateActiveSplit,
         createSplitInDb,
+        isRoutineFavorite,
+        toggleFavoriteRoutine,
     };
 
     return (

@@ -1,6 +1,6 @@
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
+import OptionsModal from '@/components/modals/OptionsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
-import RoutineOptions from '@/components/modals/RoutineOptions';
 import SearchRoutineModal from '@/components/modals/SearchRoutineModal';
 import RoutineListSection from '@/components/Routines/RoutineListSection';
 import { View } from '@/components/Themed';
@@ -138,10 +138,16 @@ export default function RoutinesScreen() {
                 onClose={() => setSearchModalVisible(false)}
                 onSelect={handleSearchSelect}
             />
-            <RoutineOptions
+            <OptionsModal
                 visible={routineOptionsModal}
                 close={() => setRoutineOptionsModal(false)}
-                routine={routine}
+                title={routine.title}
+                options={[
+                    { label: 'Start Workout', value: 'start' },
+                    { label: 'Edit Routine', value: 'edit' },
+                    { label: 'Favorite Routine', value: 'favorite' },
+                    { label: 'Delete Routine', value: 'delete', destructive: true }
+                ]}
                 onSelect={onSelectOption}
             />
             <RoutineModal
