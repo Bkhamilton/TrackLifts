@@ -1,6 +1,7 @@
 import RoutineInfo from '@/components/Home/RoutineInfo';
 import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
+import AppearanceSettingsModal from '@/components/modals/ApperanceSettingsModal';
 import HelpSupportModal from '@/components/modals/HelpSupportModal';
 import NotificationSettingsModal from '@/components/modals/NotificationSettingsModal';
 import OptionsModal from '@/components/modals/OptionsModal';
@@ -43,6 +44,9 @@ export default function HomeScreen() {
         notificationModal,
         openNotificationModal,
         closeNotificationModal,
+        appearanceSettingsModal,
+        openAppearanceSettingsModal,
+        closeAppearanceSettingsModal,
         routine,
         curDay,
         setDay,
@@ -69,6 +73,7 @@ export default function HomeScreen() {
         openNotificationModal,
         openPrivacySettingsModal,
         openHelpSupportModal,
+        openAppearanceSettingsModal,
         setRoutine,
         isActiveWorkout
     });
@@ -113,6 +118,10 @@ export default function HomeScreen() {
                     favoritesRefreshKey={favoritesRefreshKey}
                 />
             </ScrollView>
+            <AppearanceSettingsModal
+                visible={appearanceSettingsModal}
+                close={closeAppearanceSettingsModal}
+            />
             <NotificationSettingsModal
                 visible={notificationModal}
                 close={closeNotificationModal}

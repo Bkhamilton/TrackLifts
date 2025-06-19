@@ -10,6 +10,7 @@ interface UseHomeActionsProps {
     openNotificationModal: () => void;
     openPrivacySettingsModal: () => void;
     openHelpSupportModal: () => void;
+    openAppearanceSettingsModal: () => void;
     setRoutine: (routine: ActiveRoutine) => void;
     isActiveWorkout: boolean;
 }
@@ -21,6 +22,7 @@ export default function useHomeActions({
     openNotificationModal,
     openPrivacySettingsModal,
     openHelpSupportModal,
+    openAppearanceSettingsModal,
     setRoutine,
     isActiveWorkout,
 } : UseHomeActionsProps) {
@@ -66,6 +68,9 @@ export default function useHomeActions({
                 break;
             case 'exportData':
                 router.navigate('/exportWorkout')
+            case 'appearanceSettings':
+                openAppearanceSettingsModal();
+                break;
             default:
                 console.warn('Unknown setting selected:', option);
         }

@@ -48,7 +48,7 @@ export default function ExportWorkoutScreen() {
                     <MaterialCommunityIcons name="chevron-left" size={24} color="#ff8787" />
                 </TouchableOpacity>
                 <Text style={styles.title}>Export Workout Data</Text>
-                <View style={{ width: 24 }} /> {/* Spacer for alignment */}
+                <View style={{ width: 24 }} />
             </View>
 
             <ScrollView style={styles.content}>
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 24,
+        paddingTop: 40,
     },
     title: {
         fontSize: 20,

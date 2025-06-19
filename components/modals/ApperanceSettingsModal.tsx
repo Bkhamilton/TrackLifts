@@ -1,0 +1,137 @@
+import { Text, View } from '@/components/Themed';
+import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Switch, TouchableOpacity } from 'react-native';
+
+interface AppearanceSettingsModalProps {
+    visible: boolean;
+    close: () => void;
+}
+
+export default function AppearanceSettingsModal({ visible, close }: AppearanceSettingsModalProps) {
+    const [appearanceSettings, setAppearanceSettings] = useState({
+        lightMode: true,
+        usePhoneMode: true,
+    });
+
+    const toggleSetting = (setting: keyof typeof appearanceSettings) => {
+        // Prevent toggling lightMode if usePhoneMode is true
+        if (setting === 'lightMode' && appearanceSettings.usePhoneMode) return;
+        setAppearanceSettings(prev => ({
+            ...prev,
+            [setting]: !prev[setting]
+        }));
+    };
+
+    return (
+        <Modal
+            visible={visible}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={close}
+        >
+            <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>Appearance</Text>
+                        <TouchableOpacity onPress={close}>
+                            <MaterialIcons name="close" size={24} color="#666" />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.settingItem}>
+                        <View>
+                            <Text style={styles.settingTitle}>Light Mode</Text>
+                            <Text style={styles.settingDescription}>
+                                Enable light mode for the app interface
+                            </Text>
+                        </View>
+                        <Switch
+                            value={appearanceSettings.lightMode}
+                            onValueChange={() => toggleSetting('lightMode')}
+                            thumbColor="#fff"
+                            trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
+                            disabled={appearanceSettings.usePhoneMode}
+                            style={appearanceSettings.usePhoneMode ? { opacity: 0.5 } : {}}
+                        />
+                    </View>
+
+                    <View style={styles.settingItem}>
+                        <View>
+                            <Text style={styles.settingTitle}>Use Default</Text>
+                            <Text style={styles.settingDescription}>
+                                Use the default phone mode
+                            </Text>
+                        </View>
+                        <Switch
+                            value={appearanceSettings.usePhoneMode}
+                            onValueChange={() => toggleSetting('usePhoneMode')}
+                            thumbColor="#fff"
+                            trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
+                        />
+                    </View>
+
+                    <TouchableOpacity style={styles.saveButton}>
+                        <Text style={styles.saveButtonText}>Save Changes</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
+}
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        marginHorizontal: 20,
+        borderRadius: 12,
+        padding: 20,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 24,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#333',
+    },
+    settingItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    settingTitle: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 4,
+    },
+    settingDescription: {
+        fontSize: 13,
+        color: '#666',
+        maxWidth: '80%',
+    },
+    saveButton: {
+        backgroundColor: '#ff8787',
+        borderRadius: 8,
+        padding: 16,
+        alignItems: 'center',
+        marginTop: 16,
+    },
+    saveButtonText: {
+        color: 'white',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+});
