@@ -10,80 +10,23 @@ import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import useHookData from '@/hooks/useHookData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-interface FavoriteGraph {
-    id: string;
-    exercise: string;
-    graphType: string;
-    currentMax: string;
-    progress: string;
-    lastUpdated: string;
-}
-
 export default function DataScreen() {
-    const [showExerciseModal, setShowExerciseModal] = useState(false);
-    const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
-    const [dateRange, setDateRange] = useState<{ start: Date; end: Date }>({
-        start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-        end: new Date(),
-    });
-
-    const [favoriteGraphs, setFavoriteGraphs] = useState<FavoriteGraph[]>([
-        {
-            id: '1',
-            exercise: 'Bench Press',
-            graphType: 'Top Set',
-            currentMax: '225 lbs',
-            progress: '+10 lbs',
-            lastUpdated: '2 days ago'
-        },
-        {
-            id: '2',
-            exercise: 'Squats',
-            graphType: 'Most Weight Moved',
-            currentMax: '315 lbs',
-            progress: '+25 lbs',
-            lastUpdated: '1 week ago'
-        },
-        {
-            id: '3',
-            exercise: 'Deadlifts',
-            graphType: 'Strength Progress',
-            currentMax: '405 lbs',
-            progress: '+15 lbs',
-            lastUpdated: '3 days ago'
-        }
-    ]);
-
-    const handleAddFavorite = () => {
-        // Open modal to create new favorite graph
-    };
-
-    const handleSelectGraph = (graph: FavoriteGraph) => {
-        // Navigate to or open the selected graph
-    };
-
-    // Mock data
-    const workoutStats = {
-        streak: 7,
-        frequency: "5 times/week",
-        lastWorkout: "Yesterday",
-        totalWorkouts: 42,
-        caloriesBurned: 12_450,
-    };
-
-    const handleExerciseSelect = (exercise: string) => {
-        setSelectedExercise(exercise);
-        setShowExerciseModal(false);
-    };
-
-    const handleDateRangeChange = (start: Date, end: Date) => {
-        setDateRange({ start, end });
-    };
+    const {
+        showExerciseModal,
+        setShowExerciseModal,
+        selectedExercise,
+        handleExerciseSelect,
+        favoriteGraphs,
+        handleAddFavorite,
+        handleSelectGraph,
+        workoutStats,
+    } = useHookData();
 
     const router = useRouter();
 
