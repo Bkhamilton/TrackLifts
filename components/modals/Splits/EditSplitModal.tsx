@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
-import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import RoutineSelectModal from '../RoutineSelectModal';
 
 interface RoutineDay {
     day: number;
@@ -33,23 +33,15 @@ export default function EditSplitModal({
     onRemoveDay,
     onClose,
 }: EditSplitModalProps) {
-    const [activePicker, setActivePicker] = useState<number | null>(null);
     const [expandedPicker, setExpandedPicker] = useState<number | null>(null);
 
     const handleDayPress = (dayNumber: number) => {
-        if (expandedPicker === dayNumber) {
-            setExpandedPicker(null);
-        } else {
-            setExpandedPicker(dayNumber);
-        }
+        setExpandedPicker(expandedPicker === dayNumber ? null : dayNumber);
     };
 
-    const handleAddDay = () => {
-        onAddDay(editingSplit.id);
-    };
-
-    const handleRemoveDay = (dayNumber: number) => {
-        onRemoveDay(editingSplit.id, dayNumber);
+    const handleRoutineSelect = (dayNumber: number, routine: string) => {
+        onUpdateSplitDay(editingSplit.id, dayNumber, routine);
+        setExpandedPicker(null);
     };
 
     return (
@@ -61,43 +53,32 @@ export default function EditSplitModal({
                     {editingSplit.routines.map((day) => (
                         <View key={day.day} style={styles.dayRow}>
                             <Text style={styles.dayLabel}>Day {day.day}</Text>
-                            
-                            {expandedPicker === day.day ? (
-                                <Picker
-                                    selectedValue={day.routine}
-                                    style={styles.picker}
-                                    onValueChange={(value) => {
-                                        onUpdateSplitDay(editingSplit.id, day.day, value);
-                                        setExpandedPicker(null);
-                                    }}
-                                >
-                                    {availableRoutines.map((routine, i) => (
-                                        <Picker.Item key={i} label={routine} value={routine} />
-                                    ))}
-                                </Picker>
-                            ) : (
-                                <TouchableOpacity 
-                                    style={styles.routineValue}
-                                    onPress={() => handleDayPress(day.day)}
-                                >
-                                    <Text>{day.routine}</Text>
-                                </TouchableOpacity>
-                            )}
-                            
+                            <TouchableOpacity 
+                                style={styles.routineValue}
+                                onPress={() => handleDayPress(day.day)}
+                            >
+                                <Text>{day.routine}</Text>
+                            </TouchableOpacity>
                             {editingSplit.routines.length > 1 && (
                                 <TouchableOpacity 
                                     style={styles.removeButton}
-                                    onPress={() => handleRemoveDay(day.day)}
+                                    onPress={() => onRemoveDay(editingSplit.id, day.day)}
                                 >
                                     <Text style={styles.removeButtonText}>×</Text>
                                 </TouchableOpacity>
                             )}
+                            <RoutineSelectModal
+                                visible={expandedPicker === day.day}
+                                routines={availableRoutines}
+                                onSelect={(routine) => handleRoutineSelect(day.day, routine)}
+                                onClose={() => setExpandedPicker(null)}
+                            />
                         </View>
                     ))}
 
                     <TouchableOpacity 
                         style={styles.addDayButton}
-                        onPress={handleAddDay}
+                        onPress={() => onAddDay(editingSplit.id)}
                     >
                         <Text style={styles.addDayButtonText}>+ Add Day</Text>
                     </TouchableOpacity>
@@ -115,7 +96,6 @@ export default function EditSplitModal({
         </Modal>
     );
 }
-
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
@@ -200,5 +180,34 @@ const styles = StyleSheet.create({
     removeButtonText: {
         fontSize: 18,
         color: 'red',
+    },
+    routineModalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    routineModalContent: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        width: '80%',
+        maxHeight: '60%',
+    },
+    routineModalTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 12,
+        textAlign: 'center',
+    },
+    routineOption: {
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    routineOptionText: {
+        fontSize: 16,
+        color: '#333',
     },
 });

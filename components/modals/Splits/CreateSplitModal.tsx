@@ -1,7 +1,7 @@
 import { Text, TextInput, View } from '@/components/Themed';
-import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import RoutineSelectModal from '../RoutineSelectModal';
 
 interface RoutineDay {
     day: number;
@@ -76,27 +76,12 @@ export default function CreateSplitModal({
                         <View key={day.day} style={styles.dayRow}>
                             <Text style={styles.dayLabel}>Day {day.day}</Text>
                             
-                            {expandedPicker === day.day ? (
-                                <Picker
-                                    selectedValue={day.routine}
-                                    style={styles.picker}
-                                    onValueChange={(value) => {
-                                        handleUpdateDay(day.day, value);
-                                        setExpandedPicker(null);
-                                    }}
-                                >
-                                    {availableRoutines.map((routine, i) => (
-                                        <Picker.Item key={i} label={routine} value={routine} />
-                                    ))}
-                                </Picker>
-                            ) : (
-                                <TouchableOpacity 
-                                    style={styles.routineValue}
-                                    onPress={() => handleDayPress(day.day)}
-                                >
-                                    <Text>{day.routine}</Text>
-                                </TouchableOpacity>
-                            )}
+                            <TouchableOpacity 
+                                style={styles.routineValue}
+                                onPress={() => handleDayPress(day.day)}
+                            >
+                                <Text>{day.routine}</Text>
+                            </TouchableOpacity>
                             
                             {days.length > 1 && (
                                 <TouchableOpacity 
@@ -106,6 +91,16 @@ export default function CreateSplitModal({
                                     <Text style={styles.removeButtonText}>×</Text>
                                 </TouchableOpacity>
                             )}
+                            {/* RoutineSelectModal for this day */}
+                            <RoutineSelectModal
+                                visible={expandedPicker === day.day}
+                                routines={availableRoutines}
+                                onSelect={(routine) => {
+                                    handleUpdateDay(day.day, routine);
+                                    setExpandedPicker(null);
+                                }}
+                                onClose={() => setExpandedPicker(null)}
+                            />
                         </View>
                     ))}
 
