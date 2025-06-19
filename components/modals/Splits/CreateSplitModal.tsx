@@ -1,4 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/utils/types';
 import React, { useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineSelectModal from '../RoutineSelectModal';
@@ -12,14 +13,14 @@ interface CreateSplitModalProps {
     visible: boolean;
     onClose: () => void;
     onCreate: (splitName: string, routines: RoutineDay[]) => void;
-    availableRoutines: string[];
+    availableRoutines: ActiveRoutine[];
 }
 
 export default function CreateSplitModal({
     visible,
     onClose,
     onCreate,
-    availableRoutines = ['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body', 'Rest'],
+    availableRoutines = [{ id: 1, title: 'Rest', exercises: [] }],
 }: CreateSplitModalProps) {
     const [splitName, setSplitName] = useState('');
     const [days, setDays] = useState<RoutineDay[]>([{ day: 1, routine: 'Rest' }]);

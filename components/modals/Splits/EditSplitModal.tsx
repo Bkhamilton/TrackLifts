@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/utils/types';
 import React, { useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineSelectModal from '../RoutineSelectModal';
@@ -17,7 +18,7 @@ interface Split {
 interface EditSplitModalProps {
     visible: boolean;
     editingSplit: Split;
-    availableRoutines: string[];
+    availableRoutines: ActiveRoutine[];
     onUpdateSplitDay: (splitId: number, day: number, routine: string) => void;
     onAddDay: (splitId: number) => void;
     onRemoveDay: (splitId: number, day: number) => void;

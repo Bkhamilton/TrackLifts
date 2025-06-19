@@ -1,20 +1,21 @@
+import { ActiveRoutine } from '@/utils/types';
 import React from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface RoutineSelectModalProps {
     visible: boolean;
-    routines: string[];
     onSelect: (routine: string) => void;
     onClose: () => void;
     title?: string;
+    routines: ActiveRoutine[];
 }
 
 export default function RoutineSelectModal({
     visible,
-    routines,
     onSelect,
     onClose,
     title = 'Select Routine',
+    routines = [],
 }: RoutineSelectModalProps) {
     return (
         <Modal
@@ -32,13 +33,13 @@ export default function RoutineSelectModal({
                     <Text style={styles.title}>{title}</Text>
                     <FlatList
                         data={routines}
-                        keyExtractor={(item) => item}
+                        keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.option}
-                                onPress={() => onSelect(item)}
+                                onPress={() => onSelect(item.title)}
                             >
-                                <Text style={styles.optionText}>{item}</Text>
+                                <Text style={styles.optionText}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
                     />

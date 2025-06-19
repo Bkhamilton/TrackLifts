@@ -41,6 +41,8 @@ export default function SplitScreen() {
         ? dislpaySplits.find(s => s.id === editingSplitId)
         : null;
 
+    const availableRoutines = [...routines, { id: 1, title: 'Rest', exercises: []}];
+
     return (
         <View style={styles.container}>
             <Title 
@@ -71,7 +73,7 @@ export default function SplitScreen() {
                 visible={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
                 onCreate={createSplit}
-                availableRoutines={[...routines.map(r => r.title), 'Rest']}
+                availableRoutines={availableRoutines}
             />
 
             {/* Edit Split Modal */}
@@ -79,7 +81,7 @@ export default function SplitScreen() {
                 <EditSplitModal
                     visible={!!editingSplit}
                     editingSplit={editingSplit}
-                    availableRoutines={[...routines.map(r => r.title), 'Rest']}
+                    availableRoutines={availableRoutines}
                     onUpdateSplitDay={updateSplitDay}
                     onAddDay={addDayToSplit}
                     onRemoveDay={removeDayFromSplit}
