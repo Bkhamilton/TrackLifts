@@ -1,0 +1,107 @@
+import { ClearView, Text, View } from '@/components/Themed';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import WorkoutFrequencyChart from './WorkoutFrequencyChart';
+
+interface WorkoutStats {
+  streak: number;
+  frequency: string;
+  lastWorkout: string;
+  totalWorkouts: number;
+  caloriesBurned: number;
+}
+
+const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => (
+    <View style={styles.header}>
+        <ClearView style={styles.statsRow}>
+            <ClearView style={styles.statCard}>
+                <MaterialCommunityIcons name="fire" size={24} color="#ff6b6b" />
+                <Text style={styles.statValue}>{stats.streak}</Text>
+                <Text style={styles.statLabel}>Day Streak</Text>
+            </ClearView>
+            
+            <ClearView style={styles.statCard}>
+                <MaterialCommunityIcons name="calendar" size={24} color="#4dabf7" />
+                <Text style={styles.statValue}>{stats.frequency}</Text>
+                <Text style={styles.statLabel}>Frequency</Text>
+            </ClearView>
+            
+            <ClearView style={styles.statCard}>
+                <MaterialCommunityIcons name="clock" size={24} color="#51cf66" />
+                <Text style={styles.statValue}>{stats.lastWorkout}</Text>
+                <Text style={styles.statLabel}>Last Workout</Text>
+            </ClearView>
+        </ClearView>
+        
+        <WorkoutFrequencyChart/>
+        
+        <ClearView style={styles.summaryRow}>
+            <ClearView style={styles.summaryItem}>
+                <Text style={styles.summaryValue}>{stats.totalWorkouts}</Text>
+                <Text style={styles.summaryLabel}>Total Workouts</Text>
+            </ClearView>
+            <ClearView style={styles.summaryItem}>
+                <Text style={styles.summaryValue}>{stats.caloriesBurned.toLocaleString()}</Text>
+                <Text style={styles.summaryLabel}>Calories Burned</Text>
+            </ClearView>
+        </ClearView>
+    </View>
+);
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  statCard: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginTop: 8,
+    color: '#333',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#e9ecef',
+    marginVertical: 12,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  summaryItem: {
+    alignItems: 'center',
+  },
+  summaryValue: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#333',
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
+
+export default DataHeader;
