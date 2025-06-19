@@ -31,6 +31,7 @@ const WorkoutHistory: React.FC = () => (
 const styles = StyleSheet.create({
     container: {
         marginBottom: 24,
+        marginHorizontal: 16,
     },
     title: {
         fontSize: 18,

@@ -3,45 +3,46 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 const MuscleGroupStats: React.FC = () => (
-  <View style={styles.container}>
-    <Text style={styles.title}>Muscle Group Focus</Text>
-    
-    <View style={styles.statsContainer}>
-      <ClearView style={styles.statRow}>
-        <ClearView style={styles.labelColumn}>
-          <Text style={styles.muscleLabel}>Chest</Text>
-          <Text style={styles.muscleLabel}>Back</Text>
-          <Text style={styles.muscleLabel}>Legs</Text>
-          <Text style={styles.muscleLabel}>Shoulders</Text>
-          <Text style={styles.muscleLabel}>Arms</Text>
-          <Text style={styles.muscleLabel}>Core</Text>
-        </ClearView>
+    <View style={styles.container}>
+        <Text style={styles.title}>Muscle Group Focus</Text>
         
-        <ClearView style={styles.barColumn}>
-          <View style={[styles.bar, { width: '85%' }]} />
-          <View style={[styles.bar, { width: '75%' }]} />
-          <View style={[styles.bar, { width: '65%' }]} />
-          <View style={[styles.bar, { width: '60%' }]} />
-          <View style={[styles.bar, { width: '55%' }]} />
-          <View style={[styles.bar, { width: '50%' }]} />
-        </ClearView>
-        
-        <ClearView style={styles.valueColumn}>
-          <Text style={styles.valueText}>85%</Text>
-          <Text style={styles.valueText}>75%</Text>
-          <Text style={styles.valueText}>65%</Text>
-          <Text style={styles.valueText}>60%</Text>
-          <Text style={styles.valueText}>55%</Text>
-          <Text style={styles.valueText}>50%</Text>
-        </ClearView>
-      </ClearView>
+        <View style={styles.statsContainer}>
+            <ClearView style={styles.statRow}>
+                <ClearView style={styles.labelColumn}>
+                    <Text style={styles.muscleLabel}>Chest</Text>
+                    <Text style={styles.muscleLabel}>Back</Text>
+                    <Text style={styles.muscleLabel}>Legs</Text>
+                    <Text style={styles.muscleLabel}>Shoulders</Text>
+                    <Text style={styles.muscleLabel}>Arms</Text>
+                    <Text style={styles.muscleLabel}>Core</Text>
+                </ClearView>
+                
+                <ClearView style={styles.barColumn}>
+                    <View style={[styles.bar, { width: '85%' }]} />
+                    <View style={[styles.bar, { width: '75%' }]} />
+                    <View style={[styles.bar, { width: '65%' }]} />
+                    <View style={[styles.bar, { width: '60%' }]} />
+                    <View style={[styles.bar, { width: '55%' }]} />
+                    <View style={[styles.bar, { width: '50%' }]} />
+                </ClearView>
+                
+                <ClearView style={styles.valueColumn}>
+                    <Text style={styles.valueText}>85%</Text>
+                    <Text style={styles.valueText}>75%</Text>
+                    <Text style={styles.valueText}>65%</Text>
+                    <Text style={styles.valueText}>60%</Text>
+                    <Text style={styles.valueText}>55%</Text>
+                    <Text style={styles.valueText}>50%</Text>
+                </ClearView>
+            </ClearView>
+        </View>
     </View>
-  </View>
 );
 
 const styles = StyleSheet.create({
   container: {
     marginBottom: 24,
+    marginHorizontal: 16,
   },
   title: {
     fontSize: 18,

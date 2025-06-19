@@ -112,10 +112,12 @@ export default function DataScreen() {
                 }
             />
         <ScrollView 
-            style={{ flex: 1, padding: 16, marginBottom: 85 }}
+            style={{ flex: 1, paddingVertical: 16, marginBottom: 85 }}
             showsVerticalScrollIndicator={false}
         >
-            <DataHeader stats={workoutStats} />
+            <View style={{ paddingHorizontal: 16 }}>
+                <DataHeader stats={workoutStats} />
+            </View>
             
             <FavoriteGraphs
                 favorites={favoriteGraphs}
