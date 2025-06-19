@@ -11,10 +11,9 @@ import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HomeContext } from '@/contexts/HomeContext';
-import { RoutineContext } from '@/contexts/RoutineContext';
+import useHomeActions from '@/hooks/useHomeActions';
 import useHookHome from '@/hooks/useHookHome';
 import useRoutineOptionsHandler from '@/hooks/useRoutineOptionsHandler';
-import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
@@ -51,8 +50,6 @@ export default function HomeScreen() {
 
     const { setRoutineToEdit } = useContext(HomeContext);
 
-    const { addRoutineToDB } = useContext(RoutineContext); 
-
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
 
     const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
@@ -61,38 +58,20 @@ export default function HomeScreen() {
 
     const router = useRouter();
 
-    const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
-        const newRoutine = {
-            ...routine,
-            id: 0, // ID will be auto-incremented by the database
-        };
-        addRoutineToDB(newRoutine)
-            .then((id) => {
-                if (id) {
-                    console.log('Routine added with ID:', id);
-                } else {
-                    console.log('Failed to add routine');
-                }
-            })
-            .catch((error) => {
-                console.error('Error adding routine:', error);
-            });
-        closeAddRoutineModal();
-    }
-
-    const onStart = (routine: ActiveRoutine) => {
-        setRoutine(routine);
-        closeRoutineModal();
-        if (isActiveWorkout) {
-            alert('You already have an active workout. Please finish it before starting a new one.');
-            setTimeout(() => {
-                router.replace('/(tabs)/workout/activeWorkout');
-            }, 500);
-        } else {
-            router.replace('/(tabs)/workout/newWorkout');
-        }
-        
-    }
+    const {
+        onAdd, 
+        onStart, 
+        onSelectSetting 
+    } = useHomeActions({
+        closeAddRoutineModal,
+        closeRoutineModal,
+        closeSettingsModal,
+        openNotificationModal,
+        openPrivacySettingsModal,
+        openHelpSupportModal,
+        setRoutine,
+        isActiveWorkout
+    });
 
     const handleOption = useRoutineOptionsHandler({
         routine,
@@ -101,35 +80,6 @@ export default function HomeScreen() {
         refreshFavorites,
         setRoutineToEdit,
     });
-
-    const onSelectSetting = (option: string) => {
-        switch (option) {
-            case 'editProfile':
-                router.push('/(tabs)/profile/profileInfo');
-                break;
-            case 'editGoals':
-                router.push('/(tabs)/profile/profileInfo');
-                break;
-            case 'notificationSettings':
-                openNotificationModal();
-                break;
-            case 'appearanceSettings':
-                // router.push('/(tabs)/settings/appearance');
-                break;
-            case 'privacySettings':
-                openPrivacySettingsModal();
-                break;
-            case 'exportData':
-                // router.push('/(tabs)/settings/exportData');
-                break;
-            case 'helpSupport':
-                openHelpSupportModal();
-                break;
-            default:
-                console.warn('Unknown setting selected:', option);
-        }
-        closeSettingsModal();
-    }
 
     return (
         <View style={styles.container}>
