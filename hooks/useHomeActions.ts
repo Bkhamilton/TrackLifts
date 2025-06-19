@@ -64,6 +64,8 @@ export default function useHomeActions({
             case 'helpSupport':
                 openHelpSupportModal();
                 break;
+            case 'exportData':
+                router.navigate('/exportWorkout')
             default:
                 console.warn('Unknown setting selected:', option);
         }

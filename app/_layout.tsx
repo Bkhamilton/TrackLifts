@@ -57,6 +57,7 @@ function RootLayoutNav() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
                 <Stack.Screen name="finishWorkout" options={{ presentation: 'card', headerShown: false }} />
+                <Stack.Screen name="exportWorkout" options={{ presentation: 'card', headerShown: false }} />
             </Stack>
             <StatusBar style="auto" />
         </ThemeProvider>
