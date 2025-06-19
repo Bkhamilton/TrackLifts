@@ -7,6 +7,7 @@ import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import useHookRoutines from '@/hooks/useHookRoutines';
+import useRoutineOptionsHandler from '@/hooks/useRoutineOptionsHandler';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -37,31 +38,7 @@ export default function RoutinesScreen() {
 
     const router = useRouter();
 
-    const { deleteRoutineFromDB, addRoutineToDB } = useContext(RoutineContext);
-
-    const onSelectOption = (option: string) => {
-        switch (option) {
-            case 'edit':
-                router.replace('/(tabs)/(index)/editRoutine')
-                break;
-            case 'delete':
-                // Handle delete routine logic here
-                deleteRoutineFromDB(routine.id)
-                    .then(() => {
-                        console.log('Routine deleted successfully');
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting routine:', error);
-                    });
-                break;
-            case 'start':
-                onStart(routine);
-                break;
-            default:
-                console.warn('Unknown option selected:', option);
-        }
-        setRoutineOptionsModal(false);
-    }
+    const { addRoutineToDB } = useContext(RoutineContext);
 
     const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
         const newRoutine = {
@@ -81,7 +58,13 @@ export default function RoutinesScreen() {
             });
         setAddRoutineModal(false);
     }
-    
+
+    const handleOption = useRoutineOptionsHandler({
+        routine,
+        onStart,
+        closeOptionsModal: () => setRoutineOptionsModal(false),
+        refreshFavorites,
+    });
 
     return (
         <View style={styles.container}>
@@ -148,7 +131,7 @@ export default function RoutinesScreen() {
                     { label: 'Favorite Routine', value: 'favorite' },
                     { label: 'Delete Routine', value: 'delete', destructive: true }
                 ]}
-                onSelect={onSelectOption}
+                onSelect={handleOption}
             />
             <RoutineModal
                 visible={routineModal}

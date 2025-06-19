@@ -12,8 +12,8 @@ import Title from '@/components/Title';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HomeContext } from '@/contexts/HomeContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
-import { SplitContext } from '@/contexts/SplitContext';
 import useHookHome from '@/hooks/useHookHome';
+import useRoutineOptionsHandler from '@/hooks/useRoutineOptionsHandler';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -51,11 +51,9 @@ export default function HomeScreen() {
 
     const { setRoutineToEdit } = useContext(HomeContext);
 
-    const { addRoutineToDB, deleteRoutineFromDB } = useContext(RoutineContext); 
+    const { addRoutineToDB } = useContext(RoutineContext); 
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
-
-    const { toggleFavoriteRoutine } = useContext(SplitContext);
 
     const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
 
@@ -96,36 +94,13 @@ export default function HomeScreen() {
         
     }
 
-    const onSelectOption = async (option: string) => {
-        switch (option) {
-            case 'edit':
-                setRoutineToEdit(routine);
-                router.push('/(tabs)/(index)/editRoutine')
-                break;
-            case 'delete':
-                // Handle delete routine logic here
-                deleteRoutineFromDB(routine.id)
-                    .then(() => {
-                        console.log('Routine deleted successfully');
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting routine:', error);
-                    });
-                break;
-            case 'start':
-                onStart(routine);
-                break;
-            case 'favorite':
-                if (routine?.id) {
-                    await toggleFavoriteRoutine(routine.id);
-                    refreshFavorites();
-                }
-                break;
-            default:
-                console.warn('Unknown option selected:', option);
-        }
-        closeRoutineOptionsModal();
-    }
+    const handleOption = useRoutineOptionsHandler({
+        routine,
+        onStart,
+        closeOptionsModal: closeRoutineOptionsModal,
+        refreshFavorites,
+        setRoutineToEdit,
+    });
 
     const onSelectSetting = (option: string) => {
         switch (option) {
@@ -227,7 +202,7 @@ export default function HomeScreen() {
                     { label: 'Favorite Routine', value: 'favorite' },
                     { label: 'Delete Routine', value: 'delete', destructive: true }
                 ]}
-                onSelect={onSelectOption}
+                onSelect={handleOption}
             />
         </View>
     );
