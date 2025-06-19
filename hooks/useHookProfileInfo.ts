@@ -33,7 +33,7 @@ export default function useHookProfileInfo() {
     const closeAboutModal = () => setAboutModalVisible(false);
 
     const [profile, setProfile] = useState<ProfileData>({
-        username: user.username || 'benkhamilton',
+        username: user.username || '',
         avatar: '👤',
         stats: {
             height: userStats.height,
