@@ -1,5 +1,4 @@
 import { Text, View } from '@/components/Themed';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -134,13 +133,6 @@ const MuscleIntensityVisualization = () => {
                 <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
                     Muscle Intensity Visualization
                 </Text>
-                <TouchableOpacity 
-                    style={styles.addButton}
-                >
-                    <View>
-                        <MaterialCommunityIcons name="chevron-right" size={24} color="#ff8787" />
-                    </View>  
-                </TouchableOpacity>
             </View>
             <View style={{ width: '100%', paddingHorizontal: 16 }}>
                 <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
@@ -313,9 +305,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        justifyContent: 'center',
         width: '100%',
         paddingHorizontal: 16,
     },

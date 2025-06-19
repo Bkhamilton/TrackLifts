@@ -1,3 +1,4 @@
+import NotesInput from '@/components/FinishWorkout/NotesInput';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
@@ -14,6 +15,7 @@ export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
     const { history } = useContext(HistoryContext);
+    const [editedNotes, setEditedNotes] = useState(history.notes);
     const [editedRoutine, setEditedRoutine] = useState(history.routine);
     const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
@@ -46,7 +48,7 @@ export default function EditHistoryScreen() {
 
     const handleSaveRoutine = () => {
         // If editedRoutine is different from history.routine, show confirmation modal
-        if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine)) {
+        if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || editedNotes !== history.notes) {
             setConfirmModal(true);
         } else {
             router.replace('/(tabs)/history/main');
@@ -93,6 +95,10 @@ export default function EditHistoryScreen() {
                 }
             />
             <ScrollView style={styles.scrollView}>
+                <NotesInput
+                    value={editedNotes}
+                    onChangeText={setEditedNotes}
+                />
                 <Workout
                     routine={editedRoutine}
                     open={openModal}
