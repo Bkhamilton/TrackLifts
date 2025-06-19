@@ -67,7 +67,10 @@ export default function DataScreen() {
                     ]} />
                 }
             />
-        <ScrollView style={{ flex: 1, padding: 16, marginBottom: 85 }}>
+        <ScrollView 
+            style={{ flex: 1, padding: 16, marginBottom: 85 }}
+            showsVerticalScrollIndicator={false}
+        >
             <DataHeader stats={workoutStats} />
             
             <FavoriteExercises 
@@ -77,7 +80,6 @@ export default function DataScreen() {
             
             <ExerciseAnalysis 
                 exercise={selectedExercise || "Select an Exercise"} 
-                dateRange={dateRange}
                 onSelectExercise={() => setShowExerciseModal(true)}
             />
             

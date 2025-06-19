@@ -16,19 +16,19 @@ const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => (
     <View style={styles.header}>
         <ClearView style={styles.statsRow}>
             <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="fire" size={24} color="#ff6b6b" />
-                <Text style={styles.statValue}>{stats.streak}</Text>
-                <Text style={styles.statLabel}>Day Streak</Text>
+                <MaterialCommunityIcons name="fire" size={20} color="#ff6b6b" />
+                <Text style={styles.statValue}>{stats.streak} Day</Text>
+                <Text style={styles.statLabel}>Streak</Text>
             </ClearView>
             
             <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="calendar" size={24} color="#4dabf7" />
+                <MaterialCommunityIcons name="calendar" size={20} color="#4dabf7" />
                 <Text style={styles.statValue}>{stats.frequency}</Text>
                 <Text style={styles.statLabel}>Frequency</Text>
             </ClearView>
             
             <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="clock" size={24} color="#51cf66" />
+                <MaterialCommunityIcons name="clock" size={20} color="#51cf66" />
                 <Text style={styles.statValue}>{stats.lastWorkout}</Text>
                 <Text style={styles.statLabel}>Last Workout</Text>
             </ClearView>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#f8f9fa',
         borderRadius: 16,
-        padding: 16,
+        padding: 12,
         marginBottom: 24,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -64,22 +64,25 @@ const styles = StyleSheet.create({
     statsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 12,
+        paddingHorizontal: 8,
     },
     statCard: {
         alignItems: 'center',
         flex: 1,
+        paddingVertical: 4,
     },
     statValue: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '700',
-        marginTop: 8,
+        marginTop: 4,
         color: '#333',
     },
     statLabel: {
         fontSize: 10,
         color: '#666',
-        marginTop: 4,
+        marginTop: 2,
+        textAlign: 'center',
     },
     divider: {
         height: 1,

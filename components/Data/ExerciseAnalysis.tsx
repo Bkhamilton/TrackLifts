@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import DateRangeSelector from './DateRangeSelector';
 
 interface Props {
@@ -9,21 +9,43 @@ interface Props {
   onSelectExercise: () => void;
 }
 
+type GraphType = 
+  | 'Top Set' 
+  | 'Heaviest Set' 
+  | 'Most Weight Moved' 
+  | 'Average Weight' 
+  | 'Repetitions';
+
 const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
   const [dateRange, setDateRange] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     end: new Date(),
   });
+  const [graphType, setGraphType] = useState<GraphType>('Top Set');
+  const [showGraphTypeModal, setShowGraphTypeModal] = useState(false);
 
   const handleDateRangeChange = (start: Date, end: Date) => {
     setDateRange({ start, end });
     // Here you would typically fetch data for the new date range
   };
 
+  const handleGraphTypeSelect = (type: GraphType) => {
+    setGraphType(type);
+    setShowGraphTypeModal(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Exercise Analysis</Text>
+        
+        <TouchableOpacity 
+          style={styles.graphTypeSelector}
+          onPress={() => setShowGraphTypeModal(true)}
+        >
+          <Text style={styles.graphTypeText}>{graphType}</Text>
+          <MaterialCommunityIcons name="chevron-down" size={18} color="#666" />
+        </TouchableOpacity>
       </View>
       
       <TouchableOpacity 
@@ -40,10 +62,12 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
       />
       
       <View style={styles.graphPlaceholder}>
-        <Text style={styles.placeholderText}>Exercise Progress Graph</Text>
+        <Text style={styles.placeholderText}>
+          {graphType} Graph for {exercise !== "Select an Exercise" ? exercise : 'Selected Exercise'}
+        </Text>
         <Text style={styles.graphHint}>
           {exercise !== "Select an Exercise" 
-            ? `Weight progression for ${exercise} will appear here`
+            ? `${graphType} data for ${exercise} will appear here`
             : 'Select an exercise to view progress'}
         </Text>
       </View>
@@ -62,6 +86,28 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
           <Text style={styles.statLabel}>Times Performed</Text>
         </View>
       </View>
+
+      {/* Graph Type Selector Modal */}
+      <Modal visible={showGraphTypeModal} transparent={true} animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {(['Top Set', 'Heaviest Set', 'Most Weight Moved', 'Average Weight', 'Repetitions'] as GraphType[]).map((type) => (
+              <TouchableOpacity
+                key={type}
+                style={styles.modalOption}
+                onPress={() => handleGraphTypeSelect(type)}
+              >
+                <Text style={[
+                  styles.modalOptionText,
+                  graphType === type && styles.selectedOptionText
+                ]}>
+                  {type}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -77,6 +123,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
+    marginBottom: 8,
+  },
+  graphTypeSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#f1f3f5',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  graphTypeText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+    marginRight: 4,
   },
   exerciseSelector: {
     flexDirection: 'row',
@@ -108,6 +170,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#868e96',
     marginBottom: 8,
+    textAlign: 'center',
   },
   graphHint: {
     fontSize: 14,
@@ -135,6 +198,31 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: '#868e96',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '70%',
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+  },
+  modalOption: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  selectedOptionText: {
+    color: '#ff8787',
+    fontWeight: '600',
   },
 });
 
