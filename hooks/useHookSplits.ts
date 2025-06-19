@@ -130,6 +130,7 @@ export default function useHookSplits() {
 
     return {
         dislpaySplits,
+        setDisplaySplits,
         activeSplit,
         currentWeek,
         currentSplit,

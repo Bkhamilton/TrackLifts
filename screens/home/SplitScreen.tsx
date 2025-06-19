@@ -16,6 +16,7 @@ import { RoutineContext } from '@/contexts/RoutineContext';
 export default function SplitScreen() {
     const {
         dislpaySplits,
+        setDisplaySplits,
         currentWeek,
         currentSplit,
         showCreateModal,
@@ -82,9 +83,13 @@ export default function SplitScreen() {
                     visible={!!editingSplit}
                     editingSplit={editingSplit}
                     availableRoutines={availableRoutines}
-                    onUpdateSplitDay={updateSplitDay}
-                    onAddDay={addDayToSplit}
-                    onRemoveDay={removeDayFromSplit}
+                    onUpdateSplit={(updatedSplit) => {
+                        // Update displaySplits here (call updateSplitDay, etc. as needed)
+                        // For example, you can add a new updateSplit function to your hook:
+                        setDisplaySplits(prev =>
+                            prev.map(s => s.id === updatedSplit.id ? updatedSplit : s)
+                        );
+                    }}
                     onClose={() => setEditingSplitId(null)}
                 />
             )}
