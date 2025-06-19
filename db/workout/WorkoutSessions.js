@@ -1,4 +1,4 @@
-export const getWorkoutSessions = async (db) => {
+export const getTotalWorkoutSessions = async (db) => {
     try {
         const query = `
             SELECT 
@@ -23,6 +23,36 @@ export const getWorkoutSessions = async (db) => {
         throw error;
     }
 };
+
+export const getWorkoutSessions = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                ws.*, 
+                u.name AS userName, 
+                r.name AS routineName
+            FROM 
+                WorkoutSessions ws
+            LEFT JOIN 
+                Users u 
+            ON 
+                ws.user_id = u.id
+            LEFT JOIN 
+                Routines r 
+            ON 
+                ws.routine_id = r.id
+            WHERE 
+                ws.user_id = ?
+            ORDER BY 
+                ws.start_time DESC
+        `;
+        const allRows = await db.getAllAsync(query, [userId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error getting workout sessions:', error);
+        throw error;
+    }
+}   
 
 export const insertWorkoutSession = async (db, session) => {
     try {
