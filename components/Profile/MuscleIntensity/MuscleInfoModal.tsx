@@ -1,5 +1,6 @@
+import { ScrollView, Text, View } from '@/components/Themed';
 import React from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 type MuscleGroup = {
     id: string;
@@ -49,7 +50,7 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
             onRequestClose={onClose}
         >
             <View style={styles.modalOverlay}>
-                <View style={styles.modalContainer}>
+                <ScrollView style={styles.modalContainer}>
                     <Text style={styles.modalTitle}>
                         {muscleData.name} Details
                     </Text>
@@ -117,7 +118,7 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
                     >
                         <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity>
-                </View>
+                </ScrollView>
             </View>
         </Modal>
     );
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        paddingBottom: 40,
     },
     modalTitle: {
         fontSize: 22,
