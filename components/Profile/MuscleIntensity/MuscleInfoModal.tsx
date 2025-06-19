@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from '@/components/Themed';
+import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -50,75 +50,81 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
             onRequestClose={onClose}
         >
             <View style={styles.modalOverlay}>
-                <ScrollView style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>
-                        {muscleData.name} Details
-                    </Text>
-                    
-                    <Text style={styles.modalDescription}>
-                        {muscleData.description}
-                    </Text>
-                    
-                    <Text style={styles.modalSectionTitle}>
-                        Primary Muscles Worked:
-                    </Text>
-                    <View style={styles.modalMusclesList}>
-                        {getPrimaryMuscles(muscleData.id).map((muscle, index) => (
-                            <Text key={index} style={styles.modalMuscleItem}>
-                                • {muscle}
-                            </Text>
-                        ))}
-                    </View>
-                    
-                    <Text style={styles.modalSectionTitle}>
-                        Recommended Exercises:
-                    </Text>
-                    <View style={styles.modalExercisesContainer}>
-                        {muscleData.exercises.map((exercise, index) => (
-                            <View key={index} style={styles.modalExercisePill}>
-                                <Text style={styles.modalExerciseText}>{exercise}</Text>
-                            </View>
-                        ))}
-                    </View>
-
-                    {/* Intensity Breakdown Section */}
-                    {breakdown && (
-                        <View style={{ marginTop: 10 }}>
-                            <Text style={styles.modalSectionTitle}>Intensity Breakdown</Text>
-                            <Text style={{ fontSize: 15, color: '#555', marginBottom: 4 }}>
-                                Routine: <Text style={{ fontWeight: 'bold' }}>{breakdown.routine}</Text>
-                            </Text>
-                            <Text style={{ fontSize: 14, color: '#888', marginBottom: 8 }}>
-                                Date: {breakdown.date}
-                            </Text>
-                            <View style={{ borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, overflow: 'hidden' }}>
-                                <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f5', paddingVertical: 6 }}>
-                                    <Text style={[styles.tableHeader, { flex: 2 }]}>Exercise</Text>
-                                    <Text style={styles.tableHeader}>Sets</Text>
-                                    <Text style={styles.tableHeader}>Reps</Text>
-                                    <Text style={styles.tableHeader}>Weight</Text>
-                                    <Text style={styles.tableHeader}>%</Text>
-                                </View>
-                                {breakdown.exercises.map((ex, idx) => (
-                                    <View key={idx} style={{ flexDirection: 'row', paddingVertical: 5, backgroundColor: idx % 2 === 0 ? '#fff' : '#f9f9f9' }}>
-                                        <Text style={[styles.tableCell, { flex: 2 }]}>{ex.name}</Text>
-                                        <Text style={styles.tableCell}>{ex.sets}</Text>
-                                        <Text style={styles.tableCell}>{ex.reps}</Text>
-                                        <Text style={styles.tableCell}>{ex.weight}</Text>
-                                        <Text style={styles.tableCell}>{ex.contribution}</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    )}
-                    
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={onClose}
+                <View style={styles.modalContainer}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
                     >
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                        <Text style={styles.modalTitle}>
+                            {muscleData.name} Details
+                        </Text>
+                        
+                        <Text style={styles.modalDescription}>
+                            {muscleData.description}
+                        </Text>
+                        
+                        <Text style={styles.modalSectionTitle}>
+                            Primary Muscles Worked:
+                        </Text>
+                        <View style={styles.modalMusclesList}>
+                            {getPrimaryMuscles(muscleData.id).map((muscle, index) => (
+                                <Text key={index} style={styles.modalMuscleItem}>
+                                    • {muscle}
+                                </Text>
+                            ))}
+                        </View>
+                        
+                        <Text style={styles.modalSectionTitle}>
+                            Recommended Exercises:
+                        </Text>
+                        <View style={styles.modalExercisesContainer}>
+                            {muscleData.exercises.map((exercise, index) => (
+                                <View key={index} style={styles.modalExercisePill}>
+                                    <Text style={styles.modalExerciseText}>{exercise}</Text>
+                                </View>
+                            ))}
+                        </View>
+
+                        {/* Intensity Breakdown Section */}
+                        {breakdown && (
+                            <View style={{ marginTop: 10 }}>
+                                <Text style={styles.modalSectionTitle}>Intensity Breakdown</Text>
+                                <Text style={{ fontSize: 15, color: '#555', marginBottom: 4 }}>
+                                    Routine: <Text style={{ fontWeight: 'bold' }}>{breakdown.routine}</Text>
+                                </Text>
+                                <Text style={{ fontSize: 14, color: '#888', marginBottom: 8 }}>
+                                    Date: {breakdown.date}
+                                </Text>
+                                <View style={{ borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, overflow: 'hidden' }}>
+                                    <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f5', paddingVertical: 6 }}>
+                                        <Text style={[styles.tableHeader, { flex: 2 }]}>Exercise</Text>
+                                        <Text style={styles.tableHeader}>Sets</Text>
+                                        <Text style={styles.tableHeader}>Reps</Text>
+                                        <Text style={styles.tableHeader}>Weight</Text>
+                                        <Text style={styles.tableHeader}>%</Text>
+                                    </View>
+                                    {breakdown.exercises.map((ex, idx) => (
+                                        <View key={idx} style={{ flexDirection: 'row', paddingVertical: 5, backgroundColor: idx % 2 === 0 ? '#fff' : '#f9f9f9' }}>
+                                            <Text style={[styles.tableCell, { flex: 2 }]}>{ex.name}</Text>
+                                            <Text style={styles.tableCell}>{ex.sets}</Text>
+                                            <Text style={styles.tableCell}>{ex.reps}</Text>
+                                            <Text style={styles.tableCell}>{ex.weight}</Text>
+                                            <Text style={styles.tableCell}>{ex.contribution}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+                        )}
+                        
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={onClose}
+                        >
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+
+                        <ClearView style={{ height: 20 }} />
+                    </ScrollView>
+                </View>
             </View>
         </Modal>
     );
@@ -132,17 +138,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContainer: {
-        width: '85%',
+        width: '90%',
         maxHeight: '80%',
         backgroundColor: 'white',
         borderRadius: 15,
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        paddingBottom: 40,
     },
     modalTitle: {
         fontSize: 22,
