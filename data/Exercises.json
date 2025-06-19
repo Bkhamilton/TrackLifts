@@ -11,6 +11,17 @@
         "equipment": "Barbell"
     },
     {
+        "_id": "62d5e69d8e146f940e31673f",
+        "title": "Bench Press",
+        "muscleGroup": "Chest",
+        "muscles": [
+            { "name": "Chest", "value": 1 },
+            { "name": "Triceps", "value": 0.7 },
+            { "name": "Front Delts", "value": 0.3 }
+        ],
+        "equipment": "Dumbbell"
+    },
+    {
         "_id": "62db293d27459f75e4f4c858",
         "title": "Shoulder Press",
         "muscleGroup": "Shoulders",
@@ -18,6 +29,15 @@
             { "name": "Front Delts", "value": 1 }
         ],
         "equipment": "Dumbbell"
+    },
+    {
+        "_id": "62db293d27459f75e4f4c85a",
+        "title": "Shoulder Press",
+        "muscleGroup": "Shoulders",
+        "muscles": [
+            { "name": "Front Delts", "value": 1 }
+        ],
+        "equipment": "Machine"
     },
     {
         "_id": "62db2a8fc0b51297e4ffd116",
@@ -273,6 +293,18 @@
         "muscleGroup": "Arms",
         "muscles": [
             { "name": "Biceps", "value": 1 }
+        ],
+        "equipment": "Dumbbell"
+    },
+    {
+        "_id": "62e9c5d8bc8afe96e698dfe7",
+        "title": "Front Squat",
+        "muscleGroup": "Legs",
+        "muscles": [
+            { "name": "Quads", "value": 1 },
+            { "name": "Glutes", "value": 0.8 },
+            { "name": "Hamstrings", "value": 0.5 },
+            { "name": "Core", "value": 0.3 }
         ],
         "equipment": "Dumbbell"
     }
