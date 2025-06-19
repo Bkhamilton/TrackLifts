@@ -87,16 +87,16 @@ export default function DataScreen() {
             
             <FavoriteRoutines 
                 routines={[
-                { name: 'Push Day', frequency: '2 times/week' },
-                { name: 'Pull Day', frequency: '2 times/week' },
-                { name: 'Leg Day', frequency: '1 time/week' },
+                    { name: 'Push Day', frequency: '2 times/week' },
+                    { name: 'Pull Day', frequency: '2 times/week' },
+                    { name: 'Leg Day', frequency: '1 time/week' },
                 ]}
             />
 
             <AddToWorkoutModal
                 visible={showExerciseModal}
                 close={() => setShowExerciseModal(false)}
-                add={() => handleExerciseSelect('Bench Press')}
+                add={(exercise) => handleExerciseSelect(exercise.title)}
             />
         </ScrollView>
         </View>

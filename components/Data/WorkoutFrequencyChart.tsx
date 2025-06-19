@@ -20,7 +20,7 @@ export default function WorkoutFrequencyChart() {
   const font = useFont(SpaceMono, 16);
 
   return (
-    <View style={{ height: 250, padding: 16 }}>
+    <View style={{ height: 200, padding: 4 }}>
       <CartesianChart
         data={data}
         xKey={'day'} 
@@ -28,6 +28,16 @@ export default function WorkoutFrequencyChart() {
         domainPadding={{ left: 20, right: 20, top: 20 }}
         axisOptions={{
           font,
+          formatXLabel: (value) => {
+            // Display first letter of the day unless it's "Th"
+            if (value === "Thu") {
+              return "Th";
+            }
+            if (value === "Sun") {
+              return "Su";
+            }
+            return value.toString().charAt(0).toUpperCase();
+          },
           formatYLabel: (value) => {
             // Only display the value if it doesn't end in 0.5
             if (value % 1 === 0) {

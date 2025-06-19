@@ -50,58 +50,58 @@ const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => (
 );
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  statCard: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginTop: 8,
-    color: '#333',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#e9ecef',
-    marginVertical: 12,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  summaryItem: {
-    alignItems: 'center',
-  },
-  summaryValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333',
-  },
-  summaryLabel: {
-    fontSize: 14,
-    color: '#666',
-  },
+    header: {
+        backgroundColor: '#f8f9fa',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    statsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
+    },
+    statCard: {
+        alignItems: 'center',
+        flex: 1,
+    },
+    statValue: {
+        fontSize: 14,
+        fontWeight: '700',
+        marginTop: 8,
+        color: '#333',
+    },
+    statLabel: {
+        fontSize: 10,
+        color: '#666',
+        marginTop: 4,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#e9ecef',
+        marginVertical: 12,
+    },
+    summaryRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    summaryItem: {
+        alignItems: 'center',
+    },
+    summaryValue: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#333',
+    },
+    summaryLabel: {
+        fontSize: 14,
+        color: '#666',
+    },
 });
 
 export default DataHeader;

@@ -1,60 +1,70 @@
 import { Text, View } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import DateRangeSelector from './DateRangeSelector';
 
 interface Props {
   exercise: string;
-  dateRange: { start: Date; end: Date };
   onSelectExercise: () => void;
 }
 
-const ExerciseAnalysis: React.FC<Props> = ({ 
-  exercise, 
-  dateRange, 
-  onSelectExercise 
-}) => (
-  <View style={styles.container}>
-    <View style={styles.header}>
-      <Text style={styles.title}>Exercise Analysis</Text>
-    </View>
-    
-    <TouchableOpacity 
-      style={styles.exerciseSelector}
-      onPress={onSelectExercise}
-    >
-      <Text style={styles.exerciseText}>{exercise}</Text>
-      <MaterialCommunityIcons name="chevron-down" size={20} color="#666" />
-    </TouchableOpacity>
-    
-    <DateRangeSelector dateRange={dateRange} />
-    
-    <View style={styles.graphPlaceholder}>
-      <Text style={styles.placeholderText}>Exercise Progress Graph</Text>
-      <Text style={styles.graphHint}>
-        {exercise !== "Select an Exercise" 
-          ? `Weight progression for ${exercise} will appear here`
-          : 'Select an exercise to view progress'}
-      </Text>
-    </View>
-    
-    <View style={styles.statsRow}>
-      <View style={styles.statCard}>
-        <Text style={styles.statValue}>125 lbs</Text>
-        <Text style={styles.statLabel}>Current Max</Text>
+const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
+  const [dateRange, setDateRange] = useState({
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+    end: new Date(),
+  });
+
+  const handleDateRangeChange = (start: Date, end: Date) => {
+    setDateRange({ start, end });
+    // Here you would typically fetch data for the new date range
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Exercise Analysis</Text>
       </View>
-      <View style={styles.statCard}>
-        <Text style={styles.statValue}>+15 lbs</Text>
-        <Text style={styles.statLabel}>Progress</Text>
+      
+      <TouchableOpacity 
+        style={styles.exerciseSelector}
+        onPress={onSelectExercise}
+      >
+        <Text style={styles.exerciseText}>{exercise}</Text>
+        <MaterialCommunityIcons name="chevron-down" size={20} color="#666" />
+      </TouchableOpacity>
+      
+      <DateRangeSelector 
+        dateRange={dateRange} 
+        onDateRangeChange={handleDateRangeChange}  
+      />
+      
+      <View style={styles.graphPlaceholder}>
+        <Text style={styles.placeholderText}>Exercise Progress Graph</Text>
+        <Text style={styles.graphHint}>
+          {exercise !== "Select an Exercise" 
+            ? `Weight progression for ${exercise} will appear here`
+            : 'Select an exercise to view progress'}
+        </Text>
       </View>
-      <View style={styles.statCard}>
-        <Text style={styles.statValue}>8 times</Text>
-        <Text style={styles.statLabel}>Times Performed</Text>
+      
+      <View style={styles.statsRow}>
+        <View style={styles.statCard}>
+          <Text style={styles.statValue}>125 lbs</Text>
+          <Text style={styles.statLabel}>Current Max</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statValue}>+15 lbs</Text>
+          <Text style={styles.statLabel}>Progress</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statValue}>8 times</Text>
+          <Text style={styles.statLabel}>Times Performed</Text>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
