@@ -13,6 +13,17 @@ type Props = {
     visible: boolean;
     onClose: () => void;
     muscleData: MuscleGroup;
+    breakdown?: {
+        routine: string;
+        date: string;
+        exercises: {
+            name: string;
+            sets: number;
+            reps: number;
+            weight: string;
+            contribution: string;
+        }[];
+    };    
 };
 
 const getPrimaryMuscles = (muscleGroupId: string): string[] => {
@@ -27,7 +38,7 @@ const getPrimaryMuscles = (muscleGroupId: string): string[] => {
     return muscles[muscleGroupId] || [];
 };
 
-const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData }) => {
+const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakdown }) => {
     if (!muscleData) return null;
 
     return (
@@ -68,6 +79,37 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData }) => {
                             </View>
                         ))}
                     </View>
+
+                    {/* Intensity Breakdown Section */}
+                    {breakdown && (
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={styles.modalSectionTitle}>Intensity Breakdown</Text>
+                            <Text style={{ fontSize: 15, color: '#555', marginBottom: 4 }}>
+                                Routine: <Text style={{ fontWeight: 'bold' }}>{breakdown.routine}</Text>
+                            </Text>
+                            <Text style={{ fontSize: 14, color: '#888', marginBottom: 8 }}>
+                                Date: {breakdown.date}
+                            </Text>
+                            <View style={{ borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, overflow: 'hidden' }}>
+                                <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f5', paddingVertical: 6 }}>
+                                    <Text style={[styles.tableHeader, { flex: 2 }]}>Exercise</Text>
+                                    <Text style={styles.tableHeader}>Sets</Text>
+                                    <Text style={styles.tableHeader}>Reps</Text>
+                                    <Text style={styles.tableHeader}>Weight</Text>
+                                    <Text style={styles.tableHeader}>%</Text>
+                                </View>
+                                {breakdown.exercises.map((ex, idx) => (
+                                    <View key={idx} style={{ flexDirection: 'row', paddingVertical: 5, backgroundColor: idx % 2 === 0 ? '#fff' : '#f9f9f9' }}>
+                                        <Text style={[styles.tableCell, { flex: 2 }]}>{ex.name}</Text>
+                                        <Text style={styles.tableCell}>{ex.sets}</Text>
+                                        <Text style={styles.tableCell}>{ex.reps}</Text>
+                                        <Text style={styles.tableCell}>{ex.weight}</Text>
+                                        <Text style={styles.tableCell}>{ex.contribution}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
                     
                     <TouchableOpacity
                         style={styles.closeButton}
@@ -154,6 +196,19 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    tableHeader: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        color: '#1976d2',
+        flex: 1,
+        textAlign: 'center',
+    },
+    tableCell: {
+        fontSize: 13,
+        color: '#333',
+        flex: 1,
+        textAlign: 'center',
     },
 });
 

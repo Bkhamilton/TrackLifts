@@ -21,6 +21,18 @@ type MuscleInfoPanelProps = {
     view: 'front' | 'back';
 };
 
+const getPrimaryMuscles = (muscleGroupId: string): string[] => {
+    const muscles: Record<string, string[]> = {
+        chest: ['Pectoralis Major', 'Pectoralis Minor', 'Serratus Anterior'],
+        back: ['Latissimus Dorsi', 'Trapezius', 'Rhomboids', 'Erector Spinae'],
+        arms: ['Biceps Brachii', 'Triceps Brachii', 'Brachialis', 'Forearm Muscles'],
+        shoulders: ['Anterior Deltoid', 'Lateral Deltoid', 'Posterior Deltoid', 'Rotator Cuff'],
+        core: ['Rectus Abdominis', 'Obliques', 'Transverse Abdominis', 'Erector Spinae'],
+        legs: ['Quadriceps', 'Hamstrings', 'Glutes', 'Calves', 'Hip Flexors']
+    };
+    return muscles[muscleGroupId] || [];
+};
+
 const MuscleInfoPanel = ({
     selectedMuscleData,
     muscleData,
@@ -51,7 +63,40 @@ const MuscleInfoPanel = ({
         );
     }
 
-    const truncatedExercises = selectedMuscleData.exercises.slice(0, 4);
+    const hardcodedBreakdown = {
+        routine: "Push Day A",
+        date: "2025-06-18",
+        exercises: [
+            {
+                name: "Bench Press",
+                sets: 4,
+                reps: 8,
+                weight: "185 lbs",
+                contribution: "40%"
+            },
+            {
+                name: "Incline Dumbbell Press",
+                sets: 3,
+                reps: 10,
+                weight: "55 lbs",
+                contribution: "25%"
+            },
+            {
+                name: "Push-ups",
+                sets: 3,
+                reps: 20,
+                weight: "Bodyweight",
+                contribution: "20%"
+            },
+            {
+                name: "Chest Fly",
+                sets: 2,
+                reps: 15,
+                weight: "25 lbs",
+                contribution: "15%"
+            }
+        ]
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
@@ -61,23 +106,47 @@ const MuscleInfoPanel = ({
                 onPress={() => setModalVisible(true)}
                 activeOpacity={0.7}
             >
-                <Text style={styles.infoTitle}>{selectedMuscleData.name}</Text>
-                <Text style={styles.infoValue}>
-                    Intensity: <Text style={styles.highlightValue}>
+                {/* Intensity Bar */}
+                <View style={styles.intensityBarContainer}>
+                    <View style={styles.intensityBarBackground}>
+                        <View
+                            style={[
+                                styles.intensityBarFill,
+                                {
+                                    width: `${Math.round(selectedMuscleData.value * 100)}%`,
+                                    backgroundColor: getColor(selectedMuscleData.value),
+                                },
+                            ]}
+                        />
+                    </View>
+                    <Text style={styles.intensityBarLabel}>
                         {Math.round(selectedMuscleData.value * 100)}%
-                    </Text>
-                </Text>
-                
-                <View style={styles.descriptionContainer}>
-                    <Text 
-                        style={styles.infoDescription}
-                        numberOfLines={3}
-                        ellipsizeMode="tail"
-                    >
-                        {selectedMuscleData.description}
                     </Text>
                 </View>
                 
+                {/* Muscles Hit */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Muscles Hit</Text>
+                    <View style={styles.chipRow}>
+                        {getPrimaryMuscles(selectedMuscleData.id).map((muscle, idx) => (
+                            <View key={idx} style={styles.chip}>
+                                <Text style={styles.chipText}>{muscle}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+
+                {/* Exercises Done */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Exercises Done</Text>
+                    <View style={styles.chipRow}>
+                        {selectedMuscleData.exercises.map((exercise, idx) => (
+                            <View key={idx} style={styles.chip}>
+                                <Text style={styles.chipText}>{exercise}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
 
             </TouchableOpacity>
 
@@ -95,6 +164,7 @@ const MuscleInfoPanel = ({
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 muscleData={selectedMuscleData}
+                breakdown={hardcodedBreakdown} // Replace with actual breakdown data
             />
         </View>
     );
@@ -145,12 +215,6 @@ const styles = StyleSheet.create({
         color: '#555',
         lineHeight: 22,
     },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#333',
-    },
     exercisesContainer: {
         height: 90,
         flexDirection: 'row',
@@ -174,6 +238,56 @@ const styles = StyleSheet.create({
         color: '#888',
         marginLeft: 8,
         alignSelf: 'center',
+    },
+        section: {
+        marginBottom: 8,
+    },
+    sectionTitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 4,
+    },
+    chipRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 2,
+    },
+    chip: {
+        backgroundColor: '#e3f2fd',
+        borderRadius: 14,
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        marginRight: 6,
+        marginBottom: 4,
+    },
+    chipText: {
+        fontSize: 13,
+        color: '#1976d2',
+    },
+    intensityBarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    intensityBarBackground: {
+        flex: 1,
+        height: 16,
+        backgroundColor: '#eee',
+        borderRadius: 8,
+        overflow: 'hidden',
+        marginRight: 10,
+    },
+    intensityBarFill: {
+        height: '100%',
+        borderRadius: 8,
+    },
+    intensityBarLabel: {
+        width: 40,
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#333',
+        textAlign: 'right',
     },
 });
 
