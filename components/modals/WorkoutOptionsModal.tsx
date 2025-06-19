@@ -1,16 +1,16 @@
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { Routine } from '@/utils/types';
+import { ActiveRoutine } from '@/utils/types';
 import React, { useContext } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../Themed';
 
-interface RoutineOptionsProps {
+interface WorkoutOptionsProps {
     visible: boolean;
     close: () => void;
-    routine: Routine;
+    routine: ActiveRoutine;
 }
 
-export default function OptionsModal({ visible, close, routine }: RoutineOptionsProps) {
+export default function WorkoutOptionsModal({ visible, close, routine }: WorkoutOptionsProps) {
 
     const { resetRoutine, clearRoutine } = useContext(ActiveWorkoutContext);
 

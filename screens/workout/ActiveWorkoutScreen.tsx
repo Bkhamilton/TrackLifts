@@ -107,7 +107,10 @@ export default function ActiveWorkoutScreen() {
                     </TouchableOpacity>
                 }
             />
-            <ScrollView style={styles.scrollView}>
+            <ScrollView 
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}
+            >
                 <Workout
                     routine={routine}
                     open={openModal}

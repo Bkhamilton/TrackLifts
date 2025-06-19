@@ -48,7 +48,10 @@ export default function FinishWorkoutScreen() {
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView 
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+            >
                 {/* Celebration animation */}
                 <CelebrationSection 
                     totalWorkoutsCompleted={totalWorkoutsCompleted} 

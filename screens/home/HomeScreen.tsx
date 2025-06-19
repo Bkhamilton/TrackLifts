@@ -162,7 +162,10 @@ export default function HomeScreen() {
                     </View>                        
                 }
             /> 
-            <ScrollView style={styles.scrollView}>
+            <ScrollView 
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}    
+            >
                 <SplitComponent
                     curDay={curDay} 
                     setDay={setDay} 

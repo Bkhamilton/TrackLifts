@@ -95,7 +95,10 @@ export default function EditRoutineScreen() {
                     </TouchableOpacity>
                 }
             />
-            <ScrollView style={styles.scrollView}>
+            <ScrollView 
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}    
+            >
                 <Workout
                     routine={editedRoutine}
                     open={openModal}

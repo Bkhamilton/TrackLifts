@@ -49,7 +49,10 @@ export default function NewWorkoutScreen() {
                     ) : null
                 }
             />
-            <ScrollView style={styles.scrollView}>
+            <ScrollView 
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}                
+            >
                 <WorkoutDisplay 
                     routine={routine} 
                     open={openModal}

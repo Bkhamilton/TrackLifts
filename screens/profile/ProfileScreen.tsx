@@ -19,7 +19,10 @@ export default function ProfileScreen() {
             <Title 
                 title="TrackLifts"
             />
-            <ScrollView style={styles.scrollContainer}>
+            <ScrollView 
+                style={styles.scrollContainer}
+                showsVerticalScrollIndicator={false}
+            >
                 <ProfileMainInfo 
                     avatar={profileData.avatar}
                     stats={profileData.stats}

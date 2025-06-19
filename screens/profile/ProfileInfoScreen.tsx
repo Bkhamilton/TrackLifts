@@ -41,7 +41,10 @@ export default function ProfileInfoScreen() {
                 }
             />
             
-            <ScrollView style={styles.scrollContainer}>
+            <ScrollView 
+                style={styles.scrollContainer}
+                showsVerticalScrollIndicator={false}    
+            >
                 <AvatarUsernameSection
                     avatar={profile.avatar}
                     username={profile.username}
