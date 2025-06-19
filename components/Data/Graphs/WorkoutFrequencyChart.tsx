@@ -15,7 +15,7 @@ export default function WorkoutFrequencyChart() {
     { day: 'Sun', workouts: 0 },
   ];
 
-  const SpaceMono = require('../../assets/fonts/SpaceMono-Regular.ttf');
+  const SpaceMono = require('../../../assets/fonts/SpaceMono-Regular.ttf');
 
   const font = useFont(SpaceMono, 16);
 

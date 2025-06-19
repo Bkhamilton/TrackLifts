@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import WorkoutFrequencyChartMonth from './WorkoutFrequencyChartMonth';
+import WorkoutFrequencyChartMonth from './Graphs/WorkoutFrequencyChartMonth';
 
 const WorkoutHistory: React.FC = () => (
     <View style={styles.container}>

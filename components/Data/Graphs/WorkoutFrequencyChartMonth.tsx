@@ -14,7 +14,7 @@ export default function WorkoutFrequencyChartMonth() {
         };
     });
 
-    const SpaceMono = require('../../assets/fonts/SpaceMono-Regular.ttf');
+    const SpaceMono = require('../../../assets/fonts/SpaceMono-Regular.ttf');
 
     const font = useFont(SpaceMono, 12);
 

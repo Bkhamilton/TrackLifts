@@ -2,7 +2,7 @@ import { ClearView, Text, View } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import WorkoutFrequencyChart from './WorkoutFrequencyChart';
+import WorkoutFrequencyChart from './Graphs/WorkoutFrequencyChart';
 
 interface WorkoutStats {
   streak: number;

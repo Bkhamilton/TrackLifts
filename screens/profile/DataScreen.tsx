@@ -1,9 +1,9 @@
-import MiniSparkline from '@/components/Data/MiniSparkline';
+import MiniSparkline from '@/components/Data/Graphs/MiniSparkline';
 // import StrengthProgressChart from '@/components/Data/StrengthProgressChart';
 // import WorkoutFrequencyChart from '@/components/Data/WorkoutFrequencyChart';
 import DataHeader from '@/components/Data/DataHeader';
 import ExerciseAnalysis from '@/components/Data/ExerciseAnalysis';
-import FavoriteExercises from '@/components/Data/FavoriteExercises';
+import FavoriteGraphs from '@/components/Data/FavoriteGraphs';
 import FavoriteRoutines from '@/components/Data/FavoriteRoutines';
 import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
 import WorkoutHistory from '@/components/Data/WorkoutHistory';
@@ -15,6 +15,15 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+interface FavoriteGraph {
+    id: string;
+    exercise: string;
+    graphType: string;
+    currentMax: string;
+    progress: string;
+    lastUpdated: string;
+}
+
 export default function DataScreen() {
     const [showExerciseModal, setShowExerciseModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
@@ -22,6 +31,41 @@ export default function DataScreen() {
         start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
         end: new Date(),
     });
+
+    const [favoriteGraphs, setFavoriteGraphs] = useState<FavoriteGraph[]>([
+        {
+            id: '1',
+            exercise: 'Bench Press',
+            graphType: 'Top Set',
+            currentMax: '225 lbs',
+            progress: '+10 lbs',
+            lastUpdated: '2 days ago'
+        },
+        {
+            id: '2',
+            exercise: 'Squats',
+            graphType: 'Most Weight Moved',
+            currentMax: '315 lbs',
+            progress: '+25 lbs',
+            lastUpdated: '1 week ago'
+        },
+        {
+            id: '3',
+            exercise: 'Deadlifts',
+            graphType: 'Strength Progress',
+            currentMax: '405 lbs',
+            progress: '+15 lbs',
+            lastUpdated: '3 days ago'
+        }
+    ]);
+
+    const handleAddFavorite = () => {
+        // Open modal to create new favorite graph
+    };
+
+    const handleSelectGraph = (graph: FavoriteGraph) => {
+        // Navigate to or open the selected graph
+    };
 
     // Mock data
     const workoutStats = {
@@ -73,9 +117,10 @@ export default function DataScreen() {
         >
             <DataHeader stats={workoutStats} />
             
-            <FavoriteExercises 
-                favorites={['Bench Press', 'Squats', 'Deadlifts', 'Pull-ups']} 
-                onAddFavorite={() => setShowExerciseModal(true)}
+            <FavoriteGraphs
+                favorites={favoriteGraphs}
+                onAddFavorite={handleAddFavorite}
+                onSelectGraph={handleSelectGraph}
             />
             
             <ExerciseAnalysis 
