@@ -63,7 +63,7 @@ export default function EditSplitModal({
                     id: 0,
                     split_id: split!.id,
                     day: newDayNumber,
-                    routine_id: 0,
+                    routine_id: 1,
                     routine: 'Rest',
                 },
             ],
