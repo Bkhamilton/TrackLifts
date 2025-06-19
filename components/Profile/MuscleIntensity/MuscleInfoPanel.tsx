@@ -107,7 +107,7 @@ const MuscleInfoPanel = ({
                 activeOpacity={0.7}
             >
                 {/* Intensity Bar */}
-                <View style={styles.intensityBarContainer}>
+                <ClearView style={styles.intensityBarContainer}>
                     <View style={styles.intensityBarBackground}>
                         <View
                             style={[
@@ -122,31 +122,31 @@ const MuscleInfoPanel = ({
                     <Text style={styles.intensityBarLabel}>
                         {Math.round(selectedMuscleData.value * 100)}%
                     </Text>
-                </View>
+                </ClearView>
                 
                 {/* Muscles Hit */}
-                <View style={styles.section}>
+                <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Hit</Text>
-                    <View style={styles.chipRow}>
+                    <ClearView style={styles.chipRow}>
                         {getPrimaryMuscles(selectedMuscleData.id).map((muscle, idx) => (
                             <View key={idx} style={styles.chip}>
                                 <Text style={styles.chipText}>{muscle}</Text>
                             </View>
                         ))}
-                    </View>
-                </View>
+                    </ClearView>
+                </ClearView>
 
                 {/* Exercises Done */}
-                <View style={styles.section}>
+                <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Exercises Done</Text>
-                    <View style={styles.chipRow}>
+                    <ClearView style={styles.chipRow}>
                         {selectedMuscleData.exercises.map((exercise, idx) => (
                             <View key={idx} style={styles.chip}>
                                 <Text style={styles.chipText}>{exercise}</Text>
                             </View>
                         ))}
-                    </View>
-                </View>
+                    </ClearView>
+                </ClearView>
 
             </TouchableOpacity>
 
