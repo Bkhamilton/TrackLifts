@@ -73,14 +73,7 @@ export default function useHookProfileInfo() {
     const handleEditToggle = () => {
         if (isEditing) {
             // If no changes were made, just toggle editing state
-            if (JSON.stringify(profile.stats) === JSON.stringify({
-                height: userStats.height,
-                weight: userStats.weight,
-                bodyFat: userStats.bodyFat,
-                favoriteExercise: userStats.favoriteExercise,
-                memberSince: userStats.memberSince,
-                goals: userStats.goals
-            })) {
+            if (JSON.stringify(profile.stats) === JSON.stringify(userStats) && profile.username === user.username) {
                 setIsEditing(false);
             } else {
                 handleSave();
