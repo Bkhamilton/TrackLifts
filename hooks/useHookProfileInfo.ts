@@ -19,7 +19,7 @@ interface ProfileData {
         workoutsCompleted: number;
         weeklyWorkouts: number;
         weeklySets: number;
-        favoriteExercise: string;
+        topExercise: string;
     }
 }
 
@@ -47,7 +47,7 @@ export default function useHookProfileInfo() {
             workoutsCompleted: 128,
             weeklyWorkouts: 5,
             weeklySets: 45,
-            favoriteExercise: userStats.favoriteExercise
+            topExercise: 'Bench Press'
         }
     });
 

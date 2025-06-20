@@ -33,6 +33,12 @@ export default function BodyMetricsSection({
                     isEditing={isEditing}
                     onChange={value => onChange('stats.bodyFat', value)}
                 />
+                <EditableStatCard
+                    label="Favorite Exercise"
+                    value={stats.favoriteExercise}
+                    isEditing={isEditing}
+                    onChange={value => onChange('stats.favoriteExercise', value)}
+                />
             </View>
         </View>
     );

@@ -34,8 +34,8 @@ export default function WorkoutStatsSection({
                     onChange={value => onChange('stats.weeklySets', value)}
                 />
                 <EditableStatCard 
-                    label="Favorite Exercise" 
-                    value={stats.favoriteExercise} 
+                    label="Top Exercise" 
+                    value={stats.topExercise} 
                     isEditing={isEditing}
                     onChange={value => onChange('stats.favoriteExercise', value)}
                 />
