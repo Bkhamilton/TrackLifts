@@ -31,7 +31,7 @@
                 }
             ]
         },
-        "lengthMin": "89",
+        "lengthMin": "00:01:25",
         "totalWeight": 15560,
         "notes": "Great workout, felt strong."
     },
@@ -90,7 +90,7 @@
                 }
             ]
         },
-        "lengthMin": "103",
+        "lengthMin": "00:01:40",
         "totalWeight": 14095,
         "notes": ""
     },
@@ -102,7 +102,7 @@
             "title": "Routine 3",
             "exercises": []
         },
-        "lengthMin": "73",
+        "lengthMin": "00:01:15",
         "totalWeight": 12006,
         "notes": "Felt good, but need to work on form."
     }

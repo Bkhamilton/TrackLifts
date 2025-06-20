@@ -1,4 +1,5 @@
 import NotesInput from '@/components/FinishWorkout/NotesInput';
+import EditHistoryCard from '@/components/History/EditHistory/EditHistoryCard';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
@@ -15,6 +16,8 @@ export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
     const { history } = useContext(HistoryContext);
+    const [startTime, setStartTime] = useState(history.startTime);
+    const [lengthMin, setLengthMin] = useState(history.lengthMin);
     const [editedNotes, setEditedNotes] = useState(history.notes);
     const [editedRoutine, setEditedRoutine] = useState(history.routine);
     const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
@@ -95,6 +98,12 @@ export default function EditHistoryScreen() {
                 }
             />
             <ScrollView style={styles.scrollView}>
+                <EditHistoryCard
+                    startTime={startTime}
+                    lengthMin={lengthMin}
+                    onChangeStartTime={setStartTime}
+                    onChangeLengthMin={setLengthMin}
+                />
                 <NotesInput
                     value={editedNotes}
                     onChangeText={setEditedNotes}
