@@ -71,3 +71,13 @@ export const deleteSplitRoutine = async (db, id) => {
         throw error;
     }
 };
+
+export const clearSplitRoutines = async (db, splitId) => {
+    try {
+        await db.runAsync('DELETE FROM SplitRoutines WHERE split_id = ?', [splitId]);
+        console.log('SplitRoutines cleared for split ID:', splitId);
+    } catch (error) {
+        console.error('Error clearing SplitRoutines:', error);
+        throw error;
+    }
+}

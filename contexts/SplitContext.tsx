@@ -1,8 +1,8 @@
 // app/contexts/SplitContext.tsx
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { getRoutineByTitle } from '@/db/user/Routines';
-import { insertSplitRoutine } from '@/db/user/SplitRoutines';
-import { insertSplit, setNewActiveSplit } from '@/db/user/Splits';
+import { clearSplitRoutines, insertSplitRoutine } from '@/db/user/SplitRoutines';
+import { insertSplit, setNewActiveSplit, updateSplit } from '@/db/user/Splits';
 import { getSplitData } from '@/utils/splitHelpers';
 import { Splits } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -69,7 +69,38 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         await refreshSplits();
 
         return splitId;
-    };    
+    };   
+    
+    const updateSplitInDB = async (splitObj: Splits): Promise<void> => {
+        if (!db || user.id === 0) return;
+
+        // If name has changed, update the split name
+        const existingSplit = splits.find(s => s.id === splitObj.id);
+        if (existingSplit && existingSplit.name !== splitObj.name) {
+            await updateSplit(db, {
+                id: splitObj.id,
+                name: splitObj.name,
+                user_id: user.id,
+            });
+        }
+
+        // Clear existing split routines
+        await clearSplitRoutines(db, splitObj.id);
+
+        // Insert new routines
+        for (const split of splitObj.routines) {
+            const routine = await getRoutineByTitle(db, split.routine);
+            if (!routine) continue;
+            await insertSplitRoutine(db, {
+                split_id: splitObj.id,
+                split_order: split.day,
+                routine_id: routine.id,
+            });
+        }
+        
+
+        await refreshSplits();
+    }
 
     const refreshSplits = async () => {
         if (db && user.id !== 0) {
