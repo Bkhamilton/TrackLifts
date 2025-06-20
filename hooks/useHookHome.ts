@@ -1,7 +1,10 @@
+import { SplitContext } from '@/contexts/SplitContext';
 import { ActiveRoutine } from '@/utils/types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 const useHookHome = () => {
+
+    const { activeSplit } = useContext(SplitContext);
 
     const [addRoutineModal, setAddRoutineModal] = useState(false);
     const [settingsModal, setSettingsModal] = useState(false);
@@ -17,9 +20,9 @@ const useHookHome = () => {
         title: 'Test Routine',
         exercises: []
     });
-    const [curDay, setDay] = useState({
-        "day": 1,
-        "routine": "Push",
+    const [curDay, setDay] = useState(activeSplit ? activeSplit.routines[0] : {
+        day: 'Day 1',
+        routine: 'Push',
     });
 
     const openAddRoutineModal = () => setAddRoutineModal(true);
