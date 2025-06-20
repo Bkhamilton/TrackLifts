@@ -10,14 +10,30 @@ interface HistoryCardProps {
 }
 
 export default function HistoryCard({ history, open }: HistoryCardProps) {
-    function convertTime(timeMin: string) {
-        const minutes = parseInt(timeMin, 10);
-        if (minutes > 60) {
-            const hours = Math.floor(minutes / 60);
-            const remainingMinutes = minutes % 60;
-            return `${hours}h ${remainingMinutes}m`;
+
+    function convertTime(timeStr: string) {
+        // Accepts "MM:SS", "HH:MM:SS", or "DD:HH:MM:SS"
+        const parts = timeStr.split(':').map(Number);
+        let days = 0, hours = 0, minutes = 0, seconds = 0;
+
+        if (parts.length === 2) {
+            // MM:SS
+            [minutes, seconds] = parts;
+        } else if (parts.length === 3) {
+            // HH:MM:SS
+            [hours, minutes, seconds] = parts;
+        } else if (parts.length === 4) {
+            // DD:HH:MM:SS
+            [days, hours, minutes, seconds] = parts;
         }
-        return `${minutes}m`;
+
+        let result = '';
+        if (days > 0) result += `${days}d `;
+        if (hours > 0 || days > 0) result += `${hours}h `;
+        if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}m `;
+        result += `${seconds}s`;
+
+        return result.trim();
     }
 
     function formatDate(dateString: string) {
