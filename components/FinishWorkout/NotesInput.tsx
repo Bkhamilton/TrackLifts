@@ -66,13 +66,13 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 24,
+        marginTop: 12,
         marginBottom: 16,
     },
     label: {
         fontWeight: 'bold',
         marginBottom: 6,
-        fontSize: 16,
+        fontSize: 14,
     },
     previewBox: {
         borderWidth: 1,

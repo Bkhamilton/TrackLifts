@@ -65,7 +65,13 @@ export default function EditHistoryCard({
     return (
         <View style={styles.container}>
             {/* Start Time Section */}
-            <Text style={styles.label}>Start Time</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={styles.label}>Start Time</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={styles.label}>Length</Text>
+                    <Text style={styles.smallLabel}>(HH:MM:SS)</Text>
+                </View>
+            </View>
             <View style={styles.timeInputContainer}>
                 <TouchableOpacity 
                     style={styles.dateInput}
@@ -82,18 +88,17 @@ export default function EditHistoryCard({
                     <MaterialCommunityIcons name="clock" size={20} color="#666" />
                     <Text style={styles.dateText}>{formattedTime}</Text>
                 </TouchableOpacity>
-            </View>
 
-            {/* Duration Section */}
-            <Text style={styles.label}>Duration (HH:MM:SS)</Text>
-            <TextInput
-                style={styles.durationInput}
-                value={lengthMin}
-                onChangeText={handleDurationChange}
-                placeholder="00:00:00"
-                keyboardType="numeric"
-                maxLength={8} // HH:MM:SS
-            />
+                {/* Duration Section */}
+                <TextInput
+                    style={styles.durationInput}
+                    value={lengthMin}
+                    onChangeText={handleDurationChange}
+                    placeholder="00:00:00"
+                    keyboardType="numeric"
+                    maxLength={8} // HH:MM:SS
+                />
+            </View>
 
             {/* Date Picker Modal */}
             <DateTimePickerModal
@@ -119,13 +124,18 @@ export default function EditHistoryCard({
 const styles = StyleSheet.create({
     container: {
         marginTop: 12,
-        marginBottom: 16,
     },
     label: {
         fontWeight: '600',
         marginBottom: 8,
-        fontSize: 14,
+        fontSize: 13,
         color: '#333',
+    },
+    smallLabel: {
+        fontSize: 10,
+        color: '#666',
+        marginLeft: 4,
+        marginBottom: 6,
     },
     timeInputContainer: {
         flexDirection: 'row',
@@ -140,7 +150,6 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderRadius: 8,
         padding: 12,
-        marginRight: 8,
         backgroundColor: '#f8f9fa',
     },
     timeInput: {
@@ -158,11 +167,13 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     durationInput: {
+        flex: 1,
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
         padding: 12,
         backgroundColor: '#f8f9fa',
         fontSize: 14,
+        textAlign: 'right',
     },
 });
