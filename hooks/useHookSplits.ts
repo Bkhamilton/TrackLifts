@@ -15,7 +15,6 @@ export default function useHookSplits() {
     const [newSplitName, setNewSplitName] = useState('');
     const [editingSplit, setEditingSplit] = useState<Splits | null>(null);
     const [editingSplitId, setEditingSplitId] = useState<number | null>(null);
-    const [currentWeek, setCurrentWeek] = useState<RoutineDay[]>(activeSplit?.routines || []);
     const [currentSplit, setCurrentSplit] = useState<Splits | null>(activeSplit || null);
 
     const setAsPrimary = (id: number) => {
@@ -27,7 +26,6 @@ export default function useHookSplits() {
         const primarySplit = dislpaySplits.find(s => s.id === id);
         if (primarySplit) {
             setCurrentSplit(primarySplit);
-            setCurrentWeek(primarySplit.routines);
         }
     };
 
@@ -100,7 +98,6 @@ export default function useHookSplits() {
                         ...split,
                         routines: newRoutines
                     });
-                    setCurrentWeek(newRoutines);
                 }
                 
                 return {
@@ -134,8 +131,8 @@ export default function useHookSplits() {
         dislpaySplits,
         setDisplaySplits,
         activeSplit,
-        currentWeek,
         currentSplit,
+        setCurrentSplit,
         showCreateModal,
         newSplitName,
         editingSplit,

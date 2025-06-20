@@ -1,28 +1,24 @@
 import { ScrollView, Text, View } from '@/components/Themed';
+import { Splits } from '@/utils/types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-interface Day {
-    routine: string;
-}
-
 interface Props {
-    currentWeek: {day: number; routine: string}[];
-    splitName: string;
+    currentSplit: Splits | null;
 }
 
-const CurrentSplit: React.FC<Props> = ({ currentWeek, splitName }) => (
+const CurrentSplit: React.FC<Props> = ({ currentSplit }) => (
     <View style={styles.currentWeekContainer}>
         <View style={styles.header}>
             <Text style={styles.sectionTitle}>Current Split</Text>
-            <Text style={styles.splitName}>{splitName}</Text>
+            <Text style={styles.splitName}>{currentSplit?.name || 'No active split'}</Text>
         </View>
         <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
         >
-            {currentWeek.map((day) => (
+            {currentSplit?.routines.map((day) => (
                 <View key={day.day} style={[
                     styles.dayPill,
                     day.routine === 'Rest' && styles.restDayPill

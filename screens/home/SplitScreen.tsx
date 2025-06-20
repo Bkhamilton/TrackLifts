@@ -18,8 +18,8 @@ export default function SplitScreen() {
     const {
         dislpaySplits,
         setDisplaySplits,
-        currentWeek,
         currentSplit,
+        setCurrentSplit,
         showCreateModal,
         newSplitName,
         editingSplitId,
@@ -37,7 +37,7 @@ export default function SplitScreen() {
 
     const { routines } = useContext(RoutineContext);
 
-    const { updateSplitInDB } = useContext(SplitContext);
+    const { updateSplitInDB, deleteSplitInDB } = useContext(SplitContext);
 
     const router = useRouter();
 
@@ -60,8 +60,7 @@ export default function SplitScreen() {
 
             {/* Current Week Display */}
             <CurrentSplit 
-                currentWeek={currentWeek} 
-                splitName={currentSplit?.name || 'No active split'} 
+                currentSplit={currentSplit}
             />
 
             {/* Your Splits Section */}
@@ -70,6 +69,13 @@ export default function SplitScreen() {
                 setShowCreateModal={setShowCreateModal}
                 setAsPrimary={setAsPrimary}
                 setEditingSplit={setEditingSplitId}
+                onDeleteSplit={async (splitId: number) => {
+                    await deleteSplitInDB(splitId);
+                    setDisplaySplits(prev => prev.filter(s => s.id !== splitId));
+                    if (currentSplit?.id === splitId) {
+                        setCurrentSplit(null); // Clear current split if deleted
+                    }
+                }}
             />
 
             {/* Create New Split Modal */}

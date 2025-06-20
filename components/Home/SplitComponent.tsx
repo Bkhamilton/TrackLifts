@@ -42,7 +42,42 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
     if (!activeSplit || splits.length === 0) {
         return (
             <View style={styles.container}>
-                <Text style={styles.headerText}>No splits available</Text>
+                {/* Header Row */}
+                <View style={styles.headerRow}>
+                    <Text style={styles.headerText}>Create a Split</Text>
+                    <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => router.push('/(tabs)/(index)/splits')}
+                    >
+                        <MaterialCommunityIcons name="pencil" size={20} color="#666" />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Single Untitled Pill */}
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.daysScrollContainer}
+                >
+                    <TouchableOpacity
+                        style={[styles.dayPill, styles.activeDayPill]}
+                        // Set as active by default
+                        onPress={() => setDay({ day: 1, routine: "Untitled" })}
+                    >
+                        <Text style={[styles.dayText, styles.activeDayText]}>
+                            Untitled
+                        </Text>
+                    </TouchableOpacity>
+                </ScrollView>
+
+                {/* Start Button */}
+                <TouchableOpacity
+                    style={styles.startButton}
+                    onPress={() => handleStartWorkout("Untitled")}
+                >
+                    <Text style={styles.startButtonText}>Start Untitled Workout</Text>
+                    <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
+                </TouchableOpacity>
             </View>
         );
     }

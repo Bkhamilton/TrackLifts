@@ -1,14 +1,16 @@
 import { Text, View } from '@/components/Themed';
 import { Splits } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import ConfirmationModal from '../modals/ConfirmationModal';
 
 interface Props {
     splits: Splits[];
     setShowCreateModal: (show: boolean) => void;
     setAsPrimary: (id: number) => void;
     setEditingSplit: (split: number) => void;
+    onDeleteSplit: (splitId: number) => void;
 }
 
 const YourSplits: React.FC<Props> = ({
@@ -16,66 +18,99 @@ const YourSplits: React.FC<Props> = ({
     setShowCreateModal,
     setAsPrimary,
     setEditingSplit,
-}) => (
-    <View style={styles.splitsContainer}>
-        <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Your Splits</Text>
-            <TouchableOpacity 
-                style={styles.addButton}
-                onPress={() => setShowCreateModal(true)}
-            >
-                <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
-            </TouchableOpacity>
-        </View>
+    onDeleteSplit,
+}) => {
+    const [confirmModal, setConfirmModal] = useState<{ visible: boolean; splitId: number | null }>({ visible: false, splitId: null }); // <-- Add this state
 
-        <FlatList
-            data={splits}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ paddingBottom: 85, paddingTop: 12 }}
-            renderItem={({ item }) => (
-                <View style={[
-                    styles.splitCard,
-                    item.is_active && styles.primarySplitCard,
-                    !item.is_active && { borderColor: '#ccc', borderWidth: 1 }
-                ]}>
-                    <View style={styles.splitHeader}>
-                        <View>
-                            <Text style={styles.splitName}>{item.name}</Text>
-                            <Text style={styles.dayCount}>
-                                {item.routines.length} day{item.routines.length !== 1 ? 's' : ''}
-                            </Text>
-                        </View>
-                        <View style={styles.splitActions}>
-                            {!item.is_active && (
+
+    // Handler for delete confirmation
+    const handleDelete = (splitId: number) => {
+        setConfirmModal({ visible: true, splitId });
+    };
+
+    // Handler for modal selection
+    const handleConfirmDelete = (option: 'yes' | 'no') => {
+        if (option === 'yes' && confirmModal.splitId !== null) {
+            // TODO: Call your delete function here, e.g. deleteSplit(confirmModal.splitId);
+            onDeleteSplit(confirmModal.splitId);
+        }
+        setConfirmModal({ visible: false, splitId: null });
+    };
+
+    return (
+        <View style={styles.splitsContainer}>
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Your Splits</Text>
+                <TouchableOpacity 
+                    style={styles.addButton}
+                    onPress={() => setShowCreateModal(true)}
+                >
+                    <MaterialCommunityIcons name="plus" size={24} color="#ff8787" />
+                </TouchableOpacity>
+            </View>
+
+            <FlatList
+                data={splits}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{ paddingBottom: 85, paddingTop: 12 }}
+                renderItem={({ item }) => (
+                    <View style={[
+                        styles.splitCard,
+                        item.is_active && styles.primarySplitCard,
+                        !item.is_active && { borderColor: '#ccc', borderWidth: 1 }
+                    ]}>
+                        <View style={styles.splitHeader}>
+                            <View>
+                                <Text style={styles.splitName}>{item.name}</Text>
+                                <Text style={styles.dayCount}>
+                                    {item.routines.length} day{item.routines.length !== 1 ? 's' : ''}
+                                </Text>
+                            </View>
+                            <View style={styles.splitActions}>
+                                {!item.is_active && (
+                                    <TouchableOpacity
+                                        style={styles.actionButton}
+                                        onPress={() => setAsPrimary(item.id)}
+                                    >
+                                        <Text style={styles.actionText}>Set Primary</Text>
+                                    </TouchableOpacity>
+                                )}
                                 <TouchableOpacity
                                     style={styles.actionButton}
-                                    onPress={() => setAsPrimary(item.id)}
+                                    onPress={() => setEditingSplit(item.id)}
                                 >
-                                    <Text style={styles.actionText}>Set Primary</Text>
+                                    <MaterialCommunityIcons name="pencil" size={20} color="#666" />
                                 </TouchableOpacity>
-                            )}
-                            <TouchableOpacity
-                                style={styles.actionButton}
-                                onPress={() => setEditingSplit(item.id)}
-                            >
-                                <MaterialCommunityIcons name="pencil" size={20} color="#666" />
-                            </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.actionButton}
+                                    onPress={() => handleDelete(item.id)} // <-- Use confirm modal for delete
+                                >
+                                    <MaterialCommunityIcons name="trash-can" size={20} color="#ff8787" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        
+                        <View style={styles.daysContainer}>
+                            {item.routines.map((day) => (
+                                <View key={day.day} style={styles.dayItem}>
+                                    <Text style={styles.dayLabel}>Day {day.day}</Text>
+                                    <Text style={styles.routineLabel}>{day.routine}</Text>
+                                </View>
+                            ))}
                         </View>
                     </View>
-                    
-                    <View style={styles.daysContainer}>
-                        {item.routines.map((day) => (
-                            <View key={day.day} style={styles.dayItem}>
-                                <Text style={styles.dayLabel}>Day {day.day}</Text>
-                                <Text style={styles.routineLabel}>{day.routine}</Text>
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            )}
-        />
-    </View>
-);
+                )}
+            />
+            <ConfirmationModal
+                visible={confirmModal.visible}
+                message="Are you sure you want to delete this split?"
+                onClose={() => setConfirmModal({ visible: false, splitId: null })}
+                onSelect={handleConfirmDelete}
+            />
+        </View>
+    );
+};
+
 
 const styles = StyleSheet.create({
     splitsContainer: {
@@ -130,7 +165,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     actionButton: {
-        marginLeft: 16,
+        marginLeft: 8,
     },
     actionText: {
         color: '#ff8787',
