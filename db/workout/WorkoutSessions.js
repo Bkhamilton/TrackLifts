@@ -28,9 +28,14 @@ export const getWorkoutSessions = async (db, userId) => {
     try {
         const query = `
             SELECT 
-                ws.*, 
-                u.name AS userName, 
-                r.name AS routineName
+                ws.id,
+                ws.user_id AS userId,
+                ws.routine_id AS routineId,
+                ws.start_time AS startTime,
+                ws.end_time AS endTime,
+                ws.notes, 
+                u.username, 
+                r.title AS routineTitle
             FROM 
                 WorkoutSessions ws
             LEFT JOIN 

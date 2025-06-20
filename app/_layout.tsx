@@ -5,6 +5,7 @@ import { ExerciseContextProvider } from '@/contexts/ExerciseContext';
 import { RoutineContextProvider } from '@/contexts/RoutineContext';
 import { SplitContextProvider } from '@/contexts/SplitContext';
 import { UserContextProvider } from '@/contexts/UserContext';
+import { WorkoutContextProvider } from '@/contexts/WorkoutContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -36,9 +37,11 @@ export default function RootLayout() {
                     <ExerciseContextProvider>
                         <RoutineContextProvider>
                             <SplitContextProvider>
-                                <ActiveWorkoutContextProvider>
-                                    <RootLayoutNav />
-                                </ActiveWorkoutContextProvider>
+                                <WorkoutContextProvider>
+                                    <ActiveWorkoutContextProvider>
+                                        <RootLayoutNav />
+                                    </ActiveWorkoutContextProvider>
+                                </WorkoutContextProvider>
                             </SplitContextProvider>
                         </RoutineContextProvider>
                     </ExerciseContextProvider>

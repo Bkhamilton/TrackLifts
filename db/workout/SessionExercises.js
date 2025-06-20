@@ -5,7 +5,7 @@ export const getSessionExercises = async (db) => {
                 se.*, 
                 ws.start_time AS sessionStartTime, 
                 ws.end_time AS sessionEndTime, 
-                e.name AS exerciseName
+                e.title AS exerciseName
             FROM 
                 SessionExercises se
             LEFT JOIN 
@@ -32,7 +32,7 @@ export const getSessionExercisesBySessionId = async (db, sessionId) => {
                 se.*, 
                 ws.start_time AS sessionStartTime, 
                 ws.end_time AS sessionEndTime, 
-                e.name AS exerciseName
+                e.title AS exerciseName
             FROM 
                 SessionExercises se
             LEFT JOIN 
