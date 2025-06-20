@@ -4,7 +4,7 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react
 
 interface RoutineSelectModalProps {
     visible: boolean;
-    onSelect: (routine: string) => void;
+    onSelect: (routine: ActiveRoutine) => void;
     onClose: () => void;
     title?: string;
     routines: ActiveRoutine[];
@@ -37,7 +37,7 @@ export default function RoutineSelectModal({
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.option}
-                                onPress={() => onSelect(item.title)}
+                                onPress={() => onSelect(item)}
                             >
                                 <Text style={styles.optionText}>{item.title}</Text>
                             </TouchableOpacity>

@@ -12,6 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import CurrentSplit from '@/components/Split/CurrentSplit';
 import YourSplits from '@/components/Split/YourSplits';
 import { RoutineContext } from '@/contexts/RoutineContext';
+import { SplitContext } from '@/contexts/SplitContext';
 
 export default function SplitScreen() {
     const {
@@ -35,6 +36,8 @@ export default function SplitScreen() {
     } = useHookSplits();
 
     const { routines } = useContext(RoutineContext);
+
+    const { updateSplitInDB } = useContext(SplitContext);
 
     const router = useRouter();
 
@@ -83,9 +86,10 @@ export default function SplitScreen() {
                     visible={!!editingSplit}
                     editingSplit={editingSplit}
                     availableRoutines={availableRoutines}
-                    onUpdateSplit={(updatedSplit) => {
+                    onUpdateSplit={async (updatedSplit) => {
                         // Update displaySplits here (call updateSplitDay, etc. as needed)
                         // For example, you can add a new updateSplit function to your hook:
+                        await updateSplitInDB(updatedSplit);
                         setDisplaySplits(prev =>
                             prev.map(s => s.id === updatedSplit.id ? updatedSplit : s)
                         );

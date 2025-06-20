@@ -100,7 +100,6 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
             });
         }
         
-
         await refreshSplits();
     }
 

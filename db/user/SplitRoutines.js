@@ -54,7 +54,6 @@ export const updateSplitRoutine = async (db, splitRoutine) => {
             'UPDATE SplitRoutines SET split_id = ?, split_order = ?, routine_id = ? WHERE id = ?',
             [splitRoutine.split_id, splitRoutine.split_order, splitRoutine.routine_id, splitRoutine.id]
         );
-        console.log('SplitRoutine updated');
     } catch (error) {
         console.error('Error updating SplitRoutine:', error);
         throw error;
@@ -65,7 +64,6 @@ export const updateSplitRoutine = async (db, splitRoutine) => {
 export const deleteSplitRoutine = async (db, id) => {
     try {
         await db.runAsync('DELETE FROM SplitRoutines WHERE id = ?', [id]);
-        console.log('SplitRoutine deleted');
     } catch (error) {
         console.error('Error deleting SplitRoutine:', error);
         throw error;
@@ -75,7 +73,6 @@ export const deleteSplitRoutine = async (db, id) => {
 export const clearSplitRoutines = async (db, splitId) => {
     try {
         await db.runAsync('DELETE FROM SplitRoutines WHERE split_id = ?', [splitId]);
-        console.log('SplitRoutines cleared for split ID:', splitId);
     } catch (error) {
         console.error('Error clearing SplitRoutines:', error);
         throw error;

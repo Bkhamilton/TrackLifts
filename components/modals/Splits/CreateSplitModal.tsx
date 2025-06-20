@@ -45,9 +45,9 @@ export default function CreateSplitModal({
         }
     };
 
-    const handleUpdateDay = (dayNumber: number, routine: string) => {
+    const handleUpdateDay = (dayNumber: number, routine: ActiveRoutine) => {
         setDays(days.map(day => 
-            day.day === dayNumber ? { ...day, routine } : day
+            day.day === dayNumber ? { ...day, routine: routine.title, routine_id: routine.id } : day
         ));
     };
 

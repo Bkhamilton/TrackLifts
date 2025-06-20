@@ -40,11 +40,13 @@ export default function EditSplitModal({
         setExpandedPicker(expandedPicker === dayNumber ? null : dayNumber);
     };
 
-    const handleRoutineSelect = (dayNumber: number, routine: string) => {
+    const handleRoutineSelect = (dayNumber: number, routineObj: ActiveRoutine) => {
         setLocalSplit(split => ({
             ...split!,
             routines: split!.routines.map(d =>
-                d.day === dayNumber ? { ...d, routine } : d
+                d.day === dayNumber
+                    ? { ...d, routine: routineObj.title, routine_id: routineObj.id }
+                    : d
             ),
         }));
         setExpandedPicker(null);
