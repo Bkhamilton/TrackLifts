@@ -20,6 +20,7 @@ interface ActiveWorkoutContextValue {
     isActiveWorkout: boolean;
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
     startTime: number | null;
+    startTimeStr: string | null;
     finalTime: string | null;
     setFinalTime: React.Dispatch<React.SetStateAction<string | null>>;
     startWorkout: () => void;
@@ -42,6 +43,7 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     isActiveWorkout: false,
     setIsActiveWorkout: () => {},
     startTime: null,
+    startTimeStr: null,
     finalTime: null,
     setFinalTime: () => {},
     startWorkout: () => {},
@@ -74,6 +76,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     const { routines, refreshRoutines } = useContext(RoutineContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
+    const [startTimeStr, setStartTimeStr] = useState<string | null>(null);
     const [finalTime, setFinalTime] = useState<string | null>(null);
 
     const [routine, setRoutine] = useState<ActiveRoutine>({
@@ -143,7 +146,9 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
     const startWorkout = () => {
         setIsActiveWorkout(true);
-        setStartTime(Date.now());
+        const now = new Date();
+        setStartTime(now.getTime());
+        setStartTimeStr(now.toISOString());
     };
 
     const saveWorkoutToDatabase = async (workout: Workout) => {
@@ -270,6 +275,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         isActiveWorkout,
         setIsActiveWorkout,
         startTime,
+        startTimeStr,
         finalTime,
         setFinalTime,
         startWorkout,

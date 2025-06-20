@@ -14,6 +14,7 @@ export default function ActiveWorkoutScreen() {
     const { 
         routine, 
         startTime,
+        startTimeStr,
         setFinalTime, 
         setIsActiveWorkout, 
         resetRoutine, 
@@ -60,7 +61,7 @@ export default function ActiveWorkoutScreen() {
         if (isFinished) {
             const workout = {       
                 routine: routine,
-                startTime: startTime,
+                startTime: startTimeStr,
                 endTime: Date.now(),
                 lengthMin: formattedTime,
                 notes: '',
