@@ -89,6 +89,7 @@ export interface Equipment {
 export interface Splits {
     id: number;
     name: string;
+    user_id?: number;
     routines: {
         id: number;
         split_id: number;

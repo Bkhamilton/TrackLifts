@@ -14,6 +14,7 @@ interface SplitContextValue {
     activeSplit: Splits | null;
     updateActiveSplit: (splitId: number) => void;
     createSplitInDb: (splitObj: Splits) => Promise<number>;
+    updateSplitInDB: (splitObj: Splits) => Promise<void>;
     isRoutineFavorite: (routineId: number) => Promise<boolean>;
     toggleFavoriteRoutine: (routineId: number) => Promise<void>;    
 }
@@ -26,6 +27,9 @@ export const SplitContext = createContext<SplitContextValue>({
     },
     createSplitInDb: async () => {
         return 0;
+    },
+    updateSplitInDB: async () => {
+        return;
     },
     isRoutineFavorite: async () => false,
     toggleFavoriteRoutine: async () => {},    
@@ -80,7 +84,7 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
             await updateSplit(db, {
                 id: splitObj.id,
                 name: splitObj.name,
-                user_id: user.id,
+                user_id: splitObj.user_id || user.id,
             });
         }
 
@@ -89,12 +93,10 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
 
         // Insert new routines
         for (const split of splitObj.routines) {
-            const routine = await getRoutineByTitle(db, split.routine);
-            if (!routine) continue;
             await insertSplitRoutine(db, {
                 split_id: splitObj.id,
                 split_order: split.day,
-                routine_id: routine.id,
+                routine_id: split.routine_id,
             });
         }
         
@@ -153,6 +155,7 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         activeSplit,
         updateActiveSplit,
         createSplitInDb,
+        updateSplitInDB,
         isRoutineFavorite,
         toggleFavoriteRoutine,
     };
