@@ -59,7 +59,6 @@ export const updateSplit = async (db, split) => {
             'UPDATE Splits SET name = ?, user_id = ? WHERE id = ?',
             [split.name, split.user_id, split.id]
         );
-        console.log('Split updated');
     } catch (error) {
         console.error('Error updating split:', error);
         throw error;
@@ -70,7 +69,6 @@ export const updateSplit = async (db, split) => {
 export const deleteSplit = async (db, id) => {
     try {
         await db.runAsync('DELETE FROM Splits WHERE id = ?', [id]);
-        console.log('Split deleted');
     } catch (error) {
         console.error('Error deleting split:', error);
         throw error;
@@ -80,7 +78,6 @@ export const deleteSplit = async (db, id) => {
 export const clearSplit = async (db, userId, splitId) => {
     try {
         await db.runAsync('DELETE FROM Splits WHERE user_id = ? AND id = ?', [userId, splitId]);
-        console.log('Split cleared');
     } catch (error) {
         console.error('Error clearing split:', error);
         throw error;

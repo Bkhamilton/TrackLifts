@@ -61,7 +61,6 @@ export const updateExerciseSet = async (db, id, updates) => {
             'UPDATE ExerciseSets SET weight = ?, reps = ?, date = ? WHERE id = ?',
             [updates.weight, updates.reps, updates.date, id]
         );
-        console.log('Exercise set updated');
     } catch (error) {
         console.error('Error updating exercise set:', error);
         throw error;
@@ -72,7 +71,6 @@ export const updateExerciseSet = async (db, id, updates) => {
 export const deleteExerciseSet = async (db, id) => {
     try {
         await db.runAsync('DELETE FROM ExerciseSets WHERE id = ?', [id]);
-        console.log('Exercise set deleted');
     } catch (error) {
         console.error('Error deleting exercise set:', error);
         throw error;
@@ -95,7 +93,6 @@ export const deleteExerciseSetsByRoutineId = async (db, routineId) => {
             await db.runAsync(
                 `DELETE FROM ExerciseSets WHERE routine_exercise_id IN (${ids.join(',')})`
             );
-            console.log(`Deleted ExerciseSets for routineId: ${routineId}`);
         } else {
             console.log(`No ExerciseSets found for routineId: ${routineId}`);
         }
@@ -121,7 +118,6 @@ export const deleteExerciseSetsByExerciseId = async (db, exerciseId) => {
             await db.runAsync(
                 `DELETE FROM ExerciseSets WHERE routine_exercise_id IN (${ids.join(',')})`
             );
-            console.log(`Deleted ExerciseSets for exerciseId: ${exerciseId}`);
         } else {
             console.log(`No ExerciseSets found for exerciseId: ${exerciseId}`);
         }
