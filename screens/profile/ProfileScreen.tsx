@@ -28,7 +28,9 @@ export default function ProfileScreen() {
                     stats={profileData.stats}
                 />
                 <MuscleIntensity/>
-                <ProfileInsightsCard/>
+                <View style={{ paddingHorizontal: 8 }}>
+                    <ProfileInsightsCard/>
+                </View>
             </ScrollView>
         </View>
     );

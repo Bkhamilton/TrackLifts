@@ -1,10 +1,10 @@
-import { ClearView, Text, View } from '@/components/Themed';
+import { ClearView, Text } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import type { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function ProgressInsightsCard() {
+export default function ProfileInsightsCard() {
     const router = useRouter();
     
     // Sample data - replace with your actual data
@@ -13,95 +13,116 @@ export default function ProgressInsightsCard() {
         progressPercentage: 12, // % increase from last week
         streak: 8, // days
         caloriesBurned: 3420, // weekly total
+        lastWorkout: "Yesterday"
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity 
-                onPress={() => router.replace('/(tabs)/profile/data')}
-            >
-                <ClearView style={styles.header}>
-                    <Text style={styles.title}>Progress Insights</Text>
+        <TouchableOpacity 
+            style={styles.card}
+            onPress={() => router.replace('/(tabs)/profile/data')}
+        >
+            <ClearView style={styles.header}>
+                <ClearView style={styles.titleContainer}>
                     <MaterialCommunityIcons 
                         name="chart-line" 
                         size={24} 
                         color="#ff8787" 
+                        style={styles.icon}
                     />
+                    <Text style={styles.title}>Progress Insights</Text>
                 </ClearView>
-                
-                <ClearView style={styles.statsContainer}>
-                    <StatPill 
-                        icon="fire" 
-                        value={`${progressData.workoutsThisWeek}`} 
-                        label="Workouts" 
-                        trend="up" 
-                    />
-                    <StatPill 
-                        icon="trending-up" 
-                        value={`+${progressData.progressPercentage}%`} 
-                        label="Progress" 
-                        trend="up" 
-                    />
-                    <StatPill 
-                        icon="calendar-check" 
-                        value={`${progressData.streak}d`} 
-                        label="Streak" 
-                        trend="neutral" 
-                    />
-                </ClearView>
-                
-                <ClearView style={styles.footer}>
-                    <Text style={styles.linkText}>View detailed analytics →</Text>
-                </ClearView>
-            </TouchableOpacity>
-        </View>
+                <MaterialCommunityIcons 
+                    name="chevron-right" 
+                    size={24} 
+                    color="#aaa" 
+                />
+            </ClearView>
+            
+            <ClearView style={styles.statsContainer}>
+                <StatItem 
+                    icon="calendar-check" 
+                    value={`${progressData.workoutsThisWeek}`} 
+                    label="Workouts this week" 
+                    color="#4dabf7"
+                />
+                <StatItem 
+                    icon="fire" 
+                    value={`${progressData.streak}`} 
+                    label="Day streak" 
+                    color="#ff6b6b"
+                />
+                <StatItem 
+                    icon="trending-up" 
+                    value={`+${progressData.progressPercentage}%`} 
+                    label="Strength progress" 
+                    color="#51cf66"
+                />
+                <StatItem 
+                    icon="lightning-bolt" 
+                    value={`${progressData.caloriesBurned.toLocaleString()}`} 
+                    label="Calories burned" 
+                    color="#ffd43b"
+                />
+            </ClearView>
+            
+            <ClearView style={styles.footer}>
+                <Text style={styles.linkText}>Tap to view detailed analytics</Text>
+            </ClearView>
+        </TouchableOpacity>
     );
 }
 
 type MaterialCommunityIconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
-function StatPill({ icon, value, label, trend }: { 
+function StatItem({ icon, value, label, color }: { 
     icon: MaterialCommunityIconName; 
     value: string; 
     label: string;
-    trend: 'up' | 'down' | 'neutral';
+    color: string;
 }) {
-    const trendColor = {
-        up: '#4CAF50',
-        down: '#F44336',
-        neutral: '#FFC107'
-    };
-    
     return (
-        <View style={styles.pill}>
-            <MaterialCommunityIcons 
-                name={icon} 
-                size={16} 
-                color={trendColor[trend]} 
-                style={styles.pillIcon}
-            />
-            <Text style={styles.pillValue}>{value}</Text>
-            <Text style={styles.pillLabel}>{label}</Text>
-        </View>
+        <ClearView style={styles.statItem}>
+            <ClearView style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
+                <MaterialCommunityIcons 
+                    name={icon} 
+                    size={18} 
+                    color={color} 
+                />
+            </ClearView>
+            <ClearView style={styles.statTextContainer}>
+                <Text style={styles.statValue}>{value}</Text>
+                <Text style={styles.statLabel}>{label}</Text>
+            </ClearView>
+        </ClearView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#f9f9f9',
-        borderRadius: 12,
-        marginVertical: 8,
-        paddingVertical: 16,
-        marginBottom: 10,
+    card: {
+        backgroundColor: '#f8f9fa',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 16,
         borderWidth: 1,
         borderColor: '#eee',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12,
-        paddingHorizontal: 16,
+        marginBottom: 16,
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: 10,
     },
     title: {
         fontSize: 18,
@@ -110,38 +131,47 @@ const styles = StyleSheet.create({
     },
     statsContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        marginHorizontal: -8,
         marginBottom: 8,
-        paddingHorizontal: 8,
     },
-    pill: {
-        backgroundColor: 'white',
-        borderRadius: 20,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
+    statItem: {
+        width: '50%',
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#f0f0f0',
+        padding: 8,
+        marginBottom: 12,
     },
-    pillIcon: {
-        marginRight: 6,
+    iconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
     },
-    pillValue: {
-        fontSize: 14,
-        fontWeight: '600',
+    statTextContainer: {
+        flex: 1,
+    },
+    statValue: {
+        fontSize: 18,
+        fontWeight: '700',
         color: '#333',
-        marginRight: 4,
+        marginBottom: 2,
     },
-    pillLabel: {
+    statLabel: {
         fontSize: 12,
         color: '#666',
     },
     footer: {
-        alignItems: 'flex-end',
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
+        paddingTop: 16,
+        alignItems: 'center',
     },
     linkText: {
         color: '#ff8787',
         fontWeight: '500',
+        fontSize: 14,
     },
 });
