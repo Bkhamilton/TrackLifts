@@ -9,7 +9,7 @@ interface RoutineDay {
 }
 
 export default function useHookSplits() {
-    const { splits, activeSplit, updateActiveSplit } = useContext(SplitContext);
+    const { splits, activeSplit, updateActiveSplit, createSplitInDb } = useContext(SplitContext);
     const [dislpaySplits, setDisplaySplits] = useState<Splits[]>(splits);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newSplitName, setNewSplitName] = useState('');
@@ -112,7 +112,7 @@ export default function useHookSplits() {
         }));
     };
 
-    const createSplit = (name: string, routines: RoutineDay[]) => {
+    const createSplit = async (name: string, routines: RoutineDay[]) => {
         const newSplit: Splits = {
             id: dislpaySplits.length + 1,
             name,
@@ -120,10 +120,11 @@ export default function useHookSplits() {
                 ...r,
                 id: Date.now() + i,
                 split_id: dislpaySplits.length + 1,
-                routine_id: 0
+                routine_id: r.routine_id || 0
             })),
             is_active: false
         };
+        await createSplitInDb(newSplit);
         setDisplaySplits([...dislpaySplits, newSplit]);
         // add call to createSplitInDB
         setShowCreateModal(false);

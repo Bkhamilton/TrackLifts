@@ -76,3 +76,13 @@ export const deleteSplit = async (db, id) => {
         throw error;
     }
 };
+
+export const clearSplit = async (db, userId, splitId) => {
+    try {
+        await db.runAsync('DELETE FROM Splits WHERE user_id = ? AND id = ?', [userId, splitId]);
+        console.log('Split cleared');
+    } catch (error) {
+        console.error('Error clearing split:', error);
+        throw error;
+    }
+}

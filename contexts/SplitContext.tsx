@@ -1,8 +1,7 @@
 // app/contexts/SplitContext.tsx
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
-import { getRoutineByTitle } from '@/db/user/Routines';
 import { clearSplitRoutines, insertSplitRoutine } from '@/db/user/SplitRoutines';
-import { insertSplit, setNewActiveSplit, updateSplit } from '@/db/user/Splits';
+import { clearSplit, insertSplit, setNewActiveSplit, updateSplit } from '@/db/user/Splits';
 import { getSplitData } from '@/utils/splitHelpers';
 import { Splits } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -15,6 +14,7 @@ interface SplitContextValue {
     updateActiveSplit: (splitId: number) => void;
     createSplitInDb: (splitObj: Splits) => Promise<number>;
     updateSplitInDB: (splitObj: Splits) => Promise<void>;
+    deleteSplitInDB: (splitId: number) => Promise<void>;
     isRoutineFavorite: (routineId: number) => Promise<boolean>;
     toggleFavoriteRoutine: (routineId: number) => Promise<void>;    
 }
@@ -29,6 +29,9 @@ export const SplitContext = createContext<SplitContextValue>({
         return 0;
     },
     updateSplitInDB: async () => {
+        return;
+    },
+    deleteSplitInDB: async () => {
         return;
     },
     isRoutineFavorite: async () => false,
@@ -62,12 +65,10 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         });
 
         for (const split of splitObj.routines) {
-            const routine = await getRoutineByTitle(db, split.routine);
-            if (!routine) continue;
             await insertSplitRoutine(db, {
                 split_id: splitId,
                 split_order: split.day,
-                routine_id: routine.id,
+                routine_id: split.routine_id,
             });
         }
         await refreshSplits();
@@ -100,6 +101,19 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
             });
         }
         
+        await refreshSplits();
+    }
+
+    const deleteSplitInDB = async (splitId: number): Promise<void> => {
+        if (!db || user.id === 0) return;
+
+        // Clear routines associated with the split
+        await clearSplitRoutines(db, splitId);
+
+        // Delete the split itself
+        await clearSplit(db, user.id, splitId);
+
+        // Refresh splits after deletion
         await refreshSplits();
     }
 
@@ -155,6 +169,7 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         updateActiveSplit,
         createSplitInDb,
         updateSplitInDB,
+        deleteSplitInDB,
         isRoutineFavorite,
         toggleFavoriteRoutine,
     };

@@ -7,6 +7,7 @@ import RoutineSelectModal from '../RoutineSelectModal';
 interface RoutineDay {
     day: number;
     routine: string;
+    routine_id: number;
 }
 
 interface CreateSplitModalProps {
@@ -23,7 +24,7 @@ export default function CreateSplitModal({
     availableRoutines = [{ id: 1, title: 'Rest', exercises: [] }],
 }: CreateSplitModalProps) {
     const [splitName, setSplitName] = useState('');
-    const [days, setDays] = useState<RoutineDay[]>([{ day: 1, routine: 'Rest' }]);
+    const [days, setDays] = useState<RoutineDay[]>([{ day: 1, routine: 'Rest', routine_id: 1 }]);
     const [expandedPicker, setExpandedPicker] = useState<number | null>(null);
 
     const handleDayPress = (dayNumber: number) => {
@@ -36,7 +37,7 @@ export default function CreateSplitModal({
 
     const handleAddDay = () => {
         const newDayNumber = days.length > 0 ? Math.max(...days.map(d => d.day)) + 1 : 1;
-        setDays([...days, { day: newDayNumber, routine: 'Rest' }]);
+        setDays([...days, { day: newDayNumber, routine: 'Rest', routine_id: 1 }]);
     };
 
     const handleRemoveDay = (dayNumber: number) => {
@@ -54,7 +55,7 @@ export default function CreateSplitModal({
     const handleCreate = () => {
         onCreate(splitName, days);
         setSplitName('');
-        setDays([{ day: 1, routine: 'Rest' }]);
+        setDays([{ day: 1, routine: 'Rest', routine_id: 1 }]);
         setExpandedPicker(null);
     };
 
