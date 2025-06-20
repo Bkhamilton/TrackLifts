@@ -5,6 +5,7 @@ import { getWorkoutSessions } from '@/db/workout/WorkoutSessions';
 export const getHistoryData = async (db, userId) => {
     // Fetch all routines for the user
     const workoutSessions = await getWorkoutSessions(db, userId);
+
     if (!workoutSessions) {
         return null; // Return null if no workout sessions are found
     }
@@ -20,12 +21,22 @@ export const fillSessionData = async (db, workoutSessions) => {
     for (const workoutSession of workoutSessions) {
         // Fetch exercises for the current workout session
         const exercises = await getSessionExercisesBySessionId(db, workoutSession.id);
-
         const exercisesWithDetails = await fillExerciseData(db, exercises);
-        // Add the exercises field to the workout session
+
+        // Destructure to remove routine_id and routineName/routineTitle from the outer object
+        const {
+            routineId,
+            routineTitle,
+            ...rest
+        } = workoutSession;
+
         workoutSessionsWithExercises.push({
-            ...workoutSession, 
-            exercises: exercisesWithDetails,
+            ...rest,
+            routine: {
+                id: routineId,
+                title: routineTitle,
+                exercises: exercisesWithDetails,
+            },
         });
     }
 

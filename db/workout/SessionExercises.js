@@ -30,19 +30,23 @@ export const getSessionExercisesBySessionId = async (db, sessionId) => {
         const query = `
             SELECT 
                 se.*, 
-                ws.start_time AS sessionStartTime, 
-                ws.end_time AS sessionEndTime, 
-                e.title AS exerciseName
+                e.title AS title,
+                eq.name as equipment,
+                mg.name as muscleGroup
             FROM 
                 SessionExercises se
-            LEFT JOIN 
-                WorkoutSessions ws 
-            ON 
-                se.session_id = ws.id
             LEFT JOIN 
                 Exercises e 
             ON 
                 se.exercise_id = e.id
+            LEFT JOIN
+                Equipment eq
+            ON
+                e.equipment_id = eq.id
+            LEFT JOIN
+                MuscleGroups mg
+            ON
+                e.muscle_group_id = mg.id
             WHERE 
                 se.session_id = ?
             ORDER BY 

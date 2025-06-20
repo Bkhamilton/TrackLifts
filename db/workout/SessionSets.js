@@ -23,18 +23,9 @@ export const getSessionExerciseDetails = async (db, sessionExerciseId) => {
     try {
         const query = `
             SELECT 
-                ss.*, 
-                e.title AS sessionExerciseName
+                ss.*
             FROM 
                 SessionSets ss
-            LEFT JOIN 
-                SessionExercises se 
-            ON 
-                ss.session_exercise_id = se.id
-            LEFT JOIN
-                Exercises e
-            ON
-                se.exercise_id = e.id
             WHERE 
                 ss.session_exercise_id = ?
             ORDER BY 
