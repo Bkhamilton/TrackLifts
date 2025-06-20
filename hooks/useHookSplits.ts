@@ -37,7 +37,8 @@ export default function useHookSplits() {
             name: newSplitName,
             routines: [
                 {
-                    day: 1, routine: 'Rest',
+                    day: 1, 
+                    routine: 'Rest',
                     id: 0,
                     split_id: 0,
                     routine_id: 0

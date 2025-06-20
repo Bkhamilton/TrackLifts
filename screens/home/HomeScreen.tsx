@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     }, 
     scrollView: {
         paddingTop: 10, 
-        marginBottom: 83
+        marginBottom: 83,
+        width: '100%',
     } 
 });

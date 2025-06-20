@@ -21,7 +21,7 @@ const useHookHome = () => {
         exercises: []
     });
     const [curDay, setDay] = useState(activeSplit ? activeSplit.routines[0] : {
-        day: 'Day 1',
+        day: 1,
         routine: 'Push',
     });
 
