@@ -1,7 +1,7 @@
+import EditableTitle from '@/components/EditableTitle';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
-import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
@@ -70,8 +70,11 @@ export default function EditRoutineScreen() {
     
     return (
         <View style={styles.container}>
-            <Title
+            <EditableTitle
                 title={editedRoutine.title}
+                onTitleChange={(newTitle) => {
+                    setEditedRoutine(prev => ({ ...prev, title: newTitle }));
+                }}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
