@@ -35,7 +35,6 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         const fetchHistory = async () => {
             if (db && user.id !== 0) {
                 const historyData = await getHistoryData(db, user.id);
-                console.log(JSON.stringify(historyData, null, 2));
                 setWorkoutHistory(historyData || []);
             }
         };

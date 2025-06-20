@@ -209,7 +209,6 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         reps: set.reps,
                         restTime: set.restTime || null,
                         completed: true,
-                        notes: null,
                     });
                 }
 

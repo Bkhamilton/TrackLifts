@@ -42,16 +42,15 @@ export const getSessionExerciseDetails = async (db, sessionExerciseId) => {
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(
-            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, completed, rest_time, notes) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, completed, rest_time) 
+             VALUES (?, ?, ?, ?, ?, ?)`,
             [
                 sessionSet.sessionExerciseId,
                 sessionSet.setOrder,
                 sessionSet.weight,
                 sessionSet.reps,
                 sessionSet.completed,
-                sessionSet.restTime,
-                sessionSet.notes
+                sessionSet.restTime
             ]
         );
         return result.lastInsertRowId;
@@ -65,7 +64,7 @@ export const updateSessionSet = async (db, sessionSet) => {
     try {
         await db.runAsync(
             `UPDATE SessionSets 
-             SET session_exercise_id = ?, set_order = ?, weight = ?, reps = ?, completed = ?, rest_time = ?, notes = ? 
+             SET session_exercise_id = ?, set_order = ?, weight = ?, reps = ?, completed = ?, rest_time = ? 
              WHERE id = ?`,
             [
                 sessionSet.sessionExerciseId,
@@ -74,7 +73,6 @@ export const updateSessionSet = async (db, sessionSet) => {
                 sessionSet.reps,
                 sessionSet.completed,
                 sessionSet.restTime,
-                sessionSet.notes,
                 sessionSet.id
             ]
         );

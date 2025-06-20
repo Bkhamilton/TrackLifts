@@ -145,7 +145,6 @@ export const createWorkoutTables = async (db) => {
             reps INTEGER NOT NULL,
             completed BOOLEAN DEFAULT 1,
             rest_time INTEGER,
-            notes TEXT,
             FOREIGN KEY (session_exercise_id) REFERENCES SessionExercises(id)
         );
     `);
