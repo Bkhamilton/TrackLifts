@@ -1,4 +1,5 @@
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
@@ -11,6 +12,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
     const [modal, setModal] = useState(false);
+    const [confirmModal, setConfirmModal] = useState(false);
     const { 
         routine, 
         startTime,
@@ -70,6 +72,11 @@ export default function ActiveWorkoutScreen() {
             setFinalWorkout(workout);
             router.replace('/finishWorkout')
         } else {
+            // If any sets have been completed, prompt the user
+            if (completedSets.length > 0) {
+                setConfirmModal(true);
+                return;
+            }
             // Return the user to the newWorkout page without saving
             // Reset the routine to its initial state
             resetRoutine();
@@ -82,6 +89,18 @@ export default function ActiveWorkoutScreen() {
         // Remove all sets of the deleted exercise from completed sets
         setCompletedSets(prev => prev.filter(id => !routine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
     };
+
+    const handleConfirmSave = (option: 'yes' | 'no') => {
+        if (option === 'yes') {
+            // Save no changes and go back
+            resetRoutine();
+            setConfirmModal(false);
+            router.replace('/(tabs)/workout/newWorkout');
+        } else {
+            // Do nothing, just close the modal
+            setConfirmModal(false);
+        }
+    }
     
     return (
         <View style={styles.container}>
@@ -129,6 +148,12 @@ export default function ActiveWorkoutScreen() {
                 close={closeModal}
                 add={addExercise}
             />            
+            <ConfirmationModal
+                visible={confirmModal}
+                message="Are you sure you want to cancel this workout? Any completed sets will not be saved."
+                onClose={() => setConfirmModal(false)}
+                onSelect={(choice) => handleConfirmSave(choice)}
+            />
         </View>
     );
 }
