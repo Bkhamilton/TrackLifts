@@ -154,9 +154,9 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     const saveWorkoutToDatabase = async (workout: Workout) => {
         // Only update RoutineExercises if routineId is valid (not 0)
         if (workout.routine.id && workout.routine.id !== 0) {
-            await db.runAsync('BEGIN TRANSACTION');
             if (workout.routine.exercises.some(ex => ex.exercise_id === undefined)) {
                 try {
+                    await db.runAsync('BEGIN TRANSACTION');
                     await clearRoutineExercises(db, workout.routine.id);
                     for (const exercise of workout.routine.exercises) {
                         exercise.exercise_id ?
