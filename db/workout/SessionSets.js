@@ -19,6 +19,31 @@ export const getSessionSets = async (db) => {
     }
 };
 
+export const getSessionExerciseDetails = async (db, sessionExerciseId) => {
+    try {
+        const query = `
+            SELECT 
+                ss.*, 
+                se.name AS sessionExerciseName
+            FROM 
+                SessionSets ss
+            LEFT JOIN 
+                SessionExercises se 
+            ON 
+                ss.session_exercise_id = se.id
+            WHERE 
+                ss.session_exercise_id = ?
+            ORDER BY 
+                ss.set_order ASC
+        `;
+        const allRows = await db.getAllAsync(query, [sessionExerciseId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error getting session exercise details:', error);
+        throw error;
+    }
+}
+
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(
