@@ -3,6 +3,7 @@ import { ActiveRoutine, Splits } from '@/utils/types';
 import React, { useEffect, useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineSelectModal from '../RoutineSelectModal';
+import TitleChangeModal from '../TitleChangeModal';
 
 interface RoutineDay {
     day: number;
@@ -26,6 +27,7 @@ export default function EditSplitModal({
 }: EditSplitModalProps) {
     const [localSplit, setLocalSplit] = useState<Splits | null>(null);
     const [expandedPicker, setExpandedPicker] = useState<number | null>(null);
+    const [titleModalVisible, setTitleModalVisible] = useState(false);
 
     // When modal opens or editingSplit changes, copy it to local state
     useEffect(() => {
@@ -84,11 +86,28 @@ export default function EditSplitModal({
         onClose();
     };
 
+    const handleTitleChange = (newTitle: string) => {
+        setLocalSplit(split => split ? { ...split, name: newTitle } : split);
+    };
+
     return (
         <Modal visible={visible} transparent={true} animationType="slide">
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalTitle}>Edit {localSplit.name}</Text>
+                    <TouchableOpacity onPress={() => setTitleModalVisible(true)}>
+                        <Text style={styles.modalTitle} numberOfLines={1} ellipsizeMode="tail">
+                            {localSplit.name}
+                        </Text>
+                    </TouchableOpacity>
+                    <TitleChangeModal
+                        visible={titleModalVisible}
+                        initialTitle={localSplit.name}
+                        onSave={(newTitle) => {
+                            handleTitleChange(newTitle);
+                            setTitleModalVisible(false);
+                        }}
+                        onCancel={() => setTitleModalVisible(false)}
+                    />
                     <ScrollView style={styles.daysScroll} contentContainerStyle={{ paddingBottom: 8 }}>
                         {localSplit.routines.map((day) => (
                             <View key={day.day} style={styles.dayRow}>
