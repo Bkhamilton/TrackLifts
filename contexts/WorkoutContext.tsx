@@ -8,11 +8,13 @@ import { UserContext } from './UserContext';
 interface WorkoutContextValue {
     workoutHistory: History[];
     setWorkoutHistory: React.Dispatch<React.SetStateAction<History[]>>;
+    refreshHistory: () => void;
 }
 
 export const WorkoutContext = createContext<WorkoutContextValue>({
     workoutHistory: [],
-    setWorkoutHistory: () => {}
+    setWorkoutHistory: () => {},
+    refreshHistory: () => {}
 });
 
 interface WorkoutContextValueProviderProps {
@@ -25,10 +27,14 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
 
     const [workoutHistory, setWorkoutHistory] = useState<History[]>([]);
 
-    const value = {
-        workoutHistory,
-        setWorkoutHistory
-    };
+    const refreshHistory = () => {
+        // This function can be used to refresh the workout history
+        if (db && user.id !== 0) {
+            getHistoryData(db, user.id).then(historyData => {
+                setWorkoutHistory(historyData || []);
+            });
+        }
+    }
 
     useEffect(() => {
         // Initialize or fetch history data from the database if needed
@@ -40,6 +46,12 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         };
         fetchHistory();
     }, [db, user]);
+
+    const value = {
+        workoutHistory,
+        setWorkoutHistory,
+        refreshHistory
+    };
 
     return (
         <WorkoutContext.Provider value={value}>

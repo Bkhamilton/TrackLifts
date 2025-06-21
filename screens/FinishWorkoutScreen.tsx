@@ -5,6 +5,7 @@ import SummaryStatsSection from '@/components/FinishWorkout/SummaryStatsSection'
 import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookFinishWorkout from '@/hooks/useHookFinishWorkout';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
@@ -14,6 +15,7 @@ export default function FinishWorkoutScreen() {
     
     const router = useRouter();
     const { saveWorkoutToDatabase, clearRoutine } = useContext(ActiveWorkoutContext);
+    const { refreshHistory } = useContext(WorkoutContext);
 
     const {
         showSaveModal,
@@ -39,6 +41,7 @@ export default function FinishWorkoutScreen() {
                 notes: notes,
             };
             await saveWorkoutToDatabase(safeFinalWorkout);
+            refreshHistory();
             clearRoutine();
         } catch (error) {
             console.error('Error saving workout:', error);
