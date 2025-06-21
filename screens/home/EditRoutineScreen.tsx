@@ -62,9 +62,6 @@ export default function EditRoutineScreen() {
             // For example: updateRoutine(editedRoutine);
             updateRoutineInDB(editedRoutine);
             router.replace('/(tabs)/(index)');
-        } else {
-            // Discard changes and go back
-            router.replace('/(tabs)/(index)')
         }
     }
     

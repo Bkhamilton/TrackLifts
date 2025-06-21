@@ -1,9 +1,9 @@
-import EditableTitle from '@/components/EditableTitle';
 import NotesInput from '@/components/FinishWorkout/NotesInput';
 import EditHistoryCard from '@/components/History/EditHistory/EditHistoryCard';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
+import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HistoryContext } from '@/contexts/HistoryContext';
 import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
@@ -51,7 +51,10 @@ export default function EditHistoryScreen() {
 
     const handleSaveRoutine = () => {
         // If editedRoutine is different from history.routine, show confirmation modal
-        if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || editedNotes !== history.notes) {
+        if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || 
+        editedNotes !== history.notes ||
+        startTime !== history.startTime ||
+        lengthMin !== history.lengthMin) {
             setConfirmModal(true);
         } else {
             router.replace('/(tabs)/history/main');
@@ -64,19 +67,13 @@ export default function EditHistoryScreen() {
             // This is where you would typically update your context or state with the new routine
             // For example: updateRoutine(editedRoutine);
             router.replace('/(tabs)/history/main');
-        } else {
-            // Discard changes and go back
-            router.replace('/(tabs)/history/main');
         }
     }
     
     return (
         <View style={styles.container}>
-            <EditableTitle
+            <Title
                 title={editedRoutine.title}
-                onTitleChange={(newTitle) => {
-                    setEditedRoutine(prev => ({ ...prev, title: newTitle }));
-                }}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
