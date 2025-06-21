@@ -1,4 +1,5 @@
 import { Text } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
@@ -14,6 +15,8 @@ interface RoutineCardProps {
 export default function RoutineCard({ routine, open, openRoutineOptions, isFavorite = false }: RoutineCardProps) {
     // Calculate total sets
     const totalSets = routine.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
     
     // Get unique muscle groups
     const muscleGroups = [...new Set(routine.exercises.map(ex => ex.muscleGroup))];
@@ -21,7 +24,7 @@ export default function RoutineCard({ routine, open, openRoutineOptions, isFavor
     const additionalMuscles = muscleGroups.length - 1;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: cardBackground }]}>
             <TouchableOpacity 
                 style={styles.touchable}
                 onPress={() => open(routine)}
@@ -82,7 +85,6 @@ const styles = StyleSheet.create({
         borderColor: '#e0e0e0',
         borderRadius: 8,
         marginBottom: 8,
-        backgroundColor: 'white',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
