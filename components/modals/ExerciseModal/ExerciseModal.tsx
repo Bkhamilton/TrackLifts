@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Exercise } from '@/utils/types';
@@ -16,6 +16,12 @@ interface ExerciseModalProps {
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
     const [selectedTab, setSelectedTab] = useState<'Muscles' | 'Data'>('Muscles');
+
+    useEffect(() => {
+        if (visible) {
+            setSelectedTab('Muscles');
+        }
+    }, [visible]);
 
     const renderTabContent = () => {
         if (selectedTab === 'Muscles') {

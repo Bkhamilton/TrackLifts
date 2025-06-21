@@ -1,4 +1,5 @@
 import { ClearView, Text, TextInput, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveSet } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -25,10 +26,15 @@ export default function SetCard({
     isCompleted,
     onDeleteSet
 }: SetCardProps) {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
         <View style={[
             styles.setContainer,
             isCompleted && styles.completedSet,
+            !isCompleted && { backgroundColor: cardBorder }
         ]}>
             <View style={styles.contentContainer}>
                 <Text style={styles.setNumber}>#{index + 1}</Text>
@@ -94,6 +100,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
+        borderRadius: 4,
     },
     contentContainer: {
         flexDirection: 'row',
