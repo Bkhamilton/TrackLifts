@@ -42,13 +42,14 @@ export const getSessionExerciseDetails = async (db, sessionExerciseId) => {
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(
-            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, completed, rest_time) 
-             VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, estimated_1rm, completed, rest_time) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [
                 sessionSet.sessionExerciseId,
                 sessionSet.setOrder,
                 sessionSet.weight,
                 sessionSet.reps,
+                sessionSet.estimated1RM,
                 sessionSet.completed,
                 sessionSet.restTime
             ]

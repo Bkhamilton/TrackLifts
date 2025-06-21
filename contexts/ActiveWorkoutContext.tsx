@@ -5,6 +5,7 @@ import { insertSessionExercise } from '@/db/workout/SessionExercises';
 import { insertSessionSet } from '@/db/workout/SessionSets';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
 import { ActiveRoutine, Exercise, Workout } from '@/utils/types';
+import { calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
 import { RoutineContext } from './RoutineContext';
@@ -202,11 +203,13 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
                 for (let i = 0; i < exercise.sets.length; i++) {
                     const set = exercise.sets[i];
+                    const estimated1RM = calculateEstimated1RM(set.weight, set.reps);
                     await insertSessionSet(db, {
                         sessionExerciseId: sessionExerciseId,
                         setOrder: i + 1,
                         weight: set.weight,
                         reps: set.reps,
+                        estimated1RM: estimated1RM,
                         restTime: set.restTime || null,
                         completed: true,
                     });

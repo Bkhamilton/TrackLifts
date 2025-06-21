@@ -8,3 +8,7 @@ export function calculateTotalWeight(history) {
         return exerciseSum + setsSum;
     }, 0);
 }
+
+export const calculateEstimated1RM = (weight, reps) => {
+  return reps === 1 ? weight : weight * (1 + reps / 30);
+};

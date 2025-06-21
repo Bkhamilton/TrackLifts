@@ -9,6 +9,7 @@ export const createTables = async (db) => {
     await createGeneralTables(db);
     await createUserTables(db);
     await createWorkoutTables(db);
+    await createDataViews(db);
 };
 
 export const createGeneralTables = async (db) => {
@@ -115,6 +116,15 @@ export const createUserTables = async (db) => {
             FOREIGN KEY (split_id) REFERENCES Splits(id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id)
         );
+        CREATE TABLE IF NOT EXISTS SplitCompletions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            split_id INTEGER NOT NULL,
+            completion_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            completed_cycles INTEGER DEFAULT 1,
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (split_id) REFERENCES Splits(id)
+        );
     `);
 }
 
@@ -143,10 +153,80 @@ export const createWorkoutTables = async (db) => {
             set_order INTEGER NOT NULL,
             weight REAL NOT NULL,
             reps INTEGER NOT NULL,
+            estimated_1rm REAL,
             completed BOOLEAN DEFAULT 1,
             rest_time INTEGER,
             FOREIGN KEY (session_exercise_id) REFERENCES SessionExercises(id)
         );
+        CREATE TABLE IF NOT EXISTS ExerciseMaxHistory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            exercise_id INTEGER NOT NULL,
+            one_rep_max REAL NOT NULL,
+            calculation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
+        );
+    `);
+}
+
+export const createDataViews = async (db) => {
+        await db.execAsync(`
+            -- Workout Frequency View
+            CREATE VIEW WorkoutFrequency AS
+            SELECT 
+                user_id,
+                DATE(start_time) AS workout_date,
+                COUNT(*) AS session_count
+            FROM WorkoutSessions
+            GROUP BY user_id, DATE(start_time);
+
+            -- Muscle Group Focus View
+            CREATE VIEW MuscleGroupFocus AS
+            SELECT
+                se.session_id,
+                mg.name AS muscle_group,
+                COUNT(*) * em.intensity AS intensity_score
+            FROM SessionExercises se
+            JOIN Exercises e ON se.exercise_id = e.id
+            JOIN ExerciseMuscles em ON em.exercise_id = e.id
+            JOIN Muscles m ON em.muscle_id = m.id
+            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+            GROUP BY se.session_id, mg.name;
+
+            -- Favorite Routines View
+            CREATE VIEW FavoriteRoutines AS
+            SELECT
+                ws.user_id,
+                r.id AS routine_id,
+                r.title AS routine_title,
+                COUNT(*) AS usage_count,
+                MAX(ws.start_time) AS last_used
+            FROM WorkoutSessions ws
+            JOIN Routines r ON ws.routine_id = r.id
+            GROUP BY ws.user_id, r.id
+            ORDER BY usage_count DESC;
+
+            -- Strength Progress View
+            CREATE VIEW StrengthProgress AS
+            SELECT
+                se.session_id,
+                se.exercise_id,
+                MAX(ss.weight) AS top_weight,
+                SUM(ss.weight * ss.reps) AS total_volume,
+                MAX(ss.reps) AS max_reps,
+                MAX(ss.estimated_1rm) AS estimated_1rm
+            FROM SessionExercises se
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+            GROUP BY se.session_id, se.exercise_id;
+
+            -- Split Cycle Lengths View
+            CREATE VIEW SplitCycleLengths AS
+            SELECT 
+                split_id, 
+                MAX(split_order) AS cycle_days
+            FROM SplitRoutines
+            GROUP BY split_id;
     `);
 }
 
@@ -169,8 +249,21 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS WorkoutSessions;
         DROP TABLE IF EXISTS SessionExercises;
         DROP TABLE IF EXISTS SessionSets;
+        DROP TABLE IF EXISTS ExerciseMaxHistory;
+        DROP TABLE IF EXISTS SplitCompletions;
     `);
 };
+
+export const dropViews = async (db) => {
+    // Your view deletion logic here
+    await db.execAsync(`
+        DROP VIEW IF EXISTS WorkoutFrequency;
+        DROP VIEW IF EXISTS MuscleGroupFocus;
+        DROP VIEW IF EXISTS FavoriteRoutines;
+        DROP VIEW IF EXISTS StrengthProgress;
+        DROP VIEW IF EXISTS SplitCycleLengths;
+    `);
+}
 
 export const syncData = async (db) => {
     // Add Users and Workout data to the database
@@ -209,6 +302,7 @@ export const syncData = async (db) => {
 export const setupDatabase = async (db) => {
     // Your database setup logic here
     await dropTables(db);
+    await dropViews(db);
     await createTables(db);
     await syncData(db);
 };
