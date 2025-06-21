@@ -1,5 +1,6 @@
 import ExerciseOptionsModal from '@/components/modals/ExerciseOptionsModal';
 import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveExercise } from '@/utils/types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -30,6 +31,9 @@ export default function WorkoutInfo({
     const [editingSet, setEditingSet] = useState<number | null>(null);
     const [optionsModalVisible, setOptionsModalVisible] = useState(false); // Add this state
 
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     const handleOptionSelect = (option: 'replace' | 'remove') => {
         setOptionsModalVisible(false);
         // Call the appropriate handler
@@ -41,7 +45,7 @@ export default function WorkoutInfo({
     };
 
     return (
-        <View style={styles.exerciseContainer}>
+        <View style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <ExerciseOptionsModal
                 visible={optionsModalVisible}
                 onClose={() => setOptionsModalVisible(false)}
@@ -94,12 +98,10 @@ export default function WorkoutInfo({
 
 const styles = StyleSheet.create({
     exerciseContainer: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 10,
         padding: 15,
         marginBottom: 15,
         borderWidth: 1,
-        borderColor: '#eee',
     },
     exerciseTitle: {
         fontSize: 16,

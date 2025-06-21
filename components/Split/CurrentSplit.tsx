@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Splits } from '@/utils/types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
@@ -7,36 +8,43 @@ interface Props {
     currentSplit: Splits | null;
 }
 
-const CurrentSplit: React.FC<Props> = ({ currentSplit }) => (
-    <View style={styles.currentWeekContainer}>
-        <View style={styles.header}>
-            <Text style={styles.sectionTitle}>Current Split</Text>
-            <Text style={styles.splitName}>{currentSplit?.name || 'No active split'}</Text>
-        </View>
-        <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
-        >
-            {currentSplit?.routines.map((day) => (
-                <View key={day.day} style={[
-                    styles.dayPill,
-                    day.routine === 'Rest' && styles.restDayPill
-                ]}>
-                    <Text style={styles.dayText}>
-                        Day {day.day}
-                    </Text>
-                    <Text style={[
-                        styles.routineText,
-                        day.routine === 'Rest' && styles.restDayText
+const CurrentSplit: React.FC<Props> = ({ currentSplit }) => {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
+    return (
+        <View style={styles.currentWeekContainer}>
+            <View style={styles.header}>
+                <Text style={styles.sectionTitle}>Current Split</Text>
+                <Text style={styles.splitName}>{currentSplit?.name || 'No active split'}</Text>
+            </View>
+            <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContainer}
+            >
+                {currentSplit?.routines.map((day) => (
+                    <View key={day.day} style={[
+                        styles.dayPill,
+                        day.routine === 'Rest' && styles.restDayPill,
+                        { backgroundColor: cardBackground }
                     ]}>
-                        {day.routine}
-                    </Text>
-                </View>
-            ))}
-        </ScrollView>
-    </View>
-);
+                        <Text style={styles.dayText}>
+                            Day {day.day}
+                        </Text>
+                        <Text style={[
+                            styles.routineText,
+                            day.routine === 'Rest' && styles.restDayText
+                        ]}>
+                            {day.routine}
+                        </Text>
+                    </View>
+                ))}
+            </ScrollView>
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     currentWeekContainer: {
@@ -69,7 +77,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         marginRight: 8,
         borderRadius: 20,
-        backgroundColor: '#f5f5f5',
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: '#000',

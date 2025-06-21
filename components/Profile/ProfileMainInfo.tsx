@@ -1,4 +1,5 @@
 import { UserContext } from '@/contexts/UserContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
@@ -23,6 +24,9 @@ export default function ProfileMainInfo({
 
     const router = useRouter();
 
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     const handleEditProfile = () => {
         router.replace('/(tabs)/profile/profileInfo');
     };
@@ -31,7 +35,7 @@ export default function ProfileMainInfo({
         <View style={styles.container}>
             {/* Profile Header Row */}
             <View style={styles.profileHeader}>
-                <View style={styles.avatarContainer}>
+                <View style={[styles.avatarContainer, { backgroundColor: cardBackground }]}>
                     <Text style={styles.avatar}>{avatar}</Text>
                 </View>
                 <View style={styles.profileText}>
@@ -45,7 +49,7 @@ export default function ProfileMainInfo({
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.outerStatGrid}>
+            <View style={[styles.outerStatGrid, { backgroundColor: cardBackground }]}>
                 {/* Stats Grid */}
                 <View style={styles.statsGrid}>
                     <View style={styles.statItem}>
@@ -80,7 +84,6 @@ const styles = StyleSheet.create({
         width: 56,
         height: 56,
         borderRadius: 28,
-        backgroundColor: '#f0f0f0',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     outerStatGrid: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 8,
     },
     statsGrid: {

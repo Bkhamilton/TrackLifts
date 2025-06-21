@@ -1,10 +1,12 @@
 import { HistoryContext } from '@/contexts/HistoryContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveExercise, History } from '@/utils/types'; // Adjust import path as needed
+import { calculateTotalWeight } from '@/utils/workoutCalculations';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../Themed';
+import { ClearView, Text, View } from '../Themed';
 import OptionsModal from './OptionsModal';
 
 interface HistoryModalProps {
@@ -14,6 +16,9 @@ interface HistoryModalProps {
 }
 
 export default function HistoryModal({ visible, close, history }: HistoryModalProps) {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
 
     const router = useRouter();
     const { setHistory } = useContext(HistoryContext);
@@ -52,7 +57,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
     };
 
     const renderExercise = ({ item }: { item: ActiveExercise }) => (
-        <View style={styles.exerciseContainer}>
+        <View style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <View style={styles.exerciseHeader}>
                 <Text style={styles.exerciseTitle}>{item.title}</Text>
                 <Text style={styles.exerciseSubtitle}>
@@ -60,9 +65,9 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                 </Text>
             </View>
             
-            <View style={styles.setsContainer}>
+            <ClearView style={styles.setsContainer}>
                 {item.sets.map((set, index) => (
-                    <View key={set.id} style={styles.setItem}>
+                    <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder}]}>
                         <Text style={styles.setNumber}>Set {set.set_order}</Text>
                         <Text style={styles.setDetail}>{set.reps} reps × {set.weight} lbs</Text>
                         {set.restTime > 0 && (
@@ -70,9 +75,11 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                         )}
                     </View>
                 ))}
-            </View>
+            </ClearView>
         </View>
     );
+
+    const totalWeight = calculateTotalWeight(history);
 
     return (
         <Modal
@@ -123,7 +130,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                             </View>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="weight-pound" size={20} color="#ff8787" />
-                                <Text style={styles.statText}>{history.totalWeight} lbs</Text>
+                                <Text style={styles.statText}>{totalWeight} lbs</Text>
                             </View>
                         </View>
                     </View>
@@ -208,12 +215,10 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
     },
     exerciseContainer: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#eee',
     },
     exerciseHeader: {
         marginBottom: 8,
@@ -237,6 +242,8 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
+        paddingHorizontal: 4,
+        borderRadius: 4,
     },
     setNumber: {
         fontSize: 14,

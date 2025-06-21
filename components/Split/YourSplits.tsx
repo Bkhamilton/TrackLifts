@@ -1,4 +1,5 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Splits } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -22,6 +23,8 @@ const YourSplits: React.FC<Props> = ({
 }) => {
     const [confirmModal, setConfirmModal] = useState<{ visible: boolean; splitId: number | null }>({ visible: false, splitId: null }); // <-- Add this state
 
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
 
     // Handler for delete confirmation
     const handleDelete = (splitId: number) => {
@@ -57,16 +60,17 @@ const YourSplits: React.FC<Props> = ({
                     <View style={[
                         styles.splitCard,
                         item.is_active && styles.primarySplitCard,
-                        !item.is_active && { borderColor: '#ccc', borderWidth: 1 }
+                        !item.is_active && { borderColor: cardBorder, borderWidth: 1 },
+                        { backgroundColor: cardBackground }
                     ]}>
-                        <View style={styles.splitHeader}>
-                            <View>
+                        <ClearView style={styles.splitHeader}>
+                            <ClearView>
                                 <Text style={styles.splitName}>{item.name}</Text>
                                 <Text style={styles.dayCount}>
                                     {item.routines.length} day{item.routines.length !== 1 ? 's' : ''}
                                 </Text>
-                            </View>
-                            <View style={styles.splitActions}>
+                            </ClearView>
+                            <ClearView style={styles.splitActions}>
                                 {!item.is_active && (
                                     <TouchableOpacity
                                         style={styles.actionButton}
@@ -87,17 +91,17 @@ const YourSplits: React.FC<Props> = ({
                                 >
                                     <MaterialCommunityIcons name="trash-can" size={20} color="#ff8787" />
                                 </TouchableOpacity>
-                            </View>
-                        </View>
+                            </ClearView>
+                        </ClearView>
                         
-                        <View style={styles.daysContainer}>
+                        <ClearView style={styles.daysContainer}>
                             {item.routines.map((day) => (
-                                <View key={day.day} style={styles.dayItem}>
+                                <ClearView key={day.day} style={styles.dayItem}>
                                     <Text style={styles.dayLabel}>Day {day.day}</Text>
                                     <Text style={styles.routineLabel}>{day.routine}</Text>
-                                </View>
+                                </ClearView>
                             ))}
-                        </View>
+                        </ClearView>
                     </View>
                 )}
             />

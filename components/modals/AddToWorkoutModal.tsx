@@ -1,4 +1,5 @@
 import { ExerciseContext } from '@/contexts/ExerciseContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
@@ -32,6 +33,8 @@ export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutM
         return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
     };
 
+    const cardBackground = useThemeColor({}, 'grayBackground');
+
     return (
         <Modal
             visible={visible}
@@ -59,7 +62,7 @@ export default function AddToWorkoutModal({ visible, close, add }: AddToWorkoutM
                                 onPress={() => add(item)}
                             >
                                 <View style={styles.exerciseContent}>
-                                    <View style={styles.iconContainer}>
+                                    <View style={[styles.iconContainer, { backgroundColor: cardBackground }]}>
                                         <MaterialCommunityIcons 
                                             name={getMuscleGroupIcon(item.muscleGroup)} 
                                             size={24} 
@@ -140,7 +143,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#f0f7ff',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,

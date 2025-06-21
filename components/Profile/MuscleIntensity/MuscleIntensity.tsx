@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -21,6 +22,8 @@ type MusclePaths = {
 const MuscleIntensityVisualization = () => {
     const [view, setView] = useState<'front' | 'back'>('front');
     const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null);
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
     
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
@@ -230,7 +233,7 @@ const MuscleIntensityVisualization = () => {
                 </View>
                 
                 {/* Muscle Info Panel */}
-                <View style={styles.infoContainer}>
+                <View style={[styles.infoContainer, { backgroundColor: cardBackground }]}>
                     <MuscleInfoPanel
                         selectedMuscleData={selectedMuscleData}
                         muscleData={muscleData}
@@ -299,7 +302,6 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         width: '45%',
-        backgroundColor: '#fafafa',
         borderRadius: 10,
         padding: 8,
         elevation: 2,

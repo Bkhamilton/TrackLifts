@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -30,6 +31,8 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
         return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
     };
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
 
     function toggleCriteria(criteria: string) {
         let updatedCriteria = [...selectedCriteria];
@@ -79,7 +82,7 @@ export default function ExerciseList({ exercises, openModal, sortList, clearSort
                         onPress={() => openModal(item)}
                     >
                         <View style={styles.exerciseContent}>
-                            <View style={styles.iconContainer}>
+                            <View style={[styles.iconContainer, { backgroundColor: cardBackground }]}>
                                 <MaterialCommunityIcons 
                                     name={getMuscleGroupIcon(item.muscleGroup)} 
                                     size={24} 
@@ -152,7 +155,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#F5F5F5',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,

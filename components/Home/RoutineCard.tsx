@@ -17,6 +17,7 @@ export default function RoutineCard({ routine, open, openRoutineOptions, isFavor
     const totalSets = routine.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
     
     // Get unique muscle groups
     const muscleGroups = [...new Set(routine.exercises.map(ex => ex.muscleGroup))];
@@ -24,7 +25,7 @@ export default function RoutineCard({ routine, open, openRoutineOptions, isFavor
     const additionalMuscles = muscleGroups.length - 1;
 
     return (
-        <View style={[styles.container, { backgroundColor: cardBackground }]}>
+        <View style={[styles.container, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <TouchableOpacity 
                 style={styles.touchable}
                 onPress={() => open(routine)}

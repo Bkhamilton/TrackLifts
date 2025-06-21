@@ -1,4 +1,5 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { History } from '@/utils/types';
 import { calculateTotalWeight } from '@/utils/workoutCalculations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,6 +12,9 @@ interface HistoryCardProps {
 }
 
 export default function HistoryCard({ history, open }: HistoryCardProps) {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
 
     function convertTime(timeStr: string) {
         // Accepts "MM:SS", "HH:MM:SS", or "DD:HH:MM:SS"
@@ -49,16 +53,16 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
 
     return (
         <TouchableOpacity onPress={() => open(history)}>
-            <View style={styles.cardContainer}>
+            <View style={[styles.cardContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                 <View style={styles.dateContainer}>
                     <Text style={styles.dateText}>{formatDate(history.startTime)}</Text>
                 </View>
                 
-                <View style={styles.contentContainer}>
+                <ClearView style={styles.contentContainer}>
                     <Text style={styles.routineTitle}>{history.routine.title}</Text>
                     
-                    <View style={styles.statsContainer}>
-                        <View style={styles.statItem}>
+                    <ClearView style={styles.statsContainer}>
+                        <ClearView style={styles.statItem}>
                             <MaterialCommunityIcons 
                                 name="clock-outline" 
                                 size={16} 
@@ -66,9 +70,9 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 style={styles.icon}
                             />
                             <Text style={styles.statText}>{history.endTime}</Text>
-                        </View>
+                        </ClearView>
                         
-                        <View style={styles.statItem}>
+                        <ClearView style={styles.statItem}>
                             <MaterialCommunityIcons 
                                 name="weight-pound" 
                                 size={16} 
@@ -76,9 +80,9 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 style={styles.icon}
                             />
                             <Text style={styles.statText}>{totalWeight} lbs</Text>
-                        </View>
-                    </View>
-                </View>
+                        </ClearView>
+                    </ClearView>
+                </ClearView>
                 
                 <MaterialCommunityIcons 
                     name="chevron-right" 

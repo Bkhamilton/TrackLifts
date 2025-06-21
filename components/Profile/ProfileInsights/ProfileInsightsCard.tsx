@@ -1,4 +1,5 @@
 import { ClearView, Text } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { ComponentProps } from 'react';
@@ -6,6 +7,9 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ProfileInsightsCard() {
     const router = useRouter();
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
     
     // Sample data - replace with your actual data
     const progressData = {
@@ -18,7 +22,7 @@ export default function ProfileInsightsCard() {
 
     return (
         <TouchableOpacity 
-            style={styles.card}
+            style={[styles.card, { backgroundColor: cardBackground, borderColor: cardBorder }]}
             onPress={() => router.replace('/(tabs)/profile/data')}
         >
             <ClearView style={styles.header}>
@@ -99,12 +103,10 @@ function StatItem({ icon, value, label, color }: {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#f8f9fa',
         borderRadius: 16,
         padding: 20,
         marginBottom: 16,
         borderWidth: 1,
-        borderColor: '#eee',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.05,

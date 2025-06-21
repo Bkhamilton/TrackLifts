@@ -1,9 +1,9 @@
+import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { FlatList, Keyboard, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-
-import { Text, View } from '@/components/Themed';
-import { Exercise } from '@/utils/types';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -29,6 +29,8 @@ export function NewExerciseModal({ visible, close, onSelect, exercises }: NewExe
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
         return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
     };
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
 
     return (
         <Modal
@@ -59,7 +61,7 @@ export function NewExerciseModal({ visible, close, onSelect, exercises }: NewExe
                                         onPress={() => onSelect(item)}
                                     >
                                         <View style={styles.exerciseContent}>
-                                            <View style={styles.iconContainer}>
+                                            <View style={[styles.iconContainer, { backgroundColor: cardBackground }]}>
                                                 <MaterialCommunityIcons 
                                                     name={getMuscleGroupIcon(item.muscleGroup)} 
                                                     size={24} 
@@ -144,7 +146,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#F5F5F5',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,

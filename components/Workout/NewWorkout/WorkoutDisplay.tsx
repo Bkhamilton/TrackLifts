@@ -1,5 +1,7 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveRoutine } from '@/utils/types';
+import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface WorkoutProps {
@@ -8,10 +10,14 @@ interface WorkoutProps {
 }
 
 export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
         <View style={styles.container}>
             {routine.exercises.map((exercise, index) => (
-                <View key={index} style={styles.exerciseContainer}>
+                <View key={index} style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                     <Text style={styles.exerciseTitle}>{exercise.title}</Text>
                     
                     {/* Header Row */}
@@ -50,12 +56,10 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     exerciseContainer: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 10,
         padding: 15,
         marginBottom: 15,
         borderWidth: 1,
-        borderColor: '#eee',
     },
     exerciseTitle: {
         fontSize: 16,
