@@ -125,7 +125,7 @@ export const createWorkoutTables = async (db) => {
             user_id INTEGER,
             routine_id INTEGER,
             start_time DATETIME NOT NULL,
-            end_time DATETIME,
+            end_time STRING,
             notes TEXT,
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id)

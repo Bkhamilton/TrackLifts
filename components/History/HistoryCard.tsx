@@ -1,5 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import { History } from '@/utils/types';
+import { calculateTotalWeight } from '@/utils/workoutCalculations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -44,6 +45,8 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
         });
     }
 
+    const totalWeight = calculateTotalWeight(history);
+
     return (
         <TouchableOpacity onPress={() => open(history)}>
             <View style={styles.cardContainer}>
@@ -62,7 +65,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 color="#ff8787" 
                                 style={styles.icon}
                             />
-                            <Text style={styles.statText}>{convertTime(history.lengthMin)}</Text>
+                            <Text style={styles.statText}>{history.endTime}</Text>
                         </View>
                         
                         <View style={styles.statItem}>
@@ -72,7 +75,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 color="#ff8787" 
                                 style={styles.icon}
                             />
-                            <Text style={styles.statText}>{history.totalWeight} lbs</Text>
+                            <Text style={styles.statText}>{totalWeight} lbs</Text>
                         </View>
                     </View>
                 </View>

@@ -20,14 +20,14 @@ export interface History {
     startTime: string;
     routine: ActiveRoutine;
     lengthMin: string;
+    endTime?: string;
     notes: string;
-    totalWeight: number;
 }
 
 export interface Workout {
     routine: ActiveRoutine;
     startTime: string | null;
-    endTime: number | null;
+    endTime: string | null;
     lengthMin: string;
     notes: string;
 }

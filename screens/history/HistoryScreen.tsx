@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
 import HistoryInfo from '@/components/History/HistoryInfo';
@@ -6,11 +6,14 @@ import HistoryModal from '@/components/modals/HistoryModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import exampleHistory from '@/data/ExampleHistory.json';
 
 export default function HistoryScreen() {
     const [showModal, setShowModal] = React.useState(false)
     const [history, setHistory] = React.useState(exampleHistory[0]);
+
+    const { workoutHistory } = useContext(WorkoutContext);
 
     function closeModal() {
         setShowModal(false)
@@ -29,7 +32,7 @@ export default function HistoryScreen() {
             <ScrollView style={{ paddingTop: 10, width: '100%' }}>
                 <HistoryInfo 
                     open={openModal} 
-                    data={exampleHistory}
+                    data={workoutHistory}
                 /> 
             </ScrollView>
             <HistoryModal 
