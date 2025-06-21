@@ -9,9 +9,6 @@ export default function ProfileScreen() {
 
     const profileData = {
         avatar: '👤',
-        stats: {
-            workoutsCompleted: 128,
-        },
     };
 
     return (
@@ -25,7 +22,6 @@ export default function ProfileScreen() {
             >
                 <ProfileMainInfo 
                     avatar={profileData.avatar}
-                    stats={profileData.stats}
                 />
                 <MuscleIntensity/>
                 <View style={{ paddingHorizontal: 8 }}>

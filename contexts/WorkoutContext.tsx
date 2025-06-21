@@ -1,4 +1,5 @@
 // app/contexts/WorkoutContext.tsx
+import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
 import { getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
 import { History } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -26,6 +27,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
     const { user } = useContext(UserContext);
 
     const [workoutHistory, setWorkoutHistory] = useState<History[]>([]);
+    const [workoutFrequency, setWorkoutFrequency] = useState<any>(null);
 
     const refreshHistory = () => {
         // This function can be used to refresh the workout history
@@ -44,7 +46,15 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
                 setWorkoutHistory(historyData || []);
             }
         };
+        // Fetch workout frequency data
+        const fetchWorkoutFrequency = async () => {
+            if (db && user.id !== 0) {
+                const frequencyData = await getWorkoutFrequencyByUser(db, user.id);
+                setWorkoutFrequency(frequencyData);
+            }
+        }
         fetchHistory();
+        fetchWorkoutFrequency();
     }, [db, user]);
 
     const value = {
