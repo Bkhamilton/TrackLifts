@@ -3,17 +3,29 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import WorkoutFrequencyChart from './Graphs/WorkoutFrequencyChart';
+import WeeklyWorkoutFrequency from './Graphs/WeeklyWorkoutFrequency';
 
 interface WorkoutStats {
-  streak: number;
-  frequency: string;
-  lastWorkout: string;
-  totalWorkouts: number;
-  caloriesBurned: number;
+    streak: number;
+    frequency: string;
+    lastWorkout: string;
+    totalWorkouts: number;
+    caloriesBurned: number;
 }
 
-const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => {
+interface WeeklyWorkoutProps {
+    weeklyFrequency: {
+        workout_date: string;
+        session_count: number;
+    }[];
+}
+
+interface DataHeaderProps {
+    stats: WorkoutStats;
+    weeklyFrequency: WeeklyWorkoutProps['weeklyFrequency'];
+}
+
+export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps) {
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
@@ -39,8 +51,10 @@ const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => {
                     <Text style={styles.statLabel}>Last Workout</Text>
                 </ClearView>
             </ClearView>
-            
-            <WorkoutFrequencyChart/>
+
+            <WeeklyWorkoutFrequency
+                data={weeklyFrequency}
+            />
             
             <ClearView style={styles.summaryRow}>
                 <ClearView style={styles.summaryItem}>
@@ -111,5 +125,3 @@ const styles = StyleSheet.create({
         color: '#666',
     },
 });
-
-export default DataHeader;

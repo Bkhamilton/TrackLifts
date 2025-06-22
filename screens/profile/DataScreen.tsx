@@ -10,10 +10,12 @@ import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookData from '@/hooks/useHookData';
+import { buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
@@ -29,6 +31,10 @@ export default function DataScreen() {
     } = useHookData();
 
     const router = useRouter();
+
+    const { workoutFrequency } = useContext(WorkoutContext);
+
+    const [weeklyFrequency, setWeeklyFrequency] = useState<any[]>(buildLast7DaysFrequency(workoutFrequency));
 
     return (
         <View style={styles.container}>
@@ -59,7 +65,10 @@ export default function DataScreen() {
             showsVerticalScrollIndicator={false}
         >
             <View style={{ paddingHorizontal: 16 }}>
-                <DataHeader stats={workoutStats} />
+                <DataHeader 
+                    stats={workoutStats} 
+                    weeklyFrequency={weeklyFrequency}
+                />
             </View>
             
             <FavoriteGraphs

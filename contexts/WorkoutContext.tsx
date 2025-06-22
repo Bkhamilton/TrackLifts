@@ -9,12 +9,16 @@ import { UserContext } from './UserContext';
 interface WorkoutContextValue {
     workoutHistory: History[];
     setWorkoutHistory: React.Dispatch<React.SetStateAction<History[]>>;
+    workoutFrequency: any; // Define a more specific type if possible
+    setWorkoutFrequency: React.Dispatch<React.SetStateAction<any>>;
     refreshHistory: () => void;
 }
 
 export const WorkoutContext = createContext<WorkoutContextValue>({
     workoutHistory: [],
     setWorkoutHistory: () => {},
+    workoutFrequency: null,
+    setWorkoutFrequency: () => {},
     refreshHistory: () => {}
 });
 
@@ -60,6 +64,8 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
     const value = {
         workoutHistory,
         setWorkoutHistory,
+        workoutFrequency,
+        setWorkoutFrequency,
         refreshHistory
     };
 
