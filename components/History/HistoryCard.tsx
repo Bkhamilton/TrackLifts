@@ -16,15 +16,13 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
 
-    function convertTime(timeStr: string) {
-        // Accepts "MM:SS", "HH:MM:SS", or "DD:HH:MM:SS"
+    function formatTime(timeStr: string | undefined) {
+        if (!timeStr) return '0s'; // Handle undefined case
+        // Accepts "HH:MM:SS" or "DD:HH:MM:SS"
         const parts = timeStr.split(':').map(Number);
         let days = 0, hours = 0, minutes = 0, seconds = 0;
 
-        if (parts.length === 2) {
-            // MM:SS
-            [minutes, seconds] = parts;
-        } else if (parts.length === 3) {
+        if (parts.length === 3) {
             // HH:MM:SS
             [hours, minutes, seconds] = parts;
         } else if (parts.length === 4) {
@@ -36,7 +34,8 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
         if (days > 0) result += `${days}d `;
         if (hours > 0 || days > 0) result += `${hours}h `;
         if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}m `;
-        result += `${seconds}s`;
+        // Only include seconds if days === 0
+        if (days === 0) result += `${seconds}s`;
 
         return result.trim();
     }
@@ -69,7 +68,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 color="#ff8787" 
                                 style={styles.icon}
                             />
-                            <Text style={styles.statText}>{history.endTime}</Text>
+                            <Text style={styles.statText}>{formatTime(history.endTime)}</Text>
                         </ClearView>
                         
                         <ClearView style={styles.statItem}>

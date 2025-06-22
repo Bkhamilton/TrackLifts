@@ -46,6 +46,30 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
         }
     }
 
+    function formatTime(timeStr: string | undefined) {
+        if (!timeStr) return '0s'; // Handle undefined case
+        // Accepts "HH:MM:SS" or "DD:HH:MM:SS"
+        const parts = timeStr.split(':').map(Number);
+        let days = 0, hours = 0, minutes = 0, seconds = 0;
+
+        if (parts.length === 3) {
+            // HH:MM:SS
+            [hours, minutes, seconds] = parts;
+        } else if (parts.length === 4) {
+            // DD:HH:MM:SS
+            [days, hours, minutes, seconds] = parts;
+        }
+
+        let result = '';
+        if (days > 0) result += `${days}d `;
+        if (hours > 0 || days > 0) result += `${hours}h `;
+        if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}m `;
+        // Only include seconds if days === 0
+        if (days === 0) result += `${seconds}s`;
+
+        return result.trim();
+    }
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -126,7 +150,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                         <View style={styles.statsContainer}>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="clock-outline" size={20} color="#ff8787" />
-                                <Text style={styles.statText}>{history.lengthMin} min</Text>
+                                <Text style={styles.statText}>{formatTime(history.endTime)}</Text>
                             </View>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="weight-pound" size={20} color="#ff8787" />
