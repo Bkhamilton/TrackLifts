@@ -39,6 +39,9 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             getHistoryData(db, user.id).then(historyData => {
                 setWorkoutHistory(historyData || []);
             });
+            getWorkoutFrequencyByUser(db, user.id).then(frequencyData => {
+                setWorkoutFrequency(frequencyData);
+            });
         }
     }
 
