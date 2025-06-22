@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
     },
     closeButton: {
         padding: 4,
@@ -248,7 +247,6 @@ const styles = StyleSheet.create({
         color: '#999',
     },
     selectedText: {
-        color: '#333',
         fontWeight: '500',
     },
     section: {

@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
         marginLeft: 8,
-        color: '#333',
     },
     routineItem: {
         paddingVertical: 6,

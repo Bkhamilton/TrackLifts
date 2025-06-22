@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
     },
     statText: {
         fontSize: 14,
-        color: '#333',
         marginLeft: 6,
     },
     listContent: {
@@ -249,7 +248,6 @@ const styles = StyleSheet.create({
     setDetail: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#333',
     },
     restTime: {
         fontSize: 13,

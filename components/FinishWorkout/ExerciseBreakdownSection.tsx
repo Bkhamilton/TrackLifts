@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 10,
     },
     exerciseItem: {
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
     exerciseTitle: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
         marginBottom: 5,
     },
     exerciseStats: {

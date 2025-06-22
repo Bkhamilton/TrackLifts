@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     modalContainer: {
         width: '90%',
         maxHeight: '80%',
-        backgroundColor: 'white',
         borderRadius: 15,
         paddingHorizontal: 20,
         paddingTop: 20,
@@ -166,7 +165,6 @@ const styles = StyleSheet.create({
     modalSectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
         marginBottom: 10,
     },
     modalMusclesList: {

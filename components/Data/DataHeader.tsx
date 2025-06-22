@@ -1,4 +1,5 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet } from 'react-native';
@@ -12,42 +13,48 @@ interface WorkoutStats {
   caloriesBurned: number;
 }
 
-const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => (
-    <View style={styles.header}>
-        <ClearView style={styles.statsRow}>
-            <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="fire" size={20} color="#ff6b6b" />
-                <Text style={styles.statValue}>{stats.streak} Day</Text>
-                <Text style={styles.statLabel}>Streak</Text>
+const DataHeader: React.FC<{ stats: WorkoutStats }> = ({ stats }) => {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
+    return (
+        <View style={[styles.header, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
+            <ClearView style={styles.statsRow}>
+                <ClearView style={styles.statCard}>
+                    <MaterialCommunityIcons name="fire" size={20} color="#ff6b6b" />
+                    <Text style={styles.statValue}>{stats.streak} Day</Text>
+                    <Text style={styles.statLabel}>Streak</Text>
+                </ClearView>
+                
+                <ClearView style={styles.statCard}>
+                    <MaterialCommunityIcons name="calendar" size={20} color="#4dabf7" />
+                    <Text style={styles.statValue}>{stats.frequency}</Text>
+                    <Text style={styles.statLabel}>Frequency</Text>
+                </ClearView>
+                
+                <ClearView style={styles.statCard}>
+                    <MaterialCommunityIcons name="clock" size={20} color="#51cf66" />
+                    <Text style={styles.statValue}>{stats.lastWorkout}</Text>
+                    <Text style={styles.statLabel}>Last Workout</Text>
+                </ClearView>
             </ClearView>
             
-            <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="calendar" size={20} color="#4dabf7" />
-                <Text style={styles.statValue}>{stats.frequency}</Text>
-                <Text style={styles.statLabel}>Frequency</Text>
-            </ClearView>
+            <WorkoutFrequencyChart/>
             
-            <ClearView style={styles.statCard}>
-                <MaterialCommunityIcons name="clock" size={20} color="#51cf66" />
-                <Text style={styles.statValue}>{stats.lastWorkout}</Text>
-                <Text style={styles.statLabel}>Last Workout</Text>
+            <ClearView style={styles.summaryRow}>
+                <ClearView style={styles.summaryItem}>
+                    <Text style={styles.summaryValue}>{stats.totalWorkouts}</Text>
+                    <Text style={styles.summaryLabel}>Total Workouts</Text>
+                </ClearView>
+                <ClearView style={styles.summaryItem}>
+                    <Text style={styles.summaryValue}>{stats.caloriesBurned.toLocaleString()}</Text>
+                    <Text style={styles.summaryLabel}>Calories Burned</Text>
+                </ClearView>
             </ClearView>
-        </ClearView>
-        
-        <WorkoutFrequencyChart/>
-        
-        <ClearView style={styles.summaryRow}>
-            <ClearView style={styles.summaryItem}>
-                <Text style={styles.summaryValue}>{stats.totalWorkouts}</Text>
-                <Text style={styles.summaryLabel}>Total Workouts</Text>
-            </ClearView>
-            <ClearView style={styles.summaryItem}>
-                <Text style={styles.summaryValue}>{stats.caloriesBurned.toLocaleString()}</Text>
-                <Text style={styles.summaryLabel}>Calories Burned</Text>
-            </ClearView>
-        </ClearView>
-    </View>
-);
+        </View>
+    );
+}
 
 const styles = StyleSheet.create({
     header: {
@@ -76,7 +83,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '700',
         marginTop: 4,
-        color: '#333',
     },
     statLabel: {
         fontSize: 10,
@@ -99,7 +105,6 @@ const styles = StyleSheet.create({
     summaryValue: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#333',
     },
     summaryLabel: {
         fontSize: 14,

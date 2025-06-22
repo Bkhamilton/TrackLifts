@@ -26,12 +26,12 @@ export function MuscleGroupBox({visible, onSelect, close} : MuscleGroupBoxProps)
                     <FlatList
                         data={muscleGroups}
                         renderItem={({ item }) => (
-                            <View style={{ paddingVertical: 1, }}>
+                            <View style={{ paddingVertical: 4, paddingHorizontal: 6, borderBottomWidth: 1, borderColor: '#ccc' }}>
                                 <TouchableOpacity
                                     key={item.id}
                                     onPress={() => onSelect(item)}
                                 >
-                                    <View style={{ flexDirection: 'row', borderWidth: 1, paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
+                                    <View style={{ flexDirection: 'row',paddingVertical: 4, paddingHorizontal: 6, justifyContent: 'space-between'}}>
                                         <Text style={{ fontSize: 15 }}>{item.name}</Text>
                                     </View>
                                 </TouchableOpacity>

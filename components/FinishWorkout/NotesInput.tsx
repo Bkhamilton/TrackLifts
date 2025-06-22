@@ -1,5 +1,6 @@
+import { Text, View } from '@/components/Themed';
 import React, { useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 type NotesInputProps = {
     value: string;
@@ -99,7 +100,6 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         marginHorizontal: 24,
-        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 20,
         alignItems: 'stretch',

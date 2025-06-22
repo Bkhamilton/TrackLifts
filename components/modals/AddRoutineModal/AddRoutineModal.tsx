@@ -186,7 +186,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
     },
     closeButton: {
         padding: 4,
@@ -216,7 +215,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         fontSize: 16,
-        color: '#333',
         backgroundColor: '#f9f9f9',
     },
     exercisesContainer: {

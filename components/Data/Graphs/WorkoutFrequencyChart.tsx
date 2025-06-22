@@ -1,3 +1,4 @@
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
@@ -19,6 +20,8 @@ export default function WorkoutFrequencyChart() {
 
   const font = useFont(SpaceMono, 16);
 
+  const text = useThemeColor({}, 'text');
+
   return (
     <View style={{ height: 200, padding: 4 }}>
       <CartesianChart
@@ -28,6 +31,8 @@ export default function WorkoutFrequencyChart() {
         domainPadding={{ left: 20, right: 20, top: 20 }}
         axisOptions={{
           font,
+          lineColor: text,
+          labelColor: text,
           formatXLabel: (value) => {
             // Display first letter of the day unless it's "Th"
             if (value === "Thu") {

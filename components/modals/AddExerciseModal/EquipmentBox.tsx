@@ -26,7 +26,7 @@ export function EquipmentBox({visible, onSelect, close} : EquipmentBoxProps) {
                     <FlatList
                         data={equipment}
                         renderItem={({ item }) => (
-                            <View style={{ paddingVertical: 1, borderWidth: 1, borderColor: '#ff8787' }}>
+                            <View style={{ paddingVertical: 4, paddingHorizontal: 6, borderBottomWidth: 1, borderColor: '#ccc' }}>
                                 <TouchableOpacity
                                     key={item.id}
                                     onPress={() => onSelect(item)}
@@ -50,7 +50,9 @@ const styles = StyleSheet.create({
         bottom: '5%',
         right: '18%',
         elevation: 20,
-        borderRadius: 5,
+        borderRadius: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 5,
     },
     modalContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
