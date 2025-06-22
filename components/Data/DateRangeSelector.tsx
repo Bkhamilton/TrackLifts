@@ -1,5 +1,6 @@
 import DatePickerModal from '@/components/modals/DatePickerModal';
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -12,6 +13,9 @@ interface Props {
 const DateRangeSelector: React.FC<Props> = ({ dateRange, onDateRangeChange }) => {
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
+
+  const backgroundColor = useThemeColor({}, 'grayBackground');
+  const borderColor = useThemeColor({}, 'grayBorder');
 
   const handleStartDateChange = (date: Date) => {
     onDateRangeChange(date, dateRange.end);
@@ -29,7 +33,7 @@ const DateRangeSelector: React.FC<Props> = ({ dateRange, onDateRangeChange }) =>
   return (
     <View style={styles.container}>
       <TouchableOpacity 
-        style={styles.dateButton}
+        style={[styles.dateButton, { backgroundColor: backgroundColor }]}
         onPress={() => setShowStartPicker(true)}
       >
         <Text style={styles.dateText}>
@@ -45,7 +49,7 @@ const DateRangeSelector: React.FC<Props> = ({ dateRange, onDateRangeChange }) =>
       />
       
       <TouchableOpacity 
-        style={styles.dateButton}
+        style={[styles.dateButton, { backgroundColor: backgroundColor }]}
         onPress={() => setShowEndPicker(true)}
       >
         <Text style={styles.dateText}>
@@ -91,7 +95,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     textAlign: 'center',
-    color: '#495057',
   },
   arrow: {
     marginHorizontal: 8,

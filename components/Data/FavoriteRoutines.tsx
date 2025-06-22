@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -11,24 +12,30 @@ interface Props {
     routines: Routine[];
 }
 
-const FavoriteRoutines: React.FC<Props> = ({ routines }) => (
-    <View style={styles.container}>
-        <Text style={styles.title}>Favorite Routines</Text>
-        
-        <View style={styles.routinesContainer}>
-            {routines.map((routine, index) => (
-                <View key={index} style={styles.routineCard}>
-                <Text style={styles.routineName}>{routine.name}</Text>
-                <Text style={styles.routineFrequency}>{routine.frequency}</Text>
-                </View>
-            ))}
+const FavoriteRoutines: React.FC<Props> = ({ routines }) => {
+
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const borderColor = useThemeColor({}, 'grayBorder');
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Favorite Routines</Text>
             
-            {routines.length === 0 && (
-                <Text style={styles.emptyText}>No favorite routines yet</Text>
-            )}
+            <View style={styles.routinesContainer}>
+                {routines.map((routine, index) => (
+                    <View key={index} style={[styles.routineCard, { backgroundColor: backgroundColor }]}>
+                        <Text style={styles.routineName}>{routine.name}</Text>
+                        <Text style={styles.routineFrequency}>{routine.frequency}</Text>
+                    </View>
+                ))}
+                
+                {routines.length === 0 && (
+                    <Text style={styles.emptyText}>No favorite routines yet</Text>
+                )}
+            </View>
         </View>
-    </View>
-);
+    );
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -38,7 +45,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 12,
     },
     routinesContainer: {
@@ -48,7 +54,6 @@ const styles = StyleSheet.create({
     },
     routineCard: {
         width: '47%',
-        backgroundColor: '#f8f9fa',
         borderRadius: 12,
         padding: 16,
         margin: 8,
@@ -56,7 +61,6 @@ const styles = StyleSheet.create({
     routineName: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 4,
     },
     routineFrequency: {

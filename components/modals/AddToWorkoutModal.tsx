@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
     },
     closeButton: {
         padding: 4,
@@ -153,7 +152,6 @@ const styles = StyleSheet.create({
     exerciseName: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
         marginBottom: 4,
     },
     exerciseMeta: {

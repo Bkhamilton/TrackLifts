@@ -1,12 +1,18 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-const MuscleGroupStats: React.FC = () => (
+const MuscleGroupStats: React.FC = () => {
+
+  const backgroundColor = useThemeColor({}, 'grayBackground');
+  const borderColor = useThemeColor({}, 'grayBorder');
+
+  return (
     <View style={styles.container}>
         <Text style={styles.title}>Muscle Group Focus</Text>
         
-        <View style={styles.statsContainer}>
+        <View style={[styles.statsContainer, { backgroundColor, borderColor }]}>
             <ClearView style={styles.statRow}>
                 <ClearView style={styles.labelColumn}>
                     <Text style={styles.muscleLabel}>Chest</Text>
@@ -37,7 +43,8 @@ const MuscleGroupStats: React.FC = () => (
             </ClearView>
         </View>
     </View>
-);
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +54,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 12,
   },
   statsContainer: {
@@ -73,18 +79,16 @@ const styles = StyleSheet.create({
   },
   muscleLabel: {
     height: 24,
-    color: '#495057',
     marginVertical: 4,
   },
   bar: {
     height: 16,
-    backgroundColor: '#74c0fc',
+    backgroundColor: '#ff8787',
     borderRadius: 4,
     marginVertical: 4,
   },
   valueText: {
     height: 24,
-    color: '#495057',
     marginVertical: 4,
   },
   graphPlaceholder: {

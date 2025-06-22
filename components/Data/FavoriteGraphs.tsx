@@ -1,4 +1,5 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
@@ -22,6 +23,9 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
     const screenWidth = Dimensions.get('window').width;
     const cardWidth = screenWidth * 0.8;
 
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -40,15 +44,15 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                     {favorites.map((graph) => (
                         <TouchableOpacity 
                             key={graph.id}
-                            style={[styles.graphCard, { width: cardWidth }]}
+                            style={[styles.graphCard, { width: cardWidth, backgroundColor: cardBackground, borderColor: cardBorder }]}
                             onPress={() => onSelectGraph(graph)}
                         >
                             <ClearView style={styles.graphHeader}>
                                 <Text style={styles.graphTitle}>{graph.exercise}</Text>
-                                <Text style={styles.graphType}>{graph.graphType}</Text>
+                                <Text style={[styles.graphType, { backgroundColor: cardBorder }]}>{graph.graphType}</Text>
                             </ClearView>
                             
-                            <View style={styles.graphPlaceholder}>
+                            <View style={[styles.graphPlaceholder, { backgroundColor: cardBorder, borderColor: cardBorder }]}>
                                 <Text style={styles.placeholderText}>
                                     {graph.graphType} Graph
                                 </Text>
@@ -108,7 +112,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
     },
     scrollContainer: {
         paddingHorizontal: 16,
@@ -134,12 +137,9 @@ const styles = StyleSheet.create({
     graphTitle: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
     },
     graphType: {
         fontSize: 14,
-        color: '#666',
-        backgroundColor: '#e9ecef',
         borderRadius: 12,
         paddingVertical: 4,
         paddingHorizontal: 8,
@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
     statValue: {
         fontSize: 14,
         fontWeight: '700',
-        color: '#333',
     },
     statLabel: {
         fontSize: 12,

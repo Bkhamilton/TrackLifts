@@ -1,32 +1,39 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import WorkoutFrequencyChartMonth from './Graphs/WorkoutFrequencyChartMonth';
 
-const WorkoutHistory: React.FC = () => (
-    <View style={styles.container}>
-        <Text style={styles.title}>Workout History</Text>
-        
-        <View style={{ backgroundColor: '#f1f3f5', borderRadius: 12, paddingVertical: 8, marginBottom: 16 }}>
-            <WorkoutFrequencyChartMonth />
+const WorkoutHistory: React.FC = () => {
+
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const borderColor = useThemeColor({}, 'grayBorder');
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Workout History</Text>
+            
+            <View style={{ backgroundColor: backgroundColor, borderRadius: 12, paddingVertical: 8, marginBottom: 16 }}>
+                <WorkoutFrequencyChartMonth />
+            </View>
+            
+            <View style={styles.statsRow}>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
+                    <Text style={styles.statValue}>12</Text>
+                    <Text style={styles.statLabel}>This Month</Text>
+                </View>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
+                    <Text style={styles.statValue}>42</Text>
+                    <Text style={styles.statLabel}>Last 3 Months</Text>
+                </View>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
+                    <Text style={styles.statValue}>156</Text>
+                    <Text style={styles.statLabel}>This Year</Text>
+                </View>
+            </View>
         </View>
-        
-        <View style={styles.statsRow}>
-            <View style={styles.statCard}>
-                <Text style={styles.statValue}>12</Text>
-                <Text style={styles.statLabel}>This Month</Text>
-            </View>
-            <View style={styles.statCard}>
-                <Text style={styles.statValue}>42</Text>
-                <Text style={styles.statLabel}>Last 3 Months</Text>
-            </View>
-            <View style={styles.statCard}>
-                <Text style={styles.statValue}>156</Text>
-                <Text style={styles.statLabel}>This Year</Text>
-            </View>
-        </View>
-    </View>
-);
+    );
+} 
 
 const styles = StyleSheet.create({
     container: {
@@ -36,7 +43,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 12,
     },
     graphPlaceholder: {
@@ -68,7 +74,6 @@ const styles = StyleSheet.create({
     statValue: {
         fontSize: 20,
         fontWeight: '700',
-        color: '#333',
     },
     statLabel: {
         fontSize: 12,

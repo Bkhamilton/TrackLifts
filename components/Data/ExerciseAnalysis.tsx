@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
@@ -34,13 +35,16 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
         setShowGraphTypeModal(false);
     };
 
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const borderColor = useThemeColor({}, 'grayBorder');
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Exercise Analysis</Text>
                 
                 <TouchableOpacity 
-                    style={styles.graphTypeSelector}
+                    style={[styles.graphTypeSelector, { backgroundColor: backgroundColor, borderColor: borderColor }]}
                     onPress={() => setShowGraphTypeModal(true)}
                 >
                     <Text style={styles.graphTypeText}>{graphType}</Text>
@@ -49,7 +53,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             </View>
             
             <TouchableOpacity 
-                style={styles.exerciseSelector}
+                style={[styles.exerciseSelector, { backgroundColor: backgroundColor, borderColor: borderColor }]}
                 onPress={onSelectExercise}
             >
                 <Text style={styles.exerciseText}>{exercise}</Text>
@@ -61,7 +65,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
                 onDateRangeChange={handleDateRangeChange}  
             />
             
-            <View style={styles.graphPlaceholder}>
+            <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
                 <Text style={styles.placeholderText}>
                     {graphType} Graph for {exercise !== "Select an Exercise" ? exercise : 'Selected Exercise'}
                 </Text>
@@ -73,15 +77,15 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             </View>
             
             <View style={styles.statsRow}>
-                <View style={styles.statCard}>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
                     <Text style={styles.statValue}>125 lbs</Text>
                     <Text style={styles.statLabel}>Current Max</Text>
                 </View>
-                <View style={styles.statCard}>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
                     <Text style={styles.statValue}>+15 lbs</Text>
                     <Text style={styles.statLabel}>Progress</Text>
                 </View>
-                <View style={styles.statCard}>
+                <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
                     <Text style={styles.statValue}>8 times</Text>
                     <Text style={styles.statLabel}>Times Performed</Text>
                 </View>
@@ -123,7 +127,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 8,
     },
     graphTypeSelector: {
@@ -138,7 +141,6 @@ const styles = StyleSheet.create({
     graphTypeText: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#333',
         marginRight: 4,
     },
     exerciseSelector: {
@@ -153,7 +155,6 @@ const styles = StyleSheet.create({
     exerciseText: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
     },
     graphPlaceholder: {
         height: 200,
@@ -194,7 +195,6 @@ const styles = StyleSheet.create({
     statValue: {
         fontSize: 16,
         fontWeight: '700',
-        color: '#333',
     },
     statLabel: {
         fontSize: 12,
@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '70%',
-        backgroundColor: 'white',
         borderRadius: 12,
         padding: 16,
     },
@@ -219,7 +218,6 @@ const styles = StyleSheet.create({
     },
     modalOptionText: {
         fontSize: 16,
-        color: '#333',
     },
     selectedOptionText: {
         color: '#ff8787',

@@ -1,3 +1,4 @@
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
@@ -17,6 +18,8 @@ export default function WorkoutFrequencyChartMonth() {
     const SpaceMono = require('../../../assets/fonts/SpaceMono-Regular.ttf');
 
     const font = useFont(SpaceMono, 12);
+
+    const text = useThemeColor({}, 'text');
 
     const formatXLabel = (value: string) => {
         // Format Date to MM/DD, display one day per week
@@ -47,6 +50,8 @@ export default function WorkoutFrequencyChartMonth() {
             domainPadding={{ left: 5, right: 5, top: 20 }}
             axisOptions={{
                 font,
+                lineColor: text,
+                labelColor: text,
                 formatXLabel,
                 formatYLabel,
             }} 
