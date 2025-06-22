@@ -68,6 +68,7 @@ export default function useHomeActions({
                 break;
             case 'exportData':
                 router.navigate('/exportWorkout')
+                break;
             case 'appearanceSettings':
                 openAppearanceSettingsModal();
                 break;
