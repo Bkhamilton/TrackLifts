@@ -53,6 +53,24 @@ export const getWorkoutSessions = async (db, userId) => {
     }
 }   
 
+export const getWorkoutCountByUser = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                COUNT(*) AS workoutCount
+            FROM 
+                WorkoutSessions
+            WHERE 
+                user_id = ?
+        `;
+        const result = await db.getAsync(query, [userId]);
+        return result.workoutCount;
+    } catch (error) {
+        console.error('Error getting workout count by user:', error);
+        throw error;
+    }
+}
+
 export const insertWorkoutSession = async (db, session) => {
     try {
         const result = await db.runAsync(

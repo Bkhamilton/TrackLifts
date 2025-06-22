@@ -1,15 +1,18 @@
 // app/contexts/DataContext.tsx
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
+import { getWorkoutCountByUser } from '@/db/workout/WorkoutSessions';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
 
 interface DataContextValue {
     favoriteRoutines: any[]; // Replace 'any' with your specific type if available
+    totalWorkoutCount: number;
 }
 
 export const DataContext = createContext<DataContextValue>({
     favoriteRoutines: [],
+    totalWorkoutCount: 0,
 });
 
 interface DataContextValueProviderProps {
@@ -21,6 +24,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const { user } = useContext(UserContext);
 
     const [favoriteRoutines, setFavoriteRoutines] = useState<any[]>([]);
+    const [totalWorkoutCount, setTotalWorkoutCount] = useState<number>(0);
 
     useEffect(() => {
         if (db && user.id !== 0) {
@@ -28,11 +32,16 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 console.log('Favorite routines:', JSON.stringify(routines, null, 2));
                 setFavoriteRoutines(routines);
             });
+            getWorkoutCountByUser(db, user.id).then((count) => {
+                console.log('Total workout count:', count);
+                setTotalWorkoutCount(count);
+            });
         }
     }, [db, user]);
 
     const value = {
         favoriteRoutines,
+        totalWorkoutCount,
     };
 
     return (
