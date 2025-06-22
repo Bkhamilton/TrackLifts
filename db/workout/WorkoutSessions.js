@@ -63,8 +63,8 @@ export const getWorkoutCountByUser = async (db, userId) => {
             WHERE 
                 user_id = ?
         `;
-        const result = await db.getAsync(query, [userId]);
-        return result.workoutCount;
+        const result = await db.getAllAsync(query, [userId]);
+        return result[0] ? result[0].workoutCount : 0;
     } catch (error) {
         console.error('Error getting workout count by user:', error);
         throw error;

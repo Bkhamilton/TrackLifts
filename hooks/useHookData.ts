@@ -1,3 +1,4 @@
+import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
 import { useContext, useState } from 'react';
@@ -16,6 +17,7 @@ export default function useHookData() {
     const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
 
     const { workoutHistory, workoutFrequency } = useContext(WorkoutContext);
+    const { totalWorkoutCount } = useContext(DataContext);
 
     const [favoriteGraphs, setFavoriteGraphs] = useState<FavoriteGraph[]>([
         {
@@ -57,7 +59,7 @@ export default function useHookData() {
         streak: calculateStreak(workoutFrequency),
         frequency: calculateWeeklyFrequency(workoutFrequency),
         lastWorkout: calculateLastWorkout(workoutFrequency),
-        totalWorkouts: workoutHistory.length,
+        totalWorkouts: totalWorkoutCount,
         caloriesBurned: 0 // This can be calculated based on workout history if needed,
     };
 

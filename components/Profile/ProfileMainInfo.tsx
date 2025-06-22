@@ -1,5 +1,5 @@
+import { DataContext } from '@/contexts/DataContext';
 import { UserContext } from '@/contexts/UserContext';
-import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -17,7 +17,7 @@ export default function ProfileMainInfo({
 
     const { user, userStats } = useContext(UserContext);
 
-    const { workoutHistory } = useContext(WorkoutContext);
+    const { totalWorkoutCount } = useContext(DataContext);
 
     const router = useRouter();
 
@@ -58,7 +58,7 @@ export default function ProfileMainInfo({
                         <Text style={styles.statLabel}>Weight</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{workoutHistory.length}</Text>
+                        <Text style={styles.statValue}>{totalWorkoutCount}</Text>
                         <Text style={styles.statLabel}>Workouts</Text>
                     </View>
                 </View>

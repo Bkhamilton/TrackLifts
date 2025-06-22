@@ -33,7 +33,6 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setFavoriteRoutines(routines);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
-                console.log('Total workout count:', count);
                 setTotalWorkoutCount(count);
             });
         }
