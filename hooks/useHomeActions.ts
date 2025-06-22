@@ -1,4 +1,5 @@
 import { RoutineContext } from '@/contexts/RoutineContext';
+import { clearAllStorage } from '@/utils/exerciseUtils';
 import { ActiveRoutine, Exercise } from '@/utils/types';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
@@ -68,6 +69,11 @@ export default function useHomeActions({
                 break;
             case 'exportData':
                 router.navigate('/exportWorkout')
+                break;
+            case 'clearData':
+                clearAllStorage().then(() => {
+                    alert('All data cleared successfully.');
+                });
                 break;
             case 'appearanceSettings':
                 openAppearanceSettingsModal();

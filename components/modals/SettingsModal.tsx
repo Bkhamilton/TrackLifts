@@ -113,6 +113,17 @@ export default function SettingsModal({
                             </TouchableOpacity>
                             
                             <TouchableOpacity
+                                onPress={() => onSelect('clearData')} 
+                                style={styles.settingButton}
+                            >
+                                <View style={styles.buttonContent}>
+                                    <MaterialCommunityIcons name="restore" size={20} color="#ff8787" />
+                                    <Text style={styles.buttonText}>Reset All Data</Text>
+                                </View>
+                                <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
                                 onPress={() => onSelect('helpSupport')}
                                 style={styles.settingButton}
                             >
