@@ -15,3 +15,14 @@ export const getMuscleGroupFocusBySession = async (db, sessionId) => {
         throw error;
     }
 };
+
+export const getTotalMuscleGroupFocus = async (db) => {
+    try {
+        return await db.getAllAsync(
+            'SELECT muscle_group, SUM(intensity_score) AS total_intensity FROM MuscleGroupFocus GROUP BY muscle_group'
+        );
+    } catch (error) {
+        console.error('Error fetching total muscle group focus:', error);
+        throw error;
+    }
+}
