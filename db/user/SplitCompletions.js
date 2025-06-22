@@ -17,6 +17,31 @@ export const insertSplitCompletion = async (db, splitCompletion) => {
     }
 };
 
+// Get all completions for a user and split
+export const getSplitCompletionsForUser = async (db, user_id, split_id) => {
+    try {
+        const rows = await db.getAllAsync(
+            'SELECT * FROM SplitCompletions WHERE user_id = ? AND split_id = ? ORDER BY completion_date ASC',
+            [user_id, split_id]
+        );
+        return rows;
+    } catch (error) {
+        console.error('Error getting SplitCompletions for user:', error);
+        throw error;
+    }
+};
+
+// Get the current day index in the split cycle
+export const getCurrentSplitDayIndex = async (db, user_id, split_id) => {
+    const completions = await getSplitCompletionsForUser(db, user_id, split_id);
+    // Count total completions
+    let totalDays = 0;
+    for (const c of completions) {
+        totalDays += c.completed_cycles || 1;
+    }
+    return totalDays;
+};
+
 // Function to get a SplitCompletion by ID
 export const getSplitCompletionById = async (db, id) => {
     try {

@@ -1,10 +1,10 @@
 import { SplitContext } from '@/contexts/SplitContext';
 import { ActiveRoutine } from '@/utils/types';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 const useHookHome = () => {
 
-    const { activeSplit } = useContext(SplitContext);
+    const { activeSplit, getCurrentSplitDay } = useContext(SplitContext);
 
     const [addRoutineModal, setAddRoutineModal] = useState(false);
     const [settingsModal, setSettingsModal] = useState(false);
@@ -24,6 +24,19 @@ const useHookHome = () => {
         day: 1,
         routine: 'Push',
     });
+
+    useEffect(() => {
+        const syncCurrentDay = async () => {
+            if (activeSplit && activeSplit.routines.length > 0 && getCurrentSplitDay) {
+                const dayIndex = await getCurrentSplitDay();
+                const routinesSorted = [...activeSplit.routines].sort((a, b) => a.day - b.day);
+                const today = routinesSorted[dayIndex] || routinesSorted[0];
+                setDay(today);
+            }
+        };
+        syncCurrentDay();
+    }, [activeSplit, getCurrentSplitDay]);
+
 
     const openAddRoutineModal = () => setAddRoutineModal(true);
     const closeAddRoutineModal = () => setAddRoutineModal(false);

@@ -1,5 +1,6 @@
 // app/contexts/SplitContext.tsx
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
+import { getCurrentSplitDayIndex, insertSplitCompletion } from '@/db/user/SplitCompletions';
 import { clearSplitRoutines, insertSplitRoutine } from '@/db/user/SplitRoutines';
 import { clearSplit, insertSplit, setNewActiveSplit, updateSplit } from '@/db/user/Splits';
 import { getSplitData } from '@/utils/splitHelpers';
@@ -15,6 +16,9 @@ interface SplitContextValue {
     createSplitInDb: (splitObj: Splits) => Promise<number>;
     updateSplitInDB: (splitObj: Splits) => Promise<void>;
     deleteSplitInDB: (splitId: number) => Promise<void>;
+    getCurrentSplitDay: () => Promise<number>;
+    getRecommendedRoutine: () => Promise<{ routine: any | null, isRestDay: boolean }>;
+    completeCurrentSplitDay: () => Promise<void>;
     isRoutineFavorite: (routineId: number) => Promise<boolean>;
     toggleFavoriteRoutine: (routineId: number) => Promise<void>;    
 }
@@ -32,6 +36,15 @@ export const SplitContext = createContext<SplitContextValue>({
         return;
     },
     deleteSplitInDB: async () => {
+        return;
+    },
+    getCurrentSplitDay: async () => {
+        return 0;
+    },
+    getRecommendedRoutine: async () => {
+        return { routine: null, isRestDay: false };
+    },
+    completeCurrentSplitDay: async () => {
         return;
     },
     isRoutineFavorite: async () => false,
@@ -146,6 +159,39 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         }
     };
 
+        // Get the current day index in the split cycle (0-based)
+    const getCurrentSplitDay = async (): Promise<number> => {
+        if (!db || !user?.id || !activeSplit) return 0;
+        const dayIndex = await getCurrentSplitDayIndex(db, user.id, activeSplit.id);
+        // Wrap around if user has completed more days than the split length
+        const splitLength = activeSplit.routines.length;
+        return splitLength > 0 ? dayIndex % splitLength : 0;
+    };
+
+    // Recommend the next routine or rest day
+    const getRecommendedRoutine = async (): Promise<{ routine: any | null, isRestDay: boolean }> => {
+        if (!activeSplit) return { routine: null, isRestDay: false };
+        const dayIndex = await getCurrentSplitDay();
+        const routines = activeSplit.routines.sort((a, b) => a.day - b.day);
+        const today = routines[dayIndex];
+        if (!today || !today.routine_id) {
+            // No routine assigned for this day = rest day
+            return { routine: null, isRestDay: true };
+        }
+        return { routine: today, isRestDay: false };
+    };
+
+    // Mark the current day as completed
+    const completeCurrentSplitDay = async (): Promise<void> => {
+        if (!db || !user?.id || !activeSplit) return;
+        await insertSplitCompletion(db, {
+            user_id: user.id,
+            split_id: activeSplit.id,
+            completion_date: new Date().toISOString(),
+            completed_cycles: 1,
+        });
+    };
+
     useEffect(() => {
         if (db && user.id !== 0) {
             const fetchSplits = async () => {
@@ -170,6 +216,9 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         createSplitInDb,
         updateSplitInDB,
         deleteSplitInDB,
+        getCurrentSplitDay,
+        getRecommendedRoutine,
+        completeCurrentSplitDay,
         isRoutineFavorite,
         toggleFavoriteRoutine,
     };

@@ -2,13 +2,15 @@ import CelebrationSection from '@/components/FinishWorkout/CelebrationSection';
 import ExerciseBreakdownSection from '@/components/FinishWorkout/ExerciseBreakdownSection';
 import NotesInput from '@/components/FinishWorkout/NotesInput';
 import SummaryStatsSection from '@/components/FinishWorkout/SummaryStatsSection';
+import RoutineMismatchModal from '@/components/modals/RoutineMismatchModal';
 import SaveRoutineModal from '@/components/modals/SaveRoutineModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { SplitContext } from '@/contexts/SplitContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookFinishWorkout from '@/hooks/useHookFinishWorkout';
 import { useRouter } from 'expo-router';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function FinishWorkoutScreen() {
@@ -33,6 +35,42 @@ export default function FinishWorkoutScreen() {
 
     const [notes, setNotes] = React.useState(finalWorkout?.notes || '');
 
+    const { activeSplit, getCurrentSplitDay, completeCurrentSplitDay } = useContext(SplitContext);
+    const { routine: completedRoutine } = useContext(ActiveWorkoutContext);
+
+    const [showRoutineMismatchModal, setShowRoutineMismatchModal] = useState(false);
+    const [routineOptions, setRoutineOptions] = useState<any[]>([]);
+    const [expectedRoutine, setExpectedRoutine] = useState<any>(null);
+    const [selectedRoutineId, setSelectedRoutineId] = useState<number | null>(null);
+
+    // This function checks and handles split completion logic
+    const handleSplitCompletion = async () => {
+        if (!activeSplit) return;
+        const dayIndex = await getCurrentSplitDay();
+        const routinesSorted = [...activeSplit.routines].sort((a, b) => a.day - b.day);
+        const expected = routinesSorted[dayIndex];
+        setExpectedRoutine(expected);
+
+        // If the completed routine matches the expected routine, just complete the day
+        if (completedRoutine.id === expected.routine_id) {
+            await completeCurrentSplitDay();
+            return true; // No modal needed
+        } else {
+            // Show modal to ask user which routine it most resembles
+            setRoutineOptions(routinesSorted);
+            setShowRoutineMismatchModal(true);
+            return false; // Modal will handle completion
+        }
+    };
+
+    // Call this after user selects a routine in the modal
+    const handleRoutineSelection = async () => {
+        // You can store the user's selection in a log if you want for analytics
+        // For now, just complete the split day
+        await completeCurrentSplitDay();
+        setShowRoutineMismatchModal(false);
+    };
+
     const handleDone = async () => {
         // Build safeFinalWorkout with notes
         try {
@@ -41,8 +79,14 @@ export default function FinishWorkoutScreen() {
                 notes: notes,
             };
             await saveWorkoutToDatabase(safeFinalWorkout);
-            refreshHistory();
-            clearRoutine();
+            // Handle split completion logic
+            const completedNormally = await handleSplitCompletion();
+            if (completedNormally) {
+                refreshHistory();
+                clearRoutine();
+                router.replace('/(tabs)/(index)');
+            }
+            // If the split completion logic required user input, it will handle that in the modal
         } catch (error) {
             console.error('Error saving workout:', error);
         }
@@ -89,6 +133,22 @@ export default function FinishWorkoutScreen() {
                 visible={showSaveModal}
                 onClose={handleSkipSaveRoutine}
                 onSave={handleSaveRoutine}
+            />
+
+            <RoutineMismatchModal
+                visible={showRoutineMismatchModal}
+                completedRoutineTitle={completedRoutine.title}
+                expectedRoutineName={expectedRoutine?.routine_name || expectedRoutine?.routine || 'Unknown'}
+                routineOptions={routineOptions}
+                selectedRoutineId={selectedRoutineId}
+                setSelectedRoutineId={setSelectedRoutineId}
+                onContinue={async () => {
+                    await handleRoutineSelection();
+                    refreshHistory();
+                    clearRoutine();
+                    router.replace('/(tabs)/(index)');
+                }}
+                onClose={() => setShowRoutineMismatchModal(false)}
             />
         </View>
     );
