@@ -37,7 +37,7 @@ export default function SetCard({
             !isCompleted && { backgroundColor: cardBorder }
         ]}>
             <View style={styles.contentContainer}>
-                <Text style={styles.setNumber}>#{index + 1}</Text>
+                <Text style={[styles.setNumber, isCompleted && styles.completedNumber]}>#{index + 1}</Text>
                 
                 {/* Rest of the component remains the same */}
                 <View style={styles.inputContainer}>
@@ -112,8 +112,7 @@ const styles = StyleSheet.create({
     setNumber: {
         width: 40,
         textAlign: 'center',
-        fontSize: 14,
-        color: '#555',
+        fontSize: 14,     
     },
     inputContainer: {
         flexDirection: 'row',
@@ -130,6 +129,7 @@ const styles = StyleSheet.create({
         width: 60,
         textAlign: 'center',
         marginRight: 4,
+        color: '#555',
         backgroundColor: 'white',
     },
     unit: {
@@ -141,6 +141,9 @@ const styles = StyleSheet.create({
     },
     completedInput: {
         backgroundColor: '#e0ffe0',
+        color: '#555',
+    },
+    completedNumber: {
         color: '#555',
     },
     actionsContainer: {

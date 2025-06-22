@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
     },
     closeButton: {
         padding: 4,

@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
     },
     statsContainer: {
         flexDirection: 'row',
@@ -158,7 +157,6 @@ const styles = StyleSheet.create({
     statValue: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#333',
         marginBottom: 2,
     },
     statLabel: {

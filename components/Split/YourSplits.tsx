@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
     },
     addButton: {
         padding: 4,
@@ -157,7 +156,6 @@ const styles = StyleSheet.create({
     splitName: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
     },
     dayCount: {
         fontSize: 12,
@@ -194,7 +192,6 @@ const styles = StyleSheet.create({
     routineLabel: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#333',
     },
 });
 

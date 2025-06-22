@@ -199,7 +199,6 @@ const styles = StyleSheet.create({
     infoValue: {
         fontSize: 18,
         marginBottom: 15,
-        color: '#333',
     },
     highlightValue: {
         fontWeight: 'bold',
@@ -245,7 +244,6 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 15,
         fontWeight: 'bold',
-        color: '#333',
         marginBottom: 4,
     },
     chipRow: {
@@ -286,7 +284,6 @@ const styles = StyleSheet.create({
         width: 40,
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#333',
         textAlign: 'right',
     },
 });

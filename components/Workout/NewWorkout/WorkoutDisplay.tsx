@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         marginBottom: 12,
-        color: '#333',
     },
     headerRow: {
         flexDirection: 'row',
@@ -98,7 +97,6 @@ const styles = StyleSheet.create({
     },
     setValue: {
         fontSize: 14,
-        color: '#333',
         textAlign: 'center',
         flex: 1,
     },

@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { SplitContext } from '@/contexts/SplitContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -17,6 +18,8 @@ interface SplitComponentProps {
 export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
     const { routines } = useContext(RoutineContext);
     const { activeSplit, splits } = useContext(SplitContext);
+
+    const cardBackground = useThemeColor({}, 'grayBackground'); // Use theme color for card background
 
     const router = useRouter();
 
@@ -110,6 +113,7 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                         key={`${routine.routine}-${routine.day}`}
                         style={[
                             styles.dayPill,
+                            { backgroundColor: cardBackground },
                             routine.day === curDay.day && routine.routine === curDay.routine && styles.activeDayPill,
                             routine.routine === "Rest" && styles.restDayPill,
                             routine.day === curDay.day && routine.routine === curDay.routine && routine.routine === "Rest" && styles.activeRestDayPill
@@ -184,7 +188,6 @@ const styles = StyleSheet.create({
     },
     dayText: {
         fontSize: 14,
-        color: '#555',
     },
     activeDayText: {
         color: 'white',

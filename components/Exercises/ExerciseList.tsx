@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
     exerciseName: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
         marginBottom: 4,
     },
     exerciseMeta: {

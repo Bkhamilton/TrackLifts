@@ -1,4 +1,5 @@
-import { Text, View } from '@/components/Themed';
+import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveExercise } from '@/utils/types';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
@@ -8,8 +9,12 @@ interface ExerciseHeaderProps {
 }
 
 export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
-        <View style={styles.exerciseContainer}>
+        <View style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <View style={styles.exerciseHeader}>
                 <Text style={styles.exerciseTitle}>{exercise.title}</Text>
                 <Text style={styles.exerciseSubtitle}>
@@ -17,14 +22,14 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
                 </Text>
             </View>
             
-            <View style={styles.setsContainer}>
+            <ClearView style={styles.setsContainer}>
                 {exercise.sets.map((set) => (
-                    <View key={set.id} style={styles.setItem}>
-                        <Text style={styles.setNumber}>Set {set.set_order}</Text>
+                    <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder }]}>
+                        <Text style={styles.setNumber}>#{set.set_order}</Text>
                         <Text style={styles.setDetail}>{set.reps} × {set.weight} lbs</Text>
                     </View>
                 ))}
-            </View>
+            </ClearView>
         </View>
     );
 }
@@ -45,7 +50,6 @@ const styles = StyleSheet.create({
     exerciseTitle: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
     },
     exerciseSubtitle: {
         fontSize: 13,
@@ -58,6 +62,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 6,
+        paddingHorizontal: 4,
+        borderRadius: 4,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
     },
@@ -68,6 +74,5 @@ const styles = StyleSheet.create({
     setDetail: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#333',
     },
 });

@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
     },
     splitName: {
         fontSize: 16,
@@ -97,7 +96,6 @@ const styles = StyleSheet.create({
     routineText: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#333',
     },
     restDayText: {
         color: 'rgba(85, 85, 85, 0.6)',

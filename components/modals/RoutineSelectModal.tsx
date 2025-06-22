@@ -1,6 +1,7 @@
 import { ActiveRoutine } from '@/utils/types';
 import React from 'react';
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from '../Themed';
 
 interface RoutineSelectModalProps {
     visible: boolean;
@@ -57,7 +58,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     content: {
-        backgroundColor: '#fff',
         borderRadius: 10,
         padding: 20,
         width: '80%',
@@ -77,6 +77,5 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 16,
-        color: '#333',
     },
 });

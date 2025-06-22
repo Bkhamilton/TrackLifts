@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         marginLeft: 8,
-        color: '#333',
     },
     showAllButton: {
         marginTop: 12,

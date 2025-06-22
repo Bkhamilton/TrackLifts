@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     username: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
     },
     memberSince: {
         fontSize: 12,

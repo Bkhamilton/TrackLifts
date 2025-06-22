@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
     routineTitle: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
         marginBottom: 4,
     },
     statsContainer: {
