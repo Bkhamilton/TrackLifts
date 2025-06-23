@@ -3,15 +3,13 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
+import { useThemeColor } from '@/hooks/useThemeColor';
 import {
   ScrollView as DefaultScrollView,
   Text as DefaultText,
   TextInput as DefaultTextInput,
   View as DefaultView
 } from 'react-native';
-
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 type ThemeProps = {
   lightColor?: string;
@@ -22,20 +20,6 @@ export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
 export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type TextInputProps = ThemeProps & DefaultTextInput['props'];
-
-export function useThemeColor(
-  props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
-) {
-  const theme = useColorScheme() ?? 'light';
-  const colorFromProps = props[theme];
-
-  if (colorFromProps) {
-    return colorFromProps;
-  } else {
-    return Colors[theme][colorName];
-  }
-}
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;

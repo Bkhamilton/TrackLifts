@@ -15,7 +15,7 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
         usePhoneMode: true,
     });
 
-    const { appearancePreference, setAppearancePreference } = useContext(UserContext);
+    const { setAppearancePreference } = useContext(UserContext);
 
     const toggleSetting = (setting: keyof typeof appearanceSettings) => {
         // Prevent toggling lightMode if usePhoneMode is true
@@ -47,7 +47,6 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
                 <View style={styles.modalContent}>
                     <View style={styles.header}>
                         <Text style={styles.title}>Appearance</Text>
-                        <Text style={styles.title}>{JSON.stringify(appearancePreference)}</Text>
                         <TouchableOpacity onPress={close}>
                             <MaterialIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>
