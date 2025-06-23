@@ -1,4 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { StyleSheet } from 'react-native';
 
 export default function AvatarUsernameSection({
@@ -12,9 +13,13 @@ export default function AvatarUsernameSection({
     isEditing: boolean;
     onChange: (field: string, value: string) => void;
 }) {
+
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
         <View style={styles.section}>
-            <View style={styles.avatarContainer}>
+            <View style={[styles.avatarContainer, { backgroundColor }]}>
                 <Text style={styles.avatar}>{avatar}</Text>
             </View>
             {isEditing ? (
@@ -38,7 +43,6 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        backgroundColor: '#f0f0f0',
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',

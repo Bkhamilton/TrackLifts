@@ -1,8 +1,9 @@
 import EditableInfoRow from '@/components/Profile/ProfileInfo/EditableInfoRow';
-import { Text } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function AboutModal({
     visible,
@@ -17,6 +18,8 @@ export default function AboutModal({
 }) {
     const [isEditing, setIsEditing] = useState(false);
 
+    const grayText = useThemeColor({}, 'grayText');
+
     const handleEditToggle = () => setIsEditing(e => !e);
 
     return (
@@ -29,7 +32,7 @@ export default function AboutModal({
                             <MaterialCommunityIcons name="pencil" size={22} color="#ff8787" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <MaterialCommunityIcons name="close" size={22} color="#333" />
+                            <MaterialCommunityIcons name="close" size={22} color={grayText} />
                         </TouchableOpacity>
                     </View>
                     <EditableInfoRow
@@ -59,7 +62,6 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: '90%',
-        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 24,
         elevation: 5,
@@ -73,7 +75,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '700',
-        color: '#333',
         flex: 1,
     },
     closeButton: {

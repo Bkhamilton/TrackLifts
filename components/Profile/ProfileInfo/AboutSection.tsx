@@ -1,4 +1,5 @@
-import { ClearView, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import EditableInfoRow from './EditableInfoRow';
 
@@ -9,11 +10,15 @@ export default function AboutSection({
     stats: any;
     onPress?: () => void;
 }) {
+
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
         <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.7 : 1}>
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>About</Text>
-                <ClearView style={styles.infoCard}>
+                <View style={[styles.infoCard, { backgroundColor, borderColor: cardBorder }]}>
                     <EditableInfoRow 
                         label="Member Since" 
                         value={stats.memberSince} 
@@ -26,7 +31,7 @@ export default function AboutSection({
                         isEditing={false}
                         onChange={() => {}}
                     />
-                </ClearView>
+                </View>
             </View>
         </TouchableOpacity>
     );
@@ -42,10 +47,8 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     infoCard: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 8,
         padding: 16,
         borderWidth: 1,
-        borderColor: '#eee',
     },
 });

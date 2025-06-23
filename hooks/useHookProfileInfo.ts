@@ -1,3 +1,4 @@
+import { DataContext } from '@/contexts/DataContext';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { updateUserProfileStats } from '@/db/user/UserProfileStats';
@@ -27,6 +28,7 @@ export default function useHookProfileInfo() {
     const [isEditing, setIsEditing] = useState(false);
     const { db } = useContext(DBContext);
     const { user, userStats, updateUser, updateUserStats } = useContext(UserContext);
+    const { totalWorkoutCount, weeklyWorkoutCount, weeklySetsCount } = useContext(DataContext);
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
     const openAboutModal = () => setAboutModalVisible(true);
@@ -44,9 +46,9 @@ export default function useHookProfileInfo() {
             goals: userStats.goals
         },
         workoutStats: {
-            workoutsCompleted: 128,
-            weeklyWorkouts: 5,
-            weeklySets: 45,
+            workoutsCompleted: totalWorkoutCount,
+            weeklyWorkouts: weeklyWorkoutCount,
+            weeklySets: weeklySetsCount,
             topExercise: 'Bench Press'
         }
     });

@@ -9,6 +9,7 @@ const tintColorDark = '#fff';
 export const Colors = {
   light: {
     text: '#11181C',
+    grayText: '#333',
     background: '#fff',
     grayBackground: '#F5F5F5',
     grayBorder: '#EBEBEB',
@@ -19,6 +20,7 @@ export const Colors = {
   },
   dark: {
     text: '#ECEDEE',
+    grayText: '#9BA1A6',
     background: '#151718',
     grayBackground: '#313131',
     grayBorder: '#292929',    

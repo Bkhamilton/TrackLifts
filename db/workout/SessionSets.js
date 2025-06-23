@@ -39,6 +39,29 @@ export const getSessionExerciseDetails = async (db, sessionExerciseId) => {
     }
 }
 
+export const getWeeklySetCount = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                COUNT(*) AS weeklySetCount
+            FROM 
+                SessionSets ss
+            LEFT JOIN 
+                SessionExercises se ON ss.session_exercise_id = se.id
+            JOIN 
+                WorkoutSessions ws ON se.session_id = ws.id
+            WHERE 
+                ws.user_id = ? AND 
+                ws.start_time >= datetime('now', '-7 days')
+        `;
+        const result = await db.getAllAsync(query, [userId]);
+        return result[0] ? result[0].weeklySetCount : 0;
+    } catch (error) {
+        console.error('Error getting weekly set count:', error);
+        throw error;
+    }
+}
+
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(

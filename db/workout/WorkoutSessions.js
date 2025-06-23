@@ -71,6 +71,25 @@ export const getWorkoutCountByUser = async (db, userId) => {
     }
 }
 
+export const getWeeklyWorkoutCount = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                COUNT(*) AS weeklyWorkoutCount
+            FROM 
+                WorkoutSessions
+            WHERE 
+                user_id = ? AND 
+                start_time >= datetime('now', '-7 days')
+        `;
+        const result = await db.getAllAsync(query, [userId]);
+        return result[0] ? result[0].weeklyWorkoutCount : 0;
+    } catch (error) {
+        console.error('Error getting weekly workout count:', error);
+        throw error;
+    }
+}
+
 export const insertWorkoutSession = async (db, session) => {
     try {
         const result = await db.runAsync(

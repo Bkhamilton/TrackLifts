@@ -1,4 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { StyleSheet } from 'react-native';
 
 export default function EditableStatCard({ 
@@ -12,8 +13,12 @@ export default function EditableStatCard({
     isEditing: boolean;
     onChange: (value: string) => void;
 }) {
+
+    const backgroundColor = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
     return (
-        <View style={styles.statCard}>
+        <View style={[styles.statCard, { backgroundColor, borderColor: cardBorder }]}>
             {isEditing ? (
                 <TextInput
                     style={styles.editableStatValue}
@@ -31,23 +36,19 @@ export default function EditableStatCard({
 const styles = StyleSheet.create({
     statCard: {
         width: '48%',
-        backgroundColor: '#f9f9f9',
         borderRadius: 8,
         padding: 16,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#eee',
     },
     statValue: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#333',
         marginBottom: 4,
     },
     editableStatValue: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#333',
         marginBottom: 4,
         borderBottomWidth: 1,
         borderBottomColor: '#ff8787',

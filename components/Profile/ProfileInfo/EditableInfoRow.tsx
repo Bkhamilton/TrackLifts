@@ -41,12 +41,10 @@ const styles = StyleSheet.create({
     infoValue: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
     },
     editableInfoValue: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
         borderBottomWidth: 1,
         borderBottomColor: '#ff8787',
         padding: 4,
