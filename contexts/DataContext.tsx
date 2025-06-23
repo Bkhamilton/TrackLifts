@@ -7,12 +7,25 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
 
+interface FavoriteRoutine {
+    routine_id: number;
+    routine_title: string;
+    usage_count: number;
+    last_used: string;
+}
+
+interface TopExercise {
+    id: number;
+    title: string;
+    sessionCount: number;
+}
+
 interface DataContextValue {
-    favoriteRoutines: any[];
+    favoriteRoutines: FavoriteRoutine[];
     totalWorkoutCount: number;
     weeklyWorkoutCount: number;
     weeklySetsCount: number;
-    topExercise: any;
+    topExercise: TopExercise;
 }
 
 export const DataContext = createContext<DataContextValue>({
@@ -20,7 +33,11 @@ export const DataContext = createContext<DataContextValue>({
     totalWorkoutCount: 0,
     weeklyWorkoutCount: 0,
     weeklySetsCount: 0,
-    topExercise: null,
+    topExercise: {
+        id: 0,
+        title: '',
+        sessionCount: 0,
+    },
 });
 
 interface DataContextValueProviderProps {
@@ -31,16 +48,19 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const { db } = useContext(DBContext);
     const { user } = useContext(UserContext);
 
-    const [favoriteRoutines, setFavoriteRoutines] = useState<any[]>([]);
+    const [favoriteRoutines, setFavoriteRoutines] = useState<FavoriteRoutine[]>([]);
     const [totalWorkoutCount, setTotalWorkoutCount] = useState<number>(0);
     const [weeklyWorkoutCount, setWeeklyWorkoutCount] = useState<number>(0);
     const [weeklySetsCount, setWeeklySetsCount] = useState<number>(0);
-    const [topExercise, setTopExercise] = useState<any>(null);
+    const [topExercise, setTopExercise] = useState<TopExercise>({
+        id: 0,
+        title: '',
+        sessionCount: 0,
+    });
 
     useEffect(() => {
         if (db && user.id !== 0) {
             getFavoriteRoutinesByUser(db, user.id).then((routines) => {
-                console.log('Favorite routines:', JSON.stringify(routines, null, 2));
                 setFavoriteRoutines(routines);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
