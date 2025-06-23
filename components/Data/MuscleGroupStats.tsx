@@ -30,7 +30,7 @@ const MuscleGroupStats: React.FC = () => {
     value: statsMap[group] || 0,
     color: COLOR_PALETTE[idx % COLOR_PALETTE.length],
     percent: total > 0 ? Math.round(((statsMap[group] || 0) / total) * 100) : 0,
-  })).filter(d => d.value > 0);
+  }));
 
   return (
     <View style={styles.container}>
