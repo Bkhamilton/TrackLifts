@@ -64,8 +64,14 @@ export default function EditHistoryScreen() {
     const handleConfirmSave = (option: 'yes' | 'no') => {
         if (option === 'yes') {
             // Save the changes to the routine
-            // This is where you would typically update your context or state with the new routine
-            // For example: updateRoutine(editedRoutine);
+            // const updatedHistory = {
+            //     ...history,
+            //     routine: editedRoutine,
+            //     notes: editedNotes,
+            //     startTime,
+            //     lengthMin,
+            // };
+            // updateHistory(updatedHistory);
             router.replace('/(tabs)/history/main');
         }
     }

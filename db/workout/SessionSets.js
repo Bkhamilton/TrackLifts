@@ -115,3 +115,12 @@ export const deleteSessionSet = async (db, sessionSetId) => {
         throw error;
     }
 };
+
+export const clearSessionSets = async (db, sessionExerciseId) => {
+    try {
+        await db.runAsync('DELETE FROM SessionSets WHERE session_exercise_id = ?', [sessionExerciseId]);
+    } catch (error) {
+        console.error('Error clearing session sets:', error);
+        throw error;
+    }
+};

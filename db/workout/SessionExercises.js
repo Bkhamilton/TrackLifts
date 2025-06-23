@@ -126,3 +126,12 @@ export const deleteSessionExercise = async (db, sessionExerciseId) => {
         throw error;
     }
 };
+
+export const clearSessionExercises = async (db, sessionId) => {
+    try {
+        await db.runAsync('DELETE FROM SessionExercises WHERE session_id = ?', [sessionId]);
+    } catch (error) {
+        console.error('Error clearing session exercises:', error);
+        throw error;
+    }
+};
