@@ -1,7 +1,8 @@
 import { ScrollView, Text, View } from '@/components/Themed';
+import { SplitContext } from '@/contexts/SplitContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Splits } from '@/utils/types';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 interface Props {
@@ -12,6 +13,20 @@ const CurrentSplit: React.FC<Props> = ({ currentSplit }) => {
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
+    const { getCurrentSplitDay } = useContext(SplitContext);
+
+    const [currentDayIndex, setCurrentDayIndex] = useState<number>(0);
+
+    useEffect(() => {
+        const fetchCurrentDay = async () => {
+            if (currentSplit) {
+                const idx = await getCurrentSplitDay();
+                setCurrentDayIndex(idx);
+            }
+        };
+        fetchCurrentDay();
+    }, [currentSplit, getCurrentSplitDay]);
+
 
     return (
         <View style={styles.currentWeekContainer}>
@@ -28,7 +43,9 @@ const CurrentSplit: React.FC<Props> = ({ currentSplit }) => {
                     <View key={day.day} style={[
                         styles.dayPill,
                         day.routine === 'Rest' && styles.restDayPill,
-                        { backgroundColor: cardBackground }
+                        { backgroundColor: cardBackground },
+                        { opacity: currentDayIndex >= day.day ? 0.5 : 1 },
+                        currentDayIndex + 1 === day.day && { borderColor: '#ff8787', borderWidth: 2 }
                     ]}>
                         <Text style={styles.dayText}>
                             Day {day.day}

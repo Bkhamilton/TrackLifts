@@ -5,38 +5,46 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SplitComponentProps {
     curDay: { day: number; routine: string };
     setDay: (dayObj: { day: number; routine: string }) => void;
-    close: () => void;
     onStart: (routine: ActiveRoutine) => void;
 }
 
-export default function SplitComponent({ curDay, setDay, close, onStart }: SplitComponentProps) {
+export default function SplitComponent({ curDay, setDay, onStart }: SplitComponentProps) {
     const { routines } = useContext(RoutineContext);
-    const { activeSplit, splits } = useContext(SplitContext);
+    const { activeSplit, splits, completeCurrentSplitDay, refreshSplits, getCurrentSplitDay } = useContext(SplitContext);
+
+    const [currentDayIndex, setCurrentDayIndex] = useState<number>(0);
+
+    useEffect(() => {
+        const fetchCurrentDay = async () => {
+            if (activeSplit) {
+                const idx = await getCurrentSplitDay();
+                setCurrentDayIndex(idx);
+            }
+        };
+        fetchCurrentDay();
+    }, [activeSplit, getCurrentSplitDay]);
 
     const cardBackground = useThemeColor({}, 'grayBackground'); // Use theme color for card background
+    const cardBorder = useThemeColor({}, 'grayBorder'); // Use theme color for card border
 
     const router = useRouter();
 
-    // Ensure activeSplit exists before accessing its properties
-    const uniqueDays = activeSplit?.routines
-        ? [...new Set(
-            activeSplit.routines
-                .filter(routine => routine.routine !== "Rest")
-                .map(routine => routine.routine)
-        )]
-        : []; // Fallback to an empty array if activeSplit or routines are undefined
-
-    const handleStartWorkout = (title: string) => {
+    const handleStartWorkout = async (title: string) => {
+        if (title === "Rest") {
+            // If it's a rest day, increment the cycle for the Split
+            await completeCurrentSplitDay();
+            await refreshSplits();
+            return;
+        }
         const routine = routines?.find(r => r.title === title);
         if (routine) {
             onStart(routine);
-            close();
         } else {
             console.error("Routine not found:", title);
         }
@@ -116,7 +124,8 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
                             { backgroundColor: cardBackground },
                             routine.day === curDay.day && routine.routine === curDay.routine && styles.activeDayPill,
                             routine.routine === "Rest" && styles.restDayPill,
-                            routine.day === curDay.day && routine.routine === curDay.routine && routine.routine === "Rest" && styles.activeRestDayPill
+                            routine.day === curDay.day && routine.routine === curDay.routine && routine.routine === "Rest" && styles.activeRestDayPill,
+                            currentDayIndex >= routine.day && { opacity: 0.5, borderWidth: 1, borderColor: cardBorder } // Disable past days
                         ]}
                         onPress={() => setDay({ day: routine.day, routine: routine.routine })}
                     >
@@ -134,15 +143,13 @@ export default function SplitComponent({ curDay, setDay, close, onStart }: Split
             </ScrollView>
 
             {/* Only show start button for workout days */}
-            {curDay.routine !== "Rest" && (
-                <TouchableOpacity
-                    style={styles.startButton}
-                    onPress={() => handleStartWorkout(curDay.routine)}
-                >
-                    <Text style={styles.startButtonText}>Start {curDay.routine} Workout</Text>
-                    <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
-                </TouchableOpacity>
-            )}
+            <TouchableOpacity
+                style={[styles.startButton, { backgroundColor: curDay.routine === "Rest" ? 'rgba(255, 135, 135, 0.6)' : '#ff8787' }]}
+                onPress={() => handleStartWorkout(curDay.routine)}
+            >
+                <Text style={styles.startButtonText}>{curDay.routine === "Rest" ? "Skip Rest Day" : `Start ${curDay.routine} Workout`}</Text>
+                <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
+            </TouchableOpacity>
         </View>
     );
 }
@@ -200,7 +207,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ff8787',
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 16,

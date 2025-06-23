@@ -21,6 +21,7 @@ interface SplitContextValue {
     completeCurrentSplitDay: () => Promise<void>;
     isRoutineFavorite: (routineId: number) => Promise<boolean>;
     toggleFavoriteRoutine: (routineId: number) => Promise<void>;    
+    refreshSplits: () => Promise<void>;
 }
 
 export const SplitContext = createContext<SplitContextValue>({
@@ -49,6 +50,9 @@ export const SplitContext = createContext<SplitContextValue>({
     },
     isRoutineFavorite: async () => false,
     toggleFavoriteRoutine: async () => {},    
+    refreshSplits: async () => {
+        return;
+    }
 });
 
 interface SplitContextValueProviderProps {
@@ -221,6 +225,7 @@ export const SplitContextProvider = ({ children }: SplitContextValueProviderProp
         completeCurrentSplitDay,
         isRoutineFavorite,
         toggleFavoriteRoutine,
+        refreshSplits
     };
 
     return (

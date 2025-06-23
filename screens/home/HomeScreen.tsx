@@ -108,7 +108,6 @@ export default function HomeScreen() {
                 <SplitComponent
                     curDay={curDay} 
                     setDay={setDay} 
-                    close={closeRoutineModal}
                     onStart={onStart}
                 />
                 <RoutineInfo 
