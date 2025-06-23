@@ -67,7 +67,6 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 12,
         marginBottom: 16,
     },
     label: {
