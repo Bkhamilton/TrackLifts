@@ -12,7 +12,7 @@ import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookData from '@/hooks/useHookData';
-import { buildLast7DaysFrequency } from '@/utils/workoutUtils';
+import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
@@ -35,6 +35,7 @@ export default function DataScreen() {
     const { workoutFrequency } = useContext(WorkoutContext);
 
     const [weeklyFrequency, setWeeklyFrequency] = useState<any[]>(buildLast7DaysFrequency(workoutFrequency));
+    const [monthlyFrequency, setMonthlyFrequency] = useState<any[]>(buildLast30DaysFrequency(workoutFrequency));
 
     return (
         <View style={styles.container}>
@@ -84,15 +85,11 @@ export default function DataScreen() {
             
             <MuscleGroupStats />
             
-            <WorkoutHistory />
-            
-            <FavoriteRoutines 
-                routines={[
-                    { name: 'Push Day', frequency: '2 times/week' },
-                    { name: 'Pull Day', frequency: '2 times/week' },
-                    { name: 'Leg Day', frequency: '1 time/week' },
-                ]}
+            <WorkoutHistory 
+                data={monthlyFrequency}
             />
+            
+            <FavoriteRoutines />
 
             <AddToWorkoutModal
                 visible={showExerciseModal}

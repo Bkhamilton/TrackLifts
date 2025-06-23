@@ -1,50 +1,66 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
-const MuscleGroupStats: React.FC = () => {
+const MUSCLE_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'];
 
+const MuscleGroupStats: React.FC = () => {
   const backgroundColor = useThemeColor({}, 'grayBackground');
   const borderColor = useThemeColor({}, 'grayBorder');
+  const { muscleGroupFocusBySet } = useContext(DataContext);
+
+  // Build a map for quick lookup
+  const statsMap = Object.fromEntries(
+    muscleGroupFocusBySet.map(stat => [stat.muscle_group, stat.total_intensity])
+  );
+  const total = MUSCLE_GROUPS.reduce(
+    (sum, group) => sum + (statsMap[group] || 0),
+    0
+  );
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Muscle Group Focus</Text>
-        
-        <View style={[styles.statsContainer, { backgroundColor, borderColor }]}>
-            <ClearView style={styles.statRow}>
-                <ClearView style={styles.labelColumn}>
-                    <Text style={styles.muscleLabel}>Chest</Text>
-                    <Text style={styles.muscleLabel}>Back</Text>
-                    <Text style={styles.muscleLabel}>Legs</Text>
-                    <Text style={styles.muscleLabel}>Shoulders</Text>
-                    <Text style={styles.muscleLabel}>Arms</Text>
-                    <Text style={styles.muscleLabel}>Core</Text>
-                </ClearView>
-                
-                <ClearView style={styles.barColumn}>
-                    <View style={[styles.bar, { width: '85%' }]} />
-                    <View style={[styles.bar, { width: '75%' }]} />
-                    <View style={[styles.bar, { width: '65%' }]} />
-                    <View style={[styles.bar, { width: '60%' }]} />
-                    <View style={[styles.bar, { width: '55%' }]} />
-                    <View style={[styles.bar, { width: '50%' }]} />
-                </ClearView>
-                
-                <ClearView style={styles.valueColumn}>
-                    <Text style={styles.valueText}>85%</Text>
-                    <Text style={styles.valueText}>75%</Text>
-                    <Text style={styles.valueText}>65%</Text>
-                    <Text style={styles.valueText}>60%</Text>
-                    <Text style={styles.valueText}>55%</Text>
-                    <Text style={styles.valueText}>50%</Text>
-                </ClearView>
-            </ClearView>
-        </View>
+      <Text style={styles.title}>Muscle Group Focus</Text>
+      <View style={[styles.statsContainer, { backgroundColor, borderColor }]}>
+        <ClearView style={styles.statRow}>
+          <ClearView style={styles.labelColumn}>
+            {MUSCLE_GROUPS.map(group => (
+              <Text key={group} style={styles.muscleLabel}>{group}</Text>
+            ))}
+          </ClearView>
+          <ClearView style={styles.barColumn}>
+            {MUSCLE_GROUPS.map(group => {
+              const value = statsMap[group] || 0;
+              const percent = total > 0 ? Math.round((value / total) * 100) : 0;
+              return (
+                <View
+                  key={group}
+                  style={[
+                    styles.bar,
+                    { width: `${percent}%`, backgroundColor: percent > 0 ? '#ff8787' : '#e9ecef' }
+                  ]}
+                />
+              );
+            })}
+          </ClearView>
+          <ClearView style={styles.valueColumn}>
+            {MUSCLE_GROUPS.map(group => {
+              const value = statsMap[group] || 0;
+              const percent = total > 0 ? Math.round((value / total) * 100) : 0;
+              return (
+                <Text key={group} style={styles.valueText}>
+                  {percent}%
+                </Text>
+              );
+            })}
+          </ClearView>
+        </ClearView>
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -2,9 +2,13 @@ import { Text, View } from '@/components/Themed';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import WorkoutFrequencyChartMonth from './Graphs/WorkoutFrequencyChartMonth';
+import MonthlyWorkoutFrequency from './Graphs/MonthlyWorkoutFrequency';
 
-const WorkoutHistory: React.FC = () => {
+interface WorkoutHistoryProps {
+    data: { workout_date: string; session_count: number }[];
+}
+
+export default function WorkoutHistory({ data }: WorkoutHistoryProps) {
 
     const backgroundColor = useThemeColor({}, 'grayBackground');
     const borderColor = useThemeColor({}, 'grayBorder');
@@ -14,7 +18,9 @@ const WorkoutHistory: React.FC = () => {
             <Text style={styles.title}>Workout History</Text>
             
             <View style={{ backgroundColor: backgroundColor, borderRadius: 12, paddingVertical: 8, marginBottom: 16 }}>
-                <WorkoutFrequencyChartMonth />
+                <MonthlyWorkoutFrequency
+                    data={data}
+                />
             </View>
             
             <View style={styles.statsRow}>
@@ -81,5 +87,3 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
 });
-
-export default WorkoutHistory;

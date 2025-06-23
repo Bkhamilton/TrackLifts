@@ -1,5 +1,6 @@
 // app/contexts/DataContext.tsx
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
+import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getTopExericise } from '@/db/workout/SessionExercises'; // Assuming this function exists
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import { getWeeklyWorkoutCount, getWorkoutCountByUser } from '@/db/workout/WorkoutSessions';
@@ -20,12 +21,18 @@ interface TopExercise {
     sessionCount: number;
 }
 
+interface MuscleGroupStat {
+    muscle_group: string;
+    total_intensity: number;
+}
+
 interface DataContextValue {
     favoriteRoutines: FavoriteRoutine[];
     totalWorkoutCount: number;
     weeklyWorkoutCount: number;
     weeklySetsCount: number;
     topExercise: TopExercise;
+    muscleGroupFocusBySet: MuscleGroupStat[];
 }
 
 export const DataContext = createContext<DataContextValue>({
@@ -38,6 +45,7 @@ export const DataContext = createContext<DataContextValue>({
         title: '',
         sessionCount: 0,
     },
+    muscleGroupFocusBySet: [],
 });
 
 interface DataContextValueProviderProps {
@@ -57,6 +65,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         title: '',
         sessionCount: 0,
     });
+    const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
 
     useEffect(() => {
         if (db && user.id !== 0) {
@@ -75,6 +84,10 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getTopExericise(db, user.id).then((exercise) => {
                 setTopExercise(exercise);
             });
+            getTotalMuscleGroupFocus(db).then((stats) => {
+                console.log('Muscle Group Focus Stats:', JSON.stringify(stats, null, 2));
+                setMuscleGroupFocusBySet(stats);
+            });
         }
     }, [db, user]);
 
@@ -84,6 +97,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         weeklyWorkoutCount,
         weeklySetsCount,
         topExercise,
+        muscleGroupFocusBySet,
     };
 
     return (
