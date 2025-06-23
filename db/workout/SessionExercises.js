@@ -60,6 +60,35 @@ export const getSessionExercisesBySessionId = async (db, sessionId) => {
     }
 }
 
+export const getTopExericise = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                e.id, 
+                e.title, 
+                COUNT(se.id) AS sessionCount
+            FROM 
+                SessionExercises se
+            JOIN 
+                Exercises e ON se.exercise_id = e.id
+            JOIN 
+                WorkoutSessions ws ON se.session_id = ws.id
+            WHERE 
+                ws.user_id = ?
+            GROUP BY 
+                e.id
+            ORDER BY 
+                sessionCount DESC
+            LIMIT 1
+        `;
+        const row = await db.getFirstAsync(query, [userId]);
+        return row;
+    } catch (error) {
+        console.error('Error getting top exercise:', error);
+        throw error;
+    }
+}
+
 export const insertSessionExercise = async (db, sessionExercise) => {
     try {
         const result = await db.runAsync(

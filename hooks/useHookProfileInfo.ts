@@ -28,7 +28,7 @@ export default function useHookProfileInfo() {
     const [isEditing, setIsEditing] = useState(false);
     const { db } = useContext(DBContext);
     const { user, userStats, updateUser, updateUserStats } = useContext(UserContext);
-    const { totalWorkoutCount, weeklyWorkoutCount, weeklySetsCount } = useContext(DataContext);
+    const { totalWorkoutCount, weeklyWorkoutCount, weeklySetsCount, topExercise } = useContext(DataContext);
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
     const openAboutModal = () => setAboutModalVisible(true);
@@ -49,7 +49,7 @@ export default function useHookProfileInfo() {
             workoutsCompleted: totalWorkoutCount,
             weeklyWorkouts: weeklyWorkoutCount,
             weeklySets: weeklySetsCount,
-            topExercise: 'Bench Press'
+            topExercise: topExercise ? topExercise.title : 'N/A'
         }
     });
 
