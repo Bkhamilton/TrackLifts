@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
         marginHorizontal: 20,
         borderRadius: 12,
         padding: 20,
@@ -142,7 +141,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '600',
-        color: '#333',
     },
     disclosureContainer: {
         borderBottomWidth: 1,
@@ -158,7 +156,6 @@ const styles = StyleSheet.create({
     disclosureTitle: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
     },
     disclosureBody: {
         paddingBottom: 12,

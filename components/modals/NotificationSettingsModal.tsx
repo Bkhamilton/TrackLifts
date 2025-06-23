@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
         marginHorizontal: 20,
         borderRadius: 12,
         padding: 20,
@@ -145,7 +144,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '600',
-        color: '#333',
     },
     settingItem: {
         flexDirection: 'row',
@@ -158,7 +156,6 @@ const styles = StyleSheet.create({
     settingTitle: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
         marginBottom: 4,
     },
     settingDescription: {
