@@ -24,6 +24,7 @@ const MuscleIntensityVisualization = () => {
     const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
     
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
@@ -142,7 +143,7 @@ const MuscleIntensityVisualization = () => {
             </View>
 
             {/* View Toggle */}
-            <View style={styles.toggleContainer}>
+            <View style={[styles.toggleContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                 <TouchableOpacity 
                     style={[styles.toggleButton, view === 'front' && styles.activeToggle]}
                     onPress={() => setView('front')}
@@ -260,17 +261,14 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
-        color: '#333',
         textAlign: 'center',
     },
     toggleContainer: {
         flexDirection: 'row',
         marginBottom: 10,
-        backgroundColor: '#f5f5f5',
         borderRadius: 12,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: '#e0e0e0',
     },
     toggleButton: {
         paddingVertical: 12,
@@ -284,7 +282,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     inactiveText: {
-        color: '#666',
+        fontWeight: 'normal',
     },
     bodyInfoContainer: {
         flexDirection: 'row',
