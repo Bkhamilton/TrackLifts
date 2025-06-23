@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
+import { UserContext } from '@/contexts/UserContext';
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 
 interface AppearanceSettingsModalProps {
@@ -14,6 +15,8 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
         usePhoneMode: true,
     });
 
+    const { appearancePreference, setAppearancePreference } = useContext(UserContext);
+
     const toggleSetting = (setting: keyof typeof appearanceSettings) => {
         // Prevent toggling lightMode if usePhoneMode is true
         if (setting === 'lightMode' && appearanceSettings.usePhoneMode) return;
@@ -22,6 +25,16 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
             [setting]: !prev[setting]
         }));
     };
+
+    const handleSave = () => {
+        // Here you would typically save the settings to a context or global state
+        if (!appearanceSettings.usePhoneMode) {
+            setAppearancePreference(appearanceSettings.lightMode ? 'light' : 'dark');
+        } else {
+            setAppearancePreference('system');
+        }
+        close();
+    }
 
     return (
         <Modal
@@ -34,6 +47,7 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
                 <View style={styles.modalContent}>
                     <View style={styles.header}>
                         <Text style={styles.title}>Appearance</Text>
+                        <Text style={styles.title}>{JSON.stringify(appearancePreference)}</Text>
                         <TouchableOpacity onPress={close}>
                             <MaterialIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>
@@ -71,7 +85,10 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.saveButton}>
+                    <TouchableOpacity 
+                        style={styles.saveButton}
+                        onPress={handleSave}    
+                    >
                         <Text style={styles.saveButtonText}>Save Changes</Text>
                     </TouchableOpacity>
                 </View>
@@ -87,7 +104,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
         marginHorizontal: 20,
         borderRadius: 12,
         padding: 20,
@@ -101,7 +117,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '600',
-        color: '#333',
     },
     settingItem: {
         flexDirection: 'row',

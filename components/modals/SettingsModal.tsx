@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 22,
         fontWeight: 'bold',
-        color: '#333',
     },
     closeButton: {
         padding: 4,
@@ -199,6 +198,5 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
         marginLeft: 12,
-        color: '#333',
     },
 });

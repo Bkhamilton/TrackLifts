@@ -10,6 +10,8 @@ interface UserContextValue {
     userStats: UserProfileStats;
     updateUser: (user: User) => void;
     updateUserStats: (stats: UserProfileStats) => void;
+    appearancePreference: 'light' | 'dark' | 'system';
+    setAppearancePreference: (preference: 'light' | 'dark' | 'system') => void;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -34,6 +36,8 @@ export const UserContext = createContext<UserContextValue>({
     updateUserStats: () => {
         // This function can be used to update the user stats if needed
     },
+    appearancePreference: 'system',
+    setAppearancePreference: () => {},
 });
 
 interface UserContextValueProviderProps {
@@ -59,6 +63,7 @@ export const UserContextProvider = ({ children }: UserContextValueProviderProps)
         memberSince: '',
         goals: '',
     });
+    const [appearancePreference, setAppearancePreference] = useState<'light' | 'dark' | 'system'>('system');
 
     const updateUser = (newUser: User) => {
         setUser(newUser);
@@ -91,6 +96,8 @@ export const UserContextProvider = ({ children }: UserContextValueProviderProps)
         userStats,
         updateUser,
         updateUserStats,
+        appearancePreference,
+        setAppearancePreference,
     };
 
     return (
