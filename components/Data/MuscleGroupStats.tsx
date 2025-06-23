@@ -3,8 +3,12 @@ import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
+import MuscleGroupPieChart from './Graphs/MuscleGroupPieChart';
 
 const MUSCLE_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'];
+const COLOR_PALETTE = [
+  "#ff8787", "#ffd43b", "#69db7c", "#4dabf7", "#b197fc", "#ffa94d"
+];
 
 const MuscleGroupStats: React.FC = () => {
   const backgroundColor = useThemeColor({}, 'grayBackground');
@@ -20,42 +24,27 @@ const MuscleGroupStats: React.FC = () => {
     0
   );
 
+  // Prepare data for the pie chart and legend
+  const data = MUSCLE_GROUPS.map((group, idx) => ({
+    label: group,
+    value: statsMap[group] || 0,
+    color: COLOR_PALETTE[idx % COLOR_PALETTE.length],
+    percent: total > 0 ? Math.round(((statsMap[group] || 0) / total) * 100) : 0,
+  })).filter(d => d.value > 0);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Muscle Group Focus</Text>
       <View style={[styles.statsContainer, { backgroundColor, borderColor }]}>
-        <ClearView style={styles.statRow}>
-          <ClearView style={styles.labelColumn}>
-            {MUSCLE_GROUPS.map(group => (
-              <Text key={group} style={styles.muscleLabel}>{group}</Text>
-            ))}
-          </ClearView>
-          <ClearView style={styles.barColumn}>
-            {MUSCLE_GROUPS.map(group => {
-              const value = statsMap[group] || 0;
-              const percent = total > 0 ? Math.round((value / total) * 100) : 0;
-              return (
-                <View
-                  key={group}
-                  style={[
-                    styles.bar,
-                    { width: `${percent}%`, backgroundColor: percent > 0 ? '#ff8787' : '#e9ecef' }
-                  ]}
-                />
-              );
-            })}
-          </ClearView>
-          <ClearView style={styles.valueColumn}>
-            {MUSCLE_GROUPS.map(group => {
-              const value = statsMap[group] || 0;
-              const percent = total > 0 ? Math.round((value / total) * 100) : 0;
-              return (
-                <Text key={group} style={styles.valueText}>
-                  {percent}%
-                </Text>
-              );
-            })}
-          </ClearView>
+        <MuscleGroupPieChart />
+        <ClearView style={styles.legendContainer}>
+          {data.map((item) => (
+            <ClearView key={item.label} style={styles.legendRow}>
+              <View style={[styles.legendColor, { backgroundColor: item.color }]} />
+              <Text style={styles.legendLabel}>{item.label}</Text>
+              <Text style={styles.legendPercent}>{item.percent}%</Text>
+            </ClearView>
+          ))}
         </ClearView>
       </View>
     </View>
@@ -73,53 +62,39 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statsContainer: {
-    backgroundColor: '#f8f9fa',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    paddingVertical: 16,
   },
-  statRow: {
-    flexDirection: 'row',
-  },
-  labelColumn: {
-    width: 80,
-  },
-  barColumn: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingVertical: 4,
-  },
-  valueColumn: {
-    width: 50,
-    alignItems: 'flex-end',
-  },
-  muscleLabel: {
-    height: 24,
-    marginVertical: 4,
-  },
-  bar: {
-    height: 16,
-    backgroundColor: '#ff8787',
-    borderRadius: 4,
-    marginVertical: 4,
-  },
-  valueText: {
-    height: 24,
-    marginVertical: 4,
-  },
-  graphPlaceholder: {
-    height: 150,
-    backgroundColor: '#f1f3f5',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-    borderStyle: 'dashed',
-    justifyContent: 'center',
+  pieChartContainer: {
+    height: 220,
+    width: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  placeholderText: {
+  legendContainer: {
+    marginTop: 16,
+    width: '100%',
+    paddingHorizontal: 16,
+  },
+  legendRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  legendColor: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    marginRight: 10,
+  },
+  legendLabel: {
+    flex: 1,
     fontSize: 16,
-    color: '#868e96',
+  },
+  legendPercent: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
 
