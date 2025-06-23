@@ -60,7 +60,7 @@ export default function SettingsModal({
                         {/* App Settings Section */}
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>App Settings</Text>
-                            <TouchableOpacity 
+                            {/* <TouchableOpacity 
                                 onPress={() => onSelect('notificationSettings')}
                                 style={styles.settingButton}
                             >
@@ -69,7 +69,7 @@ export default function SettingsModal({
                                     <Text style={styles.buttonText}>Notification Settings</Text>
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             
                             <TouchableOpacity 
                                 onPress={() => onSelect('appearanceSettings')}
@@ -84,7 +84,7 @@ export default function SettingsModal({
                         </View>
 
                         {/* Privacy & Security Section */}
-                        <View style={styles.section}>
+                        {/* <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Privacy & Security</Text>
                             <TouchableOpacity 
                                 onPress={() => onSelect('privacySettings')}
@@ -96,7 +96,7 @@ export default function SettingsModal({
                                 </View>
                                 <MaterialCommunityIcons name="chevron-right" size={20} color="#999" />
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
 
                         {/* Other Actions Section */}
                         <View style={styles.section}>
