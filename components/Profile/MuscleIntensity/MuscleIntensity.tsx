@@ -34,15 +34,13 @@ const MuscleIntensityVisualization = () => {
     }
 
     const referenceMax: MaxScore = {
-        chest: 12000,
-        back: 15000,
-        arms: 9000,
-        shoulders: 8000,
+        chest: 30000,
+        back: 25000,
+        arms: 14000,
+        shoulders: 15000,
         core: 1000,      // much lower!
-        legs: 20000,
+        legs: 40000,
     };
-
-    const maxScore = Math.max(...muscleGroupIntensity.map(m => m.intensity_score), 1);
 
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
