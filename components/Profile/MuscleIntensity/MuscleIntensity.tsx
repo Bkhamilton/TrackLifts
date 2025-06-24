@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import IntensityLegend from './IntensityLegend';
@@ -26,6 +27,10 @@ const MuscleIntensityVisualization = () => {
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     
+    const { muscleGroupIntensity } = useContext(DataContext);
+
+    const maxScore = Math.max(...muscleGroupIntensity.map(m => m.intensity_score), 1);
+
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
         { 
@@ -70,7 +75,13 @@ const MuscleIntensityVisualization = () => {
             description: 'Leg muscles (quadriceps, hamstrings, glutes, calves) power locomotion and lower body movements.',
             exercises: ['Squats', 'Lunges', 'Deadlifts', 'Calf Raises']
         },
-    ];
+    ].map(m => {
+    const found = muscleGroupIntensity.find(x => x.muscle_group.toLowerCase() === m.name.toLowerCase());
+    return {
+        ...m,
+        value: found ? found.intensity_score / maxScore : 0
+    };
+    });
     
     // Improved color gradient: green (0) → yellow (0.5) → red (1)
     const getColor = (intensity: number): string => {

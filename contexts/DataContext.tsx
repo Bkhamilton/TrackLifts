@@ -1,7 +1,8 @@
 // app/contexts/DataContext.tsx
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
-import { getTopExericise } from '@/db/workout/SessionExercises'; // Assuming this function exists
+import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
+import { getTopExericise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import { getMonthlyWorkoutCount, getQuarterlyWorkoutCount, getWeeklyWorkoutCount, getWorkoutCountByUser, getYearlyWorkoutCount } from '@/db/workout/WorkoutSessions';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -38,6 +39,7 @@ interface DataContextValue {
         quarterly: number;
         yearly: number;
     };
+    muscleGroupIntensity: any[];
     refreshData: () => void;
 }
 
@@ -57,6 +59,7 @@ export const DataContext = createContext<DataContextValue>({
         quarterly: 0,
         yearly: 0,
     },
+    muscleGroupIntensity: [],
     refreshData: () => {
         console.warn('refreshData function not implemented');
     },
@@ -85,6 +88,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         sessionCount: 0,
     });
     const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
+    const [muscleGroupIntensity, setMuscleGroupIntensity] = useState<any[]>([]);
 
     const refreshData = () => {
         if (db && user.id !== 0) {
@@ -130,6 +134,10 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getTotalMuscleGroupFocus(db).then((stats) => {
                 setMuscleGroupFocusBySet(stats);
             });
+            getMuscleGroupIntensity(db, user.id).then((intensity) => {
+                console.log('Muscle Group Intensity:', JSON.stringify(intensity, null, 2));
+                setMuscleGroupIntensity(intensity);
+            });
         }
     }
 
@@ -143,6 +151,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         topExercise,
         muscleGroupFocusBySet,
         workoutCount,
+        muscleGroupIntensity,
         refreshData,
     };
 

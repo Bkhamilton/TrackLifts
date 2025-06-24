@@ -50,7 +50,7 @@ export default function SetCard({
                         onBlur={() => setEditingSet(null)}
                         editable={!isCompleted}
                     />
-                    <Text style={styles.unit}>kg</Text>
+                    <Text style={styles.unit}>lbs</Text>
                 </View>
                 
                 <View style={styles.inputContainer}>

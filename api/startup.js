@@ -220,6 +220,29 @@ export const createDataViews = async (db) => {
             JOIN SessionSets ss ON se.id = ss.session_exercise_id
             GROUP BY se.session_id, se.exercise_id;
 
+            -- Muscle Group Intensity View
+            CREATE VIEW IF NOT EXISTS MuscleGroupIntensity AS
+            SELECT
+                ws.user_id,
+                mg.name AS muscle_group,
+                SUM(ss.weight * ss.reps * em.intensity * 
+                    (CASE 
+                        WHEN julianday('now') - julianday(ws.start_time) <= 7 THEN 1.0
+                        WHEN julianday('now') - julianday(ws.start_time) <= 14 THEN 0.7
+                        WHEN julianday('now') - julianday(ws.start_time) <= 28 THEN 0.4
+                        ELSE 0.1
+                    END)
+                ) AS intensity_score
+            FROM WorkoutSessions ws
+            JOIN SessionExercises se ON ws.id = se.session_id
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+            JOIN Exercises e ON se.exercise_id = e.id
+            JOIN ExerciseMuscles em ON em.exercise_id = e.id
+            JOIN Muscles m ON em.muscle_id = m.id
+            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+            WHERE ws.start_time >= date('now', '-28 days')
+            GROUP BY ws.user_id, mg.name;
+
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
             SELECT 

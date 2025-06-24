@@ -31,7 +31,7 @@ export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
                     {exercise.sets.map((set) => (
                         <View key={set.id} style={[styles.setContainer, { backgroundColor: cardBorder}]}>
                             <Text style={styles.setNumber}>#{set.set_order}</Text>
-                            <Text style={styles.setValue}>{set.weight} kg</Text>
+                            <Text style={styles.setValue}>{set.weight} lbs</Text>
                             <Text style={styles.setValue}>{set.reps} reps</Text>
                         </View>
                     ))}
