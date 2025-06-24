@@ -135,7 +135,6 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setMuscleGroupFocusBySet(stats);
             });
             getMuscleGroupIntensity(db, user.id).then((intensity) => {
-                console.log('Muscle Group Intensity:', JSON.stringify(intensity, null, 2));
                 setMuscleGroupIntensity(intensity);
             });
         }
