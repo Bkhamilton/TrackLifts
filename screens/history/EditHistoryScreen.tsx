@@ -15,7 +15,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
-    const { history } = useContext(HistoryContext);
+    const { history, updateHistory } = useContext(HistoryContext);
     const [startTime, setStartTime] = useState(history.startTime);
     const [lengthMin, setLengthMin] = useState(history.lengthMin);
     const [editedNotes, setEditedNotes] = useState(history.notes);
@@ -64,14 +64,14 @@ export default function EditHistoryScreen() {
     const handleConfirmSave = (option: 'yes' | 'no') => {
         if (option === 'yes') {
             // Save the changes to the routine
-            // const updatedHistory = {
-            //     ...history,
-            //     routine: editedRoutine,
-            //     notes: editedNotes,
-            //     startTime,
-            //     lengthMin,
-            // };
-            // updateHistory(updatedHistory);
+            const updatedHistory = {
+                ...history,
+                routine: editedRoutine,
+                notes: editedNotes,
+                startTime,
+                lengthMin,
+            };
+            updateHistory(updatedHistory);
             router.replace('/(tabs)/history/main');
         }
     }

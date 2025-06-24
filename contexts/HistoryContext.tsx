@@ -6,6 +6,8 @@ import { History } from '@/utils/types';
 import { calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
+import { UserContext } from './UserContext';
+import { WorkoutContext } from './WorkoutContext';
 
 
 interface HistoryContextValue {
@@ -38,6 +40,8 @@ interface HistoryContextValueProviderProps {
 
 export const HistoryContextProvider = ({ children }: HistoryContextValueProviderProps) => {
     const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
+    const { refreshHistory } = useContext(WorkoutContext);
 
     const [history, setHistory] = useState<History>({
         id: 0,
@@ -63,12 +67,12 @@ export const HistoryContextProvider = ({ children }: HistoryContextValueProvider
 
         // 1. Update WorkoutSession
         await updateWorkoutSession(db, {
-            sessionId: newHistory.id,
+            id: newHistory.id,
+            userId: user.id,
             routineId: newHistory.routine.id !== 0 ? newHistory.routine.id : null,
             startTime: newHistory.startTime,
-            endTime: newHistory.endTime || newHistory.lengthMin,
+            endTime: newHistory.lengthMin || newHistory.endTime,
             notes: newHistory.notes,
-            lengthMin: newHistory.lengthMin,
         });
 
         // 2. If routine changed, update SessionExercises and SessionSets
@@ -134,6 +138,7 @@ export const HistoryContextProvider = ({ children }: HistoryContextValueProvider
             }
         }
         // Optionally, refresh any local state here if needed
+        refreshHistory();
     };
 
     const value = {
