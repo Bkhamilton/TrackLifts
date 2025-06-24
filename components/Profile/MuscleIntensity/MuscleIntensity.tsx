@@ -29,6 +29,19 @@ const MuscleIntensityVisualization = () => {
     
     const { muscleGroupIntensity } = useContext(DataContext);
 
+    type MaxScore = {
+        [key: string]: number;
+    }
+
+    const referenceMax: MaxScore = {
+        chest: 12000,
+        back: 15000,
+        arms: 9000,
+        shoulders: 8000,
+        core: 1000,      // much lower!
+        legs: 20000,
+    };
+
     const maxScore = Math.max(...muscleGroupIntensity.map(m => m.intensity_score), 1);
 
     // Muscle data with descriptions and exercises
@@ -76,11 +89,12 @@ const MuscleIntensityVisualization = () => {
             exercises: ['Squats', 'Lunges', 'Deadlifts', 'Calf Raises']
         },
     ].map(m => {
-    const found = muscleGroupIntensity.find(x => x.muscle_group.toLowerCase() === m.name.toLowerCase());
-    return {
-        ...m,
-        value: found ? found.intensity_score / maxScore : 0
-    };
+        const found = muscleGroupIntensity.find(x => x.muscle_group.toLowerCase() === m.name.toLowerCase());
+        const ref = referenceMax[m.id] || 1;
+        return {
+            ...m,
+            value: found ? Math.min(found.intensity_score / ref, 1) : 0 // cap at 1 (100%)
+        };
     });
     
     // Improved color gradient: green (0) → yellow (0.5) → red (1)
