@@ -17,7 +17,7 @@ export default function ProfileMainInfo({
 
     const { user, userStats } = useContext(UserContext);
 
-    const { totalWorkoutCount } = useContext(DataContext);
+    const { workoutCount } = useContext(DataContext);
 
     const router = useRouter();
 
@@ -58,7 +58,7 @@ export default function ProfileMainInfo({
                         <Text style={styles.statLabel}>Weight</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{totalWorkoutCount}</Text>
+                        <Text style={styles.statValue}>{workoutCount.total}</Text>
                         <Text style={styles.statLabel}>Workouts</Text>
                     </View>
                 </View>

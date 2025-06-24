@@ -1,7 +1,8 @@
 import { ClearView, Text } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
+import { calculateLastWorkout, calculateStreak } from '@/utils/dataCalculations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { ComponentProps, useContext } from 'react';
@@ -11,13 +12,14 @@ export default function ProfileInsightsCard() {
     const router = useRouter();
 
     const { workoutFrequency } = useContext(WorkoutContext);
+    const { workoutCount } = useContext(DataContext);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     
     // Sample data - replace with your actual data
     const progressData = {
-        workoutsThisWeek: calculateWeeklyFrequency(workoutFrequency).charAt(0), // e.g., 3 workouts
+        workoutsThisWeek: workoutCount.weekly, // e.g., 3 workouts
         progressPercentage: 0, // % increase from last week
         streak: calculateStreak(workoutFrequency), // days
         caloriesBurned: 3420, // weekly total

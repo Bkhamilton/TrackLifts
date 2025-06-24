@@ -29,7 +29,7 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
-
+    
     return (
         <View style={[styles.header, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <ClearView style={styles.statsRow}>

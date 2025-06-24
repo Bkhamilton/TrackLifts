@@ -3,7 +3,7 @@ import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getTopExericise } from '@/db/workout/SessionExercises'; // Assuming this function exists
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
-import { getWeeklyWorkoutCount, getWorkoutCountByUser } from '@/db/workout/WorkoutSessions';
+import { getMonthlyWorkoutCount, getQuarterlyWorkoutCount, getWeeklyWorkoutCount, getWorkoutCountByUser, getYearlyWorkoutCount } from '@/db/workout/WorkoutSessions';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
@@ -28,17 +28,21 @@ interface MuscleGroupStat {
 
 interface DataContextValue {
     favoriteRoutines: FavoriteRoutine[];
-    totalWorkoutCount: number;
-    weeklyWorkoutCount: number;
     weeklySetsCount: number;
     topExercise: TopExercise;
     muscleGroupFocusBySet: MuscleGroupStat[];
+    workoutCount: {
+        total: number;
+        weekly: number;
+        monthly: number;
+        quarterly: number;
+        yearly: number;
+    };
+    refreshData: () => void;
 }
 
 export const DataContext = createContext<DataContextValue>({
     favoriteRoutines: [],
-    totalWorkoutCount: 0,
-    weeklyWorkoutCount: 0,
     weeklySetsCount: 0,
     topExercise: {
         id: 0,
@@ -46,6 +50,16 @@ export const DataContext = createContext<DataContextValue>({
         sessionCount: 0,
     },
     muscleGroupFocusBySet: [],
+    workoutCount: {
+        total: 0,
+        weekly: 0,
+        monthly: 0,
+        quarterly: 0,
+        yearly: 0,
+    },
+    refreshData: () => {
+        console.warn('refreshData function not implemented');
+    },
 });
 
 interface DataContextValueProviderProps {
@@ -57,8 +71,13 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const { user } = useContext(UserContext);
 
     const [favoriteRoutines, setFavoriteRoutines] = useState<FavoriteRoutine[]>([]);
-    const [totalWorkoutCount, setTotalWorkoutCount] = useState<number>(0);
-    const [weeklyWorkoutCount, setWeeklyWorkoutCount] = useState<number>(0);
+    const [workoutCount, setWorkoutCount] = useState<any>({
+        total: 0,
+        weekly: 0,
+        monthly: 0,
+        quarterly: 0,
+        yearly: 0,
+    })
     const [weeklySetsCount, setWeeklySetsCount] = useState<number>(0);
     const [topExercise, setTopExercise] = useState<TopExercise>({
         id: 0,
@@ -67,16 +86,40 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     });
     const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
 
-    useEffect(() => {
+    const refreshData = () => {
         if (db && user.id !== 0) {
             getFavoriteRoutinesByUser(db, user.id).then((routines) => {
                 setFavoriteRoutines(routines);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
-                setTotalWorkoutCount(count);
+                setWorkoutCount((prev: any) => ({
+                    ...prev,
+                    total: count,
+                }));
             });
             getWeeklyWorkoutCount(db, user.id).then((count) => {
-                setWeeklyWorkoutCount(count);
+                setWorkoutCount((prev: any) => ({
+                    ...prev,
+                    weekly: count,
+                }));
+            });
+            getMonthlyWorkoutCount(db, user.id).then((count) => {
+                setWorkoutCount((prev: any) => ({
+                    ...prev,
+                    monthly: count,
+                }));
+            });
+            getQuarterlyWorkoutCount(db, user.id).then((count) => {
+                setWorkoutCount((prev: any) => ({
+                    ...prev,
+                    quarterly: count,
+                }));
+            });
+            getYearlyWorkoutCount(db, user.id).then((count) => {
+                setWorkoutCount((prev: any) => ({
+                    ...prev,
+                    yearly: count,
+                }));
             });
             getWeeklySetCount(db, user.id).then((count) => {
                 setWeeklySetsCount(count);
@@ -85,19 +128,22 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setTopExercise(exercise);
             });
             getTotalMuscleGroupFocus(db).then((stats) => {
-                console.log('Muscle Group Focus Stats:', JSON.stringify(stats, null, 2));
                 setMuscleGroupFocusBySet(stats);
             });
         }
+    }
+
+    useEffect(() => {
+        refreshData();
     }, [db, user]);
 
     const value = {
         favoriteRoutines,
-        totalWorkoutCount,
-        weeklyWorkoutCount,
         weeklySetsCount,
         topExercise,
         muscleGroupFocusBySet,
+        workoutCount,
+        refreshData,
     };
 
     return (

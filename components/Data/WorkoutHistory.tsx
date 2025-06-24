@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import MonthlyWorkoutFrequency from './Graphs/MonthlyWorkoutFrequency';
 
@@ -13,10 +14,11 @@ export default function WorkoutHistory({ data }: WorkoutHistoryProps) {
     const backgroundColor = useThemeColor({}, 'grayBackground');
     const borderColor = useThemeColor({}, 'grayBorder');
 
+    const { workoutCount } = useContext(DataContext);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Workout History</Text>
-            
             <View style={{ backgroundColor: backgroundColor, borderRadius: 12, paddingVertical: 8, marginBottom: 16 }}>
                 <MonthlyWorkoutFrequency
                     data={data}
@@ -25,15 +27,15 @@ export default function WorkoutHistory({ data }: WorkoutHistoryProps) {
             
             <View style={styles.statsRow}>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>12</Text>
+                    <Text style={styles.statValue}>{workoutCount.monthly}</Text>
                     <Text style={styles.statLabel}>This Month</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>42</Text>
+                    <Text style={styles.statValue}>{workoutCount.quarterly}</Text>
                     <Text style={styles.statLabel}>Last 3 Months</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>156</Text>
+                    <Text style={styles.statValue}>{workoutCount.yearly}</Text>
                     <Text style={styles.statLabel}>This Year</Text>
                 </View>
             </View>

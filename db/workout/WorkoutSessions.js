@@ -71,11 +71,80 @@ export const getWorkoutCountByUser = async (db, userId) => {
     }
 }
 
+export const getYearlyWorkoutCount = async (db, userId) => {
+    try {
+        const query = `
+            SELECT
+                strftime('%Y', start_time) AS year,
+                COUNT(*) AS count
+            FROM
+                WorkoutSessions
+            WHERE
+                user_id = ?
+            GROUP BY
+                year
+            ORDER BY
+                year DESC
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return result ? result.count : 0;
+    } catch (error) {
+        console.error('Error getting yearly workout count:', error);
+        throw error;
+    }
+}
+
+export const getQuarterlyWorkoutCount = async (db, userId) => {
+    try {
+        const query = `
+            SELECT
+                strftime('%Y-%m', start_time) AS quarter,
+                COUNT(*) AS count
+            FROM
+                WorkoutSessions
+            WHERE
+                user_id = ?
+            GROUP BY
+                quarter
+            ORDER BY
+                quarter DESC
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return result ? result.count : 0;
+    } catch (error) {
+        console.error('Error getting quarterly workout count:', error);
+        throw error;
+    }
+}
+
+export const getMonthlyWorkoutCount = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                strftime('%Y-%m', start_time) AS month,
+                COUNT(*) AS count
+            FROM 
+                WorkoutSessions
+            WHERE 
+                user_id = ?
+            GROUP BY 
+                month
+            ORDER BY 
+                month DESC
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return result ? result.count : 0;
+    } catch (error) {
+        console.error('Error getting monthly workout count:', error);
+        throw error;
+    }
+}
+
 export const getWeeklyWorkoutCount = async (db, userId) => {
     try {
         const query = `
             SELECT 
-                COUNT(*) AS weeklyWorkoutCount
+                COUNT(*) AS count
             FROM 
                 WorkoutSessions
             WHERE 
@@ -83,7 +152,7 @@ export const getWeeklyWorkoutCount = async (db, userId) => {
                 start_time >= datetime('now', '-7 days')
         `;
         const result = await db.getAllAsync(query, [userId]);
-        return result[0] ? result[0].weeklyWorkoutCount : 0;
+        return result[0] ? result[0].count : 0;
     } catch (error) {
         console.error('Error getting weekly workout count:', error);
         throw error;
