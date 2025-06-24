@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 15,
         textAlign: 'center',
-        color: '#333',
     },
     addMuscleButton: {
         backgroundColor: '#f0f0f0',
@@ -227,7 +226,6 @@ const styles = StyleSheet.create({
     muscleName: {
         fontWeight: '500',
         fontSize: 15,
-        color: '#333',
     },
     groupNameSmall: {
         fontSize: 12,

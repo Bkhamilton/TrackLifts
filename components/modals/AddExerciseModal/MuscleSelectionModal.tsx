@@ -1,7 +1,8 @@
+import { Text, View } from '@/components/Themed';
 import { Muscle } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface MuscleSelectionModalProps {
     visible: boolean;
@@ -79,7 +80,6 @@ const styles = StyleSheet.create({
         maxHeight: '80%',
     },
     muscleModalPopup: {
-        backgroundColor: 'white',
         borderRadius: 12,
         padding: 20,
         shadowColor: '#000',
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 15,
         textAlign: 'center',
-        color: '#333',
     },
     muscleGroupContainer: {
         marginBottom: 15,
@@ -101,7 +100,6 @@ const styles = StyleSheet.create({
     muscleGroupHeader: {
         fontWeight: '600',
         fontSize: 16,
-        color: '#444',
         marginBottom: 8,
         paddingLeft: 8,
     },

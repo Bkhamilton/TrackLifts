@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     monthHeader: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#333',
         marginBottom: 12,
         paddingLeft: 4,
     },
