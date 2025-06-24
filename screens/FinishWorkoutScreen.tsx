@@ -79,10 +79,11 @@ export default function FinishWorkoutScreen() {
                 notes: notes,
             };
             await saveWorkoutToDatabase(safeFinalWorkout);
+            refreshHistory();
+
             // Handle split completion logic
             const completedNormally = await handleSplitCompletion();
             if (completedNormally) {
-                refreshHistory();
                 clearRoutine();
                 router.replace('/(tabs)/(index)');
             }
