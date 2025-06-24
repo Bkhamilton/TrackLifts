@@ -1,16 +1,16 @@
+import FavoriteRoutinesModal from '@/components/modals/FavoriteRoutinesModal';
 import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 
-interface Props {}
-
-const FavoriteRoutines: React.FC<Props> = () => {
+const FavoriteRoutines: React.FC = () => {
     const backgroundColor = useThemeColor({}, 'grayBackground');
     const borderColor = useThemeColor({}, 'grayBorder');
-
     const { favoriteRoutines } = useContext(DataContext);
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     // Helper to format last used date
     function formatLastUsed(dateStr: string) {
@@ -22,12 +22,25 @@ const FavoriteRoutines: React.FC<Props> = () => {
         });
     }
 
+    // Find the highest usage_count
+    const maxUsage = favoriteRoutines.length > 0
+        ? Math.max(...favoriteRoutines.map(r => r.usage_count))
+        : 0;
+
+    // Filter routines with the highest usage_count, limit to 5
+    const topRoutines = favoriteRoutines
+        .slice() // make a shallow copy to avoid mutating context data
+        .slice(0, 4);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Favorite Routines</Text>
+            <Pressable onPress={() => setModalVisible(true)}>
+                <Text style={{ color: '#ff8787', marginBottom: 8 }}>View All</Text>
+            </Pressable>
             <View style={styles.routinesContainer}>
-                {favoriteRoutines && favoriteRoutines.length > 0 ? (
-                    favoriteRoutines.map((routine: any) => (
+                {topRoutines && topRoutines.length > 0 ? (
+                    topRoutines.map((routine: any) => (
                         <View
                             key={routine.routine_id}
                             style={[
@@ -48,9 +61,15 @@ const FavoriteRoutines: React.FC<Props> = () => {
                     <Text style={styles.emptyText}>No favorite routines yet</Text>
                 )}
             </View>
+            <FavoriteRoutinesModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                routines={favoriteRoutines}
+            />
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
