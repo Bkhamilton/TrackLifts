@@ -35,6 +35,12 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
         setShowGraphTypeModal(false);
     };
 
+    const handleGo = () => {
+        console.log('Exercise:', exercise);
+        console.log('Start Date:', dateRange.start);
+        console.log('End Date:', dateRange.end);
+    };
+
     const backgroundColor = useThemeColor({}, 'grayBackground');
     const borderColor = useThemeColor({}, 'grayBorder');
 
@@ -63,6 +69,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             <DateRangeSelector 
                 dateRange={dateRange} 
                 onDateRangeChange={handleDateRangeChange}  
+                onGo={handleGo}
             />
             
             <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
