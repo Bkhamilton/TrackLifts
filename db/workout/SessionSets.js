@@ -124,3 +124,18 @@ export const clearSessionSets = async (db, sessionExerciseId) => {
         throw error;
     }
 };
+
+export const clearSessionSetsByWorkout = async (db, workoutSessionId) => {
+    try {
+        await db.runAsync(
+            `DELETE FROM SessionSets 
+             WHERE session_exercise_id IN (
+                 SELECT id FROM SessionExercises WHERE session_id = ?
+             )`, 
+            [workoutSessionId]
+        );
+    } catch (error) {
+        console.error('Error clearing session sets by workout session ID:', error);
+        throw error;
+    }
+}

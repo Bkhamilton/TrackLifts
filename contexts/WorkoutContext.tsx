@@ -1,8 +1,8 @@
 // app/contexts/WorkoutContext.tsx
 import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
 import { clearSessionExercises, insertSessionExercise } from '@/db/workout/SessionExercises';
-import { clearSessionSets, insertSessionSet } from '@/db/workout/SessionSets';
-import { updateWorkoutSession } from '@/db/workout/WorkoutSessions';
+import { clearSessionSets, clearSessionSetsByWorkout, insertSessionSet } from '@/db/workout/SessionSets';
+import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/WorkoutSessions';
 import { areExerciseListsEqual, getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
 import { History } from '@/utils/types';
 import { calculateEstimated1RM } from '@/utils/workoutCalculations';
@@ -17,6 +17,7 @@ interface WorkoutContextValue {
     setWorkoutFrequency: React.Dispatch<React.SetStateAction<any>>;
     refreshHistory: () => void;
     updateWorkout: (newHistory: History) => Promise<void>;
+    deleteWorkout: (workout: History) => Promise<void>;
 }
 
 export const WorkoutContext = createContext<WorkoutContextValue>({
@@ -27,6 +28,9 @@ export const WorkoutContext = createContext<WorkoutContextValue>({
     refreshHistory: () => {},
     updateWorkout: async () => {
         console.warn('updateWorkout function not implemented');
+    },
+    deleteWorkout: async () => {
+        console.warn('deleteWorkout function not implemented');
     },
 });
 
@@ -137,6 +141,20 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         refreshHistory();
     };
 
+    const deleteWorkout = async (workout: History) => {
+        if (!db) return;
+
+        // 1. Delete all session sets associated with this workout
+        await clearSessionSetsByWorkout(db, workout.id);
+        // 2. Delete all session exercises associated with this workout
+        await clearSessionExercises(db, workout.id);
+        // 3. Delete the workout session
+        await deleteWorkoutSession(db, workout.id);
+
+        // Refresh the history after deletion
+        refreshHistory();
+    }
+
     useEffect(() => {
         // Initialize or fetch history data from the database if needed
         refreshHistory();
@@ -149,6 +167,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         setWorkoutFrequency,
         refreshHistory,
         updateWorkout,
+        deleteWorkout,
     };
 
     return (
