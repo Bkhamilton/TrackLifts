@@ -22,7 +22,7 @@ export default function ProfileInsightsCard() {
         workoutsThisWeek: workoutCount.weekly, // e.g., 3 workouts
         progressPercentage: 0, // % increase from last week
         streak: calculateStreak(workoutFrequency), // days
-        caloriesBurned: 3420, // weekly total
+        caloriesBurned: 0, // weekly total
         lastWorkout: calculateLastWorkout(workoutFrequency) // e.g., "2 days ago"
     };
 

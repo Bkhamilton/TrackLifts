@@ -155,6 +155,7 @@ export default function SplitComponent({ curDay, setDay, onStart }: SplitCompone
             <TouchableOpacity
                 style={[styles.startButton, { backgroundColor: curDay.routine === "Rest" ? 'rgba(255, 135, 135, 0.6)' : '#ff8787' }]}
                 onPress={() => handleStartWorkout(curDay.routine)}
+                onLongPress={() => setShowOptionsModal(true)}
             >
                 <Text style={styles.startButtonText}>{curDay.routine === "Rest" ? "Skip Rest Day" : `Start ${curDay.routine} Workout`}</Text>
                 <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
