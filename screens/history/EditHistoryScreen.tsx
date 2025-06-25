@@ -6,6 +6,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HistoryContext } from '@/contexts/HistoryContext';
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,7 +16,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function EditHistoryScreen() {
     const [modal, setModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
-    const { history, updateHistory } = useContext(HistoryContext);
+    const { history } = useContext(HistoryContext);
+    const { updateWorkout } = useContext(WorkoutContext);
     const [startTime, setStartTime] = useState(history.startTime);
     const [lengthMin, setLengthMin] = useState(history.lengthMin);
     const [editedNotes, setEditedNotes] = useState(history.notes);
@@ -71,7 +73,7 @@ export default function EditHistoryScreen() {
                 startTime,
                 lengthMin,
             };
-            updateHistory(updatedHistory);
+            updateWorkout(updatedHistory);
             router.replace('/(tabs)/history/main');
         }
     }
