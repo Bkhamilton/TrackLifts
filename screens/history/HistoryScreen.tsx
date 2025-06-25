@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import HistoryInfo from '@/components/History/HistoryInfo';
 import HistoryModal from '@/components/modals/HistoryModal';
-import { ScrollView, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 
 import { WorkoutContext } from '@/contexts/WorkoutContext';
@@ -29,12 +29,12 @@ export default function HistoryScreen() {
             <Title 
                 title="History"
             />
-            <ScrollView style={{ paddingTop: 10, width: '100%' }}>
+            <View style={{ paddingTop: 10, width: '100%' }}>
                 <HistoryInfo 
                     open={openModal} 
                     data={workoutHistory}
                 /> 
-            </ScrollView>
+            </View>
             <HistoryModal 
                 visible={showModal} 
                 close={closeModal} 

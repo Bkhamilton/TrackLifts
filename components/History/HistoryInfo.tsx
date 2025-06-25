@@ -1,8 +1,8 @@
+import { ClearView, Text, View } from '@/components/Themed';
 import { History } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { ClearView, Text, View } from '../Themed';
+import { SectionList, StyleSheet, } from 'react-native';
 import HistoryCard from './HistoryCard';
 
 interface HistoryInfoProps {
@@ -10,14 +10,43 @@ interface HistoryInfoProps {
     data: History[];
 }
 
+// Helper to get the week number of a date
+function getWeekNumber(dateString: string) {
+    const date = new Date(dateString);
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date.valueOf() - firstDayOfYear.valueOf()) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+}
+
+function getMonthYear(dateString: string) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric'
+    });
+}
+
 export default function HistoryInfo({ open, data }: HistoryInfoProps) {
-    function getMonthYear(dateString: string) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'long',
-            year: 'numeric'
+    // Group data by month/year, then by week
+    const sections = React.useMemo(() => {
+        if (!data || data.length === 0) return [];
+        const grouped: Record<string, Record<number, History[]>> = {};
+        data.forEach(history => {
+            const monthYear = getMonthYear(history.startTime);
+            const week = getWeekNumber(history.startTime);
+            if (!grouped[monthYear]) grouped[monthYear] = {};
+            if (!grouped[monthYear][week]) grouped[monthYear][week] = [];
+            grouped[monthYear][week].push(history);
         });
-    }
+        // Convert to SectionList format
+        return Object.entries(grouped).map(([title, weeks]) => ({
+            title,
+            data: Object.keys(weeks)
+                .map(Number)
+                .sort((a, b) => b - a)
+                .map(weekNum => weeks[weekNum]),
+        }));
+    }, [data]);
 
     if (!data || data.length === 0) {
         return (
@@ -34,33 +63,28 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
         );
     }
 
-    // Group by month
-    const groupedData = data.reduce((acc, history) => {
-        const monthYear = getMonthYear(history.startTime);
-        if (!acc[monthYear]) {
-            acc[monthYear] = [];
-        }
-        acc[monthYear].push(history);
-        return acc;
-    }, {} as Record<string, History[]>);
-
     return (
-        <View style={styles.container}>
-            {Object.entries(groupedData).map(([monthYear, histories]) => (
-                <View key={monthYear} style={styles.monthSection}>
-                    <Text style={styles.monthHeader}>{monthYear}</Text>
-                    <View style={styles.cardsContainer}>
-                        {histories.map(history => (
-                            <HistoryCard 
-                                key={history.id} 
-                                history={history} 
-                                open={open} 
-                            />
-                        ))}
-                    </View>
+        <SectionList
+            sections={sections}
+            keyExtractor={item => item.map(h => h.id).join('-')}
+            renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.monthHeader}>{title}</Text>
+            )}
+            renderItem={({ item }) => (
+                <View>
+                    {item.map(history => (
+                        <HistoryCard 
+                            key={history.id}
+                            history={history}
+                            open={open}
+                        />
+                    ))}
                 </View>
-            ))}
-        </View>
+            )}
+            contentContainerStyle={styles.container}
+            SectionSeparatorComponent={() => <View style={{ height: 12 }} />}
+            ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // <-- Week separator
+        />
     );
 }
 
@@ -68,17 +92,13 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         paddingHorizontal: 16,
-    },
-    monthSection: {
-        marginBottom: 20,
+        paddingBottom: 185,
     },
     monthHeader: {
         fontSize: 18,
         fontWeight: '700',
         marginBottom: 12,
         paddingLeft: 4,
-    },
-    cardsContainer: {
         backgroundColor: 'transparent',
     },
     emptyCard: {
