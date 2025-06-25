@@ -15,7 +15,7 @@ type GraphType =
     | 'Heaviest Set' 
     | 'Most Weight Moved' 
     | 'Average Weight' 
-    | 'Repetitions';
+    | 'Most Repetitions';
 
 const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     const [dateRange, setDateRange] = useState({

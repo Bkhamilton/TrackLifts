@@ -243,6 +243,23 @@ export const createDataViews = async (db) => {
             WHERE ws.start_time >= date('now', '-28 days')
             GROUP BY ws.user_id, mg.name;
 
+            -- Exercise Session Stats View
+            CREATE VIEW IF NOT EXISTS ExerciseSessionStats AS
+            SELECT
+                ws.id AS session_id,
+                ws.user_id,
+                ws.start_time AS workout_date,
+                se.exercise_id,
+                MAX(ss.weight) AS heaviest_set,
+                MAX(ss.weight * ss.reps) AS top_set, -- or use estimated_1rm if preferred
+                SUM(ss.weight * ss.reps) AS total_volume,
+                AVG(ss.weight) AS avg_weight,
+                MAX(ss.reps) AS most_reps
+            FROM WorkoutSessions ws
+            JOIN SessionExercises se ON ws.id = se.session_id
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+            GROUP BY ws.id, se.exercise_id;
+
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
             SELECT 

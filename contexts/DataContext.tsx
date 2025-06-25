@@ -1,4 +1,5 @@
 // app/contexts/DataContext.tsx
+import { getExerciseSessionStats } from '@/db/data/ExerciseSessionStats';
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
@@ -42,6 +43,11 @@ interface DataContextValue {
     };
     muscleGroupIntensity: any[];
     refreshData: () => void;
+    fetchExerciseSessionStats: (
+        exerciseId: number,
+        startDate: string,
+        endDate: string
+    ) => Promise<any[]>;
 }
 
 export const DataContext = createContext<DataContextValue>({
@@ -63,6 +69,10 @@ export const DataContext = createContext<DataContextValue>({
     muscleGroupIntensity: [],
     refreshData: () => {
         console.warn('refreshData function not implemented');
+    },
+    fetchExerciseSessionStats: async () => {
+        console.warn('fetchExerciseSessionStats function not implemented');
+        return [];
     },
 });
 
@@ -141,6 +151,20 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     }
 
+    const fetchExerciseSessionStats = async (
+        exerciseId: number,
+        startDate: string,
+        endDate: string
+    ) => {
+        if (!db || !user?.id || !exerciseId) return [];
+        try {
+            return await getExerciseSessionStats(db, user.id, exerciseId, startDate, endDate);
+        } catch (e) {
+            console.error('Failed to fetch exercise session stats:', e);
+            return [];
+        }
+    };
+
     useEffect(() => {
         refreshData();
         const handler = () => refreshData();
@@ -156,6 +180,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         workoutCount,
         muscleGroupIntensity,
         refreshData,
+        fetchExerciseSessionStats,
     };
 
     return (
