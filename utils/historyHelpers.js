@@ -59,3 +59,10 @@ export const fillExerciseData = async (db, exercises) => {
 
     return exercisesWithDetails; // Return the updated exercises array
 }
+
+export const areExerciseListsEqual = (a, b) => {
+    if (a.length !== b.length) return false;
+    const aIds = a.map(e => e.exercise_id ?? e.id).sort();
+    const bIds = b.map(e => e.exercise_id ?? e.id).sort();
+    return aIds.every((id, idx) => id === bIds[idx]);
+};

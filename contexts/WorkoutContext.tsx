@@ -1,7 +1,11 @@
 // app/contexts/WorkoutContext.tsx
 import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
-import { getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
+import { clearSessionExercises, insertSessionExercise } from '@/db/workout/SessionExercises';
+import { clearSessionSets, insertSessionSet } from '@/db/workout/SessionSets';
+import { updateWorkoutSession } from '@/db/workout/WorkoutSessions';
+import { areExerciseListsEqual, getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
 import { History } from '@/utils/types';
+import { calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
@@ -12,6 +16,7 @@ interface WorkoutContextValue {
     workoutFrequency: any; // Define a more specific type if possible
     setWorkoutFrequency: React.Dispatch<React.SetStateAction<any>>;
     refreshHistory: () => void;
+    updateWorkout: (newHistory: History) => Promise<void>;
 }
 
 export const WorkoutContext = createContext<WorkoutContextValue>({
@@ -19,7 +24,10 @@ export const WorkoutContext = createContext<WorkoutContextValue>({
     setWorkoutHistory: () => {},
     workoutFrequency: null,
     setWorkoutFrequency: () => {},
-    refreshHistory: () => {}
+    refreshHistory: () => {},
+    updateWorkout: async () => {
+        console.warn('updateWorkout function not implemented');
+    },
 });
 
 interface WorkoutContextValueProviderProps {
@@ -45,23 +53,93 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         }
     }
 
-    useEffect(() => {
-        // Initialize or fetch history data from the database if needed
-        const fetchHistory = async () => {
-            if (db && user.id !== 0) {
-                const historyData = await getHistoryData(db, user.id);
-                setWorkoutHistory(historyData || []);
-            }
-        };
-        // Fetch workout frequency data
-        const fetchWorkoutFrequency = async () => {
-            if (db && user.id !== 0) {
-                const frequencyData = await getWorkoutFrequencyByUser(db, user.id);
-                setWorkoutFrequency(frequencyData);
+    const updateWorkout = async (newHistory: History) => {
+        if (!db) return;
+
+        // 1. Update WorkoutSession
+        await updateWorkoutSession(db, {
+            id: newHistory.id,
+            userId: user.id,
+            routineId: newHistory.routine.id !== 0 ? newHistory.routine.id : null,
+            startTime: newHistory.startTime,
+            endTime: newHistory.lengthMin || newHistory.endTime,
+            notes: newHistory.notes,
+        });
+
+        // 2. If routine changed, update SessionExercises and SessionSets
+        const history = workoutHistory.find(h => h.id === newHistory.id);
+        if (!history) {
+            console.warn('History not found for the given workout ID');
+            return;
+        }
+        if (JSON.stringify(history.routine) !== JSON.stringify(newHistory.routine)) {
+            const oldExercises = history.routine.exercises;
+            const newExercises = newHistory.routine.exercises;
+            const exercisesChanged = !areExerciseListsEqual(oldExercises, newExercises);
+
+            if (exercisesChanged) {
+                // Remove old session exercises and sets
+                await clearSessionExercises(db, newHistory.id);
+
+                // Insert new session exercises and sets
+                for (const exercise of newExercises) {
+                    const sessionExerciseId = await insertSessionExercise(db, {
+                        sessionId: newHistory.id,
+                        exerciseId: exercise.exercise_id ?? exercise.id,
+                    });
+
+                    for (let i = 0; i < exercise.sets.length; i++) {
+                        const set = exercise.sets[i];
+                        const estimated1RM = calculateEstimated1RM(set.weight, set.reps);
+                        await insertSessionSet(db, {
+                            sessionExerciseId,
+                            setOrder: i + 1,
+                            weight: set.weight,
+                            reps: set.reps,
+                            estimated1RM,
+                            restTime: set.restTime || null,
+                            completed: true,
+                        });
+                    }
+                }
+            } else {
+                // Exercises are the same, only update sets
+                // You need to get the sessionExerciseId for each exercise
+                for (const exercise of newExercises) {
+                    // Find the sessionExerciseId for this exercise in the DB
+                    // You may need a helper like getSessionExerciseId(db, sessionId, exerciseId)
+                    const sessionExerciseId = await insertSessionExercise(db, {
+                        sessionId: newHistory.id,
+                        exerciseId: exercise.exercise_id ?? exercise.id,
+                        // If your insertSessionExercise is upsert, this works; otherwise, use a get function
+                    });
+
+                    // Clear and repopulate sets for this exercise
+                    await clearSessionSets(db, sessionExerciseId);
+
+                    for (let i = 0; i < exercise.sets.length; i++) {
+                        const set = exercise.sets[i];
+                        const estimated1RM = calculateEstimated1RM(set.weight, set.reps);
+                        await insertSessionSet(db, {
+                            sessionExerciseId,
+                            setOrder: i + 1,
+                            weight: set.weight,
+                            reps: set.reps,
+                            estimated1RM,
+                            restTime: set.restTime || null,
+                            completed: true,
+                        });
+                    }
+                }
             }
         }
-        fetchHistory();
-        fetchWorkoutFrequency();
+        // Optionally, refresh any local state here if needed
+        refreshHistory();
+    };
+
+    useEffect(() => {
+        // Initialize or fetch history data from the database if needed
+        refreshHistory();
     }, [db, user]);
 
     const value = {
@@ -69,7 +147,8 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
         setWorkoutHistory,
         workoutFrequency,
         setWorkoutFrequency,
-        refreshHistory
+        refreshHistory,
+        updateWorkout,
     };
 
     return (
