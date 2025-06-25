@@ -7,6 +7,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import ConfirmationModal from '../modals/ConfirmationModal';
+import OptionsModal from '../modals/OptionsModal';
 
 interface SplitComponentProps {
     curDay: { day: number; routine: string };
@@ -19,6 +21,9 @@ export default function SplitComponent({ curDay, setDay, onStart }: SplitCompone
     const { activeSplit, splits, completeCurrentSplitDay, refreshSplits, getCurrentSplitDay } = useContext(SplitContext);
 
     const [currentDayIndex, setCurrentDayIndex] = useState<number>(0);
+
+    const [showSkipModal, setShowSkipModal] = useState<boolean>(false);
+    const [showOptionsModal, setShowOptionsModal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchCurrentDay = async () => {
@@ -116,30 +121,34 @@ export default function SplitComponent({ curDay, setDay, onStart }: SplitCompone
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.daysScrollContainer}
             >
-                {activeSplit.routines.map((routine) => (
-                    <TouchableOpacity
-                        key={`${routine.routine}-${routine.day}`}
-                        style={[
-                            styles.dayPill,
-                            { backgroundColor: cardBackground },
-                            routine.day === curDay.day && routine.routine === curDay.routine && styles.activeDayPill,
-                            routine.routine === "Rest" && styles.restDayPill,
-                            routine.day === curDay.day && routine.routine === curDay.routine && routine.routine === "Rest" && styles.activeRestDayPill,
-                            currentDayIndex >= routine.day && { opacity: 0.5, borderWidth: 1, borderColor: cardBorder } // Disable past days
-                        ]}
-                        onPress={() => setDay({ day: routine.day, routine: routine.routine })}
-                    >
-                        <Text
+                {activeSplit.routines.map((routine) => {
+                    const isActive = routine.day === curDay.day && routine.routine === curDay.routine;
+                    return (
+                        <TouchableOpacity
+                            key={`${routine.routine}-${routine.day}`}
                             style={[
-                                styles.dayText,
-                                routine.day === curDay.day && routine.routine === curDay.routine && styles.activeDayText,
-                                routine.routine === "Rest" && styles.restDayText
+                                styles.dayPill,
+                                { backgroundColor: cardBackground },
+                                isActive && styles.activeDayPill,
+                                routine.routine === "Rest" && styles.restDayPill,
+                                isActive && routine.routine === "Rest" && styles.activeRestDayPill,
+                                currentDayIndex >= routine.day && { opacity: 0.5, borderWidth: 1, borderColor: cardBorder }
                             ]}
+                            onPress={() => setDay({ day: routine.day, routine: routine.routine })}
+                            onLongPress={isActive ? () => setShowOptionsModal(true) : undefined}
                         >
-                            {routine.routine === "Rest" ? "Rest" : `${routine.routine}`}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
+                            <Text
+                                style={[
+                                    styles.dayText,
+                                    isActive && styles.activeDayText,
+                                    routine.routine === "Rest" && styles.restDayText
+                                ]}
+                            >
+                                {routine.routine === "Rest" ? "Rest" : `${routine.routine}`}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
             </ScrollView>
 
             {/* Only show start button for workout days */}
@@ -150,6 +159,38 @@ export default function SplitComponent({ curDay, setDay, onStart }: SplitCompone
                 <Text style={styles.startButtonText}>{curDay.routine === "Rest" ? "Skip Rest Day" : `Start ${curDay.routine} Workout`}</Text>
                 <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
             </TouchableOpacity>
+            <ConfirmationModal
+                visible={showSkipModal}
+                message="Are you sure you want to skip this day in the cycle?"
+                onClose={() => setShowSkipModal(false)}
+                onSelect={async (choice) => {
+                    if (choice === 'yes') {
+                        // If user confirms, complete the current split day
+                        await completeCurrentSplitDay();
+                        await refreshSplits();
+                    }
+                    setShowSkipModal(false);
+                }}
+            />
+            <OptionsModal
+                visible={showOptionsModal}
+                title={curDay.routine}
+                options={[
+                    { label: 'Start Workout', value: 'start' },
+                    { label: 'Skip Workout', value: 'skip' }
+                ]}
+                close={() => setShowOptionsModal(false)}
+                onSelect={async (value) => {
+                    if (value === 'start') {
+                        handleStartWorkout(curDay.routine);
+                    } else if (value === 'skip') {
+                        // Handle split deletion logic here
+                        // For now, just close the modal
+                        setShowOptionsModal(false);
+                        setShowSkipModal(true);
+                    }
+                }}
+            />
         </View>
     );
 }
