@@ -3,6 +3,7 @@ import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
 import { clearSessionExercises, insertSessionExercise } from '@/db/workout/SessionExercises';
 import { clearSessionSets, clearSessionSetsByWorkout, insertSessionSet } from '@/db/workout/SessionSets';
 import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/WorkoutSessions';
+import { dataEvents } from '@/utils/events';
 import { areExerciseListsEqual, getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
 import { History } from '@/utils/types';
 import { calculateEstimated1RM } from '@/utils/workoutCalculations';
@@ -55,6 +56,8 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
                 setWorkoutFrequency(frequencyData);
             });
         }
+
+        dataEvents.dispatchEvent('refreshData');
     }
 
     const updateWorkout = async (newHistory: History) => {

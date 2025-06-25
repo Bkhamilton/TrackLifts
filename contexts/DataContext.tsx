@@ -5,6 +5,7 @@ import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
 import { getTopExericise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import { getMonthlyWorkoutCount, getQuarterlyWorkoutCount, getWeeklyWorkoutCount, getWorkoutCountByUser, getYearlyWorkoutCount } from '@/db/workout/WorkoutSessions';
+import { dataEvents } from '@/utils/events';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
@@ -142,6 +143,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
 
     useEffect(() => {
         refreshData();
+        const handler = () => refreshData();
+        dataEvents.addEventListener('refreshData', handler);
+        return () => dataEvents.removeEventListener('refreshData', handler);
     }, [db, user]);
 
     const value = {

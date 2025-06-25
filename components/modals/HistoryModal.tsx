@@ -1,4 +1,5 @@
 import { HistoryContext } from '@/contexts/HistoryContext';
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActiveExercise, History } from '@/utils/types'; // Adjust import path as needed
 import { calculateTotalWeight } from '@/utils/workoutCalculations';
@@ -23,6 +24,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
 
     const router = useRouter();
     const { setHistory } = useContext(HistoryContext);
+    const { deleteWorkout } = useContext(WorkoutContext);
 
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
@@ -180,7 +182,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     if (choice === 'yes') {
                         console.log('Workout deleted');
                         // Add your deletion logic here
-                        // await deleteWorkoutFromDB(history);
+                        await deleteWorkout(history);
                         close();
                     }
                     setConfirmationModalVisible(false);
