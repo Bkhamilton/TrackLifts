@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { ClearView, Text, View } from '../Themed';
+import ConfirmationModal from './ConfirmationModal';
 import OptionsModal from './OptionsModal';
 
 interface HistoryModalProps {
@@ -24,6 +25,8 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
     const { setHistory } = useContext(HistoryContext);
 
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
+    const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+
     const handleOptionSelect = (option: string) => {
         switch (option) {
             case 'edit':
@@ -38,7 +41,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                 // Handle delete action here
                 console.log('Delete workout');
                 setOptionsModalVisible(false);
-                close();
+                setConfirmationModalVisible(true);
                 break;
             default:
                 console.log('Unknown option selected');
@@ -111,16 +114,6 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
             transparent={true}
             animationType='fade'
         >
-            <OptionsModal
-                visible={optionsModalVisible}
-                close={() => setOptionsModalVisible(false)}
-                title="Options"
-                options={[
-                    { label: 'Edit Workout', value: 'edit' },
-                    { label: 'Delete Workout', value: 'delete', destructive: true }
-                ]}
-                onSelect={handleOptionSelect}
-            />
             <View style={styles.modalBackdrop}>
                 <View style={styles.modalContainer}>
                     {/* Header */}
@@ -168,6 +161,31 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     />
                 </View>
             </View>
+            <OptionsModal
+                visible={optionsModalVisible}
+                close={() => setOptionsModalVisible(false)}
+                title="Options"
+                options={[
+                    { label: 'Edit Workout', value: 'edit' },
+                    { label: 'Delete Workout', value: 'delete', destructive: true }
+                ]}
+                onSelect={handleOptionSelect}
+            />    
+            <ConfirmationModal
+                visible={confirmationModalVisible}
+                onClose={() => setConfirmationModalVisible(false)}
+                message="Are you sure you want to delete this workout? This action cannot be undone."
+                onSelect={async (choice) => {
+                    // Handle deletion logic here
+                    if (choice === 'yes') {
+                        console.log('Workout deleted');
+                        // Add your deletion logic here
+                        // await deleteWorkoutFromDB(history);
+                        close();
+                    }
+                    setConfirmationModalVisible(false);
+                }}
+            />        
         </Modal>
     );
 }
