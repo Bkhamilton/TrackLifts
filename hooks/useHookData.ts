@@ -1,6 +1,7 @@
 import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
+import { Exercise } from '@/utils/types';
 import { useContext, useState } from 'react';
 
 interface FavoriteGraph {
@@ -14,7 +15,7 @@ interface FavoriteGraph {
 
 export default function useHookData() {
     const [showExerciseModal, setShowExerciseModal] = useState(false);
-    const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+    const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     const { workoutHistory, workoutFrequency } = useContext(WorkoutContext);
     const { workoutCount } = useContext(DataContext);
@@ -63,7 +64,7 @@ export default function useHookData() {
         caloriesBurned: 0 // This can be calculated based on workout history if needed,
     };
 
-    const handleExerciseSelect = (exercise: string) => {
+    const handleExerciseSelect = (exercise: Exercise) => {
         setSelectedExercise(exercise);
         setShowExerciseModal(false);
     };

@@ -1,5 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
-import React, { useState } from 'react';
+import { DBContext } from '@/contexts/DBContext';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MuscleInfoModal from './MuscleInfoModal';
 import MuscleLabels from './MuscleLabels';
@@ -42,6 +43,10 @@ const MuscleInfoPanel = ({
     view,
 }: MuscleInfoPanelProps) => {
     const [modalVisible, setModalVisible] = useState(false);
+
+    const { muscles } = useContext(DBContext);
+
+    const selectedMuscles = muscles.filter(muscle => muscle.muscleGroup === selectedMuscleData?.name);
 
     if (!selectedMuscleData) {
         return (
@@ -128,9 +133,9 @@ const MuscleInfoPanel = ({
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Hit</Text>
                     <ClearView style={styles.chipRow}>
-                        {getPrimaryMuscles(selectedMuscleData.id).map((muscle, idx) => (
+                        {selectedMuscles.map((muscle, idx) => (
                             <View key={idx} style={styles.chip}>
-                                <Text style={styles.chipText}>{muscle}</Text>
+                                <Text style={styles.chipText}>{muscle.name}</Text>
                             </View>
                         ))}
                     </ClearView>

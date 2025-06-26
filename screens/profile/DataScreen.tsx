@@ -79,7 +79,7 @@ export default function DataScreen() {
             />
             
             <ExerciseAnalysis 
-                exercise={selectedExercise || "Select an Exercise"} 
+                exercise={selectedExercise || {id: 0, title: "Select an Exercise", equipment: "None", muscleGroupId: 0, muscleGroup: "None"}} 
                 onSelectExercise={() => setShowExerciseModal(true)}
             />
             
@@ -94,7 +94,7 @@ export default function DataScreen() {
             <AddToWorkoutModal
                 visible={showExerciseModal}
                 close={() => setShowExerciseModal(false)}
-                add={(exercise) => handleExerciseSelect(exercise.title)}
+                add={(exercise) => handleExerciseSelect(exercise)}
             />
         </ScrollView>
         </View>

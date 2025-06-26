@@ -1,12 +1,14 @@
 import { Text, View } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import DateRangeSelector from './DateRangeSelector';
 
 interface Props {
-    exercise: string;
+    exercise: Exercise;
     onSelectExercise: () => void;
 }
 
@@ -25,6 +27,8 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     const [graphType, setGraphType] = useState<GraphType>('Top Set');
     const [showGraphTypeModal, setShowGraphTypeModal] = useState(false);
 
+    const { fetchExerciseSessionStats } = useContext(DataContext);
+
     const handleDateRangeChange = (start: Date, end: Date) => {
         setDateRange({ start, end });
         // Here you would typically fetch data for the new date range
@@ -35,10 +39,12 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
         setShowGraphTypeModal(false);
     };
 
-    const handleGo = () => {
+    const handleGo = async () => {
         console.log('Exercise:', exercise);
         console.log('Start Date:', dateRange.start);
         console.log('End Date:', dateRange.end);
+        const results = await fetchExerciseSessionStats(exercise.id, dateRange.start.toISOString(), dateRange.end.toISOString());
+        console.log('Fetched Results:', JSON.stringify(results, null, 2));
     };
 
     const backgroundColor = useThemeColor({}, 'grayBackground');
@@ -62,7 +68,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
                 style={[styles.exerciseSelector, { backgroundColor: backgroundColor, borderColor: borderColor }]}
                 onPress={onSelectExercise}
             >
-                <Text style={styles.exerciseText}>{exercise}</Text>
+                <Text style={styles.exerciseText}>{exercise.title}</Text>
                 <MaterialCommunityIcons name="chevron-down" size={20} color="#666" />
             </TouchableOpacity>
             
@@ -74,11 +80,11 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             
             <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
                 <Text style={styles.placeholderText}>
-                    {graphType} Graph for {exercise !== "Select an Exercise" ? exercise : 'Selected Exercise'}
+                    {graphType} Graph for {exercise.title !== "Select an Exercise" ? exercise.title : 'Selected Exercise'}
                 </Text>
                 <Text style={styles.graphHint}>
-                    {exercise !== "Select an Exercise" 
-                        ? `${graphType} data for ${exercise} will appear here`
+                    {exercise.title !== "Select an Exercise" 
+                        ? `${graphType} data for ${exercise.title} will appear here`
                         : 'Select an exercise to view progress'}
                 </Text>
             </View>
