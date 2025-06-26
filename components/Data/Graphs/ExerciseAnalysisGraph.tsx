@@ -2,7 +2,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
-import { Bar, CartesianChart } from 'victory-native';
+import { CartesianChart, Line } from 'victory-native';
 
 export default function ExerciseAnalysisGraph({ data } : { data: any[] }) {
 
@@ -47,15 +47,12 @@ export default function ExerciseAnalysisGraph({ data } : { data: any[] }) {
                 formatYLabel,
             }} 
         >
-            {({ points, chartBounds }) => (
-                <Bar
+            {({ points }) => (
+                <Line
                     color="#ff8787"
-                    points={points.weight} 
-                    chartBounds={chartBounds}  
-                    roundedCorners={{
-                        topLeft: 5,
-                        topRight: 5,
-                    }}
+                    strokeWidth={2}
+                    animate={{ type: "timing", duration: 400 }} 
+                    points={points.weight}          
                 />
             )}
         </CartesianChart>
