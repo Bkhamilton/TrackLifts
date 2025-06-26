@@ -9,8 +9,15 @@ import React, { createContext, ReactNode, useEffect, useState } from 'react';
 interface DBContextValue {
     db: any;
     equipment: any[];
-    muscles: any[];
+    muscles: Muscle[];
     muscleGroups: MuscleGroup[];
+}
+
+type Muscle = {
+    id: string;
+    name: string;
+    muscleGroupId: string;
+    muscleGroup: string;
 }
 
 export const DBContext = createContext<DBContextValue>({
@@ -28,7 +35,7 @@ export const DBContextProvider = ({ children }: DBContextValueProviderProps) => 
     const db = useSQLiteContext();
 
     const [equipment, setEquipment] = useState<any[]>([]);
-    const [muscles, setMuscles] = useState<any[]>([]);
+    const [muscles, setMuscles] = useState<Muscle[]>([]);
     const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
 
     useEffect(() => {
