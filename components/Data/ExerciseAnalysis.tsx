@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import DateRangeSelector from './DateRangeSelector';
+import ExerciseAnalysisGraph from './Graphs/ExerciseAnalysisGraph';
 
 interface Props {
     exercise: Exercise;
@@ -48,6 +49,37 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
         setShowGraphTypeModal(false);
     };
 
+    function fillResultsWithDates(results: any[], start: Date, end: Date) {
+        // Map results by date (YYYY-MM-DD)
+        const resultMap: Record<string, any> = {};
+        results.forEach(item => {
+            const dateKey = new Date(item.workout_date).toISOString().slice(0, 10);
+            resultMap[dateKey] = item;
+        });
+
+        const filled: any[] = [];
+        const current = new Date(start);
+        const endDate = new Date(end);
+
+        while (current <= endDate) {
+            const dateKey = current.toISOString().slice(0, 10);
+            if (resultMap[dateKey]) {
+                filled.push({ ...resultMap[dateKey], workout_date: dateKey });
+            } else {
+                filled.push({
+                    session_id: null,
+                    workout_date: dateKey,
+                    exercise_id: results[0]?.exercise_id ?? null,
+                    set_id: null,
+                    weight: 0,
+                    reps: 0,
+                });
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        return filled;
+    }
+
     const handleGo = async () => {
         if (!exercise || exercise.title === "Select an Exercise") {
             alert('Please select an exercise first.');
@@ -61,8 +93,8 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             dateRange.end.toISOString(),
             statType
         );
-        setGraphData(results); // Store for graph rendering
-        console.log('Fetched Results:', JSON.stringify(results, null, 2));
+        const filledResults = fillResultsWithDates(results, dateRange.start, dateRange.end);
+        setGraphData(filledResults);
     };
 
     const backgroundColor = useThemeColor({}, 'grayBackground');
@@ -95,17 +127,27 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
                 onDateRangeChange={handleDateRangeChange}  
                 onGo={handleGo}
             />
-            
-            <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
-                <Text style={styles.placeholderText}>
-                    {graphType} Graph for {exercise.title !== "Select an Exercise" ? exercise.title : 'Selected Exercise'}
-                </Text>
-                <Text style={styles.graphHint}>
-                    {exercise.title !== "Select an Exercise" 
-                        ? `${graphType} data for ${exercise.title} will appear here`
-                        : 'Select an exercise to view progress'}
-                </Text>
-            </View>
+
+            {
+                graphData.length > 0 ? (
+                    <View style={[styles.graphContainer, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
+                        <ExerciseAnalysisGraph
+                            data={graphData}
+                        />
+                    </View>
+                ) : (
+                    <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
+                        <Text style={styles.placeholderText}>
+                            {graphType} Graph for {exercise.title !== "Select an Exercise" ? exercise.title : 'Selected Exercise'}
+                        </Text>
+                        <Text style={styles.graphHint}>
+                            {exercise.title !== "Select an Exercise" 
+                                ? `${graphType} data for ${exercise.title} will appear here`
+                                : 'Select an exercise to view progress'}
+                        </Text>
+                    </View>
+                )
+            }
             
             <View style={styles.statsRow}>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
@@ -196,6 +238,13 @@ const styles = StyleSheet.create({
         borderStyle: 'dashed',
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 16,
+    },
+    graphContainer: {
+        paddingVertical: 10,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderStyle: 'dashed',
         marginBottom: 16,
     },
     placeholderText: {
