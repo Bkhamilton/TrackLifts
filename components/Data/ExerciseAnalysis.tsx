@@ -19,6 +19,14 @@ type GraphType =
     | 'Average Weight' 
     | 'Most Repetitions';
 
+const graphTypeToStatType = {
+    'Top Set': 'top_set',
+    'Heaviest Set': 'heaviest_set',
+    'Most Weight Moved': 'total_volume',
+    'Average Weight': 'avg_weight',
+    'Most Repetitions': 'most_reps',
+} as const;
+
 const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     const [dateRange, setDateRange] = useState({
         start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
@@ -26,8 +34,9 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     });
     const [graphType, setGraphType] = useState<GraphType>('Top Set');
     const [showGraphTypeModal, setShowGraphTypeModal] = useState(false);
+    const [graphData, setGraphData] = useState<any[]>([]);    
 
-    const { fetchExerciseSessionStats } = useContext(DataContext);
+    const { fetchExerciseSessionStats, fetchExerciseStats } = useContext(DataContext);
 
     const handleDateRangeChange = (start: Date, end: Date) => {
         setDateRange({ start, end });
@@ -40,10 +49,19 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     };
 
     const handleGo = async () => {
-        console.log('Exercise:', exercise);
-        console.log('Start Date:', dateRange.start);
-        console.log('End Date:', dateRange.end);
-        const results = await fetchExerciseSessionStats(exercise.id, dateRange.start.toISOString(), dateRange.end.toISOString());
+        if (!exercise || exercise.title === "Select an Exercise") {
+            alert('Please select an exercise first.');
+            return;
+        }
+        // Map GraphType to statType
+        const statType = graphTypeToStatType[graphType];
+        const results = await fetchExerciseStats(
+            exercise.id,
+            dateRange.start.toISOString(),
+            dateRange.end.toISOString(),
+            statType
+        );
+        setGraphData(results); // Store for graph rendering
         console.log('Fetched Results:', JSON.stringify(results, null, 2));
     };
 

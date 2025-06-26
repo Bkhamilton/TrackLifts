@@ -260,6 +260,50 @@ export const createDataViews = async (db) => {
             JOIN SessionSets ss ON se.id = ss.session_exercise_id
             GROUP BY ws.id, se.exercise_id;
 
+            -- ExerciseStatSets View: Returns the set (with weight/reps) for each stat type per session/exercise
+            CREATE VIEW IF NOT EXISTS ExerciseStatSets AS
+            SELECT
+                ws.id AS session_id,
+                ws.user_id,
+                ws.start_time AS workout_date,
+                se.exercise_id,
+                ss.id AS set_id,
+                ss.weight,
+                ss.reps,
+                -- Heaviest Set: 1 if this set is the heaviest in the session/exercise
+                CASE 
+                    WHEN ss.id = (
+                        SELECT s2.id
+                        FROM SessionSets s2
+                        WHERE s2.session_exercise_id = se.id
+                        ORDER BY s2.weight DESC, s2.reps DESC
+                        LIMIT 1
+                    ) THEN 1 ELSE 0
+                END AS is_heaviest_set,
+                -- Top Set: 1 if this set is the top set (weight * reps) in the session/exercise
+                CASE 
+                    WHEN ss.id = (
+                        SELECT s2.id
+                        FROM SessionSets s2
+                        WHERE s2.session_exercise_id = se.id
+                        ORDER BY (s2.weight * s2.reps) DESC, s2.weight DESC
+                        LIMIT 1
+                    ) THEN 1 ELSE 0
+                END AS is_top_set,
+                -- Most Reps: 1 if this set has the most reps in the session/exercise
+                CASE 
+                    WHEN ss.id = (
+                        SELECT s2.id
+                        FROM SessionSets s2
+                        WHERE s2.session_exercise_id = se.id
+                        ORDER BY s2.reps DESC, s2.weight DESC
+                        LIMIT 1
+                    ) THEN 1 ELSE 0
+                END AS is_most_reps_set
+            FROM WorkoutSessions ws
+            JOIN SessionExercises se ON ws.id = se.session_id
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id;
+
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
             SELECT 

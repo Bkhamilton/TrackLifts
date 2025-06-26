@@ -50,3 +50,31 @@ export const getLatestExerciseSessionStat = async (db, userId, exerciseId) => {
         throw error;
     }
 };
+
+/**
+ * Get all-time top stats for a given exercise and user.
+ * @param {object} db - The database instance.
+ * @param {number} userId - The user ID.
+ * @param {number} exerciseId - The exercise ID.
+ * @returns {Promise<Object|null>} All-time stats or null.
+ */
+export const getAllTimeExerciseStats = async (db, userId, exerciseId) => {
+    try {
+        const result = await db.getFirstAsync(
+            `SELECT
+                SUM(total_volume) AS total_volume,
+                MAX(heaviest_set) AS heaviest_set,
+                MAX(top_set) AS top_set,
+                AVG(avg_weight) AS avg_weight,
+                MAX(most_reps) AS most_reps
+             FROM ExerciseSessionStats
+             WHERE user_id = ?
+               AND exercise_id = ?`,
+            [userId, exerciseId]
+        );
+        return result || null;
+    } catch (error) {
+        console.error('Error fetching all-time exercise stats:', error);
+        throw error;
+    }
+};

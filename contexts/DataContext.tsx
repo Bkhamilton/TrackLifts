@@ -1,11 +1,24 @@
 // app/contexts/DataContext.tsx
 import { getExerciseSessionStats } from '@/db/data/ExerciseSessionStats';
+import {
+    getAverageWeightPerSession,
+    getHeaviestSets,
+    getMostRepsSets,
+    getTopSets,
+    getTotalVolumePerSession,
+} from '@/db/data/ExerciseStatSets';
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
 import { getTopExericise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
-import { getMonthlyWorkoutCount, getQuarterlyWorkoutCount, getWeeklyWorkoutCount, getWorkoutCountByUser, getYearlyWorkoutCount } from '@/db/workout/WorkoutSessions';
+import {
+    getMonthlyWorkoutCount,
+    getQuarterlyWorkoutCount,
+    getWeeklyWorkoutCount,
+    getWorkoutCountByUser,
+    getYearlyWorkoutCount
+} from '@/db/workout/WorkoutSessions';
 import { dataEvents } from '@/utils/events';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
@@ -48,6 +61,12 @@ interface DataContextValue {
         startDate: string,
         endDate: string
     ) => Promise<any[]>;
+    fetchExerciseStats: (
+        exerciseId: number,
+        startDate: string,
+        endDate: string,
+        statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
+    ) => Promise<any[]>;
 }
 
 export const DataContext = createContext<DataContextValue>({
@@ -72,6 +91,10 @@ export const DataContext = createContext<DataContextValue>({
     },
     fetchExerciseSessionStats: async () => {
         console.warn('fetchExerciseSessionStats function not implemented');
+        return [];
+    },
+    fetchExerciseStats: async () => {
+        console.warn('fetchExerciseStats function not implemented');
         return [];
     },
 });
@@ -165,6 +188,34 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     };
 
+    const fetchExerciseStats = async (
+        exerciseId: number,
+        startDate: string,
+        endDate: string,
+        statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
+    ) => {
+        if (!db || !user?.id || !exerciseId) return [];
+        try {
+            switch (statType) {
+                case 'heaviest_set':
+                    return await getHeaviestSets(db, user.id, exerciseId, startDate, endDate);
+                case 'top_set':
+                    return await getTopSets(db, user.id, exerciseId, startDate, endDate);
+                case 'most_reps':
+                    return await getMostRepsSets(db, user.id, exerciseId, startDate, endDate);
+                case 'total_volume':
+                    return await getTotalVolumePerSession(db, user.id, exerciseId, startDate, endDate);
+                case 'avg_weight':
+                    return await getAverageWeightPerSession(db, user.id, exerciseId, startDate, endDate);
+                default:
+                    return [];
+            }
+        } catch (e) {
+            console.error('Failed to fetch exercise stats:', e);
+            return [];
+        }
+    };
+
     useEffect(() => {
         refreshData();
         const handler = () => refreshData();
@@ -181,6 +232,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         muscleGroupIntensity,
         refreshData,
         fetchExerciseSessionStats,
+        fetchExerciseStats,
     };
 
     return (
