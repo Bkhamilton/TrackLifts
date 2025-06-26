@@ -8,6 +8,7 @@ import FavoriteRoutines from '@/components/Data/FavoriteRoutines';
 import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
 import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
+import FavoriteGraphModal from '@/components/modals/FavoriteGraphModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
@@ -36,6 +37,8 @@ export default function DataScreen() {
 
     const [weeklyFrequency, setWeeklyFrequency] = useState<any[]>(buildLast7DaysFrequency(workoutFrequency));
     const [monthlyFrequency, setMonthlyFrequency] = useState<any[]>(buildLast30DaysFrequency(workoutFrequency));
+
+    const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -74,7 +77,7 @@ export default function DataScreen() {
             
             <FavoriteGraphs
                 favorites={favoriteGraphs}
-                onAddFavorite={handleAddFavorite}
+                onAddFavorite={() => setFavoriteGraphModal(true)}
                 onSelectGraph={handleSelectGraph}
             />
             
@@ -91,6 +94,15 @@ export default function DataScreen() {
             
             <FavoriteRoutines />
 
+            <FavoriteGraphModal
+                visible={favoriteGraphModal}
+                onClose={() => setFavoriteGraphModal(false)}
+                onSave={(exercise, graphType) => {
+                    // Handle saving favorite graph
+                    console.log('Saving favorite graph:', exercise, graphType);
+                    setFavoriteGraphModal(false);
+                }}
+            />
             <AddToWorkoutModal
                 visible={showExerciseModal}
                 close={() => setShowExerciseModal(false)}

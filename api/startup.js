@@ -167,6 +167,16 @@ export const createWorkoutTables = async (db) => {
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
         );
+        CREATE TABLE IF NOT EXISTS FavoriteGraphs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            exercise_id INTEGER NOT NULL,
+            graph_type TEXT NOT NULL, -- e.g. 'top_set', 'heaviest_set', etc.
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, exercise_id, graph_type),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
+        );
     `);
 }
 

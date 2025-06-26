@@ -36,6 +36,11 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     const [graphType, setGraphType] = useState<GraphType>('Top Set');
     const [showGraphTypeModal, setShowGraphTypeModal] = useState(false);
     const [graphData, setGraphData] = useState<any[]>([]);    
+    const [exerciseStats, setExerciseStats] = useState<any>({
+        currentMax: 0,
+        progress: "+0",
+        timesPerformed: 0,
+    });
 
     const { fetchExerciseSessionStats, fetchExerciseStats } = useContext(DataContext);
 
@@ -93,6 +98,14 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             dateRange.end.toISOString(),
             statType
         );
+        if (!results || results.length === 0) {
+            alert('No data available for the selected exercise and date range.');
+            return;
+        }
+        setExerciseStats({
+            ...exerciseStats,
+            timesPerformed: results.length,
+        });
         const filledResults = fillResultsWithDates(results, dateRange.start, dateRange.end);
         setGraphData(filledResults);
     };
@@ -151,15 +164,15 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             
             <View style={styles.statsRow}>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>125 lbs</Text>
+                    <Text style={styles.statValue}>{exerciseStats.currentMax} lbs</Text>
                     <Text style={styles.statLabel}>Current Max</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>+15 lbs</Text>
+                    <Text style={styles.statValue}>{exerciseStats.progress} lbs</Text>
                     <Text style={styles.statLabel}>Progress</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>8 times</Text>
+                    <Text style={styles.statValue}>{exerciseStats.timesPerformed} times</Text>
                     <Text style={styles.statLabel}>Times Performed</Text>
                 </View>
             </View>

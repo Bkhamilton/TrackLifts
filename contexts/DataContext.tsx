@@ -10,6 +10,11 @@ import {
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
+import {
+    deleteFavoriteGraph,
+    getFavoriteGraphsByUserId,
+    insertFavoriteGraph,
+} from '@/db/workout/FavoriteGraphs';
 import { getTopExericise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
@@ -44,6 +49,7 @@ interface MuscleGroupStat {
 
 interface DataContextValue {
     favoriteRoutines: FavoriteRoutine[];
+    favoriteGraphs: any[];
     weeklySetsCount: number;
     topExercise: TopExercise;
     muscleGroupFocusBySet: MuscleGroupStat[];
@@ -67,10 +73,13 @@ interface DataContextValue {
         endDate: string,
         statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
     ) => Promise<any[]>;
+    addFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
+    removeFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
 }
 
 export const DataContext = createContext<DataContextValue>({
     favoriteRoutines: [],
+    favoriteGraphs: [],
     weeklySetsCount: 0,
     topExercise: {
         id: 0,
@@ -97,6 +106,12 @@ export const DataContext = createContext<DataContextValue>({
         console.warn('fetchExerciseStats function not implemented');
         return [];
     },
+    addFavoriteGraph: async () => {
+        console.warn('addFavoriteGraph function not implemented');
+    },
+    removeFavoriteGraph: async () => {
+        console.warn('deleteFavoriteGraph function not implemented');
+    },
 });
 
 interface DataContextValueProviderProps {
@@ -108,6 +123,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const { user } = useContext(UserContext);
 
     const [favoriteRoutines, setFavoriteRoutines] = useState<FavoriteRoutine[]>([]);
+    const [favoriteGraphs, setFavoriteGraphs] = useState<any[]>([]);
     const [workoutCount, setWorkoutCount] = useState<any>({
         total: 0,
         weekly: 0,
@@ -128,6 +144,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         if (db && user.id !== 0) {
             getFavoriteRoutinesByUser(db, user.id).then((routines) => {
                 setFavoriteRoutines(routines);
+            });
+            getFavoriteGraphsByUserId(db, user.id).then((graphs) => {
+                setFavoriteGraphs(graphs);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
                 setWorkoutCount((prev: any) => ({
@@ -216,6 +235,30 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     };
 
+    const addFavoriteGraph = async (exerciseId: number, graphType: string) => {
+        if (!db || !user?.id) return;
+        try {
+            await insertFavoriteGraph(db, {
+                user_id: user.id,
+                exercise_id: exerciseId,
+                graph_type: graphType,
+            });
+            // Optionally refresh favorites here if you keep them in state
+        } catch (e) {
+            console.error('Failed to add favorite graph:', e);
+        }
+    };
+
+    const removeFavoriteGraph = async (exerciseId: number, graphType: string) => {
+        if (!db || !user?.id) return;
+        try {
+            await deleteFavoriteGraph(db, user.id, exerciseId, graphType);
+            // Optionally refresh favorites here if you keep them in state
+        } catch (e) {
+            console.error('Failed to remove favorite graph:', e);
+        }
+    };
+
     useEffect(() => {
         refreshData();
         const handler = () => refreshData();
@@ -225,6 +268,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
 
     const value = {
         favoriteRoutines,
+        favoriteGraphs,
         weeklySetsCount,
         topExercise,
         muscleGroupFocusBySet,
@@ -233,6 +277,8 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         refreshData,
         fetchExerciseSessionStats,
         fetchExerciseStats,
+        addFavoriteGraph,
+        removeFavoriteGraph,
     };
 
     return (
