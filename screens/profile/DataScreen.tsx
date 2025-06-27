@@ -14,7 +14,7 @@ import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
-import useHookData from '@/hooks/useHookData';
+import useHookData from '@/hooks/profile/useHookData';
 import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

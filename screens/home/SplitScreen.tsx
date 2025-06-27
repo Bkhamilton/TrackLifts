@@ -2,7 +2,7 @@ import CreateSplitModal from '@/components/modals/Splits/CreateSplitModal';
 import EditSplitModal from '@/components/modals/Splits/EditSplitModal';
 import { View } from '@/components/Themed';
 import Title from '@/components/Title';
-import useHookSplits from '@/hooks/useHookSplits';
+import useHookSplits from '@/hooks/home/useHookSplits';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';

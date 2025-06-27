@@ -4,7 +4,7 @@ import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import WorkoutOptionsModal from '@/components/modals/WorkoutOptionsModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { useWorkoutActions } from '@/hooks/useWorkoutActions';
+import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from 'react';

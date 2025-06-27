@@ -5,7 +5,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
-import { useEditWorkoutActions } from '@/hooks/useEditWorkoutActions';
+import { useEditWorkoutActions } from '@/hooks/workout/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';

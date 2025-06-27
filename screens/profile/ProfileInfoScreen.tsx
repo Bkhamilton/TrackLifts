@@ -5,7 +5,7 @@ import BodyMetricsSection from '@/components/Profile/ProfileInfo/BodyMetricsSect
 import WorkoutStatsSection from '@/components/Profile/ProfileInfo/WorkoutStatsSection';
 import { Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import useHookProfileInfo from '@/hooks/useHookProfileInfo';
+import useHookProfileInfo from '@/hooks/profile/useHookProfileInfo';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
