@@ -33,7 +33,7 @@ export default function WorkoutFrequencyChart({ data } : WorkoutFrequencyChartPr
     }
 
     return (
-        <View style={{ height: 200, padding: 4 }}>
+        <View style={{ height: 200, padding: 4, backgroundColor: 'transparent' }}>
             <CartesianChart
                 data={data}
                 xKey={'workout_date'} 

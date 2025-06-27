@@ -1,8 +1,9 @@
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useFont } from '@shopify/react-native-skia';
+import { Circle, useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
-import { Bar, CartesianChart } from 'victory-native';
+import type { SharedValue } from "react-native-reanimated";
+import { Bar, CartesianChart, useChartPressState } from 'victory-native';
 
 interface MonthlyFrequencyChartProps {
     data: { workout_date: string; session_count: number }[];
@@ -37,33 +38,47 @@ export default function MonthlyWorkoutFrequency({ data }: MonthlyFrequencyChartP
         return "";
     };
 
-  return (
-    <View style={{ height: 200, padding: 4 }}>
-        <CartesianChart
-            data={data}
-            xKey={'workout_date'} 
-            yKeys={["session_count"]}
-            domainPadding={{ left: 5, right: 5, top: 20 }}
-            axisOptions={{
-                font,
-                lineColor: text,
-                labelColor: text,
-                formatXLabel,
-                formatYLabel,
-            }} 
-        >
-            {({ points, chartBounds }) => (
-                <Bar
-                    color="#ff8787"
-                    points={points.session_count} 
-                    chartBounds={chartBounds}  
-                    roundedCorners={{
-                        topLeft: 5,
-                        topRight: 5,
-                    }}
-                />
-            )}
-        </CartesianChart>
-    </View>
-  );
+    const { state, isActive } = useChartPressState<{ x: string; y: { session_count: number } }>({ x: "", y: { session_count: 0 } });
+
+    function ToolTip({ x, y }: { x: SharedValue<number>; y: any }) {
+        return <Circle cx={x} cy={y.session_count.position} r={4} color={text}/>;
+    }
+
+    return (
+        <View style={{ height: 200, padding: 4 }}>
+            <CartesianChart
+                data={data}
+                xKey={'workout_date'} 
+                yKeys={["session_count"]}
+                domainPadding={{ left: 5, right: 5, top: 20 }}
+                axisOptions={{
+                    font,
+                    lineColor: text,
+                    labelColor: text,
+                    formatXLabel,
+                    formatYLabel,
+                }} 
+                chartPressState={state}
+            >
+                {({ points, chartBounds }) => (
+                    <>
+                        <Bar
+                            color="#ff8787"
+                            points={points.session_count} 
+                            chartBounds={chartBounds}  
+                            roundedCorners={{
+                                topLeft: 5,
+                                topRight: 5,
+                            }}
+                        />
+                        {
+                            isActive && (
+                                <ToolTip x={state.x.position} y={state.y} />
+                            )
+                        }                   
+                    </>
+                )}
+            </CartesianChart>
+        </View>
+    );
 }
