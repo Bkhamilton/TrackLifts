@@ -1,4 +1,4 @@
-import { ActiveExercise, ActiveRoutine, Exercise } from '@/utils/types';
+import { ActiveExercise, ActiveRoutine, Exercise } from '@/constants/types';
 import React from 'react';
 
 export const useEditWorkoutActions = (

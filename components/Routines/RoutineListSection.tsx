@@ -1,6 +1,6 @@
 import RoutineCard from '@/components/Home/RoutineCard';
 import { Text } from '@/components/Themed';
-import { ActiveRoutine } from '@/utils/types';
+import { ActiveRoutine } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MaterialCommunityIconsGlyphs from "@expo/vector-icons/build/MaterialCommunityIcons";
 import React from 'react';

@@ -1,6 +1,6 @@
+import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';

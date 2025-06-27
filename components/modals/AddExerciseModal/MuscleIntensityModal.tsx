@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
+import { Muscle } from '@/constants/types';
 import { DBContext } from '@/contexts/DBContext';
-import { Muscle } from '@/utils/types';
 import Slider from '@react-native-community/slider';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';

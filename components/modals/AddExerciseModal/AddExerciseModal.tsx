@@ -1,5 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
-import { Equipment, MuscleGroup } from '@/utils/types';
+import { Equipment, MuscleGroup } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';

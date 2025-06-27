@@ -1,6 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { History } from '@/constants/types';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
-import { History } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useMemo, useState } from 'react';
 import { RefreshControl, SectionList, StyleSheet, } from 'react-native';

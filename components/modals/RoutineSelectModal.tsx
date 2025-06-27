@@ -1,4 +1,4 @@
-import { ActiveRoutine } from '@/utils/types';
+import { ActiveRoutine } from '@/constants/types';
 import React from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';

@@ -1,6 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { History } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { History } from '@/utils/types';
 import { calculateTotalWeight } from '@/utils/workoutCalculations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';

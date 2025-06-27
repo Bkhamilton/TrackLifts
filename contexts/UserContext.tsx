@@ -1,7 +1,7 @@
 // app/contexts/UserContext.tsx
+import { User, UserProfileStats } from '@/constants/types';
 import { getUserProfileStats } from '@/db/user/UserProfileStats';
 import { getUserById } from '@/db/user/Users';
-import { User, UserProfileStats } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 

@@ -1,6 +1,6 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { RoutineContext } from '@/contexts/RoutineContext';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';

@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Exercise } from '@/utils/types';
+import { Exercise } from '@/constants/types';
 import { Text, View } from '../../Themed';
 import DataTab from './DataTab';
 import MusclesTab from './MusclesTab';

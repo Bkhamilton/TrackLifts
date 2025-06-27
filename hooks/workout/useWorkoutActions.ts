@@ -1,5 +1,5 @@
+import { Exercise } from '@/constants/types';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { Exercise } from '@/utils/types';
 import { useContext } from 'react';
 
 export const useWorkoutActions = () => {

@@ -1,5 +1,5 @@
 // app/contexts/HomeContext.tsx
-import { ActiveRoutine } from '@/utils/types';
+import { ActiveRoutine } from '@/constants/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode } from 'react';
 

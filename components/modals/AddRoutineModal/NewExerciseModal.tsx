@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
+import { Exercise } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Exercise } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { FlatList, Keyboard, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';

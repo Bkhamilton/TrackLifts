@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveRoutine } from '@/utils/types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 

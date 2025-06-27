@@ -1,7 +1,7 @@
 import ExerciseOptionsModal from '@/components/modals/ExerciseOptionsModal';
 import { ClearView, Text, View } from '@/components/Themed';
+import { ActiveExercise } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveExercise } from '@/utils/types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';

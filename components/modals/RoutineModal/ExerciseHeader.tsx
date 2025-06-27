@@ -1,6 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { ActiveExercise } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveExercise } from '@/utils/types';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 

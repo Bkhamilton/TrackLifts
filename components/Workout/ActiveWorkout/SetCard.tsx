@@ -1,6 +1,6 @@
 import { ClearView, Text, TextInput, View } from '@/components/Themed';
+import { ActiveSet } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveSet } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';

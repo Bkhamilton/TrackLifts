@@ -1,6 +1,6 @@
+import { ActiveRoutine } from '@/constants/types';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { SplitContext } from '@/contexts/SplitContext';
-import { ActiveRoutine } from '@/utils/types';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 

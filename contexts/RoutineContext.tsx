@@ -1,9 +1,9 @@
 // app/contexts/RoutineContext.tsx
+import { ActiveRoutine, Routine } from '@/constants/types';
 import { clearExerciseSets, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, deleteRoutineExerciseByRoutineId, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
 import { getRoutineData } from '@/utils/routineHelpers';
-import { ActiveRoutine, Routine } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';

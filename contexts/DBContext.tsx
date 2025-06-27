@@ -1,8 +1,8 @@
 // app/contexts/DBContext.tsx
+import { MuscleGroup } from '@/constants/types';
 import { getEquipment } from '@/db/general/Equipment';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
-import { MuscleGroup } from '@/utils/types';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 

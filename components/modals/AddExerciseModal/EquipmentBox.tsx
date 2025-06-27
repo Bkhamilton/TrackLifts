@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
+import { Equipment } from '@/constants/types';
 import { DBContext } from '@/contexts/DBContext';
-import { Equipment } from '@/utils/types';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 

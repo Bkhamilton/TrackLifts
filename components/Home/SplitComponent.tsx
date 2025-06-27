@@ -1,8 +1,8 @@
 import { Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { SplitContext } from '@/contexts/SplitContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';

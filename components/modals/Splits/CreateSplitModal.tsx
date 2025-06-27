@@ -1,5 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
-import { ActiveRoutine } from '@/utils/types';
+import { ActiveRoutine } from '@/constants/types';
 import React, { useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineSelectModal from '../RoutineSelectModal';

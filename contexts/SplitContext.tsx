@@ -1,10 +1,10 @@
 // app/contexts/SplitContext.tsx
+import { Splits } from '@/constants/types';
 import { addFavoriteRoutine, getFavoriteRoutineIds, removeFavoriteRoutine } from '@/db/user/RoutineFavorites';
 import { getCurrentSplitDayIndex, insertSplitCompletion } from '@/db/user/SplitCompletions';
 import { clearSplitRoutines, insertSplitRoutine } from '@/db/user/SplitRoutines';
 import { clearSplit, insertSplit, setNewActiveSplit, updateSplit } from '@/db/user/Splits';
 import { getSplitData } from '@/utils/splitHelpers';
-import { Splits } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';

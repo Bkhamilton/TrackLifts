@@ -1,5 +1,5 @@
+import { Equipment, Exercise, MuscleGroup } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
-import { Equipment, Exercise, MuscleGroup } from '@/utils/types';
 import { useContext, useEffect, useState } from 'react';
 
 const useHookExercises = () => {

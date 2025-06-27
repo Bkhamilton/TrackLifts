@@ -1,4 +1,4 @@
-import { Exercise } from '@/utils/types';
+import { Exercise } from '@/constants/types';
 import React from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {

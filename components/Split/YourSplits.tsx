@@ -1,6 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { Splits } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Splits } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';

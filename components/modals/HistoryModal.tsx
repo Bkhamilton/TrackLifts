@@ -1,7 +1,7 @@
+import { ActiveExercise, History } from '@/constants/types'; // Adjust import path as needed
 import { HistoryContext } from '@/contexts/HistoryContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveExercise, History } from '@/utils/types'; // Adjust import path as needed
 import { calculateTotalWeight } from '@/utils/workoutCalculations';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

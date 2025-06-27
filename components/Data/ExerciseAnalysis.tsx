@@ -1,7 +1,7 @@
 import { Text, View } from '@/components/Themed';
+import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Exercise } from '@/utils/types';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';

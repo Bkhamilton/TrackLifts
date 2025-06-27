@@ -1,7 +1,7 @@
 import { ScrollView, Text, View } from '@/components/Themed';
+import { Splits } from '@/constants/types';
 import { SplitContext } from '@/contexts/SplitContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Splits } from '@/utils/types';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 

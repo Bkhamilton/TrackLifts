@@ -1,5 +1,5 @@
+import { ActiveRoutine } from '@/constants/types';
 import { SplitContext } from '@/contexts/SplitContext';
-import { ActiveRoutine } from '@/utils/types';
 import { useContext, useEffect, useState } from 'react';
 
 const useHookHome = () => {

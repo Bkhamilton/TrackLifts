@@ -1,9 +1,9 @@
 import { Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { DBContext } from '@/contexts/DBContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { UserContext } from '@/contexts/UserContext';
 import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';

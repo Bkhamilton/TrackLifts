@@ -1,9 +1,9 @@
 // app/contexts/ExerciseContext.tsx
+import { Exercise } from '@/constants/types';
 import { deleteExerciseMuscleByExerciseId, insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { deleteExercise, insertExercise } from '@/db/general/Exercises';
 import { deleteExerciseSetsByExerciseId } from '@/db/user/ExerciseSets';
 import { getExerciseData } from '@/utils/exerciseHelpers';
-import { Exercise } from '@/utils/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 

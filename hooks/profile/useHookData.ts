@@ -1,7 +1,7 @@
+import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
-import { Exercise } from '@/utils/types';
 import { useContext, useState } from 'react';
 
 interface FavoriteGraph {

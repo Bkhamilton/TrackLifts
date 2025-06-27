@@ -1,5 +1,5 @@
 import { Text, View } from '@/components/Themed';
-import { Exercise } from '@/utils/types';
+import { Exercise } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';

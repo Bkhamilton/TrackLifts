@@ -1,5 +1,5 @@
 // app/contexts/HistoryContext.tsx
-import { History } from '@/utils/types';
+import { History } from '@/constants/types';
 import React, { createContext, ReactNode, useState } from 'react';
 
 

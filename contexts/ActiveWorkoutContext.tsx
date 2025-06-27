@@ -1,10 +1,10 @@
 // app/contexts/ActiveWorkoutContext.tsx
+import { ActiveRoutine, Exercise, Workout } from '@/constants/types';
 import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertSessionExercise } from '@/db/workout/SessionExercises';
 import { insertSessionSet } from '@/db/workout/SessionSets';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
-import { ActiveRoutine, Exercise, Workout } from '@/utils/types';
 import { calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';

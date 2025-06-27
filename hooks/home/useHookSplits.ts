@@ -1,5 +1,5 @@
+import { Splits } from '@/constants/types';
 import { SplitContext } from '@/contexts/SplitContext';
-import { Splits } from '@/utils/types';
 import { useContext, useState } from 'react';
 
 interface RoutineDay {

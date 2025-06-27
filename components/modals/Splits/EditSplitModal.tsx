@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from '@/components/Themed';
-import { ActiveRoutine, Splits } from '@/utils/types';
+import { ActiveRoutine, Splits } from '@/constants/types';
 import React, { useEffect, useState } from 'react';
 import { Modal, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import RoutineSelectModal from '../RoutineSelectModal';

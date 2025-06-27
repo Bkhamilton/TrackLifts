@@ -1,5 +1,5 @@
+import { ActiveRoutine } from '@/constants/types';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
-import { ActiveRoutine } from '@/utils/types';
 import React, { useContext } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../Themed';

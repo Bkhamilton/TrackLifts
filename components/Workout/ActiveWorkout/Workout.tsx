@@ -1,5 +1,5 @@
 import { Text, View } from '@/components/Themed';
-import { ActiveRoutine } from '@/utils/types';
+import { ActiveRoutine } from '@/constants/types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import WorkoutInfo from './WorkoutInfo';

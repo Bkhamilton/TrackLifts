@@ -1,6 +1,6 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { SplitContext } from '@/contexts/SplitContext';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';

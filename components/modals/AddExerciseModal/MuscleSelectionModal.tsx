@@ -1,5 +1,5 @@
 import { Text, View } from '@/components/Themed';
-import { Muscle } from '@/utils/types';
+import { Muscle } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';

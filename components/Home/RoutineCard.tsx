@@ -1,6 +1,6 @@
 import { Text } from '@/components/Themed';
+import { ActiveRoutine } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActiveRoutine } from '@/utils/types';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
