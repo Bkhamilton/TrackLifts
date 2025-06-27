@@ -31,6 +31,15 @@ const FavoriteGraphModal: React.FC<Props> = ({ visible, onClose, onSave }) => {
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
     const [showExerciseModal, setShowExerciseModal] = useState(false);
     const [showGraphTypeModal, setShowGraphTypeModal] = useState(false);
+    
+    const handleSave = (exercise: Exercise, graphType: GraphType) => {
+        if (exercise && graphType) {
+            onSave(exercise, graphType);
+            setSelectedExercise(null);
+            setSelectedGraphType('Top Set'); // Reset to default
+            onClose();
+        }
+    }
 
     return (
         <Modal visible={visible} transparent animationType="fade">

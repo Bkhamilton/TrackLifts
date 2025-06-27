@@ -16,7 +16,24 @@ export const insertFavoriteGraph = async (db, favorite) => {
 export const getFavoriteGraphsByUserId = async (db, userId) => {
     try {
         const rows = await db.getAllAsync(
-            `SELECT * FROM FavoriteGraphs WHERE user_id = ? ORDER BY created_at DESC`,
+            `SELECT 
+                fg.id, 
+                fg.user_id, 
+                fg.exercise_id, 
+                fg.graph_type AS graphType, 
+                e.title AS exercise, 
+                eq.name AS equipment,
+                fg.created_at 
+            FROM 
+                FavoriteGraphs fg
+            JOIN 
+                Exercises e ON fg.exercise_id = e.id
+            JOIN
+                Equipment eq ON e.equipment_id = eq.id
+            WHERE 
+                fg.user_id = ? 
+            ORDER BY 
+                fg.created_at DESC`,
             [userId]
         );
         return rows;

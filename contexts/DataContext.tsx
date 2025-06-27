@@ -146,6 +146,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setFavoriteRoutines(routines);
             });
             getFavoriteGraphsByUserId(db, user.id).then((graphs) => {
+                console.log('Fetched favorite graphs:', JSON.stringify(graphs, null, 2));
                 setFavoriteGraphs(graphs);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {

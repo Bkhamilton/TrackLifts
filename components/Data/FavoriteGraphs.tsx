@@ -7,10 +7,8 @@ import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 interface FavoriteGraph {
     id: string;
     exercise: string;
+    equipment: string;
     graphType: string;
-    currentMax: string;
-    progress: string;
-    lastUpdated: string;
 }
 
 interface Props {
@@ -48,7 +46,7 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                             onPress={() => onSelectGraph(graph)}
                         >
                             <ClearView style={styles.graphHeader}>
-                                <Text style={styles.graphTitle}>{graph.exercise}</Text>
+                                <Text style={styles.graphTitle}>{graph.exercise} ({graph.equipment})</Text>
                                 <Text style={[styles.graphType, { backgroundColor: cardBorder }]}>{graph.graphType}</Text>
                             </ClearView>
                             
@@ -65,15 +63,15 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                             
                             <ClearView style={styles.graphStats}>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>{graph.currentMax}</Text>
+                                    <Text style={styles.statValue}>0 lbs</Text>
                                     <Text style={styles.statLabel}>Current Max</Text>
                                 </ClearView>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>{graph.progress}</Text>
+                                    <Text style={styles.statValue}>+0 lbs</Text>
                                     <Text style={styles.statLabel}>Progress</Text>
                                 </ClearView>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>{graph.lastUpdated}</Text>
+                                    <Text style={styles.statValue}>2 days ago</Text>
                                     <Text style={styles.statLabel}>Last Updated</Text>
                                 </ClearView>
                             </ClearView>
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     graphTitle: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: '600',
     },
     graphType: {

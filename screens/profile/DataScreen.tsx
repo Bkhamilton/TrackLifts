@@ -11,6 +11,7 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import FavoriteGraphModal from '@/components/modals/FavoriteGraphModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookData from '@/hooks/useHookData';
 import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
@@ -34,6 +35,7 @@ export default function DataScreen() {
     const router = useRouter();
 
     const { workoutFrequency } = useContext(WorkoutContext);
+    const { addFavoriteGraph } = useContext(DataContext);
 
     const [weeklyFrequency, setWeeklyFrequency] = useState<any[]>(buildLast7DaysFrequency(workoutFrequency));
     const [monthlyFrequency, setMonthlyFrequency] = useState<any[]>(buildLast30DaysFrequency(workoutFrequency));
@@ -97,9 +99,9 @@ export default function DataScreen() {
             <FavoriteGraphModal
                 visible={favoriteGraphModal}
                 onClose={() => setFavoriteGraphModal(false)}
-                onSave={(exercise, graphType) => {
+                onSave={async (exercise, graphType) => {
                     // Handle saving favorite graph
-                    console.log('Saving favorite graph:', exercise, graphType);
+                    await handleAddFavorite(exercise, graphType);
                     setFavoriteGraphModal(false);
                 }}
             />

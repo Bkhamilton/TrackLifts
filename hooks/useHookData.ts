@@ -7,10 +7,8 @@ import { useContext, useState } from 'react';
 interface FavoriteGraph {
     id: string;
     exercise: string;
+    equipment: string;
     graphType: string;
-    currentMax: string;
-    progress: string;
-    lastUpdated: string;
 }
 
 export default function useHookData() {
@@ -18,37 +16,41 @@ export default function useHookData() {
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     const { workoutHistory, workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount } = useContext(DataContext);
+    const { workoutCount, addFavoriteGraph } = useContext(DataContext);
 
     const [favoriteGraphs, setFavoriteGraphs] = useState<FavoriteGraph[]>([
         {
             id: '1',
             exercise: 'Bench Press',
+            equipment: 'Barbell',
             graphType: 'Top Set',
-            currentMax: '225 lbs',
-            progress: '+10 lbs',
-            lastUpdated: '2 days ago'
         },
         {
             id: '2',
             exercise: 'Squats',
-            graphType: 'Most Weight Moved',
-            currentMax: '315 lbs',
-            progress: '+25 lbs',
-            lastUpdated: '1 week ago'
+            equipment: 'Barbell',
+            graphType: 'Heaviest Set',
         },
         {
             id: '3',
             exercise: 'Deadlifts',
-            graphType: 'Strength Progress',
-            currentMax: '405 lbs',
-            progress: '+15 lbs',
-            lastUpdated: '3 days ago'
+            equipment: 'Barbell',
+            graphType: 'Average Weight',
         }
     ]);
 
-    const handleAddFavorite = () => {
+    const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
+        await addFavoriteGraph(exercise.id, graphType);
+        setFavoriteGraphs((prev) => [
+            ...prev,
+            {
+                id: (prev.length + 1).toString(),
+                exercise: exercise.title,
+                equipment: exercise.equipment,
+                graphType: graphType,
+            },
+        ]);
     };
 
     const handleSelectGraph = (graph: FavoriteGraph) => {
