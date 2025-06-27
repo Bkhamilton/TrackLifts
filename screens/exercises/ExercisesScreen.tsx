@@ -1,15 +1,15 @@
 import SearchExerciseModal from '@/components/modals/SearchExerciseModal';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
-import useHookExercises from '@/hooks/useHookExercises';
+import useHookExercises from '@/hooks/exercises/useHookExercises';
 import { sortList } from '@/utils/exerciseUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import ExerciseList from '../components/Exercises/ExerciseList';
-import AddExerciseModal from '../components/modals/AddExerciseModal/AddExerciseModal';
-import ExerciseModal from '../components/modals/ExerciseModal/ExerciseModal';
-import { View } from '../components/Themed';
-import Title from '../components/Title';
+import ExerciseList from '../../components/Exercises/ExerciseList';
+import AddExerciseModal from '../../components/modals/AddExerciseModal/AddExerciseModal';
+import ExerciseModal from '../../components/modals/ExerciseModal/ExerciseModal';
+import { View } from '../../components/Themed';
+import Title from '../../components/Title';
 
 export default function ExercisesScreen() {
     
