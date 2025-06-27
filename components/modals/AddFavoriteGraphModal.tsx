@@ -26,7 +26,7 @@ const graphTypes: GraphType[] = [
     'Most Repetitions',
 ];
 
-const FavoriteGraphModal: React.FC<Props> = ({ visible, onClose, onSave }) => {
+const AddFavoriteGraphModal: React.FC<Props> = ({ visible, onClose, onSave }) => {
     const [selectedGraphType, setSelectedGraphType] = useState<GraphType>('Top Set');
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
     const [showExerciseModal, setShowExerciseModal] = useState(false);
@@ -227,4 +227,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FavoriteGraphModal;
+export default AddFavoriteGraphModal;

@@ -13,12 +13,14 @@ interface FavoriteGraph {
 
 export default function useHookData() {
     const [showExerciseModal, setShowExerciseModal] = useState(false);
+    const [showFavoriteGraphModal, setShowFavoriteGraphModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     const { workoutFrequency } = useContext(WorkoutContext);
     const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats } = useContext(DataContext);
 
     const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
+    const [selectedGraph, setSelectedGraph] = useState<FavoriteGraph | null>(null);
 
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
@@ -64,6 +66,8 @@ export default function useHookData() {
 
     const handleSelectGraph = (graph: FavoriteGraph) => {
         // Navigate to or open the selected graph
+        setSelectedGraph(graph);
+        setShowFavoriteGraphModal(true);
     };
 
     // Mock data
@@ -91,5 +95,9 @@ export default function useHookData() {
         handleSelectGraph,
         workoutStats,
         handleExerciseSelect,
+        showFavoriteGraphModal,
+        setShowFavoriteGraphModal,
+        selectedGraph,
+        setSelectedGraph,
     };
 }

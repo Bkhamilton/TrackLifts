@@ -7,8 +7,9 @@ import FavoriteGraphs from '@/components/Data/FavoriteGraphs';
 import FavoriteRoutines from '@/components/Data/FavoriteRoutines';
 import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
 import WorkoutHistory from '@/components/Data/WorkoutHistory';
+import AddFavoriteGraphModal from '@/components/modals/AddFavoriteGraphModal';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
-import FavoriteGraphModal from '@/components/modals/FavoriteGraphModal';
+import FavoriteGraphDisplayModal from '@/components/modals/FavoriteGraphDisplayModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DataContext } from '@/contexts/DataContext';
@@ -30,6 +31,9 @@ export default function DataScreen() {
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,
+        showFavoriteGraphModal,
+        setShowFavoriteGraphModal,
+        selectedGraph,
     } = useHookData();
 
     const router = useRouter();
@@ -96,7 +100,12 @@ export default function DataScreen() {
             
             <FavoriteRoutines />
 
-            <FavoriteGraphModal
+            <FavoriteGraphDisplayModal
+                visible={showFavoriteGraphModal}
+                onClose={() => setShowFavoriteGraphModal(false)}
+                graph={selectedGraph || { id: '', exercise: '', equipment: '', graphType: '', stats: [] }}
+            />
+            <AddFavoriteGraphModal
                 visible={favoriteGraphModal}
                 onClose={() => setFavoriteGraphModal(false)}
                 onSave={async (exercise, graphType) => {
