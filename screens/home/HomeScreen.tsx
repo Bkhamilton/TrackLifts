@@ -2,6 +2,7 @@ import RoutineInfo from '@/components/Home/RoutineInfo';
 import SplitComponent from '@/components/Home/SplitComponent';
 import AddRoutineModal from '@/components/modals/AddRoutineModal/AddRoutineModal';
 import AppearanceSettingsModal from '@/components/modals/ApperanceSettingsModal';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import HelpSupportModal from '@/components/modals/HelpSupportModal';
 import NotificationSettingsModal from '@/components/modals/NotificationSettingsModal';
 import OptionsModal from '@/components/modals/OptionsModal';
@@ -47,6 +48,9 @@ export default function HomeScreen() {
         appearanceSettingsModal,
         openAppearanceSettingsModal,
         closeAppearanceSettingsModal,
+        confirmationModal,
+        openConfirmationModal,
+        closeConfirmationModal,        
         routine,
         curDay,
         setDay,
@@ -65,7 +69,8 @@ export default function HomeScreen() {
     const {
         onAdd, 
         onStart, 
-        onSelectSetting 
+        onSelectSetting,
+        onConfirmClearData 
     } = useHomeActions({
         closeAddRoutineModal,
         closeRoutineModal,
@@ -74,6 +79,7 @@ export default function HomeScreen() {
         openPrivacySettingsModal,
         openHelpSupportModal,
         openAppearanceSettingsModal,
+        openConfirmationModal,
         setRoutine,
         isActiveWorkout
     });
@@ -132,6 +138,12 @@ export default function HomeScreen() {
             <PrivacySettingsModal
                 visible={privacySettingsModal}
                 close={closePrivacySettingsModal}
+            />
+            <ConfirmationModal
+                visible={confirmationModal}
+                onClose={closeConfirmationModal}
+                message="Are you sure you want to clear all data? This action cannot be undone."
+                onSelect={onConfirmClearData}
             />
             <SettingsModal
                 visible={settingsModal}

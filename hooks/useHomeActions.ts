@@ -12,6 +12,7 @@ interface UseHomeActionsProps {
     openPrivacySettingsModal: () => void;
     openHelpSupportModal: () => void;
     openAppearanceSettingsModal: () => void;
+    openConfirmationModal: () => void;
     setRoutine: (routine: ActiveRoutine) => void;
     isActiveWorkout: boolean;
 }
@@ -24,6 +25,7 @@ export default function useHomeActions({
     openPrivacySettingsModal,
     openHelpSupportModal,
     openAppearanceSettingsModal,
+    openConfirmationModal,
     setRoutine,
     isActiveWorkout,
 } : UseHomeActionsProps) {
@@ -52,6 +54,14 @@ export default function useHomeActions({
         }
     };
 
+    const onConfirmClearData = (choice: 'yes' | 'no') => {
+        if (choice === 'yes') {
+            clearAllStorage().then(() => {
+                alert('All data cleared successfully.');
+            });
+        }
+    }
+
     const onSelectSetting = (option: string) => {
         switch (option) {
             case 'editProfile':
@@ -71,9 +81,7 @@ export default function useHomeActions({
                 router.navigate('/exportWorkout')
                 break;
             case 'clearData':
-                clearAllStorage().then(() => {
-                    alert('All data cleared successfully.');
-                });
+                openConfirmationModal();
                 break;
             case 'appearanceSettings':
                 openAppearanceSettingsModal();
@@ -87,6 +95,7 @@ export default function useHomeActions({
     return { 
         onAdd, 
         onStart, 
-        onSelectSetting 
+        onSelectSetting,
+        onConfirmClearData 
     };
 }
