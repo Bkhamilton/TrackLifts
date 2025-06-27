@@ -19,7 +19,7 @@ import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/worko
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
     const {
@@ -39,12 +39,20 @@ export default function DataScreen() {
     const router = useRouter();
 
     const { workoutFrequency } = useContext(WorkoutContext);
-    const { addFavoriteGraph } = useContext(DataContext);
+    const { addFavoriteGraph, refreshData } = useContext(DataContext);
 
     const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
     const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
 
     const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        refreshData();
+        setRefreshing(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -73,6 +81,13 @@ export default function DataScreen() {
         <ScrollView 
             style={{ flex: 1, paddingVertical: 16, marginBottom: 85 }}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    colors={['#ff8787']}
+                />   
+            }
         >
             <View style={{ paddingHorizontal: 16 }}>
                 <DataHeader 

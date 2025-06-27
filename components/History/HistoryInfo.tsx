@@ -1,8 +1,9 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { History } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as React from 'react';
-import { SectionList, StyleSheet, } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { RefreshControl, SectionList, StyleSheet, } from 'react-native';
 import HistoryCard from './HistoryCard';
 
 interface HistoryInfoProps {
@@ -27,6 +28,9 @@ function getMonthYear(dateString: string) {
 }
 
 export default function HistoryInfo({ open, data }: HistoryInfoProps) {
+
+    const { refreshHistory } = useContext(WorkoutContext);
+
     // Group data by month/year, then by week
     const sections = React.useMemo(() => {
         if (!data || data.length === 0) return [];
@@ -63,6 +67,14 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
         );
     }
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        refreshHistory();
+        setRefreshing(false);
+    };    
+
     return (
         <SectionList
             sections={sections}
@@ -84,6 +96,13 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
             contentContainerStyle={styles.container}
             SectionSeparatorComponent={() => <View style={{ height: 12 }} />}
             ItemSeparatorComponent={() => <View style={{ height: 12 }} />} // <-- Week separator
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    colors={['#ff8787']}
+                />
+            }
         />
     );
 }
