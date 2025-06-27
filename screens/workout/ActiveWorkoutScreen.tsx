@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import useHookActiveWorkout from '@/hooks/workout/useHookActiveWorkout';
 import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { useWorkoutTimer } from '@/hooks/workout/useWorkoutTimer';
 import { useRouter } from 'expo-router';
@@ -11,8 +12,14 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
-    const [modal, setModal] = useState(false);
-    const [confirmModal, setConfirmModal] = useState(false);
+    const {
+        addWorkoutModal,
+        confirmModal,
+        openWorkoutModal,
+        closeWorkoutModal,
+        openConfirmModal,
+        closeConfirmModal
+    } = useHookActiveWorkout();
     const { 
         routine, 
         startTime,
@@ -27,13 +34,6 @@ export default function ActiveWorkoutScreen() {
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
-
-    const openModal = () => {
-        setModal(true);
-    };
-    const closeModal = () => {
-        setModal(false);
-    };
 
     const toggleSetComplete = (exerciseId: number, setId: number) => {
         setCompletedSets(prev => {
@@ -74,7 +74,7 @@ export default function ActiveWorkoutScreen() {
         } else {
             // If any sets have been completed, prompt the user
             if (completedSets.length > 0) {
-                setConfirmModal(true);
+                openConfirmModal();
                 return;
             }
             // Return the user to the newWorkout page without saving
@@ -94,11 +94,11 @@ export default function ActiveWorkoutScreen() {
         if (option === 'yes') {
             // Save no changes and go back
             resetRoutine();
-            setConfirmModal(false);
+            closeConfirmModal();
             router.replace('/(tabs)/workout/newWorkout');
         } else {
             // Do nothing, just close the modal
-            setConfirmModal(false);
+            closeConfirmModal();
         }
     }
     
@@ -133,7 +133,7 @@ export default function ActiveWorkoutScreen() {
             >
                 <Workout
                     routine={routine}
-                    open={openModal}
+                    open={openWorkoutModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
                     onDeleteSet={handleDeleteSet} // Add this prop
@@ -144,14 +144,14 @@ export default function ActiveWorkoutScreen() {
                 />
             </ScrollView>
             <AddToWorkoutModal
-                visible={modal}
-                close={closeModal}
+                visible={addWorkoutModal}
+                close={closeWorkoutModal}
                 add={addExercise}
             />            
             <ConfirmationModal
                 visible={confirmModal}
                 message="Are you sure you want to cancel this workout? Any completed sets will not be saved."
-                onClose={() => setConfirmModal(false)}
+                onClose={closeConfirmModal}
                 onSelect={(choice) => handleConfirmSave(choice)}
             />
         </View>
