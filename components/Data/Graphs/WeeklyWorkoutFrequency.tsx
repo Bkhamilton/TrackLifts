@@ -29,7 +29,7 @@ export default function WorkoutFrequencyChart({ data } : WorkoutFrequencyChartPr
     // }, [isActive, state.x, data]);
 
     function ToolTip({ x, y }: { x: SharedValue<number>; y: any }) {
-        return <Circle cx={x} cy={y.session_count.position} r={8} color={text}/>;
+        return <Circle cx={x} cy={y.session_count.position} r={6} color={text}/>;
     }
 
     return (

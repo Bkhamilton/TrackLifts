@@ -1,5 +1,6 @@
+import { ScrollView, Text, View } from '@/components/Themed';
 import React from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet } from 'react-native';
 
 interface Routine {
     routine_id: number;
@@ -54,7 +55,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
-        backgroundColor: '#fff',
         borderRadius: 16,
         padding: 24,
         width: '85%',
