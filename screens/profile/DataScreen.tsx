@@ -39,7 +39,7 @@ export default function DataScreen() {
     const router = useRouter();
 
     const { workoutFrequency } = useContext(WorkoutContext);
-    const { addFavoriteGraph, refreshData } = useContext(DataContext);
+    const { refreshData } = useContext(DataContext);
 
     const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
     const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);

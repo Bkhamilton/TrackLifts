@@ -21,17 +21,10 @@ export default function SplitScreen() {
         currentSplit,
         setCurrentSplit,
         showCreateModal,
-        newSplitName,
         editingSplitId,
         setEditingSplitId,
         setShowCreateModal,
-        setNewSplitName,
-        setEditingSplit,
         setAsPrimary,
-        createNewSplit,
-        updateSplitDay,
-        addDayToSplit,
-        removeDayFromSplit,
         createSplit
     } = useHookSplits();
 
