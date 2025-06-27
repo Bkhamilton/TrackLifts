@@ -2,7 +2,7 @@ import { ClearView, Text, View } from '@/components/Themed';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { History } from '@/utils/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { RefreshControl, SectionList, StyleSheet, } from 'react-native';
 import HistoryCard from './HistoryCard';
 
@@ -32,7 +32,7 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
     const { refreshHistory } = useContext(WorkoutContext);
 
     // Group data by month/year, then by week
-    const sections = React.useMemo(() => {
+    const sections = useMemo(() => {
         if (!data || data.length === 0) return [];
         const grouped: Record<string, Record<number, History[]>> = {};
         data.forEach(history => {
