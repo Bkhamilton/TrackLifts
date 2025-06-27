@@ -49,3 +49,34 @@ export const buildLast30DaysFrequency = (rawFrequency) => {
         session_count: lookup[date] ?? 0,
     }));
 }
+
+export function fillResultsWithDates(results, start, end) {
+    // Map results by date (YYYY-MM-DD)
+    const resultMap = {};
+    results.forEach(item => {
+        const dateKey = new Date(item.workout_date).toISOString().slice(0, 10);
+        resultMap[dateKey] = item;
+    });
+
+    const filled = [];
+    const current = new Date(start);
+    const endDate = new Date(end);
+
+    while (current <= endDate) {
+        const dateKey = current.toISOString().slice(0, 10);
+        if (resultMap[dateKey]) {
+            filled.push({ ...resultMap[dateKey], workout_date: dateKey });
+        } else {
+            filled.push({
+                session_id: null,
+                workout_date: dateKey,
+                exercise_id: results[0]?.exercise_id ?? null,
+                set_id: null,
+                weight: null,
+                reps: null,
+            });
+        }
+        current.setDate(current.getDate() + 1);
+    }
+    return filled;
+}

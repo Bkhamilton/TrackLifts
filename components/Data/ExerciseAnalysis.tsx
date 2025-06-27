@@ -2,6 +2,7 @@ import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Exercise } from '@/utils/types';
+import { fillResultsWithDates } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
@@ -53,37 +54,6 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
         setGraphType(type);
         setShowGraphTypeModal(false);
     };
-
-    function fillResultsWithDates(results: any[], start: Date, end: Date) {
-        // Map results by date (YYYY-MM-DD)
-        const resultMap: Record<string, any> = {};
-        results.forEach(item => {
-            const dateKey = new Date(item.workout_date).toISOString().slice(0, 10);
-            resultMap[dateKey] = item;
-        });
-
-        const filled: any[] = [];
-        const current = new Date(start);
-        const endDate = new Date(end);
-
-        while (current <= endDate) {
-            const dateKey = current.toISOString().slice(0, 10);
-            if (resultMap[dateKey]) {
-                filled.push({ ...resultMap[dateKey], workout_date: dateKey });
-            } else {
-                filled.push({
-                    session_id: null,
-                    workout_date: dateKey,
-                    exercise_id: results[0]?.exercise_id ?? null,
-                    set_id: null,
-                    weight: null, // Use null instead of 0
-                    reps: null,   // Use null instead of 0
-                });
-            }
-            current.setDate(current.getDate() + 1);
-        }
-        return filled;
-    }
 
     const handleGo = async () => {
         if (!exercise || exercise.title === "Select an Exercise") {

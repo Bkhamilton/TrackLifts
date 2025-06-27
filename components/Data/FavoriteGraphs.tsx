@@ -3,12 +3,14 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import FavoriteExerciseAnalysisGraph from './Graphs/FavoriteExerciseAnalysisGraph';
 
 interface FavoriteGraph {
     id: string;
     exercise: string;
     equipment: string;
     graphType: string;
+    stats?: any[];
 }
 
 interface Props {
@@ -49,17 +51,27 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                                 <Text style={styles.graphTitle}>{graph.exercise} ({graph.equipment})</Text>
                                 <Text style={[styles.graphType, { backgroundColor: cardBorder }]}>{graph.graphType}</Text>
                             </ClearView>
-                            
-                            <View style={[styles.graphPlaceholder, { backgroundColor: cardBorder, borderColor: cardBorder }]}>
-                                <Text style={styles.placeholderText}>
-                                    {graph.graphType} Graph
-                                </Text>
-                                <MaterialCommunityIcons 
-                                    name="chart-line" 
-                                    size={40} 
-                                    color="#adb5bd" 
-                                />
-                            </View>
+
+                            {
+                                graph.stats && graph.stats.length > 0 ? (
+                                    <View style={[styles.graphContainer, { backgroundColor: cardBorder, borderColor: cardBorder }]}>
+                                        <FavoriteExerciseAnalysisGraph
+                                            data={graph.stats}
+                                        />
+                                    </View>
+                                ) : (
+                                    <View style={[styles.graphPlaceholder, { backgroundColor: cardBorder, borderColor: cardBorder }]}>
+                                        <Text style={styles.placeholderText}>
+                                            {graph.graphType} Graph
+                                        </Text>
+                                        <MaterialCommunityIcons 
+                                            name="chart-line" 
+                                            size={40} 
+                                            color="#adb5bd" 
+                                        />
+                                    </View>
+                                )
+                            }
                             
                             <ClearView style={styles.graphStats}>
                                 <ClearView style={styles.statItem}>
@@ -153,6 +165,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 12,
     },
+    graphContainer: {
+        height: 120,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderStyle: 'dashed',
+        marginBottom: 12,
+    },    
     placeholderText: {
         fontSize: 14,
         color: '#868e96',

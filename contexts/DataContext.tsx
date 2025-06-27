@@ -25,6 +25,7 @@ import {
     getYearlyWorkoutCount
 } from '@/db/workout/WorkoutSessions';
 import { dataEvents } from '@/utils/events';
+import { fillResultsWithDates } from '@/utils/workoutUtils';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
@@ -148,20 +149,30 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getFavoriteGraphsByUserId(db, user.id).then(async (graphs) => {
                 const endDate = new Date();
                 const startDate = new Date();
-                startDate.setMonth(endDate.getMonth() - 3);
+                startDate.setMonth(endDate.getMonth() - 1);
 
                 const formattedEnd = endDate.toISOString().slice(0, 10);
                 const formattedStart = startDate.toISOString().slice(0, 10);
 
+                const graphTypeToStatType: Record<string, 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'> = {
+                    'Top Set': 'top_set',
+                    'Heaviest Set': 'heaviest_set',
+                    'Most Weight Moved': 'total_volume',
+                    'Average Weight': 'avg_weight',
+                    'Most Repetitions': 'most_reps',
+                };                
+
                 const graphsWithStats = await Promise.all(
                     graphs.map(async (graph: any) => {
+                        const statType = graphTypeToStatType[graph.graphType] || 'top_set';
                         const stats = await fetchExerciseStats(
                             graph.exercise_id,
                             formattedStart,
                             formattedEnd,
-                            graph.graphType
+                            statType
                         );
-                        return { ...graph, stats };
+                        const filledStats = fillResultsWithDates(stats, startDate, endDate);
+                        return { ...graph, stats: filledStats };
                     })
                 );
                 setFavoriteGraphs(graphsWithStats);
