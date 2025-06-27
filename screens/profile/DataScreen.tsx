@@ -41,8 +41,8 @@ export default function DataScreen() {
     const { workoutFrequency } = useContext(WorkoutContext);
     const { addFavoriteGraph } = useContext(DataContext);
 
-    const [weeklyFrequency, setWeeklyFrequency] = useState<any[]>(buildLast7DaysFrequency(workoutFrequency));
-    const [monthlyFrequency, setMonthlyFrequency] = useState<any[]>(buildLast30DaysFrequency(workoutFrequency));
+    const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
+    const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
 
     const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
 
