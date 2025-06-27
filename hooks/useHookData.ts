@@ -15,14 +15,41 @@ export default function useHookData() {
     const [showExerciseModal, setShowExerciseModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
-    const { workoutHistory, workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount, addFavoriteGraph, favoriteGraphs } = useContext(DataContext);
+    const { workoutFrequency } = useContext(WorkoutContext);
+    const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats } = useContext(DataContext);
 
     const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
 
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
         await addFavoriteGraph(exercise.id, graphType);
+
+        // Prepare date range (last 1 months)
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(endDate.getMonth() - 1);
+        const formattedEnd = endDate.toISOString().slice(0, 10);
+        const formattedStart = startDate.toISOString().slice(0, 10);
+
+        // Map graphType to statType
+        const graphTypeToStatType: Record<string, 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'> = {
+            'Top Set': 'top_set',
+            'Heaviest Set': 'heaviest_set',
+            'Most Weight Moved': 'total_volume',
+            'Average Weight': 'avg_weight',
+            'Most Repetitions': 'most_reps',
+        };
+        const statType = graphTypeToStatType[graphType] || 'top_set';
+
+        // Fetch stats
+        const stats = await fetchExerciseStats(
+            exercise.id,
+            formattedStart,
+            formattedEnd,
+            statType
+        );
+
+        // Add to display state (with stats)
         setFavoriteGraphDisplay((prev) => [
             ...prev,
             {
@@ -30,6 +57,7 @@ export default function useHookData() {
                 exercise: exercise.title,
                 equipment: exercise.equipment,
                 graphType: graphType,
+                stats,
             },
         ]);
     };
