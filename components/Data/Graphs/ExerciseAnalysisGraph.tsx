@@ -1,8 +1,9 @@
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useFont } from '@shopify/react-native-skia';
+import { Circle, useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
-import { CartesianChart, Line } from 'victory-native';
+import type { SharedValue } from "react-native-reanimated";
+import { CartesianChart, Line, useChartPressState } from 'victory-native';
 
 export default function ExerciseAnalysisGraph({ data } : { data: any[] }) {
 
@@ -32,30 +33,43 @@ export default function ExerciseAnalysisGraph({ data } : { data: any[] }) {
         return "";
     };
 
-  return (
-    <View style={{ height: 200, padding: 4 }}>
-        <CartesianChart
-            data={data}
-            xKey={'workout_date'} 
-            yKeys={["weight", "reps"]}
-            domainPadding={{ left: 5, right: 5, top: 20 }}
-            axisOptions={{
-                font,
-                lineColor: text,
-                labelColor: text,
-                formatXLabel,
-                formatYLabel,
-            }} 
-        >
-            {({ points }) => (
-                <Line
-                    color="#ff8787"
-                    strokeWidth={2}
-                    animate={{ type: "timing", duration: 400 }} 
-                    points={points.weight}          
-                />
-            )}
-        </CartesianChart>
-    </View>
-  );
+    const { state, isActive } = useChartPressState({ x: 0, y: { weight: 0, reps: 0 } });
+
+    function ToolTip({ x, y }: { x: SharedValue<number>; y: SharedValue<number> }) {
+        return <Circle cx={x} cy={y} r={8} color={text} />;
+    }
+
+    return (
+        <View style={{ height: 200, padding: 4 }}>
+            <CartesianChart
+                data={data}
+                xKey={'workout_date'} 
+                yKeys={["weight", "reps"]}
+                domainPadding={{ left: 5, right: 5, top: 20 }}
+                axisOptions={{
+                    font,
+                    lineColor: text,
+                    labelColor: text,
+                    formatXLabel,
+                    formatYLabel,
+                }} 
+                chartPressState={state}
+            >
+                {({ points }) => (
+                    <>
+                        <Line
+                            color="#ff8787"
+                            strokeWidth={2}
+                            animate={{ type: "timing", duration: 400 }} 
+                            points={points.weight}
+                            connectMissingData={true}          
+                        />
+                        {isActive && (
+                            <ToolTip x={state.x.position} y={state.y.weight.position} />
+                        )}                    
+                    </>
+                )}
+            </CartesianChart>
+        </View>
+    );
 }

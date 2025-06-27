@@ -55,56 +55,33 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     };
 
     function fillResultsWithDates(results: any[], start: Date, end: Date) {
-        if (!results || results.length === 0) return [];
-
-        // Sort results by date
-        const sortedResults = [...results].sort((a, b) =>
-            new Date(a.workout_date).getTime() - new Date(b.workout_date).getTime()
-        );
-
-        // Find first and last workout dates in results
-        const firstWorkoutDate = new Date(sortedResults[0].workout_date);
-        const lastWorkoutDate = new Date(sortedResults[sortedResults.length - 1].workout_date);
+        // Map results by date (YYYY-MM-DD)
+        const resultMap: Record<string, any> = {};
+        results.forEach(item => {
+            const dateKey = new Date(item.workout_date).toISOString().slice(0, 10);
+            resultMap[dateKey] = item;
+        });
 
         const filled: any[] = [];
         const current = new Date(start);
+        const endDate = new Date(end);
 
-        // Fill 0s before the first workout
-        while (current < firstWorkoutDate) {
+        while (current <= endDate) {
             const dateKey = current.toISOString().slice(0, 10);
-            filled.push({
-                session_id: null,
-                workout_date: dateKey,
-                exercise_id: results[0]?.exercise_id ?? null,
-                set_id: null,
-                weight: 0,
-                reps: 0,
-            });
+            if (resultMap[dateKey]) {
+                filled.push({ ...resultMap[dateKey], workout_date: dateKey });
+            } else {
+                filled.push({
+                    session_id: null,
+                    workout_date: dateKey,
+                    exercise_id: results[0]?.exercise_id ?? null,
+                    set_id: null,
+                    weight: null, // Use null instead of 0
+                    reps: null,   // Use null instead of 0
+                });
+            }
             current.setDate(current.getDate() + 1);
         }
-
-        // Add actual results (no 0s in between)
-        results.forEach(item => {
-            const dateKey = new Date(item.workout_date).toISOString().slice(0, 10);
-            filled.push({ ...item, workout_date: dateKey });
-        });
-
-        // Fill 0s after the last workout
-        const afterLast = new Date(lastWorkoutDate);
-        afterLast.setDate(afterLast.getDate() + 1);
-        while (afterLast <= end) {
-            const dateKey = afterLast.toISOString().slice(0, 10);
-            filled.push({
-                session_id: null,
-                workout_date: dateKey,
-                exercise_id: results[0]?.exercise_id ?? null,
-                set_id: null,
-                weight: 0,
-                reps: 0,
-            });
-            afterLast.setDate(afterLast.getDate() + 1);
-        }
-
         return filled;
     }
 
