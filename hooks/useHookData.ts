@@ -16,33 +16,14 @@ export default function useHookData() {
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     const { workoutHistory, workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount, addFavoriteGraph } = useContext(DataContext);
+    const { workoutCount, addFavoriteGraph, favoriteGraphs } = useContext(DataContext);
 
-    const [favoriteGraphs, setFavoriteGraphs] = useState<FavoriteGraph[]>([
-        {
-            id: '1',
-            exercise: 'Bench Press',
-            equipment: 'Barbell',
-            graphType: 'Top Set',
-        },
-        {
-            id: '2',
-            exercise: 'Squats',
-            equipment: 'Barbell',
-            graphType: 'Heaviest Set',
-        },
-        {
-            id: '3',
-            exercise: 'Deadlifts',
-            equipment: 'Barbell',
-            graphType: 'Average Weight',
-        }
-    ]);
+    const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
 
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
         await addFavoriteGraph(exercise.id, graphType);
-        setFavoriteGraphs((prev) => [
+        setFavoriteGraphDisplay((prev) => [
             ...prev,
             {
                 id: (prev.length + 1).toString(),
@@ -76,8 +57,8 @@ export default function useHookData() {
         setShowExerciseModal,
         selectedExercise,
         setSelectedExercise,
-        favoriteGraphs,
-        setFavoriteGraphs,
+        favoriteGraphDisplay,
+        setFavoriteGraphDisplay,
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,

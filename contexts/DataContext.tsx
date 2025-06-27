@@ -140,14 +140,31 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
     const [muscleGroupIntensity, setMuscleGroupIntensity] = useState<any[]>([]);
 
-    const refreshData = () => {
+    const refreshData = async () => {
         if (db && user.id !== 0) {
             getFavoriteRoutinesByUser(db, user.id).then((routines) => {
                 setFavoriteRoutines(routines);
             });
-            getFavoriteGraphsByUserId(db, user.id).then((graphs) => {
-                console.log('Fetched favorite graphs:', JSON.stringify(graphs, null, 2));
-                setFavoriteGraphs(graphs);
+            getFavoriteGraphsByUserId(db, user.id).then(async (graphs) => {
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setMonth(endDate.getMonth() - 3);
+
+                const formattedEnd = endDate.toISOString().slice(0, 10);
+                const formattedStart = startDate.toISOString().slice(0, 10);
+
+                const graphsWithStats = await Promise.all(
+                    graphs.map(async (graph: any) => {
+                        const stats = await fetchExerciseStats(
+                            graph.exercise_id,
+                            formattedStart,
+                            formattedEnd,
+                            graph.graphType
+                        );
+                        return { ...graph, stats };
+                    })
+                );
+                setFavoriteGraphs(graphsWithStats);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
                 setWorkoutCount((prev: any) => ({

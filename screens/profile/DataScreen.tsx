@@ -26,7 +26,7 @@ export default function DataScreen() {
         setShowExerciseModal,
         selectedExercise,
         handleExerciseSelect,
-        favoriteGraphs,
+        favoriteGraphDisplay,
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,
@@ -78,7 +78,7 @@ export default function DataScreen() {
             </View>
             
             <FavoriteGraphs
-                favorites={favoriteGraphs}
+                favorites={favoriteGraphDisplay}
                 onAddFavorite={() => setFavoriteGraphModal(true)}
                 onSelectGraph={handleSelectGraph}
             />
