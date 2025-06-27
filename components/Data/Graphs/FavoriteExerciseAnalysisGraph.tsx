@@ -1,9 +1,8 @@
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Circle, useFont } from '@shopify/react-native-skia';
+import { useFont } from '@shopify/react-native-skia';
 import React from 'react';
 import { View } from 'react-native';
-import type { SharedValue } from "react-native-reanimated";
-import { CartesianChart, Line, useChartPressState } from 'victory-native';
+import { CartesianChart, Line } from 'victory-native';
 
 export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }) {
 
@@ -33,12 +32,6 @@ export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }
         return "";
     };
 
-    const { state, isActive } = useChartPressState({ x: 0, y: { weight: 0, reps: 0 } });
-
-    function ToolTip({ x, y }: { x: SharedValue<number>; y: SharedValue<number> }) {
-        return <Circle cx={x} cy={y} r={8} color={text} />;
-    }
-
     return (
         <View style={{ height: 120, padding: 4 }}>
             <CartesianChart
@@ -53,7 +46,6 @@ export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }
                     formatXLabel,
                     formatYLabel,
                 }} 
-                chartPressState={state}
             >
                 {({ points }) => (
                     <>
@@ -63,10 +55,7 @@ export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }
                             animate={{ type: "timing", duration: 400 }} 
                             points={points.weight}
                             connectMissingData={true}          
-                        />
-                        {isActive && (
-                            <ToolTip x={state.x.position} y={state.y.weight.position} />
-                        )}                    
+                        />             
                     </>
                 )}
             </CartesianChart>
