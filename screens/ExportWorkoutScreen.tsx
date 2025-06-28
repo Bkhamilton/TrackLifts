@@ -1,45 +1,20 @@
+import ExportOption from '@/components/ExportWorkout/ExportOption';
+import FormatOption from '@/components/ExportWorkout/FormatOption';
 import { ScrollView, Text, View } from '@/components/Themed';
+import useHookExportWorkout from '@/hooks/useHookExportWorkout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { StyleSheet, Switch, TouchableOpacity } from 'react-native';
-
-type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
-
-interface ExportOptions {
-    userProfile: boolean;
-    routines: boolean;
-    workoutHistory: boolean;
-    exerciseData: boolean;
-    splits: boolean;
-    progressMetrics: boolean;
-}
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ExportWorkoutScreen() {
+
     const router = useRouter();
-    
-    // State for export options
-    const [exportOptions, setExportOptions] = useState<ExportOptions>({
-        userProfile: true,
-        routines: true,
-        workoutHistory: true,
-        exerciseData: true,
-        splits: true,
-        progressMetrics: true,
-    });
-
-    const toggleExportOption = (option: keyof ExportOptions) => {
-        setExportOptions(prev => ({
-            ...prev,
-            [option]: !prev[option]
-        }));
-    };
-
-    const handleExport = () => {
-        // This will be implemented later
-        console.log('Exporting with options:', exportOptions);
-        router.navigate('/(tabs)/(index)');
-    };
+    const {
+        exportOptions,
+        toggleExportOption,
+        handleExport,
+    } = useHookExportWorkout();
 
     return (
         <View style={styles.container}>
@@ -132,45 +107,6 @@ export default function ExportWorkoutScreen() {
     );
 }
 
-interface ExportOptionProps {
-    label: string;
-    icon: IconName;
-    value: boolean;
-    onToggle: () => void;
-    description: string;
-}
-
-const ExportOption = ({ label, icon, value, onToggle, description } : ExportOptionProps) => (
-    <View style={styles.optionContainer}>
-        <View style={styles.optionLeft}>
-            <MaterialCommunityIcons name={icon} size={20} color="#666" />
-            <View style={styles.optionText}>
-                <Text style={styles.optionLabel}>{label}</Text>
-                <Text style={styles.optionDescription}>{description}</Text>
-            </View>
-        </View>
-        <Switch 
-            value={value}
-            onValueChange={onToggle}
-            thumbColor="#fff"
-            trackColor={{ false: '#ddd', true: '#ff8787' }}
-        />
-    </View>
-);
-
-interface FormatOptionProps {
-    label: string;
-    icon: IconName;
-    active: boolean;
-}
-
-const FormatOption = ({ label, icon, active } : FormatOptionProps) => (
-    <View style={[styles.formatOption, active && styles.activeFormat]}>
-        <MaterialCommunityIcons name={icon} size={20} color={active ? '#ff8787' : '#666'} />
-        <Text style={[styles.formatLabel, active && styles.activeFormatLabel]}>{label}</Text>
-    </View>
-);
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -205,61 +141,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         color: '#333',
     },
-    optionContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    optionLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-        marginRight: 16,
-    },
-    optionText: {
-        marginLeft: 12,
-        flex: 1,
-    },
-    optionLabel: {
-        fontSize: 16,
-        fontWeight: '500',
-        marginBottom: 4,
-    },
-    optionDescription: {
-        fontSize: 12,
-        color: '#666',
-    },
     formatSection: {
         marginBottom: 32,
     },
     formatOptions: {
         flexDirection: 'row',
-    },
-    formatOption: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        marginRight: 12,
-    },
-    activeFormat: {
-        borderColor: '#ff8787',
-        backgroundColor: 'rgba(255, 135, 135, 0.1)',
-    },
-    formatLabel: {
-        marginLeft: 8,
-        fontSize: 14,
-        color: '#666',
-    },
-    activeFormatLabel: {
-        color: '#ff8787',
-        fontWeight: '500',
     },
     exportButton: {
         backgroundColor: '#ff8787',
