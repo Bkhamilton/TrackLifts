@@ -6,11 +6,6 @@ import Title from '@/components/Title';
 import { StyleSheet } from 'react-native';
 
 export default function ProfileScreen() {
-
-    const profileData = {
-        avatar: '👤',
-    };
-
     return (
         <View style={styles.container}>
             <Title 
@@ -20,11 +15,9 @@ export default function ProfileScreen() {
                 style={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
             >
-                <ProfileMainInfo 
-                    avatar={profileData.avatar}
-                />
+                <ProfileMainInfo/>
                 <MuscleIntensity/>
-                <View style={{ paddingHorizontal: 8 }}>
+                <View style={styles.insightContainer}>
                     <ProfileInsightsCard/>
                 </View>
             </ScrollView>
@@ -41,5 +34,9 @@ const styles = StyleSheet.create({
     scrollContainer: {
         paddingTop: 4, 
         marginBottom: 83
+    },
+    insightContainer: {
+        paddingHorizontal: 8,
+        paddingBottom: 8,
     }
 });

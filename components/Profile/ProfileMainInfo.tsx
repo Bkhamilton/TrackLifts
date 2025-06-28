@@ -1,3 +1,4 @@
+import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import { UserContext } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -5,24 +6,18 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../Themed';
 
-interface ProfileMainInfoProps {
-    avatar: string;
-}
-
-export default function ProfileMainInfo({
-    avatar = '👤',
-}: ProfileMainInfoProps) {
+export default function ProfileMainInfo() {
 
     const { user, userStats } = useContext(UserContext);
 
     const { workoutCount } = useContext(DataContext);
 
+    const avatar = '👤';
+
     const router = useRouter();
 
     const cardBackground = useThemeColor({}, 'grayBackground');
-    const cardBorder = useThemeColor({}, 'grayBorder');
 
     const handleEditProfile = () => {
         router.replace('/(tabs)/profile/profileInfo');
