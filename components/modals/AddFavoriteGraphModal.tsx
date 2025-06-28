@@ -94,7 +94,7 @@ const AddFavoriteGraphModal: React.FC<Props> = ({ visible, onClose, onSave }) =>
                             disabled={!selectedExercise}
                             onPress={() => {
                                 if (selectedExercise && selectedGraphType) {
-                                    onSave(selectedExercise, selectedGraphType);
+                                    handleSave(selectedExercise, selectedGraphType);
                                 }
                             }}
                         >

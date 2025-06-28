@@ -10,7 +10,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 // New imports
 import CurrentSplit from '@/components/Split/CurrentSplit';
-import YourSplits from '@/components/Split/YourSplits';
+import YourSplits from '@/components/Split/YourSplits/YourSplits';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { SplitContext } from '@/contexts/SplitContext';
 

@@ -12,7 +12,6 @@ interface Props {
 const CurrentSplit: React.FC<Props> = ({ currentSplit }) => {
 
     const cardBackground = useThemeColor({}, 'grayBackground');
-    const cardBorder = useThemeColor({}, 'grayBorder');
     const { getCurrentSplitDay } = useContext(SplitContext);
 
     const [currentDayIndex, setCurrentDayIndex] = useState<number>(0);
@@ -26,7 +25,6 @@ const CurrentSplit: React.FC<Props> = ({ currentSplit }) => {
         };
         fetchCurrentDay();
     }, [currentSplit, getCurrentSplitDay]);
-
 
     return (
         <View style={styles.currentWeekContainer}>
