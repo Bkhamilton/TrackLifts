@@ -2,7 +2,7 @@
 import { ActiveRoutine, Routine } from '@/constants/types';
 import { clearExerciseSets, deleteExerciseSetsByRoutineId, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, deleteRoutineExerciseByRoutineId, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
-import { deleteRoutine, insertRoutine } from '@/db/user/Routines';
+import { deleteRoutine, insertRoutine, updateRoutine } from '@/db/user/Routines';
 import { getRoutineData } from '@/utils/routineHelpers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
@@ -111,41 +111,56 @@ export const RoutineContextProvider = ({ children }: RoutineContextValueProvider
 
         await db.runAsync('BEGIN TRANSACTION');
         try {
-            // 1. Clear existing RoutineExercises for this routine
-            await clearRoutineExercises(db, routine.id);
 
-            // 2. Insert new RoutineExercises and update ExerciseSets
-            for (const exercise of routine.exercises) {
-                if (!exercise.exercise_id) {
-                    await insertRoutineExercise(db, {
-                        routine_id: routine.id,
-                        exercise_id: exercise.id,
-                    });
-                } else {
-                    await insertRoutineExercise(db, {
-                        routine_id: routine.id,
-                        exercise_id: exercise.exercise_id,
-                    });
-                }
-                // Clear existing ExerciseSets for this routine/exercise
-                await clearExerciseSets(db, routine.id, exercise.id);
+            const curRoutine = routines.find((r) => r.id === routine.id);
+            if (!curRoutine) {
+                throw new Error('Routine not found in current state.');
+            }
+            if (curRoutine.title !== routine.title) {
+                // If the title has changed, update the routine title
+                await updateRoutine(db, {
+                    id: routine.id,
+                    title: routine.title,
+                    user_id: user.id,
+                });
+            }
 
-                // Get the routine_exercise row just inserted
-                const routineExercise = exercise.exercise_id ? await getRoutineExercise(db, routine.id, exercise.exercise_id) : await getRoutineExercise(db, routine.id, exercise.id);
-                if (routineExercise) {
-                    for (let i = 0; i < exercise.sets.length; i++) {
-                        const set = exercise.sets[i];
-                        await insertExerciseSet(db, {
-                            routine_exercise_id: routineExercise.id,
-                            set_order: i + 1,
-                            weight: set.weight,
-                            reps: set.reps,
-                            date: new Date().toISOString(),
+            if (JSON.stringify(curRoutine.exercises) !== JSON.stringify(routine.exercises)) {
+                // 1. Clear existing RoutineExercises for this routine
+                await clearRoutineExercises(db, routine.id);
+
+                // 2. Insert new RoutineExercises and update ExerciseSets
+                for (const exercise of routine.exercises) {
+                    if (!exercise.exercise_id) {
+                        await insertRoutineExercise(db, {
+                            routine_id: routine.id,
+                            exercise_id: exercise.id,
                         });
+                    } else {
+                        await insertRoutineExercise(db, {
+                            routine_id: routine.id,
+                            exercise_id: exercise.exercise_id,
+                        });
+                    }
+                    // Clear existing ExerciseSets for this routine/exercise
+                    await clearExerciseSets(db, routine.id, exercise.id);
+
+                    // Get the routine_exercise row just inserted
+                    const routineExercise = exercise.exercise_id ? await getRoutineExercise(db, routine.id, exercise.exercise_id) : await getRoutineExercise(db, routine.id, exercise.id);
+                    if (routineExercise) {
+                        for (let i = 0; i < exercise.sets.length; i++) {
+                            const set = exercise.sets[i];
+                            await insertExerciseSet(db, {
+                                routine_exercise_id: routineExercise.id,
+                                set_order: i + 1,
+                                weight: set.weight,
+                                reps: set.reps,
+                                date: new Date().toISOString(),
+                            });
+                        }
                     }
                 }
             }
-
             // Use setRoutines to update the state with the new routine data
             setRoutines((prevRoutines) =>
                 prevRoutines.map((r) =>

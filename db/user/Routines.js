@@ -53,7 +53,7 @@ export const getRoutineByTitle = async (db, title) => {
 export const updateRoutine = async (db, routine) => {
     try {
         await db.runAsync(
-            'UPDATE Routines SET title = ?, user_id = ? WHERE id = ?',
+            'UPDATE Routines SET title = ? WHERE id = ? AND user_id = ?',
             [routine.title, routine.user_id, routine.id]
         );
         console.log('Routine updated');
