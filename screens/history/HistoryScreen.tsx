@@ -7,22 +7,17 @@ import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 
 import { WorkoutContext } from '@/contexts/WorkoutContext';
-import exampleHistory from '@/data/ExampleHistory.json';
+import useHookHistory from '@/hooks/history/useHookHistory';
 
 export default function HistoryScreen() {
-    const [showModal, setShowModal] = React.useState(false)
-    const [history, setHistory] = React.useState(exampleHistory[0]);
+    const {
+        historyModal,
+        history,
+        closeHistoryModal,
+        openHistoryModal,        
+    } = useHookHistory();
 
     const { workoutHistory } = useContext(WorkoutContext);
-
-    function closeModal() {
-        setShowModal(false)
-    }
-
-    function openModal(history: any) {
-        setHistory(history);
-        setShowModal(true);
-    }
 
     return (
         <View style={styles.container}>
@@ -31,13 +26,13 @@ export default function HistoryScreen() {
             />
             <View style={{ paddingTop: 10, width: '100%' }}>
                 <HistoryInfo 
-                    open={openModal} 
+                    open={openHistoryModal} 
                     data={workoutHistory}
                 /> 
             </View>
             <HistoryModal 
-                visible={showModal} 
-                close={closeModal} 
+                visible={historyModal} 
+                close={closeHistoryModal} 
                 history={history}
             />
         </View>
