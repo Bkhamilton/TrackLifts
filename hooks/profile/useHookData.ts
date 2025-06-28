@@ -2,6 +2,7 @@ import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
+import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { useContext, useState } from 'react';
 
 interface FavoriteGraph {
@@ -17,10 +18,23 @@ export default function useHookData() {
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     const { workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats } = useContext(DataContext);
+    const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats, refreshData } = useContext(DataContext);
 
     const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
     const [selectedGraph, setSelectedGraph] = useState<FavoriteGraph | null>(null);
+
+    const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
+    const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
+
+    const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        refreshData();
+        setRefreshing(false);
+    };    
 
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
@@ -99,5 +113,11 @@ export default function useHookData() {
         setShowFavoriteGraphModal,
         selectedGraph,
         setSelectedGraph,
+        weeklyFrequency,
+        monthlyFrequency,
+        favoriteGraphModal,
+        setFavoriteGraphModal,
+        refreshing,
+        handleRefresh,
     };
 }

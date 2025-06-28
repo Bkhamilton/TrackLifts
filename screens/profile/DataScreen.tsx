@@ -12,13 +12,10 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import FavoriteGraphDisplayModal from '@/components/modals/FavoriteGraphDisplayModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import { DataContext } from '@/contexts/DataContext';
-import { WorkoutContext } from '@/contexts/WorkoutContext';
 import useHookData from '@/hooks/profile/useHookData';
-import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
@@ -34,25 +31,15 @@ export default function DataScreen() {
         showFavoriteGraphModal,
         setShowFavoriteGraphModal,
         selectedGraph,
+        weeklyFrequency,
+        monthlyFrequency,
+        favoriteGraphModal,
+        setFavoriteGraphModal,
+        refreshing,
+        handleRefresh,        
     } = useHookData();
 
     const router = useRouter();
-
-    const { workoutFrequency } = useContext(WorkoutContext);
-    const { refreshData } = useContext(DataContext);
-
-    const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
-    const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
-
-    const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
-
-    const [refreshing, setRefreshing] = useState(false);
-
-    const handleRefresh = () => {
-        setRefreshing(true);
-        refreshData();
-        setRefreshing(false);
-    };
 
     return (
         <View style={styles.container}>
