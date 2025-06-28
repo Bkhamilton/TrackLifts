@@ -8,17 +8,23 @@ import useHookActiveWorkout from '@/hooks/workout/useHookActiveWorkout';
 import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { useWorkoutTimer } from '@/hooks/workout/useWorkoutTimer';
 import { useRouter } from 'expo-router';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
     const {
         addWorkoutModal,
         confirmModal,
+        completedSets,
+        allSetsCompleted,        
         openWorkoutModal,
         closeWorkoutModal,
         openConfirmModal,
-        closeConfirmModal
+        closeConfirmModal,
+        toggleSetComplete,
+        handleDeleteSet,
+        handleDeleteExercise,        
+        handleConfirmSave,
     } = useHookActiveWorkout();
     const { 
         routine, 
@@ -29,32 +35,10 @@ export default function ActiveWorkoutScreen() {
         resetRoutine, 
         setFinalWorkout,
     } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useWorkoutActions();
+    const { addExercise, updateSet, addSet } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
-    const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
-
-    const toggleSetComplete = (exerciseId: number, setId: number) => {
-        setCompletedSets(prev => {
-            if (prev.includes(setId)) {
-                return prev.filter(id => id !== setId);
-            } else {
-                return [...prev, setId];
-            }
-        });
-    };
-
-    // Function to handle deleting a set
-    const handleDeleteSet = (exerciseId: number, setId: number) => {
-        deleteSet(exerciseId, setId);
-        // Remove the set from completed sets if it was there
-        setCompletedSets(prev => prev.filter(id => id !== setId));
-    };
-
-    // Calculate total sets and completed sets
-    const totalSets = routine.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-    const allSetsCompleted = totalSets > 0 && completedSets.length === totalSets;
 
     // Function to handle stopping the workout
     const handleWorkoutAction = (isFinished: boolean) => {
@@ -83,24 +67,6 @@ export default function ActiveWorkoutScreen() {
             router.replace('/(tabs)/workout/newWorkout');
         }
     };
-
-    const handleDeleteExercise = (exerciseId: number) => {
-        deleteExercise(exerciseId);
-        // Remove all sets of the deleted exercise from completed sets
-        setCompletedSets(prev => prev.filter(id => !routine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
-    };
-
-    const handleConfirmSave = (option: 'yes' | 'no') => {
-        if (option === 'yes') {
-            // Save no changes and go back
-            resetRoutine();
-            closeConfirmModal();
-            router.replace('/(tabs)/workout/newWorkout');
-        } else {
-            // Do nothing, just close the modal
-            closeConfirmModal();
-        }
-    }
     
     return (
         <View style={styles.container}>
