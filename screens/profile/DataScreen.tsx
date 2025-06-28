@@ -66,7 +66,7 @@ export default function DataScreen() {
                 }
             />
         <ScrollView 
-            style={{ flex: 1, paddingVertical: 16, marginBottom: 85 }}
+            style={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
             refreshControl={
                 <RefreshControl
@@ -76,7 +76,7 @@ export default function DataScreen() {
                 />   
             }
         >
-            <View style={{ paddingHorizontal: 16 }}>
+            <View style={styles.cardContainer}>
                 <DataHeader 
                     stats={workoutStats} 
                     weeklyFrequency={weeklyFrequency}
@@ -107,6 +107,7 @@ export default function DataScreen() {
                 onClose={() => setShowFavoriteGraphModal(false)}
                 graph={selectedGraph || { id: '', exercise: '', equipment: '', graphType: '', stats: [] }}
             />
+            
             <AddFavoriteGraphModal
                 visible={favoriteGraphModal}
                 onClose={() => setFavoriteGraphModal(false)}
@@ -132,6 +133,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scrollContainer: {
-        paddingTop: 10,
+        flex: 1, 
+        paddingVertical: 16, 
+        marginBottom: 85
+    },
+    cardContainer: {
+        paddingHorizontal: 16,
     }
 });

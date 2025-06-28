@@ -4,31 +4,24 @@ import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import WorkoutOptionsModal from '@/components/modals/WorkoutOptionsModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import useHookNewWorkout from '@/hooks/workout/useHookNewWorkout';
 import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { useRouter } from "expo-router";
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function NewWorkoutScreen() {
-    const [addWorkoutModal, setAddWorkoutModal] = useState(false);
-    const [optionsModal, setOptionsModal] = useState(false);
-    const { routine, startWorkout } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet } = useWorkoutActions();
-
-    const router = useRouter();
-
-    const onStartWorkout = () => {
-        startWorkout();
-        router.push('/(tabs)/workout/activeWorkout');
-    }
-
-    const openModal = () => {
-        setAddWorkoutModal(true);
-    }
-    const closeModal = () => {
-        setAddWorkoutModal(false);
-    }
+    const {
+        addWorkoutModal,
+        optionsModal,
+        openWorkoutModal,
+        closeWorkoutModal,
+        openOptionsModal,
+        closeOptionsModal,
+        onStartWorkout
+    } = useHookNewWorkout();
+    const { routine } = useContext(ActiveWorkoutContext);
+    const { addExercise } = useWorkoutActions();
 
     return (
         <View style={styles.container}>
@@ -42,7 +35,7 @@ export default function NewWorkoutScreen() {
                 leftContent={
                     routine.title !== 'Empty Workout' ? (
                         <TouchableOpacity 
-                            onPress={() => setOptionsModal(true)}
+                            onPress={openOptionsModal}
                         >
                             <SimpleLineIcons name="options" size={20} color="#ff8787" />
                         </TouchableOpacity>
@@ -55,17 +48,17 @@ export default function NewWorkoutScreen() {
             >
                 <WorkoutDisplay 
                     routine={routine} 
-                    open={openModal}
+                    open={openWorkoutModal}
                 />
             </ScrollView>
             <AddToWorkoutModal 
                 visible={addWorkoutModal} 
-                close={closeModal} 
+                close={closeWorkoutModal} 
                 add={addExercise}
             />
             <WorkoutOptionsModal
                 visible={optionsModal} 
-                close={() => setOptionsModal(false)} 
+                close={closeOptionsModal} 
                 routine={routine}
             />            
         </View>
@@ -78,9 +71,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scrollView: {
-        flex: 1, // Allow the ScrollView to take up available space
-        marginBottom: 85, // Add space for the button
-        width: '100%', // Ensure the ScrollView takes the full width
+        flex: 1,
+        marginBottom: 85,
+        width: '100%',
         paddingHorizontal: 12,
         paddingTop: 10,
     },

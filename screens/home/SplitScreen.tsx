@@ -87,7 +87,6 @@ export default function SplitScreen() {
                     availableRoutines={availableRoutines}
                     onUpdateSplit={async (updatedSplit) => {
                         // Update displaySplits here (call updateSplitDay, etc. as needed)
-                        // For example, you can add a new updateSplit function to your hook:
                         await updateSplitInDB(updatedSplit);
                         setDisplaySplits(prev =>
                             prev.map(s => s.id === updatedSplit.id ? updatedSplit : s)
