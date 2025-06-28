@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+// File: utils/exerciseUtils.js
+// This file contains utility functions for handling exercises, including filtering and sorting.
 /**
  * Sorts an array of exercises based on the given criteria.
  * @param {Array} exercises - The array of exercises to sort.
@@ -26,16 +26,4 @@ export function sortList(exercises, criteria) {
     });
 
     return sortedArray;
-}
-
-/**
- * Clears all data from AsyncStorage.
- */
-export async function clearAllStorage() {
-    try {
-        await AsyncStorage.clear();
-        console.log('All AsyncStorage data cleared.');
-    } catch (error) {
-        console.error('Error clearing AsyncStorage:', error);
-    }
 }

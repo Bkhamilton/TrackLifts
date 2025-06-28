@@ -1,6 +1,6 @@
 import { ActiveRoutine, Exercise } from '@/constants/types';
 import { RoutineContext } from '@/contexts/RoutineContext';
-import { clearAllStorage } from '@/utils/exerciseUtils';
+import { clearAllStorage } from '@/utils/debugTools';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 
