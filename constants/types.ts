@@ -2,7 +2,7 @@ export interface Exercise {
     id: number;
     title: string;
     equipment: string;
-    muscleGroupId: number;
+    muscleGroupId?: number;
     muscleGroup: string;
     muscles?: any[];
 }
