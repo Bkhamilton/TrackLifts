@@ -11,9 +11,9 @@ interface WorkoutInfoProps {
     exercise: ActiveExercise;
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
     onAddSet: (exerciseId: number) => void;
-    onToggleComplete: (exerciseId: number, setId: number) => void;
+    onToggleComplete?: (exerciseId: number, setId: number) => void;
     onDeleteSet: (exerciseId: number, setId: number) => void;
-    completedSets: number[];
+    completedSets?: number[];
     onReplaceExercise?: (exerciseId: number) => void;
     onRemoveExercise?: (exerciseId: number) => void;
 }
@@ -79,9 +79,9 @@ export default function WorkoutInfo({
                     onUpdateSet={onUpdateSet} 
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}
-                    onToggleComplete={(setId) => onToggleComplete(exercise.id, setId)}
+                    onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(exercise.id, setId) : undefined}
                     onDeleteSet={(setId) => onDeleteSet(exercise.id, setId)}
-                    isCompleted={completedSets.includes(set.id)}
+                    isCompleted={completedSets ? completedSets.includes(set.id) : false}
                 />
             ))}
             

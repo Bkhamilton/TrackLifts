@@ -11,8 +11,8 @@ interface SetCardProps {
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
     editingSet: number | null;
     setEditingSet: React.Dispatch<React.SetStateAction<number | null>>;
-    onToggleComplete: (setId: number) => void;
-    isCompleted: boolean;
+    onToggleComplete?: (setId: number) => void;
+    isCompleted?: boolean;
     onDeleteSet: (setId: number) => void;
 }
 
@@ -23,7 +23,7 @@ export default function SetCard({
     editingSet, 
     setEditingSet,
     onToggleComplete,
-    isCompleted,
+    isCompleted = false,
     onDeleteSet
 }: SetCardProps) {
 
@@ -67,16 +67,20 @@ export default function SetCard({
                 </View>
 
                 <ClearView style={styles.actionsContainer}>
-                    <TouchableOpacity 
-                        onPress={() => onToggleComplete(set.id)}
-                        style={styles.checkButton}
-                    >
-                        <MaterialCommunityIcons
-                            name={isCompleted ? "check-circle" : (editingSet === set.id ? "pencil" : "circle-outline")}
-                            size={24}
-                            color={isCompleted ? "green" : (editingSet === set.id ? "#007AFF" : "#aaa")}
-                        />
-                    </TouchableOpacity>
+                    {
+                        onToggleComplete && (
+                            <TouchableOpacity 
+                                onPress={() => onToggleComplete(set.id)}
+                                style={styles.checkButton}
+                            >
+                                <MaterialCommunityIcons
+                                    name={isCompleted ? "check-circle" : (editingSet === set.id ? "pencil" : "circle-outline")}
+                                    size={24}
+                                    color={isCompleted ? "green" : (editingSet === set.id ? "#007AFF" : "#aaa")}
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
                     <TouchableOpacity 
                         onPress={() => onDeleteSet(set.id)}
                         style={styles.deleteButton}

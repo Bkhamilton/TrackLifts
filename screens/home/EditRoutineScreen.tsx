@@ -18,7 +18,6 @@ export default function EditRoutineScreen() {
     const { routineToEdit } = useContext(HomeContext);
     const [editedRoutine, setEditedRoutine] = useState(routineToEdit);
     const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
-    const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
 
@@ -29,21 +28,9 @@ export default function EditRoutineScreen() {
         setModal(false);
     };
 
-    const toggleSetComplete = (exerciseId: number, setId: number) => {
-        setCompletedSets(prev => {
-            if (prev.includes(setId)) {
-                return prev.filter(id => id !== setId);
-            } else {
-                return [...prev, setId];
-            }
-        });
-    };
-
     // Function to handle deleting a set
     const handleDeleteSet = (exerciseId: number, setId: number) => {
         deleteSet(exerciseId, setId);
-        // Remove the set from completed sets if it was there
-        setCompletedSets(prev => prev.filter(id => id !== setId));
     };
 
     const handleSaveRoutine = () => {
@@ -104,15 +91,9 @@ export default function EditRoutineScreen() {
                     open={openModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
-                    onDeleteSet={handleDeleteSet} // Add this prop
-                    onToggleComplete={toggleSetComplete}
-                    completedSets={completedSets}
+                    onDeleteSet={handleDeleteSet}
                     onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
-                    onRemoveExercise={(exerciseId) => {
-                        deleteExercise(exerciseId);
-                        // Remove all sets of the deleted exercise from completed sets
-                        setCompletedSets(prev => prev.filter(id => !editedRoutine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
-                    }}
+                    onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
             </ScrollView>
             <AddToWorkoutModal

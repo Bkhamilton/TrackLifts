@@ -10,8 +10,8 @@ interface WorkoutProps {
     onUpdateSet: (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => void;
     onAddSet: (exerciseId: number) => void;
     onDeleteSet: (exerciseId: number, setId: number) => void;
-    onToggleComplete: (exerciseId: number, setId: number) => void;
-    completedSets: number[];
+    onToggleComplete?: (exerciseId: number, setId: number) => void;
+    completedSets?: number[];
     onReplaceExercise?: (exerciseId: number) => void; // Add this prop
     onRemoveExercise?: (exerciseId: number) => void; // Add this prop
 }
