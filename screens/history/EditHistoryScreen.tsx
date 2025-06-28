@@ -5,66 +5,35 @@ import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
-import { HistoryContext } from '@/contexts/HistoryContext';
-import { WorkoutContext } from '@/contexts/WorkoutContext';
+import useHookEditHistory from '@/hooks/history/useHookEditHistory';
 import { useEditWorkoutActions } from '@/hooks/workout/useEditWorkoutActions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function EditHistoryScreen() {
-    const [modal, setModal] = useState(false);
-    const [confirmModal, setConfirmModal] = useState(false);
-    const { history } = useContext(HistoryContext);
-    const { updateWorkout } = useContext(WorkoutContext);
-    const [startTime, setStartTime] = useState(history.startTime);
-    const [lengthMin, setLengthMin] = useState(history.lengthMin);
-    const [editedNotes, setEditedNotes] = useState(history.notes);
-    const [editedRoutine, setEditedRoutine] = useState(history.routine);
+    const {
+        addWorkoutModal,
+        confirmModal,
+        startTime,
+        setStartTime,
+        lengthMin,
+        setLengthMin,
+        editedNotes,
+        setEditedNotes,
+        editedRoutine,
+        setEditedRoutine,
+        handleSaveRoutine,
+        handleConfirmSave,        
+        openWorkoutModal,
+        closeWorkoutModal,
+        openConfirmModal,
+        closeConfirmModal        
+    } = useHookEditHistory();
     const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
-    const [completedSets, setCompletedSets] = useState<number[]>([]);
 
     const router = useRouter();
-
-    const openModal = () => {
-        setModal(true);
-    };
-    const closeModal = () => {
-        setModal(false);
-    };
-
-    // Function to handle deleting a set
-    const handleDeleteSet = (exerciseId: number, setId: number) => {
-        deleteSet(exerciseId, setId);
-    };
-
-    const handleSaveRoutine = () => {
-        // If editedRoutine is different from history.routine, show confirmation modal
-        if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || 
-        editedNotes !== history.notes ||
-        startTime !== history.startTime ||
-        lengthMin !== history.lengthMin) {
-            setConfirmModal(true);
-        } else {
-            router.replace('/(tabs)/history/main');
-        }
-    }
-
-    const handleConfirmSave = (option: 'yes' | 'no') => {
-        if (option === 'yes') {
-            // Save the changes to the routine
-            const updatedHistory = {
-                ...history,
-                routine: editedRoutine,
-                notes: editedNotes,
-                startTime,
-                lengthMin,
-            };
-            updateWorkout(updatedHistory);
-            router.replace('/(tabs)/history/main');
-        }
-    }
     
     return (
         <View style={styles.container}>
@@ -106,23 +75,23 @@ export default function EditHistoryScreen() {
                 />
                 <Workout
                     routine={editedRoutine}
-                    open={openModal}
+                    open={openWorkoutModal}
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
-                    onDeleteSet={handleDeleteSet} // Add this prop
+                    onDeleteSet={deleteSet} // Add this prop
                     onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
             </ScrollView>
             <AddToWorkoutModal
-                visible={modal}
-                close={closeModal}
+                visible={addWorkoutModal}
+                close={closeWorkoutModal}
                 add={addExercise}
             />
             <ConfirmationModal
                 visible={confirmModal}
                 message="Confirm changes?"
-                onClose={() => setConfirmModal(false)}
+                onClose={closeConfirmModal}
                 onSelect={(option) => handleConfirmSave(option)}
             />
         </View>

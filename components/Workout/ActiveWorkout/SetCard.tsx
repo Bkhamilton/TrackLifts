@@ -27,14 +27,13 @@ export default function SetCard({
     onDeleteSet
 }: SetCardProps) {
 
-    const cardBackground = useThemeColor({}, 'grayBackground');
-    const cardBorder = useThemeColor({}, 'grayBorder');
+    const cardBackground = useThemeColor({}, 'grayBorder');
 
     return (
         <View style={[
             styles.setContainer,
             isCompleted && styles.completedSet,
-            !isCompleted && { backgroundColor: cardBorder }
+            !isCompleted && { backgroundColor: cardBackground }
         ]}>
             <View style={styles.contentContainer}>
                 <Text style={[styles.setNumber, isCompleted && styles.completedNumber]}>#{index + 1}</Text>
