@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
 import HistoryInfo from '@/components/History/HistoryInfo';
-import HistoryModal from '@/components/modals/HistoryModal';
+import HistoryModal from '@/components/modals/HistoryModal/HistoryModal';
 import { View } from '@/components/Themed';
 import Title from '@/components/Title';
 

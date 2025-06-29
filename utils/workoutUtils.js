@@ -80,3 +80,37 @@ export function fillResultsWithDates(results, start, end) {
     }
     return filled;
 }
+
+export function formatLengthTime(timeStr) {
+    if (!timeStr) return '0s'; // Handle undefined case
+    // Accepts "HH:MM:SS" or "DD:HH:MM:SS"
+    const parts = timeStr.split(':').map(Number);
+    let days = 0, hours = 0, minutes = 0, seconds = 0;
+
+    if (parts.length === 3) {
+        // HH:MM:SS
+        [hours, minutes, seconds] = parts;
+    } else if (parts.length === 4) {
+        // DD:HH:MM:SS
+        [days, hours, minutes, seconds] = parts;
+    }
+
+    let result = '';
+    if (days > 0) result += `${days}d `;
+    if (hours > 0 || days > 0) result += `${hours}h `;
+    if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}m `;
+    // Only include seconds if days === 0
+    if (days === 0) result += `${seconds}s`;
+
+    return result.trim();
+}
+
+export const formatShortDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+};

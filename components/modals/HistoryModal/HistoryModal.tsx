@@ -1,15 +1,16 @@
-import { ActiveExercise, History } from '@/constants/types'; // Adjust import path as needed
+import { History } from '@/constants/types'; // Adjust import path as needed
 import { HistoryContext } from '@/contexts/HistoryContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { calculateTotalWeight } from '@/utils/workoutCalculations';
+import { formatLengthTime, formatShortDate } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { ClearView, Text, View } from '../Themed';
-import ConfirmationModal from './ConfirmationModal';
-import OptionsModal from './OptionsModal';
+import { Text, View } from '../../Themed';
+import ConfirmationModal from '../ConfirmationModal';
+import OptionsModal from '../OptionsModal';
+import ExerciseCard from './ExerciseCard';
 
 interface HistoryModalProps {
     visible: boolean;
@@ -18,9 +19,6 @@ interface HistoryModalProps {
 }
 
 export default function HistoryModal({ visible, close, history }: HistoryModalProps) {
-
-    const cardBackground = useThemeColor({}, 'grayBackground');
-    const cardBorder = useThemeColor({}, 'grayBorder');
 
     const router = useRouter();
     const { setHistory } = useContext(HistoryContext);
@@ -50,63 +48,6 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                 break;
         }
     }
-
-    function formatTime(timeStr: string | undefined) {
-        if (!timeStr) return '0s'; // Handle undefined case
-        // Accepts "HH:MM:SS" or "DD:HH:MM:SS"
-        const parts = timeStr.split(':').map(Number);
-        let days = 0, hours = 0, minutes = 0, seconds = 0;
-
-        if (parts.length === 3) {
-            // HH:MM:SS
-            [hours, minutes, seconds] = parts;
-        } else if (parts.length === 4) {
-            // DD:HH:MM:SS
-            [days, hours, minutes, seconds] = parts;
-        }
-
-        let result = '';
-        if (days > 0) result += `${days}d `;
-        if (hours > 0 || days > 0) result += `${hours}h `;
-        if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}m `;
-        // Only include seconds if days === 0
-        if (days === 0) result += `${seconds}s`;
-
-        return result.trim();
-    }
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
-    };
-
-    const renderExercise = ({ item }: { item: ActiveExercise }) => (
-        <View style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
-            <View style={styles.exerciseHeader}>
-                <Text style={styles.exerciseTitle}>{item.title}</Text>
-                <Text style={styles.exerciseSubtitle}>
-                    {item.muscleGroup} • {item.equipment}
-                </Text>
-            </View>
-            
-            <ClearView style={styles.setsContainer}>
-                {item.sets.map((set, index) => (
-                    <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder}]}>
-                        <Text style={styles.setNumber}>Set {set.set_order}</Text>
-                        <Text style={styles.setDetail}>{set.reps} reps × {set.weight} lbs</Text>
-                        {set.restTime > 0 && (
-                            <Text style={styles.restTime}>Rest: {set.restTime}s</Text>
-                        )}
-                    </View>
-                ))}
-            </ClearView>
-        </View>
-    );
 
     const totalWeight = calculateTotalWeight(history);
 
@@ -140,12 +81,12 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     {/* Summary */}
                     <View style={styles.summaryContainer}>
                         <Text style={styles.routineTitle}>{history.routine.title}</Text>
-                        <Text style={styles.dateText}>{formatDate(history.startTime)}</Text>
+                        <Text style={styles.dateText}>{formatShortDate(history.startTime)}</Text>
                         
                         <View style={styles.statsContainer}>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="clock-outline" size={20} color="#ff8787" />
-                                <Text style={styles.statText}>{formatTime(history.endTime)}</Text>
+                                <Text style={styles.statText}>{formatLengthTime(history.endTime)}</Text>
                             </View>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="weight-pound" size={20} color="#ff8787" />
@@ -157,7 +98,9 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     {/* Exercises List */}
                     <FlatList
                         data={history.routine.exercises}
-                        renderItem={renderExercise}
+                        renderItem={({ item }) => (
+                            <ExerciseCard exercise={item} />
+                        )}
                         keyExtractor={(item) => item.id.toString()}
                         contentContainerStyle={styles.listContent}
                     />
@@ -254,47 +197,5 @@ const styles = StyleSheet.create({
     },
     listContent: {
         paddingBottom: 16,
-    },
-    exerciseContainer: {
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 12,
-        borderWidth: 1,
-    },
-    exerciseHeader: {
-        marginBottom: 8,
-        backgroundColor: 'transparent',
-    },
-    exerciseTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    exerciseSubtitle: {
-        fontSize: 13,
-        color: '#666',
-    },
-    setsContainer: {
-        marginTop: 8,
-    },
-    setItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
-        paddingHorizontal: 4,
-        borderRadius: 4,
-    },
-    setNumber: {
-        fontSize: 14,
-        color: '#666',
-    },
-    setDetail: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    restTime: {
-        fontSize: 13,
-        color: '#ff8787',
     },
 });
