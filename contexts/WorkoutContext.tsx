@@ -1,7 +1,7 @@
 // app/contexts/WorkoutContext.tsx
 import { History } from '@/constants/types';
 import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
-import { clearSessionExercises, insertSessionExercise } from '@/db/workout/SessionExercises';
+import { clearSessionExercises, getSessionExerciseId, insertSessionExercise } from '@/db/workout/SessionExercises';
 import { clearSessionSets, clearSessionSetsByWorkout, insertSessionSet } from '@/db/workout/SessionSets';
 import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/WorkoutSessions';
 import { dataEvents } from '@/utils/events';
@@ -87,6 +87,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             if (exercisesChanged) {
                 // Remove old session exercises and sets
                 await clearSessionExercises(db, newHistory.id);
+                await clearSessionSetsByWorkout(db, newHistory.id);
 
                 // Insert new session exercises and sets
                 for (const exercise of newExercises) {
@@ -115,11 +116,11 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
                 for (const exercise of newExercises) {
                     // Find the sessionExerciseId for this exercise in the DB
                     // You may need a helper like getSessionExerciseId(db, sessionId, exerciseId)
-                    const sessionExerciseId = await insertSessionExercise(db, {
-                        sessionId: newHistory.id,
-                        exerciseId: exercise.exercise_id ?? exercise.id,
-                        // If your insertSessionExercise is upsert, this works; otherwise, use a get function
-                    });
+                    const sessionExerciseId = await getSessionExerciseId(db, newHistory.id, exercise.exercise_id ?? exercise.id);
+                    if (!sessionExerciseId) {
+                        console.warn(`Session exercise not found for exercise ID: ${exercise.exercise_id ?? exercise.id}`);
+                        continue;
+                    }
 
                     // Clear and repopulate sets for this exercise
                     await clearSessionSets(db, sessionExerciseId);

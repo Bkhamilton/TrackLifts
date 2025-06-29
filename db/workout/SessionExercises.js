@@ -60,6 +60,25 @@ export const getSessionExercisesBySessionId = async (db, sessionId) => {
     }
 }
 
+export const getSessionExerciseId = async (db, sessionId, exerciseId) => {
+    try {
+        const query = `
+            SELECT 
+                se.id
+            FROM 
+                SessionExercises se
+            WHERE 
+                se.session_id = ? AND
+                se.exercise_id = ?
+        `;
+        const row = await db.getFirstAsync(query, [sessionId, exerciseId]);
+        return row ? row.id : null;
+    } catch (error) {
+        console.error('Error getting session exercise ID:', error);
+        throw error;
+    }
+};
+
 export const getTopExericise = async (db, userId) => {
     try {
         const query = `

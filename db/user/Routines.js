@@ -54,9 +54,8 @@ export const updateRoutine = async (db, routine) => {
     try {
         await db.runAsync(
             'UPDATE Routines SET title = ? WHERE id = ? AND user_id = ?',
-            [routine.title, routine.user_id, routine.id]
+            [routine.title, routine.id, routine.user_id]
         );
-        console.log('Routine updated');
     } catch (error) {
         console.error('Error updating routine:', error);
         throw error;
