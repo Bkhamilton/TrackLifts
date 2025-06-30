@@ -1,4 +1,4 @@
-import ExerciseOptionsModal from '@/components/modals/ExerciseOptionsModal';
+import ExerciseOptionsModal from '@/components/modals/Workout/ExerciseOptionsModal';
 import { ClearView, Text, View } from '@/components/Themed';
 import { ActiveExercise } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';

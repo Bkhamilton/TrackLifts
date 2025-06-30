@@ -1,8 +1,8 @@
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import WorkoutDisplay from '@/components/Workout/NewWorkout/WorkoutDisplay';
-import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
-import WorkoutOptionsModal from '@/components/modals/WorkoutOptionsModal';
+import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
+import WorkoutOptionsModal from '@/components/modals/Workout/WorkoutOptionsModal';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import useHookNewWorkout from '@/hooks/workout/useHookNewWorkout';
 import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';

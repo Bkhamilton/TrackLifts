@@ -1,4 +1,4 @@
-import FavoriteRoutinesModal from '@/components/modals/FavoriteRoutinesModal';
+import FavoriteRoutinesModal from '@/components/modals/Data/FavoriteRoutinesModal';
 import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';

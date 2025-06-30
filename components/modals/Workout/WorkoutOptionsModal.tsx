@@ -2,7 +2,7 @@ import { ActiveRoutine } from '@/constants/types';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import React, { useContext } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { Text, View } from '../Themed';
+import { Text, View } from '../../Themed';
 
 interface WorkoutOptionsProps {
     visible: boolean;

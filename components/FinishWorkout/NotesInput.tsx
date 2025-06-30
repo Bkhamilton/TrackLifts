@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
     },
     closeButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#ff8787',
         borderRadius: 8,
         paddingVertical: 12,
         alignItems: 'center',

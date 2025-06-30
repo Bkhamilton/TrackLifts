@@ -1,6 +1,6 @@
 import EditableTitle from '@/components/EditableTitle';
-import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';

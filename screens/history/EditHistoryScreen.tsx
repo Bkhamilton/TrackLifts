@@ -1,7 +1,7 @@
 import NotesInput from '@/components/FinishWorkout/NotesInput';
 import EditHistoryCard from '@/components/History/EditHistory/EditHistoryCard';
-import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
