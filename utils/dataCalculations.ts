@@ -1,28 +1,19 @@
 export const calculateStreak = (workoutFrequency: { workout_date: string, session_count: number }[]) => {
     if (!workoutFrequency || workoutFrequency.length === 0) return 0;
 
-    // Sort by date descending
-    const sortedFrequency = [...workoutFrequency].sort(
-        (a, b) => new Date(b.workout_date).getTime() - new Date(a.workout_date).getTime()
-    );
-
-    // Check if the most recent workout is today
-    const today = new Date();
-    const latestWorkout = new Date(sortedFrequency[0].workout_date);
-    const diffToToday = Math.floor(
-        (today.setHours(0,0,0,0) - latestWorkout.setHours(0,0,0,0)) / (1000 * 3600 * 24)
-    );
-
-    if (diffToToday !== 0) return 0; // No streak if last workout wasn't today
+    // Sort by date
+    const sortedFrequency = [...workoutFrequency].sort((a, b) => new Date(b.workout_date).getTime() - new Date(a.workout_date).getTime());
 
     let streak = 1;
-    let lastDate = latestWorkout;
+    let lastDate = new Date(sortedFrequency[0].workout_date);
+
+    const lastWorkout = calculateLastWorkout(workoutFrequency);
+    if (lastWorkout === "N/A") return 0; // No workouts available
+    if (lastWorkout !== "Today" && lastWorkout !== "Yesterday") return 0; // Streak only counts if last workout was today or yesterday
 
     for (let i = 1; i < sortedFrequency.length; i++) {
         const currentDate = new Date(sortedFrequency[i].workout_date);
-        const diffDays = Math.floor(
-            (lastDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24)
-        );
+        const diffDays = Math.ceil((lastDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
 
         if (diffDays === 1) {
             streak++;
