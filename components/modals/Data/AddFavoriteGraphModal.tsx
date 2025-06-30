@@ -3,7 +3,7 @@ import { Exercise } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import AddToWorkoutModal from './AddToWorkoutModal';
+import AddToWorkoutModal from '../Workout/AddToWorkoutModal';
 
 type GraphType =
     | 'Top Set'
