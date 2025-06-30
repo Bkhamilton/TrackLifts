@@ -3,7 +3,7 @@ export function getLast7Days() {
     const days = [];
     const pad = (n) => n < 10 ? '0' + n : n;
     const today = new Date();
-    for (let i = 6; i >= 0; i--) {
+    for (let i = -1; i < 6; i++) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
         const year = d.getFullYear();
@@ -11,14 +11,14 @@ export function getLast7Days() {
         const day = pad(d.getDate());
         days.push(`${year}-${month}-${day}`);
     }
-    return days;
+    return days.reverse(); // oldest to newest, or remove .reverse() for newest to oldest
 }
 
 export function getLast30Days() {
     const days = [];
     const pad = (n) => n < 10 ? '0' + n : n;
     const today = new Date();
-    for (let i = 29; i >= 0; i--) {
+    for (let i = 28; i >= -1; i--) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
         const year = d.getFullYear();
