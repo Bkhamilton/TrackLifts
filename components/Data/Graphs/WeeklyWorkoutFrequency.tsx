@@ -47,7 +47,7 @@ export default function WorkoutFrequencyChart({ data } : WorkoutFrequencyChartPr
                         // Convert YYYY-MM-DD to day of week
                         const date = new Date(value);
                         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-                        const day = days[date.getDay()];
+                        const day = days[(date.getDay() + 1) % 7]
                         if (day === "Thu") return "Th";
                         if (day === "Sun") return "Su";
                         return day.charAt(0);
