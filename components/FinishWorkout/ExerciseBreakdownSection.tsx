@@ -22,8 +22,8 @@ export default function ExerciseBreakdownSection({ exerciseStats }: Props) {
                     <Text style={styles.exerciseTitle}>{exercise.title}</Text>
                     <View style={styles.exerciseStats}>
                         <Text style={styles.exerciseStat}>Sets: {exercise.sets}</Text>
-                        <Text style={styles.exerciseStat}>Volume: {exercise.totalWeight} kg</Text>
-                        <Text style={styles.exerciseStat}>Max: {exercise.highestWeight} kg</Text>
+                        <Text style={styles.exerciseStat}>Volume: {exercise.totalWeight} lbs</Text>
+                        <Text style={styles.exerciseStat}>Max: {exercise.highestWeight} lbs</Text>
                     </View>
                 </View>
             ))}

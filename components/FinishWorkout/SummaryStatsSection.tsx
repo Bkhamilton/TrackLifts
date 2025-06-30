@@ -27,12 +27,12 @@ export default function SummaryStatsSection({
                 <Text style={styles.statText}>Total Sets: {totalSets}</Text>
             </ClearView>
             <ClearView style={styles.statRow}>
-                <MaterialCommunityIcons name="weight-kilogram" size={24} color="#666" />
-                <Text style={styles.statText}>Total Weight Moved: {totalWeightMoved} kg</Text>
+                <MaterialCommunityIcons name="weight-pound" size={24} color="#666" />
+                <Text style={styles.statText}>Total Weight Moved: {totalWeightMoved} lbs</Text>
             </ClearView>
             <ClearView style={styles.statRow}>
                 <MaterialCommunityIcons name="trophy" size={24} color="#666" />
-                <Text style={styles.statText}>Highest Weight: {highestWeight} kg</Text>
+                <Text style={styles.statText}>Highest Weight: {highestWeight} lbs</Text>
             </ClearView>
         </View>
     );

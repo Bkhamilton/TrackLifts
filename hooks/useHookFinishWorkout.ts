@@ -18,12 +18,12 @@ export default function useHookFinishWorkout() {
         setRoutine 
     } = useContext(ActiveWorkoutContext);
     const { addRoutineToDB } = useContext(RoutineContext);
-    const { refreshHistory } = useContext(WorkoutContext);
+    const { refreshHistory, workoutHistory } = useContext(WorkoutContext);
     const { activeSplit, getCurrentSplitDay, completeCurrentSplitDay } = useContext(SplitContext);
 
     const router = useRouter();
 
-    const totalWorkoutsCompleted = routine.exercises?.reduce((sum, ex) => sum + ex.sets.length, 0) || 0;
+    const totalWorkoutsCompleted = workoutHistory.length + 1; // +1 for the current workout being completed
 
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [showRoutineMismatchModal, setShowRoutineMismatchModal] = useState(false);
