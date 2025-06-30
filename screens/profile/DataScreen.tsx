@@ -84,7 +84,7 @@ export default function DataScreen() {
             </View>
             
             <FavoriteGraphs
-                favorites={[]}
+                favorites={favoriteGraphDisplay}
                 onAddFavorite={() => setFavoriteGraphModal(true)}
                 onSelectGraph={handleSelectGraph}
             />

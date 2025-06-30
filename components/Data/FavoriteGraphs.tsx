@@ -26,14 +26,6 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
 
-    if (!favorites || favorites.length === 0) {
-        return (
-            <View style={styles.header}>
-                <Text style={styles.title}>No Favorite Graphs</Text>
-            </View>
-        );
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -100,7 +92,7 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                 </ScrollView>
             ) : (
                 <TouchableOpacity 
-                    style={styles.emptyContainer}
+                    style={[styles.emptyContainer, { backgroundColor: cardBackground }]}
                     onPress={onAddFavorite}
                 >
                     <MaterialCommunityIcons 
@@ -203,7 +195,6 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     emptyContainer: {
-        backgroundColor: '#f8f9fa',
         borderRadius: 16,
         padding: 24,
         alignItems: 'center',
@@ -212,7 +203,6 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         fontSize: 16,
-        color: '#333',
         marginTop: 12,
     },
     emptySubtext: {
