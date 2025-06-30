@@ -10,6 +10,8 @@ export default function useHookData() {
     const [showFavoriteGraphModal, setShowFavoriteGraphModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
+    const { removeFavoriteGraph } = useContext(DataContext);
+
     const { workoutFrequency } = useContext(WorkoutContext);
     const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats, refreshData } = useContext(DataContext);
 
@@ -20,6 +22,31 @@ export default function useHookData() {
     const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
 
     const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
+
+    const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+    const [pendingRemoveGraph, setPendingRemoveGraph] = useState<FavoriteGraph | null>(null);
+
+    const handleRequestRemoveFavorite = (graph: FavoriteGraph) => {
+        setPendingRemoveGraph(graph);
+        setShowRemoveConfirm(true);
+    };
+
+    const handleConfirmRemove = (choice: 'yes' | 'no') => {
+        setShowRemoveConfirm(false);
+        if (choice === 'yes' && pendingRemoveGraph) {
+            // Actually remove favorite here
+            handleRemoveFavorite(pendingRemoveGraph.exercise_id, pendingRemoveGraph.graphType);
+        }
+        setPendingRemoveGraph(null);
+    };
+
+    const handleRemoveFavorite = (exerciseId: number, graphType: string) => {
+        removeFavoriteGraph(exerciseId, graphType);
+        setFavoriteGraphDisplay((prev) =>
+            prev.filter((graph) => graph.exercise_id !== exerciseId || graph.graphType !== graphType)
+        );
+        setShowFavoriteGraphModal(false);
+    }
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -113,5 +140,12 @@ export default function useHookData() {
         setFavoriteGraphModal,
         refreshing,
         handleRefresh,
+        showRemoveConfirm,
+        setShowRemoveConfirm,
+        pendingRemoveGraph,
+        setPendingRemoveGraph,
+        handleRequestRemoveFavorite,
+        handleConfirmRemove,
+        handleRemoveFavorite,
     };
 }

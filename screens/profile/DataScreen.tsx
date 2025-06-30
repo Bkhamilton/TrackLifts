@@ -9,14 +9,14 @@ import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
 import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import AddFavoriteGraphModal from '@/components/modals/AddFavoriteGraphModal';
 import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import FavoriteGraphDisplayModal from '@/components/modals/FavoriteGraphDisplayModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import { DataContext } from '@/contexts/DataContext';
 import useHookData from '@/hooks/profile/useHookData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useContext } from 'react';
+import React from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
@@ -26,6 +26,7 @@ export default function DataScreen() {
         selectedExercise,
         handleExerciseSelect,
         favoriteGraphDisplay,
+        setFavoriteGraphDisplay,
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,
@@ -38,16 +39,14 @@ export default function DataScreen() {
         setFavoriteGraphModal,
         refreshing,
         handleRefresh,        
+        showRemoveConfirm,
+        setShowRemoveConfirm,
+        pendingRemoveGraph,
+        handleRequestRemoveFavorite,
+        handleConfirmRemove,
     } = useHookData();
 
     const router = useRouter();
-
-    const { removeFavoriteGraph } = useContext(DataContext);
-
-    const handleRemoveFavorite = (exerciseId: number, graphType: string) => {
-        removeFavoriteGraph(exerciseId, graphType);
-        setShowFavoriteGraphModal(false);
-    }
 
     return (
         <View style={styles.container}>
@@ -114,7 +113,7 @@ export default function DataScreen() {
                 visible={showFavoriteGraphModal}
                 onClose={() => setShowFavoriteGraphModal(false)}
                 graph={selectedGraph || { id: '', exercise: '', exercise_id: 0, equipment: '', graphType: '', stats: [] }}
-                onRemoveFavorite={handleRemoveFavorite}
+                onRequestRemoveFavorite={handleRequestRemoveFavorite}
             />
             
             <AddFavoriteGraphModal
@@ -130,6 +129,17 @@ export default function DataScreen() {
                 visible={showExerciseModal}
                 close={() => setShowExerciseModal(false)}
                 add={(exercise) => handleExerciseSelect(exercise)}
+            />
+
+            <ConfirmationModal
+                visible={showRemoveConfirm}
+                onClose={() => setShowRemoveConfirm(false)}
+                message={
+                    pendingRemoveGraph
+                        ? `Are you sure you want to remove ${pendingRemoveGraph.exercise} from your favorites?`
+                        : ''
+                }
+                onSelect={handleConfirmRemove}
             />
         </ScrollView>
         </View>

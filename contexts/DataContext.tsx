@@ -175,10 +175,14 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                             formattedEnd,
                             statType
                         );
+                        if (!stats || stats.length === 0) {
+                            return { ...graph, stats: [] };
+                        }
                         const filledStats = fillResultsWithDates(stats, startDate, endDate);
                         return { ...graph, stats: filledStats };
                     })
                 );
+                console.log('Fetched favorite graphs with stats:', JSON.stringify(graphsWithStats, null, 2));
                 setFavoriteGraphs(graphsWithStats);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {

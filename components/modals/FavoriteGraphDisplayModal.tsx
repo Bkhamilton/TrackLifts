@@ -3,9 +3,8 @@ import { Text, View } from '@/components/Themed';
 import { FavoriteGraph } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import ConfirmationModal from './ConfirmationModal';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -13,21 +12,19 @@ interface Props {
     visible: boolean;
     onClose: () => void;
     graph: FavoriteGraph;
-    onRemoveFavorite: (exerciseId: number, graphType: string) => void;
+    onRequestRemoveFavorite: (graph: FavoriteGraph) => void;
 }
 
-const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, onRemoveFavorite }) => {
+const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, onRequestRemoveFavorite }) => {
     
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [iconName, setIconName] = useState<IconName>('star');
-
     const handleRemoveFavorite = () => {
-        setModalVisible(true);
-    };
-    
+        onRequestRemoveFavorite(graph);
+        onClose();
+    }
+
     return (
         <Modal
             visible={visible}
@@ -40,7 +37,7 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
                     {/* Dropdown menu button */}
                     <View style={styles.modalHeader}>
                         <TouchableOpacity onPress={handleRemoveFavorite} style={styles.dropdownButton}>
-                            <MaterialCommunityIcons name={iconName} size={24} color="#ff8787" />
+                            <MaterialCommunityIcons name='star' size={24} color="#ff8787" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                             <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
@@ -84,18 +81,6 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
                     </View>
                 </View>
             </View>
-            <ConfirmationModal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                message={`Are you sure you want to remove ${graph.exercise} from your favorites?`}
-                onSelect={(choice) => {
-                    if (choice === 'yes') {
-                        setIconName('star-outline'); // Change icon to outline
-                        onRemoveFavorite(graph.exercise_id, graph.graphType);
-                    }
-                    setModalVisible(false);
-                }}
-            />
         </Modal>
     );
 };
