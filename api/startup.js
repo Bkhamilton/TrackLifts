@@ -345,6 +345,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS SessionSets;
         DROP TABLE IF EXISTS ExerciseMaxHistory;
         DROP TABLE IF EXISTS SplitCompletions;
+        DROP TABLE IF EXISTS FavoriteGraphs;
     `);
 };
 
@@ -352,10 +353,13 @@ export const dropViews = async (db) => {
     // Your view deletion logic here
     await db.execAsync(`
         DROP VIEW IF EXISTS WorkoutFrequency;
+        DROP VIEW IF EXISTS MuscleGroupIntensity;
         DROP VIEW IF EXISTS MuscleGroupFocus;
         DROP VIEW IF EXISTS FavoriteRoutines;
         DROP VIEW IF EXISTS StrengthProgress;
         DROP VIEW IF EXISTS SplitCycleLengths;
+        DROP VIEW IF EXISTS ExerciseSessionStats;
+        DROP VIEW IF EXISTS ExerciseStatSets;
     `);
 }
 

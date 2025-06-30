@@ -26,6 +26,14 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
 
+    if (!favorites || favorites.length === 0) {
+        return (
+            <View style={styles.header}>
+                <Text style={styles.title}>No Favorite Graphs</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -35,7 +43,7 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                 </TouchableOpacity>
             </View>
             
-            {favorites.length > 0 ? (
+            {favorites && favorites.length > 0 ? (
                 <ScrollView 
                     horizontal
                     showsHorizontalScrollIndicator={false}

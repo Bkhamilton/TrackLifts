@@ -84,7 +84,7 @@ export default function DataScreen() {
             </View>
             
             <FavoriteGraphs
-                favorites={favoriteGraphDisplay}
+                favorites={[]}
                 onAddFavorite={() => setFavoriteGraphModal(true)}
                 onSelectGraph={handleSelectGraph}
             />
@@ -135,7 +135,8 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flex: 1, 
         paddingVertical: 16, 
-        marginBottom: 85
+        marginBottom: 85,
+        width: '100%',
     },
     cardContainer: {
         paddingHorizontal: 16,

@@ -147,6 +147,11 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setFavoriteRoutines(routines);
             });
             getFavoriteGraphsByUserId(db, user.id).then(async (graphs) => {
+                console.log('Favorite Graphs:', JSON.stringify(graphs, null, 2));
+                if (!graphs || graphs.length === 0) {
+                    setFavoriteGraphs([]);
+                    return;
+                }
                 const endDate = new Date();
                 const startDate = new Date();
                 startDate.setMonth(endDate.getMonth() - 1);
