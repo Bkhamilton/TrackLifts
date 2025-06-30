@@ -3,7 +3,7 @@ import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useContext } from 'react';
 
 export const useWorkoutActions = () => {
-    const { routine, addToRoutine, updateRoutine } = useContext(ActiveWorkoutContext);
+    const { routine, addToRoutine, updateRoutine, replaceExercise } = useContext(ActiveWorkoutContext);
 
     const addExercise = (exercise: Exercise) => {
         addToRoutine(exercise);
@@ -78,5 +78,9 @@ export const useWorkoutActions = () => {
         });
     }
 
-    return { addExercise, updateSet, addSet, deleteSet, deleteExercise };
+    const replaceExerciseInRoutine = (exerciseId: number, newExercise: Exercise) => {
+        replaceExercise(exerciseId, newExercise);
+    }
+
+    return { addExercise, updateSet, addSet, deleteSet, deleteExercise, replaceExerciseInRoutine };
 };

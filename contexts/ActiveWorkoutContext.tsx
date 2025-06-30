@@ -18,6 +18,7 @@ interface ActiveWorkoutContextValue {
     setRoutine: React.Dispatch<React.SetStateAction<ActiveRoutine>>;
     updateRoutine: (routine: ActiveRoutine) => void;
     addToRoutine: (exercise: Exercise) => void;
+    replaceExercise: (exerciseId: number, newExercise: Exercise) => void;
     isActiveWorkout: boolean;
     setIsActiveWorkout: React.Dispatch<React.SetStateAction<boolean>>;
     startTime: number | null;
@@ -41,6 +42,7 @@ export const ActiveWorkoutContext = createContext<ActiveWorkoutContextValue>({
     setRoutine: () => {},
     updateRoutine: () => {},
     addToRoutine: () => {},
+    replaceExercise: () => {},
     isActiveWorkout: false,
     setIsActiveWorkout: () => {},
     startTime: null,
@@ -144,6 +146,28 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
             exercises: [...prevRoutine.exercises, exerciseWithSets],
         }));
     };
+
+    const replaceExercise = (exerciseId: number, newExercise: Exercise) => {
+        const exerciseWithSets = {
+            ...newExercise,
+            sets: [
+                {
+                    id: Date.now(), // Use a unique ID for the set
+                    reps: 10, // Default reps
+                    weight: 0, // Default weight
+                    restTime: 60, // Default rest time in seconds
+                    set_order: 1, // Set the order to 1
+                },
+            ],
+        };
+
+        setRoutine((prevRoutine) => ({
+            ...prevRoutine,
+            exercises: prevRoutine.exercises.map((exercise) =>
+                exercise.id === exerciseId ? exerciseWithSets : exercise
+            ),
+        }));
+    }
 
     const startWorkout = () => {
         setIsActiveWorkout(true);
@@ -274,6 +298,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
         setRoutine,
         updateRoutine,
         addToRoutine,
+        replaceExercise,
         isActiveWorkout,
         setIsActiveWorkout,
         startTime,

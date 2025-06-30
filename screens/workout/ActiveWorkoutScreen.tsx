@@ -30,7 +30,7 @@ export default function ActiveWorkoutScreen() {
         resetRoutine, 
         setFinalWorkout,
     } = useContext(ActiveWorkoutContext);
-    const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useWorkoutActions();
+    const { addExercise, updateSet, addSet, deleteSet, deleteExercise, replaceExerciseInRoutine } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
     const [completedSets, setCompletedSets] = useState<number[]>([]);
 
