@@ -1,16 +1,9 @@
-import { Exercise } from '@/constants/types';
+import { Exercise, FavoriteGraph } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { calculateLastWorkout, calculateStreak, calculateWeeklyFrequency } from '@/utils/dataCalculations';
 import { buildLast30DaysFrequency, buildLast7DaysFrequency } from '@/utils/workoutUtils';
 import { useContext, useState } from 'react';
-
-interface FavoriteGraph {
-    id: string;
-    exercise: string;
-    equipment: string;
-    graphType: string;
-}
 
 export default function useHookData() {
     const [showExerciseModal, setShowExerciseModal] = useState(false);
@@ -71,6 +64,7 @@ export default function useHookData() {
             {
                 id: (prev.length + 1).toString(),
                 exercise: exercise.title,
+                exercise_id: exercise.id,
                 equipment: exercise.equipment,
                 graphType: graphType,
                 stats,

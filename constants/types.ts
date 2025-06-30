@@ -108,3 +108,12 @@ export interface UserProfileStats {
     memberSince: string;
     goals: string;
 }
+
+export interface FavoriteGraph {
+    id: string;
+    exercise: string;
+    exercise_id: number;
+    equipment: string;
+    graphType: string;
+    stats?: any[];
+}

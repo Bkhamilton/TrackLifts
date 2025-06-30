@@ -12,10 +12,11 @@ import AddToWorkoutModal from '@/components/modals/AddToWorkoutModal';
 import FavoriteGraphDisplayModal from '@/components/modals/FavoriteGraphDisplayModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { DataContext } from '@/contexts/DataContext';
 import useHookData from '@/hooks/profile/useHookData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
@@ -40,6 +41,13 @@ export default function DataScreen() {
     } = useHookData();
 
     const router = useRouter();
+
+    const { removeFavoriteGraph } = useContext(DataContext);
+
+    const handleRemoveFavorite = (exerciseId: number, graphType: string) => {
+        removeFavoriteGraph(exerciseId, graphType);
+        setShowFavoriteGraphModal(false);
+    }
 
     return (
         <View style={styles.container}>
@@ -105,7 +113,8 @@ export default function DataScreen() {
             <FavoriteGraphDisplayModal
                 visible={showFavoriteGraphModal}
                 onClose={() => setShowFavoriteGraphModal(false)}
-                graph={selectedGraph || { id: '', exercise: '', equipment: '', graphType: '', stats: [] }}
+                graph={selectedGraph || { id: '', exercise: '', exercise_id: 0, equipment: '', graphType: '', stats: [] }}
+                onRemoveFavorite={handleRemoveFavorite}
             />
             
             <AddFavoriteGraphModal

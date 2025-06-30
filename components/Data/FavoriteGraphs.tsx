@@ -1,17 +1,10 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
+import { FavoriteGraph } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import FavoriteExerciseAnalysisGraph from './Graphs/FavoriteExerciseAnalysisGraph';
-
-interface FavoriteGraph {
-    id: string;
-    exercise: string;
-    equipment: string;
-    graphType: string;
-    stats?: any[];
-}
 
 interface Props {
     favorites: FavoriteGraph[];

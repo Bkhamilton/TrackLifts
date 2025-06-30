@@ -1,24 +1,33 @@
 import FavoriteExerciseAnalysisGraph from '@/components/Data/Graphs/FavoriteExerciseAnalysisGraph';
-import { Text } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
+import { FavoriteGraph } from '@/constants/types';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import ConfirmationModal from './ConfirmationModal';
 
-interface FavoriteGraph {
-    id: string;
-    exercise: string;
-    equipment: string;
-    graphType: string;
-    stats?: any[];
-}
+type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
 interface Props {
     visible: boolean;
     onClose: () => void;
     graph: FavoriteGraph;
+    onRemoveFavorite: (exerciseId: number, graphType: string) => void;
 }
 
-const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph }) => {
+const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, onRemoveFavorite }) => {
+    
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [iconName, setIconName] = useState<IconName>('star');
+
+    const handleRemoveFavorite = () => {
+        setModalVisible(true);
+    };
+    
     return (
         <Modal
             visible={visible}
@@ -30,8 +39,8 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph })
                 <View style={styles.modalContent}>
                     {/* Dropdown menu button */}
                     <View style={styles.modalHeader}>
-                        <TouchableOpacity style={styles.dropdownButton}>
-                            <MaterialCommunityIcons name="dots-vertical" size={24} color="#333" />
+                        <TouchableOpacity onPress={handleRemoveFavorite} style={styles.dropdownButton}>
+                            <MaterialCommunityIcons name={iconName} size={24} color="#ff8787" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                             <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
@@ -40,14 +49,14 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph })
                     <View key={graph.id} style={styles.graphCard}>
                         <View style={styles.graphHeader}>
                             <Text style={styles.graphTitle}>{graph.exercise} ({graph.equipment})</Text>
-                            <Text style={styles.graphType}>{graph.graphType}</Text>
+                            <Text style={[styles.graphType, { backgroundColor: cardBorder }]}>{graph.graphType}</Text>
                         </View>
                         {graph.stats && graph.stats.length > 0 ? (
-                            <View style={styles.graphContainer}>
+                            <View style={[styles.graphContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                                 <FavoriteExerciseAnalysisGraph data={graph.stats} />
                             </View>
                         ) : (
-                            <View style={styles.graphPlaceholder}>
+                            <View style={[styles.graphPlaceholder, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                                 <Text style={styles.placeholderText}>
                                     {graph.graphType} Graph
                                 </Text>
@@ -75,6 +84,18 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph })
                     </View>
                 </View>
             </View>
+            <ConfirmationModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                message={`Are you sure you want to remove ${graph.exercise} from your favorites?`}
+                onSelect={(choice) => {
+                    if (choice === 'yes') {
+                        setIconName('star-outline'); // Change icon to outline
+                        onRemoveFavorite(graph.exercise_id, graph.graphType);
+                    }
+                    setModalVisible(false);
+                }}
+            />
         </Modal>
     );
 };
@@ -87,7 +108,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
-        backgroundColor: '#fff',
         borderRadius: 18,
         width: '92%',
         maxHeight: '90%',
@@ -97,7 +117,7 @@ const styles = StyleSheet.create({
     },
     modalHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         paddingHorizontal: 16,
         marginBottom: 8,

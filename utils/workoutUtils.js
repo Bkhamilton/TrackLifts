@@ -18,7 +18,7 @@ export function getLast30Days() {
     const days = [];
     const pad = (n) => n < 10 ? '0' + n : n;
     const today = new Date();
-    for (let i = 28; i >= -1; i--) {
+    for (let i = 29; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
         const year = d.getFullYear();
