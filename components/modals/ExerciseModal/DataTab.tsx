@@ -1,28 +1,88 @@
 import { Text, View } from '@/components/Themed';
-import React from 'react';
+import { Exercise } from '@/constants/types';
+import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
+import { getAllTimeExerciseSessionStatDetails } from '@/db/data/ExerciseSessionStatDetails';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-// Hardcoded stat values for demonstration
-const stats = [
-    { label: 'Top Set', value: '125 lbs x 8 reps' },
-    { label: 'Heaviest Set', value: '130 lbs x 4 reps' },
-    { label: 'Most Weight Moved', value: '2,000 lbs' },
-    { label: 'Average Weight', value: '110 lbs' },
-    { label: 'Repetitions', value: '95 lbs x 20 reps' },
-];
+export default function DataTab({ exercise }: { exercise: Exercise }) {
 
-export default function DataTab() {
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
+
+    const [statDetails, setStatDetails] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchStatDetails = async () => {
+            if (db && exercise) {
+                const details = await getAllTimeExerciseSessionStatDetails(db, user.id, exercise.id);
+                setStatDetails(details);
+            }
+        };
+
+        fetchStatDetails();
+    }, [db, exercise]);
+
+        // Helper to format stat values or show placeholder
+    const formatStat = (value: any, suffix = '') =>
+        value === null || value === undefined
+            ? '-'
+            : `${Number.isFinite(value) ? Math.round(value * 100) / 100 : value}${suffix}`;
+
     return (
         <View style={styles.dataContainer}>
             <Text style={styles.header}>Exercise Data</Text>
-            {stats.map((stat, idx) => (
-                <View key={stat.label} style={styles.statRow}>
-                    <Text style={styles.statLabel}>{stat.label}</Text>
-                    <View style={styles.valueBox}>
-                        <Text style={styles.statValue}>{stat.value}</Text>
-                    </View>
+            <View style={styles.statRow}>
+                <Text style={styles.statLabel}>Top Set</Text>
+                <View style={styles.valueBox}>
+                    <Text style={styles.statValue}>
+                        {statDetails && statDetails.top_set_weight !== null && statDetails.top_set_reps !== null
+                            ? `${statDetails.top_set_weight} lbs x ${statDetails.top_set_reps} reps`
+                            : '-'}
+                    </Text>
                 </View>
-            ))}
+            </View>
+            <View style={styles.statRow}>
+                <Text style={styles.statLabel}>Heaviest Set</Text>
+                <View style={styles.valueBox}>
+                    <Text style={styles.statValue}>
+                        {statDetails && statDetails.heaviest_set_weight !== null && statDetails.heaviest_set_reps !== null
+                            ? `${statDetails.heaviest_set_weight} lbs x ${statDetails.heaviest_set_reps} reps`
+                            : '-'}
+                    </Text>
+                </View>
+            </View>
+            <View style={styles.statRow}>
+                <Text style={styles.statLabel}>Most Weight Moved</Text>
+                <View style={styles.valueBox}>
+                    <Text style={styles.statValue}>
+                        {statDetails && statDetails.total_volume !== null
+                            ? `${formatStat(statDetails.total_volume)} lbs`
+                            : '-'}
+                    </Text>
+                </View>
+            </View>
+            <View style={styles.statRow}>
+                <Text style={styles.statLabel}>Average Weight</Text>
+                <View style={styles.valueBox}>
+                    <Text style={styles.statValue}>
+                        {statDetails && statDetails.avg_weight !== null
+                            ? `${formatStat(statDetails.avg_weight)} lbs`
+                            : '-'}
+                    </Text>
+                </View>
+            </View>
+            <View style={styles.statRow}>
+                <Text style={styles.statLabel}>Repetitions</Text>
+                <View style={styles.valueBox}>
+                    <Text style={styles.statValue}>
+                        {statDetails && statDetails.most_reps_weight !== null && statDetails.most_reps_reps !== null
+                            ? `${statDetails.most_reps_weight} lbs x ${statDetails.most_reps_reps} reps`
+                            : '-'}
+                    </Text>
+                </View>
+            </View>
         </View>
     );
 }

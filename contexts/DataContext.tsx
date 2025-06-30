@@ -106,7 +106,7 @@ export const DataContext = createContext<DataContextValue>({
     fetchExerciseStats: async () => {
         console.warn('fetchExerciseStats function not implemented');
         return [];
-    },
+    }, 
     addFavoriteGraph: async () => {
         console.warn('addFavoriteGraph function not implemented');
     },
@@ -182,7 +182,6 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                         return { ...graph, stats: filledStats };
                     })
                 );
-                console.log('Fetched favorite graphs with stats:', JSON.stringify(graphsWithStats, null, 2));
                 setFavoriteGraphs(graphsWithStats);
             });
             getWorkoutCountByUser(db, user.id).then((count) => {
@@ -270,7 +269,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             console.error('Failed to fetch exercise stats:', e);
             return [];
         }
-    };
+    };    
 
     const addFavoriteGraph = async (exerciseId: number, graphType: string) => {
         if (!db || !user?.id) return;

@@ -314,6 +314,54 @@ export const createDataViews = async (db) => {
             JOIN SessionExercises se ON ws.id = se.session_id
             JOIN SessionSets ss ON se.id = ss.session_exercise_id;
 
+            CREATE VIEW IF NOT EXISTS ExerciseSessionStatDetails AS
+            SELECT
+                ws.id AS session_id,
+                ws.user_id,
+                ws.start_time AS workout_date,
+                se.exercise_id,
+
+                -- Heaviest Set
+                (SELECT ss1.weight FROM SessionSets ss1
+                    WHERE ss1.session_exercise_id = se.id
+                    ORDER BY ss1.weight DESC, ss1.reps DESC
+                    LIMIT 1) AS heaviest_set_weight,
+                (SELECT ss1.reps FROM SessionSets ss1
+                    WHERE ss1.session_exercise_id = se.id
+                    ORDER BY ss1.weight DESC, ss1.reps DESC
+                    LIMIT 1) AS heaviest_set_reps,
+
+                -- Top Set (weight * reps)
+                (SELECT ss2.weight FROM SessionSets ss2
+                    WHERE ss2.session_exercise_id = se.id
+                    ORDER BY (ss2.weight * ss2.reps) DESC, ss2.weight DESC
+                    LIMIT 1) AS top_set_weight,
+                (SELECT ss2.reps FROM SessionSets ss2
+                    WHERE ss2.session_exercise_id = se.id
+                    ORDER BY (ss2.weight * ss2.reps) DESC, ss2.weight DESC
+                    LIMIT 1) AS top_set_reps,
+
+                -- Most Reps
+                (SELECT ss3.weight FROM SessionSets ss3
+                    WHERE ss3.session_exercise_id = se.id
+                    ORDER BY ss3.reps DESC, ss3.weight DESC
+                    LIMIT 1) AS most_reps_weight,
+                (SELECT ss3.reps FROM SessionSets ss3
+                    WHERE ss3.session_exercise_id = se.id
+                    ORDER BY ss3.reps DESC, ss3.weight DESC
+                    LIMIT 1) AS most_reps_reps,
+
+                -- Most Weight Moved (total volume)
+                SUM(ss.weight * ss.reps) AS total_volume,
+
+                -- Average Weight
+                AVG(ss.weight) AS avg_weight
+
+            FROM WorkoutSessions ws
+            JOIN SessionExercises se ON ws.id = se.session_id
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+            GROUP BY ws.id, se.exercise_id;            
+
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
             SELECT 
@@ -360,6 +408,7 @@ export const dropViews = async (db) => {
         DROP VIEW IF EXISTS SplitCycleLengths;
         DROP VIEW IF EXISTS ExerciseSessionStats;
         DROP VIEW IF EXISTS ExerciseStatSets;
+        DROP VIEW IF EXISTS ExerciseSessionStatDetails;
     `);
 }
 

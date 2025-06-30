@@ -27,7 +27,7 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
         if (selectedTab === 'Muscles') {
             return <MusclesTab exercise={exercise} />;
         } else {
-            return <DataTab />;
+            return <DataTab exercise={exercise} />;
         }
     };
 
