@@ -48,6 +48,7 @@ export default function ProfileInfoScreen() {
                 <AvatarUsernameSection
                     avatar={profile.avatar}
                     username={profile.username}
+                    createdAt={profile.createdAt}
                     isEditing={isEditing}
                     onChange={handleChange}
                 />

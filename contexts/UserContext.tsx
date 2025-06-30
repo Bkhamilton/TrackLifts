@@ -21,6 +21,7 @@ export const UserContext = createContext<UserContextValue>({
         name: '',
         email: '',
         password: '',
+        createdAt: '',
     },
     userStats: {
         height: '',
@@ -54,6 +55,7 @@ export const UserContextProvider = ({ children }: UserContextValueProviderProps)
         name: '',
         email: '',
         password: '',
+        createdAt: '',
     });
     const [userStats, setUserStats] = useState<UserProfileStats>({
         height: '',

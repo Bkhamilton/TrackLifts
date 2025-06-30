@@ -23,6 +23,13 @@ export default function ProfileMainInfo() {
         router.replace('/(tabs)/profile/profileInfo');
     };
 
+    const formatMemberSince = (dateString: string) => {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    };
+
+
     return (
         <View style={styles.container}>
             {/* Profile Header Row */}
@@ -32,7 +39,7 @@ export default function ProfileMainInfo() {
                 </View>
                 <View style={styles.profileText}>
                     <Text style={styles.username}>{user.username}</Text>
-                    <Text style={styles.memberSince}>Member since {userStats.memberSince}</Text>
+                    <Text style={styles.memberSince}>Member since {formatMemberSince(user.createdAt)}</Text>
                 </View>
                 <TouchableOpacity
                     onPress={handleEditProfile}

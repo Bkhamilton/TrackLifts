@@ -8,6 +8,7 @@ import { useContext, useState } from 'react';
 interface ProfileData {
     username: string;
     avatar: string;
+    createdAt: string;
     stats: {
         height: string;
         weight: string;
@@ -37,6 +38,7 @@ export default function useHookProfileInfo() {
     const [profile, setProfile] = useState<ProfileData>({
         username: user.username || '',
         avatar: '👤',
+        createdAt: user.createdAt || '',
         stats: {
             height: userStats.height,
             weight: userStats.weight,
