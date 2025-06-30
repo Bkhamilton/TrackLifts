@@ -289,6 +289,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         if (!db || !user?.id) return;
         try {
             await deleteFavoriteGraph(db, user.id, exerciseId, graphType);
+            setFavoriteGraphs((prev) =>
+                prev.filter((graph) => graph.exercise_id !== exerciseId || graph.graphType !== graphType)
+            );
             // Optionally refresh favorites here if you keep them in state
         } catch (e) {
             console.error('Failed to remove favorite graph:', e);
