@@ -1,5 +1,6 @@
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
+import ReplaceWorkoutModal from '@/components/modals/Workout/ReplaceWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
@@ -14,12 +15,15 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 export default function ActiveWorkoutScreen() {
     const {
         addWorkoutModal,
-        confirmModal,        
+        replaceWorkoutModal,
+        confirmModal,
         openWorkoutModal,
         closeWorkoutModal,
+        openReplaceWorkoutModal,
+        closeReplaceWorkoutModal,
         openConfirmModal,
         closeConfirmModal,
-        handleConfirmSave,
+        handleConfirmSave
     } = useHookActiveWorkout();
     const { 
         routine, 
@@ -90,6 +94,8 @@ export default function ActiveWorkoutScreen() {
         // Remove all sets of the deleted exercise from completed sets
         setCompletedSets(prev => prev.filter(id => !routine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
     };
+
+    const [exerciseIdToReplace, setExerciseIdToReplace] = useState<number | null>(null);
     
     return (
         <View style={styles.container}>
@@ -128,10 +134,24 @@ export default function ActiveWorkoutScreen() {
                     onDeleteSet={handleDeleteSet} // Add this prop
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
-                    onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
+                    onReplaceExercise={(exerciseId) => {
+                        setExerciseIdToReplace(exerciseId);
+                        openReplaceWorkoutModal();
+                    }}
                     onRemoveExercise={handleDeleteExercise}
                 />
             </ScrollView>
+            <ReplaceWorkoutModal
+                visible={replaceWorkoutModal}
+                close={closeReplaceWorkoutModal}
+                onSelect={(newExercise) => {
+                    if (exerciseIdToReplace !== null) {
+                        replaceExerciseInRoutine(exerciseIdToReplace, newExercise);
+                        setExerciseIdToReplace(null);
+                    }
+                    closeReplaceWorkoutModal();
+                }}
+            />
             <AddToWorkoutModal
                 visible={addWorkoutModal}
                 close={closeWorkoutModal}

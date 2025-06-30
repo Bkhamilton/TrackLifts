@@ -11,10 +11,14 @@ export default function useHookActiveWorkout() {
     const { deleteSet, deleteExercise } = useWorkoutActions();
 
     const [addWorkoutModal, setAddWorkoutModal] = useState(false);
+    const [replaceWorkoutModal, setReplaceWorkoutModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
 
     const openWorkoutModal = () => setAddWorkoutModal(true);
     const closeWorkoutModal = () => setAddWorkoutModal(false);
+
+    const openReplaceWorkoutModal = () => setReplaceWorkoutModal(true);
+    const closeReplaceWorkoutModal = () => setReplaceWorkoutModal(false);
 
     const openConfirmModal = () => setConfirmModal(true);
     const closeConfirmModal = () => setConfirmModal(false);    
@@ -33,9 +37,12 @@ export default function useHookActiveWorkout() {
 
     return {
         addWorkoutModal,
+        replaceWorkoutModal,
         confirmModal,
         openWorkoutModal,
         closeWorkoutModal,
+        openReplaceWorkoutModal,
+        closeReplaceWorkoutModal,
         openConfirmModal,
         closeConfirmModal,
         handleConfirmSave

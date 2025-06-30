@@ -26,7 +26,7 @@ const muscleGroupIcons = {
     // Add more muscle groups as needed
 };
 
-export default function AddToWorkoutModal({ visible, close, onSelect }: AddToWorkoutModalProps) {
+export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToWorkoutModalProps) {
     const { exercises } = useContext(ExerciseContext);
 
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
