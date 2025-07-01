@@ -40,7 +40,7 @@ export default function ActiveWorkoutScreen() {
 
     const router = useRouter();
 
-    const toggleSetComplete = (exerciseId: number, setId: number) => {
+    const toggleSetComplete = (exerciseIndex: number, setId: number) => {
         setCompletedSets(prev => {
             if (prev.includes(setId)) {
                 return prev.filter(id => id !== setId);
@@ -50,10 +50,8 @@ export default function ActiveWorkoutScreen() {
         });
     };
 
-    // Function to handle deleting a set
-    const handleDeleteSet = (exerciseId: number, setId: number) => {
-        deleteSet(exerciseId, setId);
-        // Remove the set from completed sets if it was there
+    const handleDeleteSet = (exerciseIndex: number, setId: number) => {
+        deleteSet(exerciseIndex, setId);
         setCompletedSets(prev => prev.filter(id => id !== setId));
     };
 
@@ -89,13 +87,16 @@ export default function ActiveWorkoutScreen() {
         }
     };
 
-    const handleDeleteExercise = (exerciseId: number) => {
-        deleteExercise(exerciseId);
+    const handleDeleteExercise = (exerciseIndex: number) => {
+        deleteExercise(exerciseIndex);
         // Remove all sets of the deleted exercise from completed sets
-        setCompletedSets(prev => prev.filter(id => !routine.exercises.find(ex => ex.id === exerciseId)?.sets.some(set => set.id === id)));
+        setCompletedSets(prev => {
+            const setsToRemove = routine.exercises[exerciseIndex]?.sets.map(set => set.id) || [];
+            return prev.filter(id => !setsToRemove.includes(id));
+        });
     };
 
-    const [exerciseIdToReplace, setExerciseIdToReplace] = useState<number | null>(null);
+    const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number | null>(null);
     
     return (
         <View style={styles.container}>
@@ -134,8 +135,8 @@ export default function ActiveWorkoutScreen() {
                     onDeleteSet={handleDeleteSet} // Add this prop
                     onToggleComplete={toggleSetComplete}
                     completedSets={completedSets}
-                    onReplaceExercise={(exerciseId) => {
-                        setExerciseIdToReplace(exerciseId);
+                    onReplaceExercise={(exerciseIndex) => {
+                        setExerciseIndexToReplace(exerciseIndex);
                         openReplaceWorkoutModal();
                     }}
                     onRemoveExercise={handleDeleteExercise}
@@ -145,9 +146,10 @@ export default function ActiveWorkoutScreen() {
                 visible={replaceWorkoutModal}
                 close={closeReplaceWorkoutModal}
                 onSelect={(newExercise) => {
-                    if (exerciseIdToReplace !== null) {
-                        replaceExerciseInRoutine(exerciseIdToReplace, newExercise);
-                        setExerciseIdToReplace(null);
+                    if (exerciseIndexToReplace !== null) {
+                        // You may need to update your replaceExerciseInRoutine to accept index
+                        replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
+                        setExerciseIndexToReplace(null);
                     }
                     closeReplaceWorkoutModal();
                 }}

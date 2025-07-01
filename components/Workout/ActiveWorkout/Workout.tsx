@@ -7,13 +7,13 @@ import WorkoutInfo from './WorkoutInfo';
 interface WorkoutProps {
     open: () => void;
     routine: ActiveRoutine;
-    onUpdateSet: (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => void;
-    onAddSet: (exerciseId: number) => void;
-    onDeleteSet: (exerciseId: number, setId: number) => void;
-    onToggleComplete?: (exerciseId: number, setId: number) => void;
+    onUpdateSet: (exerciseIndex: number, setId: number, field: 'weight' | 'reps', value: string) => void;
+    onAddSet: (exerciseIndex: number) => void;
+    onDeleteSet: (exerciseIndex: number, setId: number) => void;
+    onToggleComplete?: (exerciseIndex: number, setId: number) => void;
     completedSets?: number[];
-    onReplaceExercise?: (exerciseId: number) => void; // Add this prop
-    onRemoveExercise?: (exerciseId: number) => void; // Add this prop
+    onReplaceExercise?: (exerciseIndex: number) => void;
+    onRemoveExercise?: (exerciseIndex: number) => void;
 }
 
 export default function Workout({ 
@@ -28,8 +28,8 @@ export default function Workout({
     onRemoveExercise
 }: WorkoutProps) {
 
-    const handleDeleteSet = (exerciseId: number, setId: number) => {
-        onDeleteSet(exerciseId, setId);
+    const handleDeleteSet = (exerciseIndex: number, setId: number) => {
+        onDeleteSet(exerciseIndex, setId);
     }
 
     return (
@@ -38,13 +38,14 @@ export default function Workout({
                 <WorkoutInfo
                     key={index}
                     exercise={exercise}
-                    onUpdateSet={(setId, field, value) => onUpdateSet(exercise.id, setId, field, value)}
-                    onAddSet={() => onAddSet(exercise.id)}
-                    onDeleteSet={(exerciseId, setId) => handleDeleteSet(exerciseId, setId)}
-                    onToggleComplete={onToggleComplete}
+                    exerciseIndex={index}
+                    onUpdateSet={(setId, field, value) => onUpdateSet(index, setId, field, value)}
+                    onAddSet={() => onAddSet(index)}
+                    onDeleteSet={(setId) => handleDeleteSet(index, setId)}
+                    onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(index, setId) : undefined}
                     completedSets={completedSets}
-                    onReplaceExercise={onReplaceExercise}
-                    onRemoveExercise={onRemoveExercise}
+                    onReplaceExercise={onReplaceExercise ? () => onReplaceExercise(index) : undefined}
+                    onRemoveExercise={onRemoveExercise ? () => onRemoveExercise(index) : undefined}
                 />
             ))}
             {

@@ -9,17 +9,19 @@ import SetCard from './SetCard';
 
 interface WorkoutInfoProps {
     exercise: ActiveExercise;
+    exerciseIndex: number;
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
-    onAddSet: (exerciseId: number) => void;
-    onToggleComplete?: (exerciseId: number, setId: number) => void;
-    onDeleteSet: (exerciseId: number, setId: number) => void;
+    onAddSet: () => void;
+    onToggleComplete?: (setId: number) => void;
+    onDeleteSet: (setId: number) => void;
     completedSets?: number[];
-    onReplaceExercise?: (exerciseId: number) => void;
-    onRemoveExercise?: (exerciseId: number) => void;
+    onReplaceExercise?: () => void;
+    onRemoveExercise?: () => void;
 }
 
 export default function WorkoutInfo({ 
     exercise, 
+    exerciseIndex,
     onUpdateSet, 
     onAddSet,
     onToggleComplete,
@@ -36,11 +38,10 @@ export default function WorkoutInfo({
 
     const handleOptionSelect = (option: 'replace' | 'remove') => {
         setOptionsModalVisible(false);
-        // Call the appropriate handler
         if (option === 'replace' && onReplaceExercise) {
-            onReplaceExercise(exercise.id);
+            onReplaceExercise();
         } else if (option === 'remove' && onRemoveExercise) {
-            onRemoveExercise(exercise.id);
+            onRemoveExercise();
         }
     };
 
@@ -79,15 +80,15 @@ export default function WorkoutInfo({
                     onUpdateSet={onUpdateSet} 
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}
-                    onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(exercise.id, setId) : undefined}
-                    onDeleteSet={(setId) => onDeleteSet(exercise.id, setId)}
+                    onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(setId) : undefined}
+                    onDeleteSet={(setId) => onDeleteSet(setId)}
                     isCompleted={completedSets ? completedSets.includes(set.id) : false}
                 />
             ))}
             
             {/* Add Set Button */}
             <TouchableOpacity 
-                onPress={() => onAddSet(exercise.id)}
+                onPress={onAddSet}
                 style={styles.addSetButton}
             >
                 <Text style={styles.addSetButtonText}>+ Add Set</Text>
