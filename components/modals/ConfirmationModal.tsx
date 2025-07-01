@@ -1,4 +1,5 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface ConfirmationModalProps {
@@ -14,6 +15,9 @@ export default function ConfirmationModal({
     onClose,
     onSelect
 }: ConfirmationModalProps) {
+
+    const grayText = useThemeColor({}, 'grayText');
+
     return (
         <Modal
             visible={visible}
@@ -23,8 +27,8 @@ export default function ConfirmationModal({
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.message}>{message}</Text>
-                    
+                    <Text style={[styles.message, { color: grayText }]}>{message}</Text>
+
                     <ClearView style={styles.buttonContainer}>
                         <TouchableOpacity 
                             style={[styles.button, styles.noButton]}
@@ -61,7 +65,6 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        backgroundColor: 'white',
         borderRadius: 12,
         padding: 20,
     },
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         marginBottom: 20,
-        color: '#333',
     },
     buttonContainer: {
         flexDirection: 'row',

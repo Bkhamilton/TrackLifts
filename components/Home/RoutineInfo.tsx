@@ -4,6 +4,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { UserContext } from '@/contexts/UserContext';
 import { getFavoriteRoutineIds } from '@/db/user/RoutineFavorites';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
@@ -27,6 +28,8 @@ export default function RoutineInfo({
     const { user } = useContext(UserContext);
     const { routines } = useContext(RoutineContext);
     const [favoriteRoutineIds, setFavoriteRoutineIds] = useState<number[]>([]);
+
+    const grayText = useThemeColor({}, 'grayText');
 
     useEffect(() => {
         if (db && user?.id) {
@@ -100,7 +103,7 @@ export default function RoutineInfo({
                 ))}
                 
                 {/* Show All Button if there are more routines */}
-                <TouchableOpacity onPress={() => router.replace('/(tabs)/(index)/routines')} style={styles.showAllButton}>
+                <TouchableOpacity onPress={() => router.replace('/(tabs)/(index)/routines')} style={[styles.showAllButton, { borderColor: grayText }]}>
                     <Text style={styles.showAllButtonText}>Show All Routines ({otherRoutines.length})</Text>
                 </TouchableOpacity>
             </View>

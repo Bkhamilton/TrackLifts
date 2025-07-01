@@ -1,32 +1,38 @@
 import { Text, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-const IntensityLegend = ({
-    getColor,
-}: {
+interface IntensityLegendProps {
     getColor: (intensity: number) => string;
-}) => (
-    <View style={styles.legendContainer}>
-        <Text style={styles.legendTitle}>Intensity Scale:</Text>
-        <View style={styles.legendBar}>
-            {[...Array(10)].map((_, i) => (
-                <View
-                    key={i}
-                    style={[
-                        styles.legendSegment,
-                        { backgroundColor: getColor(i / 9) }
-                    ]}
-                />
-            ))}
+}
+
+const IntensityLegend = ({ getColor }: IntensityLegendProps) => {
+
+    const grayText = useThemeColor({}, 'grayText');
+
+    return (
+        <View style={styles.legendContainer}>
+            <Text style={[styles.legendTitle, { color: grayText }]}>Intensity Scale:</Text>
+            <View style={styles.legendBar}>
+                {[...Array(10)].map((_, i) => (
+                    <View
+                        key={i}
+                        style={[
+                            styles.legendSegment,
+                            { backgroundColor: getColor(i / 9) }
+                        ]}
+                    />
+                ))}
+            </View>
+            <View style={styles.legendLabels}>
+                <Text style={[styles.legendLabel, { color: grayText }]}>Low</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>Medium</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>High</Text>
+            </View>
         </View>
-        <View style={styles.legendLabels}>
-            <Text style={styles.legendLabel}>Low</Text>
-            <Text style={styles.legendLabel}>Medium</Text>
-            <Text style={styles.legendLabel}>High</Text>
-        </View>
-    </View>
-);
+    );
+}
 
 const styles = StyleSheet.create({
     legendContainer: {

@@ -16,6 +16,7 @@ export default function ProfileInsightsCard() {
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
+    const grayText = useThemeColor({}, 'grayText');
     
     // Sample data - replace with your actual data
     const progressData = {
@@ -90,6 +91,9 @@ function StatItem({ icon, value, label, color }: {
     label: string;
     color: string;
 }) {
+
+    const grayText = useThemeColor({}, 'grayText');
+
     return (
         <ClearView style={styles.statItem}>
             <ClearView style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
@@ -101,7 +105,7 @@ function StatItem({ icon, value, label, color }: {
             </ClearView>
             <ClearView style={styles.statTextContainer}>
                 <Text style={styles.statValue}>{value}</Text>
-                <Text style={styles.statLabel}>{label}</Text>
+                <Text style={[styles.statLabel, { color: grayText }]}>{label}</Text>
             </ClearView>
         </ClearView>
     );

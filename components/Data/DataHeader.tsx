@@ -29,6 +29,7 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
+    const grayText = useThemeColor({}, 'grayText');
     
     return (
         <View style={[styles.header, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
@@ -36,19 +37,19 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="fire" size={20} color="#ff6b6b" />
                     <Text style={styles.statValue}>{stats.streak} Day</Text>
-                    <Text style={styles.statLabel}>Streak</Text>
+                    <Text style={[styles.statLabel, { color: grayText }]}>Streak</Text>
                 </ClearView>
                 
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="calendar" size={20} color="#4dabf7" />
                     <Text style={styles.statValue}>{stats.frequency}</Text>
-                    <Text style={styles.statLabel}>Frequency</Text>
+                    <Text style={[styles.statLabel, { color: grayText }]}>Frequency</Text>
                 </ClearView>
                 
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="clock" size={20} color="#51cf66" />
                     <Text style={styles.statValue}>{stats.lastWorkout}</Text>
-                    <Text style={styles.statLabel}>Last Workout</Text>
+                    <Text style={[styles.statLabel, { color: grayText }]}>Last Workout</Text>
                 </ClearView>
             </ClearView>
 
@@ -59,11 +60,11 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
             <ClearView style={styles.summaryRow}>
                 <ClearView style={styles.summaryItem}>
                     <Text style={styles.summaryValue}>{stats.totalWorkouts}</Text>
-                    <Text style={styles.summaryLabel}>Total Workouts</Text>
+                    <Text style={[styles.summaryLabel, { color: grayText }]}>Total Workouts</Text>
                 </ClearView>
                 <ClearView style={styles.summaryItem}>
                     <Text style={styles.summaryValue}>{stats.caloriesBurned.toLocaleString()}</Text>
-                    <Text style={styles.summaryLabel}>Calories Burned</Text>
+                    <Text style={[styles.summaryLabel, { color: grayText }]}>Calories Burned</Text>
                 </ClearView>
             </ClearView>
         </View>
