@@ -6,6 +6,32 @@ import { CartesianChart, Line } from 'victory-native';
 
 export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }) {
 
+    let displayData = data.map((item, idx) => {
+        if (idx === 0) {
+            return {
+                ...item,
+                weight: item.weight == null ? 0 : item.weight,
+                reps: item.reps == null ? 0 : item.reps,
+            };
+        }
+        return item;
+    });
+    if (displayData.length === 1) {
+        const date = new Date(displayData[0].workout_date);
+        // Add a day before as baseline
+        const baselineDate = new Date(date);
+        baselineDate.setDate(date.getDate() - 1);
+        displayData = [
+            {
+                ...displayData[0],
+                workout_date: baselineDate.toISOString().slice(0, 10),
+                weight: 0,
+                reps: 0,
+            },
+            ...displayData,
+        ];
+    }    
+
     const SpaceMono = require('../../../assets/fonts/SpaceMono-Regular.ttf');
 
     const font = useFont(SpaceMono, 10);
@@ -35,7 +61,7 @@ export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }
     return (
         <View style={{ height: 120, padding: 4 }}>
             <CartesianChart
-                data={data}
+                data={displayData}
                 xKey={'workout_date'} 
                 yKeys={["weight", "reps"]}
                 domainPadding={{ left: 5, right: 5, top: 20 }}
