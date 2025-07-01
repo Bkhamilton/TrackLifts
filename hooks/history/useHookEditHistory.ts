@@ -13,7 +13,7 @@ export default function useHookHistory() {
     const { history } = useContext(HistoryContext);
     const { updateWorkout } = useContext(WorkoutContext);
     const [startTime, setStartTime] = useState(history.startTime);
-    const [lengthMin, setLengthMin] = useState(history.lengthMin);
+    const [endTime, setEndTime] = useState(history.endTime);
     const [editedNotes, setEditedNotes] = useState(history.notes);
     const [editedRoutine, setEditedRoutine] = useState(history.routine);
 
@@ -28,7 +28,7 @@ export default function useHookHistory() {
         if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || 
         editedNotes !== history.notes ||
         startTime !== history.startTime ||
-        lengthMin !== history.lengthMin) {
+        endTime !== history.endTime) {
             openConfirmModal();
         } else {
             router.replace('/(tabs)/history/main');
@@ -43,7 +43,7 @@ export default function useHookHistory() {
                 routine: editedRoutine,
                 notes: editedNotes,
                 startTime,
-                lengthMin,
+                endTime,
             };
             updateWorkout(updatedHistory);
             router.replace('/(tabs)/history/main');
@@ -55,8 +55,8 @@ export default function useHookHistory() {
         confirmModal,
         startTime,
         setStartTime,
-        lengthMin,
-        setLengthMin,
+        endTime,
+        setEndTime,
         editedNotes,
         setEditedNotes,
         editedRoutine,

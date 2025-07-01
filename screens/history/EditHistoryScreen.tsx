@@ -18,8 +18,8 @@ export default function EditHistoryScreen() {
         confirmModal,
         startTime,
         setStartTime,
-        lengthMin,
-        setLengthMin,
+        endTime,
+        setEndTime,  
         editedNotes,
         setEditedNotes,
         editedRoutine,
@@ -65,9 +65,9 @@ export default function EditHistoryScreen() {
             <ScrollView style={styles.scrollView}>
                 <EditHistoryCard
                     startTime={startTime}
-                    lengthMin={lengthMin}
+                    endTime={endTime!}
                     onChangeStartTime={setStartTime}
-                    onChangeLengthMin={setLengthMin}
+                    onChangeEndTime={setEndTime}
                 />
                 <NotesInput
                     value={editedNotes}

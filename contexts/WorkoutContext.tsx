@@ -69,7 +69,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             userId: user.id,
             routineId: newHistory.routine.id !== 0 ? newHistory.routine.id : null,
             startTime: newHistory.startTime,
-            endTime: newHistory.lengthMin || newHistory.endTime,
+            endTime: newHistory.endTime,
             notes: newHistory.notes,
         });
 

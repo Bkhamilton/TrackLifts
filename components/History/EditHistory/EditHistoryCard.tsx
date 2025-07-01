@@ -1,4 +1,5 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -6,16 +7,16 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type EditHistoryCardProps = {
     startTime: string;
-    lengthMin: string;
+    endTime: string;
     onChangeStartTime: (text: string) => void;
-    onChangeLengthMin: (text: string) => void;
+    onChangeEndTime: (text: string) => void;
 };
 
 export default function EditHistoryCard({
     startTime,
-    lengthMin,
+    endTime,
     onChangeStartTime,
-    onChangeLengthMin,
+    onChangeEndTime,
 }: EditHistoryCardProps) {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
@@ -24,6 +25,9 @@ export default function EditHistoryCard({
     // Format the date for display
     const formattedDate = selectedDate.toLocaleDateString();
     const formattedTime = selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const cardBackground = useThemeColor({}, 'grayBackground');
+    const cardBorder = useThemeColor({}, 'grayBorder');
 
     // Handle date selection
     const handleDateConfirm = (date: Date) => {
@@ -59,7 +63,7 @@ export default function EditHistoryCard({
             }
         }
         
-        onChangeLengthMin(formatted);
+        onChangeEndTime(formatted);
     };
 
     return (
@@ -74,7 +78,7 @@ export default function EditHistoryCard({
             </View>
             <View style={styles.timeInputContainer}>
                 <TouchableOpacity 
-                    style={styles.dateInput}
+                    style={[styles.dateInput, { backgroundColor: cardBackground, borderColor: cardBorder }]}
                     onPress={() => setShowDatePicker(true)}
                 >
                     <MaterialCommunityIcons name="calendar" size={20} color="#666" />
@@ -82,7 +86,7 @@ export default function EditHistoryCard({
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
-                    style={styles.timeInput}
+                    style={[styles.timeInput, { backgroundColor: cardBackground, borderColor: cardBorder }]}
                     onPress={() => setShowTimePicker(true)}
                 >
                     <MaterialCommunityIcons name="clock" size={20} color="#666" />
@@ -91,8 +95,8 @@ export default function EditHistoryCard({
 
                 {/* Duration Section */}
                 <TextInput
-                    style={styles.durationInput}
-                    value={lengthMin}
+                    style={[styles.durationInput, { backgroundColor: cardBackground, borderColor: cardBorder }]}
+                    value={endTime}
                     onChangeText={handleDurationChange}
                     placeholder="00:00:00"
                     keyboardType="numeric"
@@ -129,7 +133,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginBottom: 8,
         fontSize: 13,
-        color: '#333',
     },
     smallLabel: {
         fontSize: 10,
@@ -164,7 +167,6 @@ const styles = StyleSheet.create({
     dateText: {
         marginLeft: 8,
         fontSize: 14,
-        color: '#333',
     },
     durationInput: {
         flex: 1,

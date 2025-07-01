@@ -93,6 +93,12 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                                 <Text style={styles.statText}>{totalWeight} lbs</Text>
                             </View>
                         </View>
+                        {
+                            history.notes && 
+                            <View style={styles.notesContainer}>
+                                <Text style={styles.notesText}>{history.notes}</Text>
+                            </View>
+                        }
                     </View>
 
                     {/* Exercises List */}
@@ -197,5 +203,13 @@ const styles = StyleSheet.create({
     },
     listContent: {
         paddingBottom: 16,
+    },
+    notesContainer: {
+        marginTop: 4,
+    },
+    notesText: {
+        fontSize: 12,
+        color: '#666',
+        fontStyle: 'italic',
     },
 });
