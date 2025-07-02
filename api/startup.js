@@ -385,28 +385,20 @@ export const createDataViews = async (db) => {
                 ws.user_id,
                 mg.id AS muscle_group_id,
                 mg.name AS muscle_group,
-                -- Calculate soreness considering time decay and intensity
                 SUM(
                     (ss.weight * ss.reps * em.intensity * 
-                    (ss.weight / COALESCE((
-                        SELECT MAX(one_rep_max) 
-                        FROM ExerciseMaxHistory 
-                        WHERE exercise_id = e.id 
-                        AND user_id = ws.user_id
-                        AND calculation_date <= ws.start_time
-                    ), 1)) 
-                    * 
-                    -- Non-linear decay: higher soreness decays slower
+                    (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
+                    *
                     CASE 
                         WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 
-                            0.8 - (0.8 - 0.6) * (1 - EXP(-0.5 * (julianday('now') - julianday(ws.start_time) - 1)))
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 
-                            0.6 - (0.6 - 0.4) * (1 - EXP(-0.3 * (julianday('now') - julianday(ws.start_time) - 2)))
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 
-                            0.4 - (0.4 - 0.2) * (1 - EXP(-0.2 * (julianday('now') - julianday(ws.start_time) - 4)))
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
                         ELSE 0.1
                     END
+                    )
                 ) AS intensity_score
             FROM WorkoutSessions ws
             JOIN SessionExercises se ON ws.id = se.session_id
@@ -415,8 +407,17 @@ export const createDataViews = async (db) => {
             JOIN ExerciseMuscles em ON em.exercise_id = e.id
             JOIN Muscles m ON em.muscle_id = m.id
             JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+            LEFT JOIN (
+                SELECT
+                    user_id,
+                    exercise_id,
+                    MAX(one_rep_max) AS max_one_rep_max,
+                    MAX(calculation_date) AS max_date
+                FROM ExerciseMaxHistory
+                GROUP BY user_id, exercise_id
+            ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
             WHERE ws.start_time >= date('now', '-14 days')
-            GROUP BY ws.user_id, mg.name;            
+            GROUP BY ws.user_id, mg.name;           
 
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
