@@ -314,7 +314,7 @@ export const createDataViews = async (db) => {
                         SELECT s2.id
                         FROM SessionSets s2
                         WHERE s2.session_exercise_id = se.id
-                        ORDER BY (s2.weight * s2.reps) DESC, s2.weight DESC
+                        ORDER BY s2.estimated_1rm DESC, s2.weight DESC
                         LIMIT 1
                     ) THEN 1 ELSE 0
                 END AS is_top_set,
