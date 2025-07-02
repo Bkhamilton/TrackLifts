@@ -2,6 +2,7 @@
 import { ActiveRoutine, Exercise, Workout } from '@/constants/types';
 import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
+import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/ExerciseMaxHistory';
 import { insertSessionExercise } from '@/db/workout/SessionExercises';
 import { insertSessionSet } from '@/db/workout/SessionSets';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
@@ -224,6 +225,27 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         sessionId: sessionId,
                         exerciseId: exercise.id,
                     }); 
+
+                // Calculate max 1RM for this exercise in this session
+                let max1RM = 0;
+                for (const set of exercise.sets) {
+                    const est1RM = calculateEstimated1RM(set.weight, set.reps);
+                    if (est1RM > max1RM) max1RM = est1RM;
+                }
+
+                // Get previous max 1RM from ExerciseMaxHistory
+                const exerciseId = exercise.exercise_id || exercise.id;
+                const prevMax1RM = await getPreviousMax1RM(db, user.id, exerciseId);
+
+                // If new max1RM is greater, insert into ExerciseMaxHistory
+                if (max1RM > prevMax1RM) {
+                    await insertExerciseMaxHistory(db, {
+                        user_id: user.id,
+                        exercise_id: exerciseId,
+                        one_rep_max: max1RM,
+                        calculation_date: workout.endTime || new Date().toISOString(),
+                    });
+                }
 
                 for (let i = 0; i < exercise.sets.length; i++) {
                     const set = exercise.sets[i];

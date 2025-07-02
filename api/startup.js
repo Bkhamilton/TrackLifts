@@ -125,6 +125,24 @@ export const createUserTables = async (db) => {
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (split_id) REFERENCES Splits(id)
         );
+        CREATE TABLE IF NOT EXISTS MuscleSorenessHistory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            muscle_group_id INTEGER NOT NULL,
+            soreness_score REAL NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
+        );
+        CREATE TABLE IF NOT EXISTS UserMuscleMaxSoreness (
+            user_id INTEGER NOT NULL,
+            muscle_group_id INTEGER NOT NULL,
+            max_soreness REAL NOT NULL,
+            last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, muscle_group_id),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
+        );        
     `);
 }
 
@@ -360,7 +378,45 @@ export const createDataViews = async (db) => {
             FROM WorkoutSessions ws
             JOIN SessionExercises se ON ws.id = se.session_id
             JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            GROUP BY ws.id, se.exercise_id;            
+            GROUP BY ws.id, se.exercise_id;           
+            
+            CREATE VIEW IF NOT EXISTS MuscleGroupSoreness AS
+            SELECT
+                ws.user_id,
+                mg.id AS muscle_group_id,
+                mg.name AS muscle_group,
+                -- Calculate soreness considering time decay and intensity
+                SUM(
+                    (ss.weight * ss.reps * em.intensity * 
+                    (ss.weight / COALESCE((
+                        SELECT MAX(one_rep_max) 
+                        FROM ExerciseMaxHistory 
+                        WHERE exercise_id = e.id 
+                        AND user_id = ws.user_id
+                        AND calculation_date <= ws.start_time
+                    ), 1)) 
+                    * 
+                    -- Non-linear decay: higher soreness decays slower
+                    CASE 
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 
+                            0.8 - (0.8 - 0.6) * (1 - EXP(-0.5 * (julianday('now') - julianday(ws.start_time) - 1)))
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 
+                            0.6 - (0.6 - 0.4) * (1 - EXP(-0.3 * (julianday('now') - julianday(ws.start_time) - 2)))
+                        WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 
+                            0.4 - (0.4 - 0.2) * (1 - EXP(-0.2 * (julianday('now') - julianday(ws.start_time) - 4)))
+                        ELSE 0.1
+                    END
+                ) AS intensity_score
+            FROM WorkoutSessions ws
+            JOIN SessionExercises se ON ws.id = se.session_id
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+            JOIN Exercises e ON se.exercise_id = e.id
+            JOIN ExerciseMuscles em ON em.exercise_id = e.id
+            JOIN Muscles m ON em.muscle_id = m.id
+            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+            WHERE ws.start_time >= date('now', '-14 days')
+            GROUP BY ws.user_id, mg.name;            
 
             -- Split Cycle Lengths View
             CREATE VIEW SplitCycleLengths AS
@@ -394,6 +450,8 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS ExerciseMaxHistory;
         DROP TABLE IF EXISTS SplitCompletions;
         DROP TABLE IF EXISTS FavoriteGraphs;
+        DROP TABLE IF EXISTS MuscleSorenessHistory;
+        DROP TABLE IF EXISTS UserMuscleMaxSoreness;
     `);
 };
 
@@ -409,6 +467,7 @@ export const dropViews = async (db) => {
         DROP VIEW IF EXISTS ExerciseSessionStats;
         DROP VIEW IF EXISTS ExerciseStatSets;
         DROP VIEW IF EXISTS ExerciseSessionStatDetails;
+        DROP VIEW IF EXISTS MuscleGroupSoreness;
     `);
 }
 

@@ -18,6 +18,15 @@ export const insertExerciseMaxHistory = async (db, record) => {
     }
 };
 
+// Function to get the maximum one-rep max for a user and exercise
+export const getPreviousMax1RM = async (db, userId, exerciseId) => {
+    const rows = await db.getAllAsync(
+        `SELECT MAX(one_rep_max) as max1RM FROM ExerciseMaxHistory WHERE user_id = ? AND exercise_id = ?`,
+        [userId, exerciseId]
+    );
+    return rows[0]?.max1RM || 0;
+};
+
 // Function to get an ExerciseMaxHistory record by ID
 export const getExerciseMaxHistoryById = async (db, id) => {
     try {
