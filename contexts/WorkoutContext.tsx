@@ -1,6 +1,7 @@
 // app/contexts/WorkoutContext.tsx
 import { History } from '@/constants/types';
 import { getWorkoutFrequencyByUser } from '@/db/data/WorkoutFrequency';
+import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/ExerciseMaxHistory';
 import { clearSessionExercises, getSessionExerciseId, insertSessionExercise } from '@/db/workout/SessionExercises';
 import { clearSessionSets, clearSessionSetsByWorkout, insertSessionSet } from '@/db/workout/SessionSets';
 import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/WorkoutSessions';
@@ -41,7 +42,7 @@ interface WorkoutContextValueProviderProps {
 
 export const WorkoutContextProvider = ({ children }: WorkoutContextValueProviderProps) => {
     const { db } = useContext(DBContext);
-    const { user } = useContext(UserContext);
+    const { user, userStats } = useContext(UserContext);
 
     const [workoutHistory, setWorkoutHistory] = useState<History[]>([]);
     const [workoutFrequency, setWorkoutFrequency] = useState<any>(null);
@@ -95,6 +96,27 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
                         sessionId: newHistory.id,
                         exerciseId: exercise.exercise_id ?? exercise.id,
                     });
+
+                    let max1RM = 0;
+                    for (const set of exercise.sets) {
+                        let est1RM;
+                        if (exercise.equipment === 'Bodyweight' || set.weight <= 0) {
+                            est1RM = calculateEstimated1RM(userStats.weight || 150, 1);
+                        } else {
+                            est1RM = calculateEstimated1RM(set.weight, set.reps);
+                        }
+                        if (est1RM > max1RM) max1RM = est1RM;
+                    }
+                    const exerciseId = exercise.exercise_id ?? exercise.id;
+                    const prevMax1RM = await getPreviousMax1RM(db, user.id, exerciseId);
+                    if (max1RM > prevMax1RM) {
+                        await insertExerciseMaxHistory(db, {
+                            user_id: user.id,
+                            exercise_id: exerciseId,
+                            one_rep_max: max1RM,
+                            calculation_date: newHistory.endTime || new Date().toISOString(),
+                        });
+                    }                    
 
                     for (let i = 0; i < exercise.sets.length; i++) {
                         const set = exercise.sets[i];

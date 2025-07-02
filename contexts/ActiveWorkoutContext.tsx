@@ -76,7 +76,7 @@ interface ActiveWorkoutContextValueProviderProps {
 
 export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextValueProviderProps) => {
     const { db } = useContext(DBContext);
-    const { user } = useContext(UserContext);
+    const { user, userStats } = useContext(UserContext);
     const { routines, refreshRoutines } = useContext(RoutineContext);
 
     const [startTime, setStartTime] = useState<number | null>(null);
@@ -229,7 +229,13 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                 // Calculate max 1RM for this exercise in this session
                 let max1RM = 0;
                 for (const set of exercise.sets) {
-                    const est1RM = calculateEstimated1RM(set.weight, set.reps);
+                    let est1RM;
+                    // If bodyweight exercise (weight is 0 or undefined)
+                    if (exercise.equipment == 'Bodyweight' || set.weight <= 0) {
+                        est1RM = calculateEstimated1RM(userStats.weight || 150, 1); // fallback to 150lbs if unknown
+                    } else {
+                        est1RM = calculateEstimated1RM(set.weight, set.reps);
+                    }
                     if (est1RM > max1RM) max1RM = est1RM;
                 }
 
