@@ -352,11 +352,11 @@ export const createDataViews = async (db) => {
                 -- Top Set (weight * reps)
                 (SELECT ss2.weight FROM SessionSets ss2
                     WHERE ss2.session_exercise_id = se.id
-                    ORDER BY (ss2.weight * ss2.reps) DESC, ss2.weight DESC
+                    ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
                     LIMIT 1) AS top_set_weight,
                 (SELECT ss2.reps FROM SessionSets ss2
                     WHERE ss2.session_exercise_id = se.id
-                    ORDER BY (ss2.weight * ss2.reps) DESC, ss2.weight DESC
+                    ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
                     LIMIT 1) AS top_set_reps,
 
                 -- Most Reps
