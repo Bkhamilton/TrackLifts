@@ -10,6 +10,7 @@ import {
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
+import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
 import {
     deleteFavoriteGraph,
     getFavoriteGraphsByUserId,
@@ -62,6 +63,7 @@ interface DataContextValue {
         yearly: number;
     };
     muscleGroupIntensity: any[];
+    muscleGroupSoreness: any[];
     refreshData: () => void;
     fetchExerciseSessionStats: (
         exerciseId: number,
@@ -96,6 +98,7 @@ export const DataContext = createContext<DataContextValue>({
         yearly: 0,
     },
     muscleGroupIntensity: [],
+    muscleGroupSoreness: [],
     refreshData: () => {
         console.warn('refreshData function not implemented');
     },
@@ -140,6 +143,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     });
     const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
     const [muscleGroupIntensity, setMuscleGroupIntensity] = useState<any[]>([]);
+    const [muscleGroupSoreness, setMuscleGroupSoreness] = useState<any[]>([]);
 
     const refreshData = async () => {
         if (db && user.id !== 0) {
@@ -225,6 +229,10 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             });
             getMuscleGroupIntensity(db, user.id).then((intensity) => {
                 setMuscleGroupIntensity(intensity);
+            });
+            getMuscleGroupSoreness(db, user.id).then((soreness) => {
+                console.log('Muscle Group Soreness:', JSON.stringify(soreness, null, 2));
+                setMuscleGroupSoreness(soreness);
             });
         }
     }
@@ -313,6 +321,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         muscleGroupFocusBySet,
         workoutCount,
         muscleGroupIntensity,
+        muscleGroupSoreness,
         refreshData,
         fetchExerciseSessionStats,
         fetchExerciseStats,

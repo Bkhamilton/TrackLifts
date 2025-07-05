@@ -1,4 +1,16 @@
 // app/db/data/MuscleSoreness.js
+export const getMuscleGroupSoreness = async (db, userId) => {
+    try {
+        return await db.getAllAsync(
+            'SELECT muscle_group, soreness_score FROM MuscleGroupSoreness WHERE user_id = ?',
+            [userId]
+        );
+    } catch (error) {
+        console.error('Error fetching muscle group soreness:', error);
+        throw error;
+    }
+};
+
 export const updateMuscleSoreness = async (db, userId) => {
     try {
         // Calculate current soreness
