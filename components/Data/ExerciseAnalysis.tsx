@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
+import { getCurrentMax } from '@/db/workout/SessionExercises';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -72,8 +73,11 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             alert('No data available for the selected exercise and date range.');
             return;
         }
+        const currentMax = await getCurrentMax(exercise.id)
+        // const progress = await getProgress(exercise.id, dateRange.start, dateRange.end);        
         setExerciseStats({
             ...exerciseStats,
+            currentMax: currentMax || 0,
             timesPerformed: results.length,
         });
         const filledResults = fillResultsWithDates(results, dateRange.start, dateRange.end);

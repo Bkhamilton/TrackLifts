@@ -79,7 +79,29 @@ export const getSessionExerciseId = async (db, sessionId, exerciseId) => {
     }
 };
 
-export const getTopExericise = async (db, userId) => {
+export const getCurrentMax = async (db, exerciseId) => {
+    try {
+        const query = `
+            SELECT 
+                MAX(ss.weight) AS currentMax
+            FROM 
+                SessionExercises se
+            JOIN 
+                Exercises e ON se.exercise_id = e.id
+            JOIN 
+                SessionSets ss ON se.id = ss.session_exercise_id
+            WHERE 
+                e.id = ?
+        `;
+        const row = await db.getFirstAsync(query, [exerciseId]);
+        return row ? row.currentMax : null;
+    } catch (error) {
+        console.error('Error getting current max:', error);
+        throw error;
+    }
+}
+
+export const getTopExercise = async (db, userId) => {
     try {
         const query = `
             SELECT 

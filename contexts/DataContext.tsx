@@ -16,7 +16,7 @@ import {
     getFavoriteGraphsByUserId,
     insertFavoriteGraph,
 } from '@/db/workout/FavoriteGraphs';
-import { getTopExericise } from '@/db/workout/SessionExercises';
+import { getTopExercise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
     getMonthlyWorkoutCount,
@@ -221,7 +221,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getWeeklySetCount(db, user.id).then((count) => {
                 setWeeklySetsCount(count);
             });
-            getTopExericise(db, user.id).then((exercise) => {
+            getTopExercise(db, user.id).then((exercise) => {
                 setTopExercise(exercise);
             });
             getTotalMuscleGroupFocus(db).then((stats) => {
