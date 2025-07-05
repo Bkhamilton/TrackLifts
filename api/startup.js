@@ -399,7 +399,7 @@ export const createDataViews = async (db) => {
                         ELSE 0.1
                     END
                     )
-                ) AS intensity_score
+                ) AS soreness_score
             FROM WorkoutSessions ws
             JOIN SessionExercises se ON ws.id = se.session_id
             JOIN SessionSets ss ON se.id = ss.session_exercise_id

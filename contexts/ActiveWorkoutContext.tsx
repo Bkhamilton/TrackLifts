@@ -1,5 +1,6 @@
 // app/contexts/ActiveWorkoutContext.tsx
 import { ActiveRoutine, Exercise, Workout } from '@/constants/types';
+import { updateMuscleSoreness } from '@/db/data/MuscleGroupSoreness';
 import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
 import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/ExerciseMaxHistory';
@@ -286,6 +287,8 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                         });
                     }
                 }
+
+                await updateMuscleSoreness(db, user.id);
             }
             await db.runAsync('COMMIT');
         } catch (error) {
