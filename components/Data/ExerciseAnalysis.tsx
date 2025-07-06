@@ -1,6 +1,7 @@
 import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
+import { DBContext } from '@/contexts/DBContext';
 import { getCurrentMax } from '@/db/workout/SessionExercises';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
@@ -31,6 +32,7 @@ const graphTypeToStatType = {
 } as const;
 
 const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
+    const { db } = useContext(DBContext);
     const [dateRange, setDateRange] = useState({
         start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
         end: new Date(),
@@ -73,7 +75,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             alert('No data available for the selected exercise and date range.');
             return;
         }
-        const currentMax = await getCurrentMax(exercise.id)
+        const currentMax = await getCurrentMax(db, exercise.id)
         // const progress = await getProgress(exercise.id, dateRange.start, dateRange.end);        
         setExerciseStats({
             ...exerciseStats,
