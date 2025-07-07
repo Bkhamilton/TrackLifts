@@ -11,6 +11,8 @@ import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
 import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
+import { getMuscleSorenessByMuscleGroup } from '@/db/data/MuscleSoreness';
+import { getMuscleGroupIdByName } from '@/db/general/MuscleGroups';
 import { getMuscleMaxSoreness } from '@/db/user/UserMuscleMaxSoreness';
 import {
     deleteFavoriteGraph,
@@ -77,6 +79,7 @@ interface DataContextValue {
         endDate: string,
         statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
     ) => Promise<any[]>;
+    getMuscleSoreness: (muscleGroup: string) => Promise<any[]>;
     addFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
     removeFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
 }
@@ -111,6 +114,10 @@ export const DataContext = createContext<DataContextValue>({
         console.warn('fetchExerciseStats function not implemented');
         return [];
     }, 
+    getMuscleSoreness: async () => {
+        console.warn('getMuscleSoreness function not implemented');
+        return [];
+    },
     addFavoriteGraph: async () => {
         console.warn('addFavoriteGraph function not implemented');
     },
@@ -294,6 +301,22 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     };    
 
+    const getMuscleSoreness = async (muscleGroup: string) => {
+        if (!db || !user?.id) return [];
+        try {
+            const muscleGroupId = await getMuscleGroupIdByName(db, muscleGroup);
+            if (!muscleGroupId) {
+                console.warn(`Muscle group "${muscleGroup}" not found.`);
+                return [];
+            }
+
+            return await getMuscleSorenessByMuscleGroup(db, user.id, muscleGroupId);
+        } catch (e) {
+            console.error('Failed to fetch muscle soreness:', e);
+            return [];
+        }
+    }
+
     const addFavoriteGraph = async (exerciseId: number, graphType: string) => {
         if (!db || !user?.id) return;
         try {
@@ -340,6 +363,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         refreshData,
         fetchExerciseSessionStats,
         fetchExerciseStats,
+        getMuscleSoreness,
         addFavoriteGraph,
         removeFavoriteGraph,
     };

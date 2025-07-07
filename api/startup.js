@@ -198,236 +198,272 @@ export const createWorkoutTables = async (db) => {
     `);
 }
 
-export const createDataViews = async (db) => {
-        await db.execAsync(`
-            -- Workout Frequency View
-            CREATE VIEW WorkoutFrequency AS
-            SELECT 
-                user_id,
-                DATE(start_time) AS workout_date,
-                COUNT(*) AS session_count
-            FROM WorkoutSessions
-            GROUP BY user_id, DATE(start_time);
+export const createWorkoutViews = async (db) => {
+    await db.execAsync(`
+        CREATE VIEW WorkoutFrequency AS
+        SELECT 
+            user_id,
+            DATE(start_time) AS workout_date,
+            COUNT(*) AS session_count
+        FROM WorkoutSessions
+        GROUP BY user_id, DATE(start_time);
 
-            -- Muscle Group Focus View
-            CREATE VIEW MuscleGroupFocus AS
-            SELECT
-                se.session_id,
-                mg.name AS muscle_group,
-                COUNT(*) * em.intensity AS intensity_score
-            FROM SessionExercises se
-            JOIN Exercises e ON se.exercise_id = e.id
-            JOIN ExerciseMuscles em ON em.exercise_id = e.id
-            JOIN Muscles m ON em.muscle_id = m.id
-            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
-            GROUP BY se.session_id, mg.name;
-
-            -- Favorite Routines View
-            CREATE VIEW FavoriteRoutines AS
-            SELECT
-                ws.user_id,
-                r.id AS routine_id,
-                r.title AS routine_title,
-                COUNT(*) AS usage_count,
-                MAX(ws.start_time) AS last_used
-            FROM WorkoutSessions ws
-            JOIN Routines r ON ws.routine_id = r.id
-            GROUP BY ws.user_id, r.id
-            ORDER BY usage_count DESC;
-
-            -- Strength Progress View
-            CREATE VIEW StrengthProgress AS
-            SELECT
-                se.session_id,
-                se.exercise_id,
-                MAX(ss.weight) AS top_weight,
-                SUM(ss.weight * ss.reps) AS total_volume,
-                MAX(ss.reps) AS max_reps,
-                MAX(ss.estimated_1rm) AS estimated_1rm
-            FROM SessionExercises se
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            GROUP BY se.session_id, se.exercise_id;
-
-            -- Muscle Group Intensity View
-            CREATE VIEW IF NOT EXISTS MuscleGroupIntensity AS
-            SELECT
-                ws.user_id,
-                mg.name AS muscle_group,
-                SUM(ss.weight * ss.reps * em.intensity * 
-                    (CASE 
-                        WHEN julianday('now') - julianday(ws.start_time) <= 7 THEN 1.0
-                        WHEN julianday('now') - julianday(ws.start_time) <= 14 THEN 0.7
-                        WHEN julianday('now') - julianday(ws.start_time) <= 28 THEN 0.4
-                        ELSE 0.1
-                    END)
-                ) AS intensity_score
-            FROM WorkoutSessions ws
-            JOIN SessionExercises se ON ws.id = se.session_id
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            JOIN Exercises e ON se.exercise_id = e.id
-            JOIN ExerciseMuscles em ON em.exercise_id = e.id
-            JOIN Muscles m ON em.muscle_id = m.id
-            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
-            WHERE ws.start_time >= date('now', '-28 days')
-            GROUP BY ws.user_id, mg.name;
-
-            -- Exercise Session Stats View
-            CREATE VIEW IF NOT EXISTS ExerciseSessionStats AS
-            SELECT
-                ws.id AS session_id,
-                ws.user_id,
-                ws.start_time AS workout_date,
-                se.exercise_id,
-                MAX(ss.weight) AS heaviest_set,
-                MAX(ss.weight * ss.reps) AS top_set, -- or use estimated_1rm if preferred
-                SUM(ss.weight * ss.reps) AS total_volume,
-                AVG(ss.weight) AS avg_weight,
-                MAX(ss.reps) AS most_reps
-            FROM WorkoutSessions ws
-            JOIN SessionExercises se ON ws.id = se.session_id
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            GROUP BY ws.id, se.exercise_id;
-
-            -- ExerciseStatSets View: Returns the set (with weight/reps) for each stat type per session/exercise
-            CREATE VIEW IF NOT EXISTS ExerciseStatSets AS
-            SELECT
-                ws.id AS session_id,
-                ws.user_id,
-                ws.start_time AS workout_date,
-                se.exercise_id,
-                ss.id AS set_id,
-                ss.weight,
-                ss.reps,
-                -- Heaviest Set: 1 if this set is the heaviest in the session/exercise
-                CASE 
-                    WHEN ss.id = (
-                        SELECT s2.id
-                        FROM SessionSets s2
-                        WHERE s2.session_exercise_id = se.id
-                        ORDER BY s2.weight DESC, s2.reps DESC
-                        LIMIT 1
-                    ) THEN 1 ELSE 0
-                END AS is_heaviest_set,
-                -- Top Set: 1 if this set is the top set (weight * reps) in the session/exercise
-                CASE 
-                    WHEN ss.id = (
-                        SELECT s2.id
-                        FROM SessionSets s2
-                        WHERE s2.session_exercise_id = se.id
-                        ORDER BY s2.estimated_1rm DESC, s2.weight DESC
-                        LIMIT 1
-                    ) THEN 1 ELSE 0
-                END AS is_top_set,
-                -- Most Reps: 1 if this set has the most reps in the session/exercise
-                CASE 
-                    WHEN ss.id = (
-                        SELECT s2.id
-                        FROM SessionSets s2
-                        WHERE s2.session_exercise_id = se.id
-                        ORDER BY s2.reps DESC, s2.weight DESC
-                        LIMIT 1
-                    ) THEN 1 ELSE 0
-                END AS is_most_reps_set
-            FROM WorkoutSessions ws
-            JOIN SessionExercises se ON ws.id = se.session_id
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id;
-
-            CREATE VIEW IF NOT EXISTS ExerciseSessionStatDetails AS
-            SELECT
-                ws.id AS session_id,
-                ws.user_id,
-                ws.start_time AS workout_date,
-                se.exercise_id,
-
-                -- Heaviest Set
-                (SELECT ss1.weight FROM SessionSets ss1
-                    WHERE ss1.session_exercise_id = se.id
-                    ORDER BY ss1.weight DESC, ss1.reps DESC
-                    LIMIT 1) AS heaviest_set_weight,
-                (SELECT ss1.reps FROM SessionSets ss1
-                    WHERE ss1.session_exercise_id = se.id
-                    ORDER BY ss1.weight DESC, ss1.reps DESC
-                    LIMIT 1) AS heaviest_set_reps,
-
-                -- Top Set (weight * reps)
-                (SELECT ss2.weight FROM SessionSets ss2
-                    WHERE ss2.session_exercise_id = se.id
-                    ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
-                    LIMIT 1) AS top_set_weight,
-                (SELECT ss2.reps FROM SessionSets ss2
-                    WHERE ss2.session_exercise_id = se.id
-                    ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
-                    LIMIT 1) AS top_set_reps,
-
-                -- Most Reps
-                (SELECT ss3.weight FROM SessionSets ss3
-                    WHERE ss3.session_exercise_id = se.id
-                    ORDER BY ss3.reps DESC, ss3.weight DESC
-                    LIMIT 1) AS most_reps_weight,
-                (SELECT ss3.reps FROM SessionSets ss3
-                    WHERE ss3.session_exercise_id = se.id
-                    ORDER BY ss3.reps DESC, ss3.weight DESC
-                    LIMIT 1) AS most_reps_reps,
-
-                -- Most Weight Moved (total volume)
-                SUM(ss.weight * ss.reps) AS total_volume,
-
-                -- Average Weight
-                AVG(ss.weight) AS avg_weight
-
-            FROM WorkoutSessions ws
-            JOIN SessionExercises se ON ws.id = se.session_id
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            GROUP BY ws.id, se.exercise_id;           
-            
-            CREATE VIEW IF NOT EXISTS MuscleGroupSoreness AS
-            SELECT
-                ws.user_id,
-                mg.id AS muscle_group_id,
-                mg.name AS muscle_group,
-                SUM(
-                    (ss.weight * ss.reps * em.intensity * 
-                    (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
-                    *
-                    CASE 
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
-                        WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
-                        ELSE 0.1
-                    END
-                    )
-                ) AS soreness_score
-            FROM WorkoutSessions ws
-            JOIN SessionExercises se ON ws.id = se.session_id
-            JOIN SessionSets ss ON se.id = ss.session_exercise_id
-            JOIN Exercises e ON se.exercise_id = e.id
-            JOIN ExerciseMuscles em ON em.exercise_id = e.id
-            JOIN Muscles m ON em.muscle_id = m.id
-            JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
-            LEFT JOIN (
-                SELECT
-                    user_id,
-                    exercise_id,
-                    MAX(one_rep_max) AS max_one_rep_max,
-                    MAX(calculation_date) AS max_date
-                FROM ExerciseMaxHistory
-                GROUP BY user_id, exercise_id
-            ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
-            WHERE ws.start_time >= date('now', '-14 days')
-            GROUP BY ws.user_id, mg.name;           
-
-            -- Split Cycle Lengths View
-            CREATE VIEW SplitCycleLengths AS
-            SELECT 
-                split_id, 
-                MAX(split_order) AS cycle_days
-            FROM SplitRoutines
-            GROUP BY split_id;
+        CREATE VIEW FavoriteRoutines AS
+        SELECT
+            ws.user_id,
+            r.id AS routine_id,
+            r.title AS routine_title,
+            COUNT(*) AS usage_count,
+            MAX(ws.start_time) AS last_used
+        FROM WorkoutSessions ws
+        JOIN Routines r ON ws.routine_id = r.id
+        GROUP BY ws.user_id, r.id
+        ORDER BY usage_count DESC;
     `);
-}
+};
+
+export const createExerciseViews = async (db) => {
+    await db.execAsync(`
+        CREATE VIEW MuscleGroupFocus AS
+        SELECT
+            se.session_id,
+            mg.name AS muscle_group,
+            COUNT(*) * em.intensity AS intensity_score
+        FROM SessionExercises se
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        GROUP BY se.session_id, mg.name;
+
+        CREATE VIEW StrengthProgress AS
+        SELECT
+            se.session_id,
+            se.exercise_id,
+            MAX(ss.weight) AS top_weight,
+            SUM(ss.weight * ss.reps) AS total_volume,
+            MAX(ss.reps) AS max_reps,
+            MAX(ss.estimated_1rm) AS estimated_1rm
+        FROM SessionExercises se
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        GROUP BY se.session_id, se.exercise_id;
+
+        CREATE VIEW IF NOT EXISTS ExerciseSessionStats AS
+        SELECT
+            ws.id AS session_id,
+            ws.user_id,
+            ws.start_time AS workout_date,
+            se.exercise_id,
+            MAX(ss.weight) AS heaviest_set,
+            MAX(ss.weight * ss.reps) AS top_set,
+            SUM(ss.weight * ss.reps) AS total_volume,
+            AVG(ss.weight) AS avg_weight,
+            MAX(ss.reps) AS most_reps
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        GROUP BY ws.id, se.exercise_id;
+
+        CREATE VIEW IF NOT EXISTS ExerciseStatSets AS
+        SELECT
+            ws.id AS session_id,
+            ws.user_id,
+            ws.start_time AS workout_date,
+            se.exercise_id,
+            ss.id AS set_id,
+            ss.weight,
+            ss.reps,
+            CASE 
+                WHEN ss.id = (
+                    SELECT s2.id
+                    FROM SessionSets s2
+                    WHERE s2.session_exercise_id = se.id
+                    ORDER BY s2.weight DESC, s2.reps DESC
+                    LIMIT 1
+                ) THEN 1 ELSE 0
+            END AS is_heaviest_set,
+            CASE 
+                WHEN ss.id = (
+                    SELECT s2.id
+                    FROM SessionSets s2
+                    WHERE s2.session_exercise_id = se.id
+                    ORDER BY s2.estimated_1rm DESC, s2.weight DESC
+                    LIMIT 1
+                ) THEN 1 ELSE 0
+            END AS is_top_set,
+            CASE 
+                WHEN ss.id = (
+                    SELECT s2.id
+                    FROM SessionSets s2
+                    WHERE s2.session_exercise_id = se.id
+                    ORDER BY s2.reps DESC, s2.weight DESC
+                    LIMIT 1
+                ) THEN 1 ELSE 0
+            END AS is_most_reps_set
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id;
+
+        CREATE VIEW IF NOT EXISTS ExerciseSessionStatDetails AS
+        SELECT
+            ws.id AS session_id,
+            ws.user_id,
+            ws.start_time AS workout_date,
+            se.exercise_id,
+            (SELECT ss1.weight FROM SessionSets ss1
+                WHERE ss1.session_exercise_id = se.id
+                ORDER BY ss1.weight DESC, ss1.reps DESC
+                LIMIT 1) AS heaviest_set_weight,
+            (SELECT ss1.reps FROM SessionSets ss1
+                WHERE ss1.session_exercise_id = se.id
+                ORDER BY ss1.weight DESC, ss1.reps DESC
+                LIMIT 1) AS heaviest_set_reps,
+            (SELECT ss2.weight FROM SessionSets ss2
+                WHERE ss2.session_exercise_id = se.id
+                ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
+                LIMIT 1) AS top_set_weight,
+            (SELECT ss2.reps FROM SessionSets ss2
+                WHERE ss2.session_exercise_id = se.id
+                ORDER BY ss2.estimated_1rm DESC, ss2.weight DESC
+                LIMIT 1) AS top_set_reps,
+            (SELECT ss3.weight FROM SessionSets ss3
+                WHERE ss3.session_exercise_id = se.id
+                ORDER BY ss3.reps DESC, ss3.weight DESC
+                LIMIT 1) AS most_reps_weight,
+            (SELECT ss3.reps FROM SessionSets ss3
+                WHERE ss3.session_exercise_id = se.id
+                ORDER BY ss3.reps DESC, ss3.weight DESC
+                LIMIT 1) AS most_reps_reps,
+            SUM(ss.weight * ss.reps) AS total_volume,
+            AVG(ss.weight) AS avg_weight
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        GROUP BY ws.id, se.exercise_id;
+    `);
+};
+
+export const createSorenessViews = async (db) => {
+    await db.execAsync(`
+        CREATE VIEW IF NOT EXISTS MuscleGroupIntensity AS
+        SELECT
+            ws.user_id,
+            mg.name AS muscle_group,
+            SUM(ss.weight * ss.reps * em.intensity * 
+                (CASE 
+                    WHEN julianday('now') - julianday(ws.start_time) <= 7 THEN 1.0
+                    WHEN julianday('now') - julianday(ws.start_time) <= 14 THEN 0.7
+                    WHEN julianday('now') - julianday(ws.start_time) <= 28 THEN 0.4
+                    ELSE 0.1
+                END)
+            ) AS intensity_score
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        WHERE ws.start_time >= date('now', '-28 days')
+        GROUP BY ws.user_id, mg.name;
+
+        CREATE VIEW IF NOT EXISTS MuscleGroupSoreness AS
+        SELECT
+            ws.user_id,
+            mg.id AS muscle_group_id,
+            mg.name AS muscle_group,
+            SUM(
+                (ss.weight * ss.reps * em.intensity * 
+                (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
+                *
+                CASE 
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
+                    ELSE 0.1
+                END
+                )
+            ) AS soreness_score
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        LEFT JOIN (
+            SELECT
+                user_id,
+                exercise_id,
+                MAX(one_rep_max) AS max_one_rep_max,
+                MAX(calculation_date) AS max_date
+            FROM ExerciseMaxHistory
+            GROUP BY user_id, exercise_id
+        ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
+        WHERE ws.start_time >= date('now', '-14 days')
+        GROUP BY ws.user_id, mg.name;
+
+        CREATE VIEW IF NOT EXISTS MuscleSoreness AS
+        SELECT
+            ws.user_id,
+            mg.id AS muscle_group_id,
+            mg.name AS muscle_group,
+            m.id AS muscle_id,
+            m.name AS muscle_name,
+            SUM(
+                ss.weight * ss.reps * em.intensity * 
+                (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
+                *
+                CASE 
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
+                    ELSE 0.1
+                END
+            ) AS soreness_score
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        LEFT JOIN (
+            SELECT
+                user_id,
+                exercise_id,
+                MAX(one_rep_max) AS max_one_rep_max
+            FROM ExerciseMaxHistory
+            GROUP BY user_id, exercise_id
+        ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
+        WHERE ws.start_time >= date('now', '-14 days')
+        GROUP BY ws.user_id, mg.id, m.id;
+    `);
+};
+
+export const createSplitViews = async (db) => {
+    await db.execAsync(`
+        CREATE VIEW SplitCycleLengths AS
+        SELECT 
+            split_id, 
+            MAX(split_order) AS cycle_days
+        FROM SplitRoutines
+        GROUP BY split_id;
+    `);
+};
+
+export const createDataViews = async (db) => {
+    await createWorkoutViews(db);
+    await createExerciseViews(db);
+    await createSorenessViews(db);
+    await createSplitViews(db);
+};
 
 export const dropTables = async (db) => {
     // Your table deletion logic here
@@ -469,6 +505,7 @@ export const dropViews = async (db) => {
         DROP VIEW IF EXISTS ExerciseStatSets;
         DROP VIEW IF EXISTS ExerciseSessionStatDetails;
         DROP VIEW IF EXISTS MuscleGroupSoreness;
+        DROP VIEW IF EXISTS MuscleSoreness;
     `);
 }
 

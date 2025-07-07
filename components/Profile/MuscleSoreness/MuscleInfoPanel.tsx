@@ -1,6 +1,7 @@
 import { ClearView, Text, View } from '@/components/Themed';
+import { DataContext } from '@/contexts/DataContext';
 import { DBContext } from '@/contexts/DBContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MuscleInfoModal from './MuscleInfoModal';
 import MuscleLabels from './MuscleLabels';
@@ -48,6 +49,20 @@ const MuscleInfoPanel = ({
 
     const selectedMuscles = muscles.filter(muscle => muscle.muscleGroup === selectedMuscleData?.name);
 
+    const { getMuscleSoreness } = useContext(DataContext);
+    const [muscleSoreness, setMuscleSoreness] = useState<any[]>([]);
+
+    // Fetch muscle-level soreness when muscle group changes
+    useEffect(() => {
+        if (selectedMuscleData?.id) {
+            const fetchData = async () => {
+                const data = await getMuscleSoreness(selectedMuscleData.name);
+                setMuscleSoreness(data);
+            };
+            fetchData();
+        }
+    }, [selectedMuscleData]);
+
     if (!selectedMuscleData) {
         return (
             <View style={styles.placeholder}>
@@ -68,22 +83,11 @@ const MuscleInfoPanel = ({
         );
     }
 
-    const recoveryPercentage = Math.round((1 - selectedMuscleData.value) * 100);
-
-    const getRecoveryStatus = (percentage: number) => {
-        if (percentage >= 80) return 'Fully Recovered';
-        if (percentage >= 60) return 'Ready for Training';
-        if (percentage >= 40) return 'Limit Intensity';
-        if (percentage >= 20) return 'Needs Recovery';
-        return 'Requires Rest';
+    // Function to get color for individual muscles
+    const getMuscleColor = (score: number, max: number = 1) => {
+        const normalized = Math.min(1 - Math.exp(-0.8 * (score / max)), 1);
+        return getColor(normalized);
     };
-
-    const getRecoveryColor = (percentage: number) => {
-        if (percentage >= 80) return '#2ecc71'; // Green
-        if (percentage >= 60) return '#f1c40f'; // Yellow
-        if (percentage >= 40) return '#e67e22'; // Orange
-        return '#e74c3c'; // Red
-    };    
 
     const hardcodedBreakdown = {
         routine: "Push Day A",
@@ -149,13 +153,16 @@ const MuscleInfoPanel = ({
                     </Text>
                 </ClearView>
 
-                {/* Muscles Hit */}
                 <ClearView style={styles.section}>
-                    <Text style={styles.sectionTitle}>Muscles Hit</Text>
-                    <ClearView style={styles.chipRow}>
-                        {selectedMuscles.map((muscle, idx) => (
-                            <View key={idx} style={styles.chip}>
-                                <Text style={styles.chipText}>{muscle.name}</Text>
+                    <Text style={styles.sectionTitle}>Muscles Affected</Text>
+                    <ClearView style={styles.muscleContainer}>
+                        {muscleSoreness.map((muscle, idx) => (
+                            <View key={idx} style={styles.muscleItem}>
+                                <View style={[styles.muscleColorIndicator, { backgroundColor: getMuscleColor(muscle.soreness_score) }]} />
+                                <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
+                                <Text style={styles.muscleScore}>
+                                    {Math.round(muscle.soreness_score)}
+                                </Text>
                             </View>
                         ))}
                     </ClearView>
@@ -359,6 +366,29 @@ const styles = StyleSheet.create({
     recoveryStatus: {
         fontSize: 16,
         fontWeight: 'bold',
+    },    
+    muscleContainer: {
+        marginTop: 8,
+    },
+    muscleItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 6,
+    },
+    muscleColorIndicator: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        marginRight: 8,
+    },
+    muscleName: {
+        flex: 1,
+        fontSize: 14,
+    },
+    muscleScore: {
+        fontWeight: 'bold',
+        width: 40,
+        textAlign: 'right',
     },    
 });
 
