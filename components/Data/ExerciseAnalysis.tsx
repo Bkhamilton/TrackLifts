@@ -119,11 +119,13 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
 
             {
                 graphData.length > 0 ? (
-                    <View style={[styles.graphContainer, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
+                    <TouchableOpacity 
+                        style={[styles.graphContainer, { backgroundColor: backgroundColor, borderColor: borderColor }]}
+                    >
                         <ExerciseAnalysisGraph
                             data={graphData}
                         />
-                    </View>
+                    </TouchableOpacity>
                 ) : (
                     <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
                         <Text style={styles.placeholderText}>

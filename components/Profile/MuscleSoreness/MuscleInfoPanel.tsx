@@ -1,6 +1,5 @@
 import { ClearView, Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
-import { DBContext } from '@/contexts/DBContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MuscleInfoModal from './MuscleInfoModal';
@@ -23,18 +22,6 @@ type MuscleInfoPanelProps = {
     view: 'front' | 'back';
 };
 
-const getPrimaryMuscles = (muscleGroupId: string): string[] => {
-    const muscles: Record<string, string[]> = {
-        chest: ['Pectoralis Major', 'Pectoralis Minor', 'Serratus Anterior'],
-        back: ['Latissimus Dorsi', 'Trapezius', 'Rhomboids', 'Erector Spinae'],
-        arms: ['Biceps Brachii', 'Triceps Brachii', 'Brachialis', 'Forearm Muscles'],
-        shoulders: ['Anterior Deltoid', 'Lateral Deltoid', 'Posterior Deltoid', 'Rotator Cuff'],
-        core: ['Rectus Abdominis', 'Obliques', 'Transverse Abdominis', 'Erector Spinae'],
-        legs: ['Quadriceps', 'Hamstrings', 'Glutes', 'Calves', 'Hip Flexors']
-    };
-    return muscles[muscleGroupId] || [];
-};
-
 const MuscleInfoPanel = ({
     selectedMuscleData,
     muscleData,
@@ -44,10 +31,6 @@ const MuscleInfoPanel = ({
     view,
 }: MuscleInfoPanelProps) => {
     const [modalVisible, setModalVisible] = useState(false);
-
-    const { muscles } = useContext(DBContext);
-
-    const selectedMuscles = muscles.filter(muscle => muscle.muscleGroup === selectedMuscleData?.name);
 
     const { getMuscleSoreness } = useContext(DataContext);
     const [muscleSoreness, setMuscleSoreness] = useState<any[]>([]);
@@ -156,15 +139,15 @@ const MuscleInfoPanel = ({
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Affected</Text>
                     <ClearView style={styles.muscleContainer}>
-                        {muscleSoreness.map((muscle, idx) => (
-                            <View key={idx} style={styles.muscleItem}>
+                        {muscleSoreness.slice(0, 4).map((muscle, idx) => (
+                            <ClearView key={idx} style={styles.muscleItem}>
                                 <View style={[styles.muscleColorIndicator, { backgroundColor: getMuscleColor(muscle.soreness_score) }]} />
                                 <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
-                                <Text style={styles.muscleScore}>
-                                    {Math.round(muscle.soreness_score)}
-                                </Text>
-                            </View>
+                            </ClearView>
                         ))}
+                        {muscleSoreness.length > 4 && (
+                            <Text style={{ fontSize: 16, color: '#888', marginLeft: 8 }}>...</Text>
+                        )}
                     </ClearView>
                 </ClearView>
 

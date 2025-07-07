@@ -6,13 +6,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
-
 interface Props {
     visible: boolean;
     onClose: () => void;
     graph: FavoriteGraph;
-    onRequestRemoveFavorite: (graph: FavoriteGraph) => void;
+    onRequestRemoveFavorite?: (graph: FavoriteGraph) => void;
 }
 
 const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, onRequestRemoveFavorite }) => {
@@ -21,7 +19,7 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
     const cardBorder = useThemeColor({}, 'grayBorder');
 
     const handleRemoveFavorite = () => {
-        onRequestRemoveFavorite(graph);
+        onRequestRemoveFavorite!(graph);
         onClose();
     }
 
@@ -36,16 +34,21 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
                 <View style={styles.modalContent}>
                     {/* Dropdown menu button */}
                     <View style={styles.modalHeader}>
-                        <TouchableOpacity onPress={handleRemoveFavorite} style={styles.dropdownButton}>
-                            <MaterialCommunityIcons name='star' size={24} color="#ff8787" />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
-                        </TouchableOpacity>
+                        <Text style={styles.graphTitle}>{graph.exercise} ({graph.equipment})</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            {
+                                onRequestRemoveFavorite &&
+                                <TouchableOpacity onPress={() => handleRemoveFavorite()} style={styles.dropdownButton}>
+                                    <MaterialCommunityIcons name='star' size={24} color="#ff8787" />
+                                </TouchableOpacity>
+                            }
+                            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                                <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     <View key={graph.id} style={styles.graphCard}>
                         <View style={styles.graphHeader}>
-                            <Text style={styles.graphTitle}>{graph.exercise} ({graph.equipment})</Text>
                             <Text style={[styles.graphType, { backgroundColor: cardBorder }]}>{graph.graphType}</Text>
                         </View>
                         {graph.stats && graph.stats.length > 0 ? (
@@ -102,10 +105,9 @@ const styles = StyleSheet.create({
     },
     modalHeader: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 16,
-        marginBottom: 8,
     },
     dropdownButton: {
         padding: 8,
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
     },
     graphCard: {
-        padding: 16,
+        paddingHorizontal: 16,
     },
     graphHeader: {
         flexDirection: 'row',

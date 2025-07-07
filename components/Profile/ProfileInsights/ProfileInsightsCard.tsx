@@ -24,8 +24,91 @@ export default function ProfileInsightsCard() {
         progressPercentage: 0, // % increase from last week
         streak: calculateStreak(workoutFrequency), // days
         caloriesBurned: 0, // weekly total
-        lastWorkout: calculateLastWorkout(workoutFrequency) // e.g., "2 days ago"
+        lastWorkout: calculateLastWorkout(workoutFrequency), // e.g., "2 days ago"
+        totalWeightThisWeek: 12500,            // kg lifted this week
+        averageDuration: 45,                  // minutes per session
+        activeDaysThisMonth: workoutCount.monthly,        
     };
+
+    // Helper: Score each stat for noteworthiness
+    function getStatScore(stat: { key: string, value: number }) {
+        switch (stat.key) {
+            case 'streak':
+                return stat.value >= 7 ? 100 + stat.value : stat.value; // highlight long streaks
+            case 'progressPercentage':
+                return Math.abs(stat.value); // highlight big changes
+            case 'totalWeightThisWeek':
+                return stat.value;
+            case 'averageDuration':
+                return stat.value;
+            case 'workoutsThisWeek':
+                return stat.value;
+            case 'activeDaysThisMonth':
+                return stat.value;
+            default:
+                return 0;
+        }
+    }
+
+    // Build all possible stats
+    const allStats = [
+        {
+            key: 'workoutsThisWeek',
+            icon: 'calendar-check' as const,
+            value: progressData.workoutsThisWeek,
+            label: 'Workouts this week',
+            color: '#4dabf7',
+        },
+        {
+            key: 'activeDaysThisMonth',
+            icon: 'calendar-month' as const,
+            value: progressData.activeDaysThisMonth,
+            label: 'Active days (mo)',
+            color: '#845ef7',
+        },
+        {
+            key: 'streak',
+            icon: 'fire' as const,
+            value: progressData.streak,
+            label: 'Day streak',
+            color: '#ff6b6b',
+        },
+        {
+            key: 'progressPercentage',
+            icon: 'trending-up' as const,
+            value: progressData.progressPercentage,
+            label: 'Strength progress',
+            color: '#51cf66',
+        },
+        {
+            key: 'totalWeightThisWeek',
+            icon: 'dumbbell' as const,
+            value: progressData.totalWeightThisWeek,
+            label: 'Weight lifted',
+            color: '#74c0fc',
+        },
+        {
+            key: 'averageDuration',
+            icon: 'timer-outline' as const,
+            value: progressData.averageDuration,
+            label: 'Avg duration',
+            color: '#fcc419',
+        },
+    ];
+
+    // Remove one of the weekly/monthly if both are present, keep the higher
+    let filteredStats = allStats;
+    if (progressData.workoutsThisWeek >= progressData.activeDaysThisMonth) {
+        filteredStats = allStats.filter(stat => stat.key !== 'activeDaysThisMonth');
+    } else {
+        filteredStats = allStats.filter(stat => stat.key !== 'workoutsThisWeek');
+    }    
+
+    // Score, sort, and pick top 4
+    const displayedStats = filteredStats
+        .map(stat => ({ ...stat, score: getStatScore(stat) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 4);    
 
     return (
         <TouchableOpacity 
@@ -50,30 +133,15 @@ export default function ProfileInsightsCard() {
             </ClearView>
             
             <ClearView style={styles.statsContainer}>
-                <StatItem 
-                    icon="calendar-check" 
-                    value={`${progressData.workoutsThisWeek}`} 
-                    label="Workouts this week" 
-                    color="#4dabf7"
-                />
-                <StatItem 
-                    icon="fire" 
-                    value={`${progressData.streak}`} 
-                    label="Day streak" 
-                    color="#ff6b6b"
-                />
-                <StatItem 
-                    icon="trending-up" 
-                    value={`+${progressData.progressPercentage}%`} 
-                    label="Strength progress" 
-                    color="#51cf66"
-                />
-                <StatItem 
-                    icon="lightning-bolt" 
-                    value={`${progressData.caloriesBurned.toLocaleString()}`} 
-                    label="Calories burned" 
-                    color="#ffd43b"
-                />
+                {displayedStats.map(({ icon, value, label, color, key }) => (
+                    <StatItem
+                        key={key}
+                        icon={icon}
+                        value={typeof value === 'number' ? value.toString() : value}
+                        label={label}
+                        color={color}
+                    />
+                ))}         
             </ClearView>
             
             <ClearView style={styles.footer}>
