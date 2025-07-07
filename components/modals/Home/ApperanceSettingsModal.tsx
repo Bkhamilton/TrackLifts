@@ -1,5 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, Switch, TouchableOpacity } from 'react-native';
@@ -13,6 +14,7 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
     const [appearanceSettings, setAppearanceSettings] = useState({
         lightMode: true,
         usePhoneMode: true,
+        weightMetric: true, // Default to pounds
     });
 
     const { setAppearancePreference } = useContext(UserContext);
@@ -36,6 +38,8 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
         close();
     }
 
+    const grayText = useThemeColor({}, 'grayText');
+
     return (
         <Modal
             visible={visible}
@@ -52,37 +56,58 @@ export default function AppearanceSettingsModal({ visible, close }: AppearanceSe
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.settingItem}>
-                        <View>
-                            <Text style={styles.settingTitle}>Light Mode</Text>
-                            <Text style={styles.settingDescription}>
-                                Enable light mode for the app interface
-                            </Text>
+                    <View style={styles.section}>
+                        <Text style={[styles.sectionTitle, { color: grayText }]}>Theme Settings</Text>
+                        <View style={styles.settingItem}>
+                            <View>
+                                <Text style={styles.settingTitle}>Light Mode</Text>
+                                <Text style={styles.settingDescription}>
+                                    Enable light mode for the app interface
+                                </Text>
+                            </View>
+                            <Switch
+                                value={appearanceSettings.lightMode}
+                                onValueChange={() => toggleSetting('lightMode')}
+                                thumbColor="#fff"
+                                trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
+                                disabled={appearanceSettings.usePhoneMode}
+                                style={appearanceSettings.usePhoneMode ? { opacity: 0.5 } : {}}
+                            />
                         </View>
-                        <Switch
-                            value={appearanceSettings.lightMode}
-                            onValueChange={() => toggleSetting('lightMode')}
-                            thumbColor="#fff"
-                            trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
-                            disabled={appearanceSettings.usePhoneMode}
-                            style={appearanceSettings.usePhoneMode ? { opacity: 0.5 } : {}}
-                        />
+
+                        <View style={styles.settingItem}>
+                            <View>
+                                <Text style={styles.settingTitle}>Use Default</Text>
+                                <Text style={styles.settingDescription}>
+                                    Use the default phone mode
+                                </Text>
+                            </View>
+                            <Switch
+                                value={appearanceSettings.usePhoneMode}
+                                onValueChange={() => toggleSetting('usePhoneMode')}
+                                thumbColor="#fff"
+                                trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
+                            />
+                        </View>
                     </View>
 
-                    <View style={styles.settingItem}>
-                        <View>
-                            <Text style={styles.settingTitle}>Use Default</Text>
-                            <Text style={styles.settingDescription}>
-                                Use the default phone mode
-                            </Text>
+                    {/* <View style={styles.section}>
+                        <Text style={[styles.sectionTitle, { color: grayText }]}>Other Settings</Text>
+                        <View style={styles.settingItem}>
+                            <View>
+                                <Text style={styles.settingTitle}>Weight Metric</Text>
+                                <Text style={styles.settingDescription}>
+                                    Use {appearanceSettings.weightMetric ? 'pounds' : 'kilograms'} as the weight measurement unit
+                                </Text>
+                            </View>
+                            <Switch
+                                value={appearanceSettings.weightMetric}
+                                onValueChange={() => toggleSetting('weightMetric')}
+                                thumbColor="#fff"
+                                trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
+                            />
                         </View>
-                        <Switch
-                            value={appearanceSettings.usePhoneMode}
-                            onValueChange={() => toggleSetting('usePhoneMode')}
-                            thumbColor="#fff"
-                            trackColor={{ false: '#f0f0f0', true: '#ff8787' }}
-                        />
-                    </View>
+                    </View> */}
 
                     <TouchableOpacity 
                         style={styles.saveButton}
@@ -147,5 +172,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '600',
         fontSize: 16,
+    },
+    section: {
+        marginBottom: 12,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 12,
     },
 });
