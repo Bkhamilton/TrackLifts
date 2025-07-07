@@ -1,4 +1,4 @@
-import MuscleIntensity from '@/components/Profile/MuscleIntensity/MuscleIntensity';
+import MuscleSoreness from '@/components/Profile/MuscleSoreness/MuscleSoreness';
 import ProfileInsightsCard from '@/components/Profile/ProfileInsights/ProfileInsightsCard';
 import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
 import { ScrollView, View } from '@/components/Themed';
@@ -16,7 +16,7 @@ export default function ProfileScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 <ProfileMainInfo/>
-                <MuscleIntensity/>
+                <MuscleSoreness/>
                 <View style={styles.insightContainer}>
                     <ProfileInsightsCard/>
                 </View>

@@ -11,6 +11,7 @@ import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
 import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
+import { getMuscleMaxSoreness } from '@/db/user/UserMuscleMaxSoreness';
 import {
     deleteFavoriteGraph,
     getFavoriteGraphsByUserId,
@@ -230,10 +231,24 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getMuscleGroupIntensity(db, user.id).then((intensity) => {
                 setMuscleGroupIntensity(intensity);
             });
-            getMuscleGroupSoreness(db, user.id).then((soreness) => {
-                console.log('Muscle Group Soreness:', JSON.stringify(soreness, null, 2));
-                setMuscleGroupSoreness(soreness);
+                    // Fetch both current soreness and max soreness
+            const [currentSoreness, maxSoreness] = await Promise.all([
+                getMuscleGroupSoreness(db, user.id),
+                getMuscleMaxSoreness(db, user.id)
+            ]);
+
+            // Combine the data
+            const muscleData = currentSoreness.map((item: { muscle_group_id: any; }) => {
+                const max = maxSoreness.find((m: { muscle_group_id: any; }) => 
+                    m.muscle_group_id === item.muscle_group_id
+                );
+                return {
+                    ...item,
+                    max_soreness: max ? max.max_soreness : 1 // Default to 1 if no max
+                };
             });
+            
+            setMuscleGroupSoreness(muscleData);
         }
     }
 

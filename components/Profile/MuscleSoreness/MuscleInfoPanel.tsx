@@ -68,6 +68,23 @@ const MuscleInfoPanel = ({
         );
     }
 
+    const recoveryPercentage = Math.round((1 - selectedMuscleData.value) * 100);
+
+    const getRecoveryStatus = (percentage: number) => {
+        if (percentage >= 80) return 'Fully Recovered';
+        if (percentage >= 60) return 'Ready for Training';
+        if (percentage >= 40) return 'Limit Intensity';
+        if (percentage >= 20) return 'Needs Recovery';
+        return 'Requires Rest';
+    };
+
+    const getRecoveryColor = (percentage: number) => {
+        if (percentage >= 80) return '#2ecc71'; // Green
+        if (percentage >= 60) return '#f1c40f'; // Yellow
+        if (percentage >= 40) return '#e67e22'; // Orange
+        return '#e74c3c'; // Red
+    };    
+
     const hardcodedBreakdown = {
         routine: "Push Day A",
         date: "2025-06-18",
@@ -112,6 +129,9 @@ const MuscleInfoPanel = ({
                 activeOpacity={0.7}
             >
                 {/* Intensity Bar */}
+                <Text style={styles.sorenessTitle}>
+                    {selectedMuscleData.name} Soreness
+                </Text>                
                 <ClearView style={styles.intensityBarContainer}>
                     <View style={styles.intensityBarBackground}>
                         <View
@@ -128,7 +148,7 @@ const MuscleInfoPanel = ({
                         {Math.round(selectedMuscleData.value * 100)}%
                     </Text>
                 </ClearView>
-                
+
                 {/* Muscles Hit */}
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Hit</Text>
@@ -291,6 +311,55 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'right',
     },
+    sorenessMeter: {
+        marginBottom: 20,
+    },
+    sorenessTitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    meterBackground: {
+        height: 20,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    meterFill: {
+        height: '100%',
+    },
+    meterLabels: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5,
+    },
+    meterLabel: {
+        fontSize: 14,
+    },
+    scoreContainer: {
+        borderTopWidth: 1,
+        borderTopColor: '#e0e0e0',
+        paddingTop: 15,
+        marginBottom: 15,
+    },
+    scoreItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    scoreLabel: {
+        fontSize: 16,
+        color: '#555',
+    },
+    scoreValue: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    recoveryStatus: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },    
 });
 
 export default MuscleInfoPanel;

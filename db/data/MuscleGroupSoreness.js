@@ -2,7 +2,7 @@
 export const getMuscleGroupSoreness = async (db, userId) => {
     try {
         return await db.getAllAsync(
-            'SELECT muscle_group, soreness_score FROM MuscleGroupSoreness WHERE user_id = ?',
+            'SELECT muscle_group, muscle_group_id, soreness_score FROM MuscleGroupSoreness WHERE user_id = ?',
             [userId]
         );
     } catch (error) {

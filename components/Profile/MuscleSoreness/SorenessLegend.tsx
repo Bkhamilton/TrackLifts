@@ -3,17 +3,17 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-interface IntensityLegendProps {
+interface SorenessLegendProps {
     getColor: (intensity: number) => string;
 }
 
-const IntensityLegend = ({ getColor }: IntensityLegendProps) => {
+const SorenessLegend = ({ getColor }: SorenessLegendProps) => {
 
     const grayText = useThemeColor({}, 'grayText');
 
     return (
         <View style={styles.legendContainer}>
-            <Text style={[styles.legendTitle, { color: grayText }]}>Intensity Scale:</Text>
+            <Text style={[styles.legendTitle, { color: grayText }]}>Soreness Scale:</Text>
             <View style={styles.legendBar}>
                 {[...Array(10)].map((_, i) => (
                     <View
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default IntensityLegend;
+export default SorenessLegend;

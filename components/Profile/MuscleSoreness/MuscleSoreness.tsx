@@ -4,8 +4,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import IntensityLegend from './IntensityLegend';
 import MuscleInfoPanel from './MuscleInfoPanel';
+import SorenessLegend from './SorenessLegend';
 
 type MuscleGroup = {
   id: string;
@@ -20,14 +20,14 @@ type MusclePaths = {
   back: Record<string, string>;
 };
 
-const MuscleIntensityVisualization = () => {
+const MuscleSoreness = () => {
     const [view, setView] = useState<'front' | 'back'>('front');
     const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     
-    const { muscleGroupIntensity } = useContext(DataContext);
+    const { muscleGroupIntensity, muscleGroupSoreness } = useContext(DataContext);
 
     type MaxScore = {
         [key: string]: number;
@@ -87,11 +87,26 @@ const MuscleIntensityVisualization = () => {
             exercises: ['Squats', 'Lunges', 'Deadlifts', 'Calf Raises']
         },
     ].map(m => {
-        const found = muscleGroupIntensity.find(x => x.muscle_group.toLowerCase() === m.name.toLowerCase());
-        const ref = referenceMax[m.id] || 1;
+        const dbData = muscleGroupSoreness.find(s => 
+            s.muscle_group.toLowerCase() === m.name.toLowerCase()
+        );
+        
+        if (!dbData) return { ...m, value: 0, rawScore: 0, maxSoreness: 1 };
+        
+        const rawScore = dbData.soreness_score || 0;
+        const maxSoreness = dbData.max_soreness || 1;
+        
+        // Enhanced normalization function
+        const normalizedSoreness = Math.min(
+            1 - Math.exp(-0.8 * (rawScore / maxSoreness)),
+            1
+        );
+
         return {
             ...m,
-            value: found ? Math.min(found.intensity_score / ref, 1) : 0 // cap at 1 (100%)
+            value: normalizedSoreness,
+            rawScore,
+            maxSoreness
         };
     });
     
@@ -158,7 +173,7 @@ const MuscleIntensityVisualization = () => {
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
-                    Muscle Intensity Visualization
+                    Muscle Soreness Visualization
                 </Text>
             </View>
             <View style={{ width: '100%', paddingHorizontal: 16 }}>
@@ -268,9 +283,9 @@ const MuscleIntensityVisualization = () => {
                     />
                 </View>
             </View>
-            
-            {/* Intensity Legend */}
-            <IntensityLegend getColor={getColor} />
+
+            {/* Soreness Legend */}
+            <SorenessLegend getColor={getColor} />
         </View>
     );
 };
@@ -349,4 +364,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MuscleIntensityVisualization;
+export default MuscleSoreness;
