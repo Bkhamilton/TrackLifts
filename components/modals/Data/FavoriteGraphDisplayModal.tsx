@@ -81,6 +81,23 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
                                 <Text style={styles.statLabel}>Last Updated</Text>
                             </View>
                         </View>
+                        {graph.stats && graph.stats.length > 0 && (
+                            <View style={{ marginTop: 12 }}>
+                                <Text style={{ fontWeight: '600', marginBottom: 4 }}>Workout Results:</Text>
+                                {graph.stats
+                                    .filter(stat => stat.weight != null && stat.reps != null)
+                                    .map((stat, idx) => (
+                                        <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
+                                            <Text style={{ fontSize: 13 }}>
+                                                {stat.workout_date ? new Date(stat.workout_date).toLocaleDateString() : 'Unknown date'}
+                                            </Text>
+                                            <Text style={{ fontSize: 13 }}>
+                                                {stat.weight} lbs × {stat.reps} reps
+                                            </Text>
+                                        </View>
+                                    ))}
+                            </View>
+                        )}                        
                     </View>
                 </View>
             </View>
