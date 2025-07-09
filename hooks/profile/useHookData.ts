@@ -10,10 +10,16 @@ export default function useHookData() {
     const [showFavoriteGraphModal, setShowFavoriteGraphModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
-    const { removeFavoriteGraph } = useContext(DataContext);
-
     const { workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount, addFavoriteGraph, favoriteGraphs, fetchExerciseStats, refreshData } = useContext(DataContext);
+    const { 
+        workoutCount, 
+        addFavoriteGraph, 
+        removeFavoriteGraph,
+        favoriteGraphs, 
+        fetchExerciseStats, 
+        refreshData,
+        totalCaloriesBurned,
+    } = useContext(DataContext);
 
     const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
     const [selectedGraph, setSelectedGraph] = useState<FavoriteGraph | null>(null);
@@ -111,7 +117,7 @@ export default function useHookData() {
         frequency: calculateWeeklyFrequency(workoutFrequency),
         lastWorkout: calculateLastWorkout(workoutFrequency),
         totalWorkouts: workoutCount.total,
-        caloriesBurned: 0 // This can be calculated based on workout history if needed,
+        caloriesBurned: totalCaloriesBurned,
     };
 
     const handleExerciseSelect = (exercise: Exercise) => {

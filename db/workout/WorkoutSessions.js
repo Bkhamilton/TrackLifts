@@ -159,6 +159,24 @@ export const getWeeklyWorkoutCount = async (db, userId) => {
     }
 }
 
+export const getTotalCaloriesBurned = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                SUM(calories_burned) AS totalCalories
+            FROM 
+                WorkoutSessions
+            WHERE 
+                user_id = ?
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return result ? result.totalCalories : 0;
+    } catch (error) {
+        console.error('Error getting total calories burned:', error);
+        throw error;
+    }
+}
+
 export const insertWorkoutSession = async (db, session) => {
     try {
         const result = await db.runAsync(

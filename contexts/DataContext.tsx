@@ -24,6 +24,7 @@ import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
     getMonthlyWorkoutCount,
     getQuarterlyWorkoutCount,
+    getTotalCaloriesBurned,
     getWeeklyWorkoutCount,
     getWorkoutCountByUser,
     getYearlyWorkoutCount
@@ -56,6 +57,7 @@ interface DataContextValue {
     favoriteRoutines: FavoriteRoutine[];
     favoriteGraphs: any[];
     weeklySetsCount: number;
+    totalCaloriesBurned: number;
     topExercise: TopExercise;
     muscleGroupFocusBySet: MuscleGroupStat[];
     workoutCount: {
@@ -88,6 +90,7 @@ export const DataContext = createContext<DataContextValue>({
     favoriteRoutines: [],
     favoriteGraphs: [],
     weeklySetsCount: 0,
+    totalCaloriesBurned: 0,
     topExercise: {
         id: 0,
         title: '',
@@ -144,6 +147,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         yearly: 0,
     })
     const [weeklySetsCount, setWeeklySetsCount] = useState<number>(0);
+    const [totalCaloriesBurned, setTotalCaloriesBurned] = useState<number>(0);
     const [topExercise, setTopExercise] = useState<TopExercise>({
         id: 0,
         title: '',
@@ -229,6 +233,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getWeeklySetCount(db, user.id).then((count) => {
                 setWeeklySetsCount(count);
             });
+            getTotalCaloriesBurned(db, user.id).then((calories) => {
+                setTotalCaloriesBurned(calories);
+            });
             getTopExercise(db, user.id).then((exercise) => {
                 setTopExercise(exercise);
             });
@@ -238,7 +245,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getMuscleGroupIntensity(db, user.id).then((intensity) => {
                 setMuscleGroupIntensity(intensity);
             });
-                    // Fetch both current soreness and max soreness
+            // Fetch both current soreness and max soreness
             const [currentSoreness, maxSoreness] = await Promise.all([
                 getMuscleGroupSoreness(db, user.id),
                 getMuscleMaxSoreness(db, user.id)
@@ -355,6 +362,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         favoriteRoutines,
         favoriteGraphs,
         weeklySetsCount,
+        totalCaloriesBurned,
         topExercise,
         muscleGroupFocusBySet,
         workoutCount,
