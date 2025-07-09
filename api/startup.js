@@ -155,6 +155,7 @@ export const createWorkoutTables = async (db) => {
             start_time DATETIME NOT NULL,
             end_time STRING,
             notes TEXT,
+            calories_burned REAL,
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (routine_id) REFERENCES Routines(id)
         );

@@ -7,7 +7,7 @@ import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/Exerci
 import { insertSessionExercise } from '@/db/workout/SessionExercises';
 import { insertSessionSet } from '@/db/workout/SessionSets';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
-import { calculateEstimated1RM } from '@/utils/workoutCalculations';
+import { calculateCaloriesBurned, calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
 import { RoutineContext } from './RoutineContext';
@@ -204,6 +204,23 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
             }
         }
 
+        // Calculate duration in minutes
+        const start = new Date(workout.startTime!);
+        const end = new Date(workout.endTime || Date.now());
+        const durationMinutes = (end.getTime() - start.getTime()) / 1000 / 60;
+
+        // Get user weight in lbs (fallback to 180lbs if unknown)
+        const weightLbs = userStats?.weight
+            ? parseFloat(userStats.weight)
+            : 180;
+
+        // Calculate calories burned
+        const caloriesBurned = calculateCaloriesBurned({
+            weightLbs,
+            durationMinutes,
+            met: 4.5, // or adjust based on intensity
+        });        
+
         // Insert WorkoutSession (allow routineId to be 0 or null for ad-hoc workouts)
         const sessionId = await insertWorkoutSession(db, {
             userId: user.id,
@@ -211,6 +228,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
             startTime: workout.startTime,
             endTime: workout.endTime,
             notes: workout.notes || null,
+            caloriesBurned,
         });
 
         // Insert session exercises and sets as usual

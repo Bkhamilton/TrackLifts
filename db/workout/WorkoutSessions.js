@@ -162,9 +162,9 @@ export const getWeeklyWorkoutCount = async (db, userId) => {
 export const insertWorkoutSession = async (db, session) => {
     try {
         const result = await db.runAsync(
-            `INSERT INTO WorkoutSessions (user_id, routine_id, start_time, end_time, notes) 
-             VALUES (?, ?, ?, ?, ?)`,
-            [session.userId, session.routineId, session.startTime, session.endTime, session.notes]
+            `INSERT INTO WorkoutSessions (user_id, routine_id, start_time, end_time, notes, calories_burned) 
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [session.userId, session.routineId, session.startTime, session.endTime, session.notes, session.caloriesBurned]
         );
         return result.lastInsertRowId;
     } catch (error) {

@@ -12,3 +12,13 @@ export function calculateTotalWeight(history) {
 export const calculateEstimated1RM = (weight, reps) => {
   return reps === 1 ? weight : weight * (1 + reps / 30);
 };
+
+export function calculateCaloriesBurned({
+    weightLbs,
+    durationMinutes,
+    met = 4.5, // default for moderate weightlifting
+}) {
+    const weightKg = weightLbs * 0.453592;
+    const durationHours = durationMinutes / 60;
+    return met * weightKg * durationHours;
+}
