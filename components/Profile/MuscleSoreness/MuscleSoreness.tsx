@@ -34,44 +34,44 @@ const MuscleSoreness = () => {
         { 
             id: 'chest', 
             name: 'Chest', 
-            value: 0.8,
+            value: 0,
             description: 'The chest muscles (pectoralis major) are responsible for pushing movements and shoulder adduction.',
-            exercises: ['Bench Press', 'Push-ups', 'Chest Fly', 'Incline Dumbbell Press']
+            exercises: ['']
         },
         { 
             id: 'back', 
             name: 'Back', 
-            value: 0.6,
+            value: 0,
             description: 'Back muscles (latissimus dorsi, trapezius, rhomboids) are crucial for pulling movements and posture.',
-            exercises: ['Pull-ups', 'Bent-over Rows', 'Deadlifts', 'Lat Pulldowns']
+            exercises: ['']
         },
         { 
             id: 'arms', 
             name: 'Arms', 
-            value: 0.7,
+            value: 0,
             description: 'Arm muscles (biceps, triceps, forearms) control elbow flexion/extension and grip strength.',
-            exercises: ['Bicep Curls', 'Tricep Extensions', 'Hammer Curls', 'Dips']
+            exercises: ['']
         },
         { 
             id: 'shoulders', 
             name: 'Shoulders', 
-            value: 0.5,
+            value: 0,
             description: 'Shoulder muscles (deltoids) enable arm rotation and lifting movements.',
-            exercises: ['Shoulder Press', 'Lateral Raises', 'Front Raises', 'Upright Rows']
+            exercises: ['']
         },
         { 
             id: 'core', 
             name: 'Core', 
-            value: 0.2,
+            value: 0,
             description: 'Core muscles (abdominals, obliques) stabilize the torso and transfer force between upper/lower body.',
-            exercises: ['Planks', 'Russian Twists', 'Leg Raises', 'Crunches']
+            exercises: ['']
         },
         { 
             id: 'legs', 
             name: 'Legs', 
-            value: 0.75,
+            value: 0,
             description: 'Leg muscles (quadriceps, hamstrings, glutes, calves) power locomotion and lower body movements.',
-            exercises: ['Squats', 'Lunges', 'Deadlifts', 'Calf Raises']
+            exercises: ['']
         },
     ].map(m => {
         const dbData = muscleGroupSoreness.find(s => 
