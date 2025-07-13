@@ -12,7 +12,7 @@ export default function ProfileInsightsCard() {
     const router = useRouter();
 
     const { workoutFrequency } = useContext(WorkoutContext);
-    const { workoutCount } = useContext(DataContext);
+    const { workoutCount, totalCaloriesBurned } = useContext(DataContext);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
@@ -23,9 +23,9 @@ export default function ProfileInsightsCard() {
         workoutsThisWeek: workoutCount.weekly, // e.g., 3 workouts
         progressPercentage: 0, // % increase from last week
         streak: calculateStreak(workoutFrequency), // days
-        caloriesBurned: 0, // weekly total
+        caloriesBurned: totalCaloriesBurned, // total calories burned
         lastWorkout: calculateLastWorkout(workoutFrequency), // e.g., "2 days ago"
-        totalWeightThisWeek: 12500,            // kg lifted this week
+        totalWeightThisWeek: 12500,            // lbs lifted this week
         averageDuration: 45,                  // minutes per session
         activeDaysThisMonth: workoutCount.monthly,        
     };
