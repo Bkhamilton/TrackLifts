@@ -19,7 +19,7 @@ import {
     getFavoriteGraphsByUserId,
     insertFavoriteGraph,
 } from '@/db/workout/FavoriteGraphs';
-import { getTopExercise } from '@/db/workout/SessionExercises';
+import { getRecentSorenessExercises, getTopExercise } from '@/db/workout/SessionExercises';
 import { getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
     getMonthlyWorkoutCount,
@@ -82,6 +82,7 @@ interface DataContextValue {
         statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
     ) => Promise<any[]>;
     getMuscleSoreness: (muscleGroup: string) => Promise<any[]>;
+    getRecentExercises: (muscleGroup: string) => Promise<any[]>;    
     addFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
     removeFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
 }
@@ -121,6 +122,10 @@ export const DataContext = createContext<DataContextValue>({
         console.warn('getMuscleSoreness function not implemented');
         return [];
     },
+    getRecentExercises: async () => {
+        console.warn('getRecentExercises function not implemented');
+        return [];
+    },    
     addFavoriteGraph: async () => {
         console.warn('addFavoriteGraph function not implemented');
     },
@@ -324,6 +329,22 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     }
 
+    const getRecentExercises = async (muscleGroup: string) => {
+        if (!db || !user?.id) return [];
+        try {
+            const muscleGroupId = await getMuscleGroupIdByName(db, muscleGroup);
+            if (!muscleGroupId) {
+                console.warn(`Muscle group "${muscleGroup}" not found.`);
+                return [];
+            }
+
+            return await getRecentSorenessExercises(db, user.id, muscleGroupId);
+        } catch (e) {
+            console.error('Failed to fetch recent exercises:', e);
+            return [];
+        }
+    };
+
     const addFavoriteGraph = async (exerciseId: number, graphType: string) => {
         if (!db || !user?.id) return;
         try {
@@ -372,6 +393,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         fetchExerciseSessionStats,
         fetchExerciseStats,
         getMuscleSoreness,
+        getRecentExercises,
         addFavoriteGraph,
         removeFavoriteGraph,
     };

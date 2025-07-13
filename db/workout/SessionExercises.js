@@ -25,6 +25,27 @@ export const getSessionExercises = async (db) => {
     }
 };
 
+export const getRecentSorenessExercises = async (db, userId, muscleGroupId) => {
+    const query = `
+        SELECT DISTINCT e.id, e.title
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        WHERE ws.user_id = ?
+          AND mg.id = ?
+          AND ws.start_time >= date('now', '-14 days')
+        ORDER BY ws.start_time DESC
+    `;
+    const rows = await db.getAllAsync(query, [userId, muscleGroupId]);
+    if (!rows || rows.length === 0) {
+        return [];
+    }
+    return rows;
+};
+
 export const getSessionExercisesBySessionId = async (db, sessionId) => {
     try {
         const query = `

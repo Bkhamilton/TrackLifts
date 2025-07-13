@@ -27,20 +27,7 @@ const MuscleSoreness = () => {
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     
-    const { muscleGroupIntensity, muscleGroupSoreness } = useContext(DataContext);
-
-    type MaxScore = {
-        [key: string]: number;
-    }
-
-    const referenceMax: MaxScore = {
-        chest: 30000,
-        back: 25000,
-        arms: 14000,
-        shoulders: 15000,
-        core: 1000,      // much lower!
-        legs: 40000,
-    };
+    const { muscleGroupSoreness, getRecentExercises } = useContext(DataContext);
 
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
@@ -101,6 +88,13 @@ const MuscleSoreness = () => {
             1 - Math.exp(-0.8 * (rawScore / maxSoreness)),
             1
         );
+
+        // grab exercises from workout
+        getRecentExercises(m.name).then(exercises => {
+            m.exercises = exercises.map(e => e.name);
+        }).catch(err => {
+            console.error(`Error fetching exercises for ${m.name}:`, err);
+        });
 
         return {
             ...m,
