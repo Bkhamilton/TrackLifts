@@ -20,12 +20,6 @@ export default function AboutSection({
                 <Text style={styles.sectionTitle}>About</Text>
                 <View style={[styles.infoCard, { backgroundColor, borderColor: cardBorder }]}>
                     <EditableInfoRow 
-                        label="Member Since" 
-                        value={stats.memberSince} 
-                        isEditing={false}
-                        onChange={() => {}}
-                    />
-                    <EditableInfoRow 
                         label="Goals" 
                         value={stats.goals} 
                         isEditing={false}

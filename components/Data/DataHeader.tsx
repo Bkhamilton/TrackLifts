@@ -63,7 +63,7 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
                     <Text style={[styles.summaryLabel, { color: grayText }]}>Total Workouts</Text>
                 </ClearView>
                 <ClearView style={styles.summaryItem}>
-                    <Text style={styles.summaryValue}>{stats.caloriesBurned.toLocaleString()}</Text>
+                    <Text style={styles.summaryValue}>{stats.caloriesBurned || 0}</Text>
                     <Text style={[styles.summaryLabel, { color: grayText }]}>Calories Burned</Text>
                 </ClearView>
             </ClearView>

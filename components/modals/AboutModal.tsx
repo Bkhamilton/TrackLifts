@@ -36,12 +36,6 @@ export default function AboutModal({
                         </TouchableOpacity>
                     </View>
                     <EditableInfoRow
-                        label="Member Since"
-                        value={stats.memberSince}
-                        isEditing={isEditing}
-                        onChange={value => onChange('stats.memberSince', value)}
-                    />
-                    <EditableInfoRow
                         label="Goals"
                         value={stats.goals}
                         isEditing={isEditing}
