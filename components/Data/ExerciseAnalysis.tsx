@@ -2,7 +2,9 @@ import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
 import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import { getCurrentMax } from '@/db/workout/SessionExercises';
+import { getMax1RM } from '@/db/workout/SessionSets';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -33,6 +35,7 @@ const graphTypeToStatType = {
 
 const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
     const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const [dateRange, setDateRange] = useState({
         start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
         end: new Date(),
@@ -76,10 +79,19 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
             return;
         }
         const currentMax = await getCurrentMax(db, exercise.id)
+
+        const thisMonth1RM = await getMax1RM(db, user.id, exercise.id, '-30 days', '0 days');
+        const lastMonth1RM = await getMax1RM(db, user.id, exercise.id, '-60 days', '-30 days');
+
+        let progress = 0;
+        if (lastMonth1RM > 0) {
+            progress = ((thisMonth1RM - lastMonth1RM) / lastMonth1RM) * 100;
+        }        
         // const progress = await getProgress(exercise.id, dateRange.start, dateRange.end);        
         setExerciseStats({
             ...exerciseStats,
             currentMax: currentMax || 0,
+            progress: progress === 0 ? "+0" : (progress > 0 ? `+${progress.toFixed(2)}` : progress.toFixed(2)),
             timesPerformed: results.length,
         });
         const filledResults = fillResultsWithDates(results, dateRange.start, dateRange.end);
@@ -146,7 +158,7 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
                     <Text style={styles.statLabel}>Current Max</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
-                    <Text style={styles.statValue}>{exerciseStats.progress} lbs</Text>
+                    <Text style={styles.statValue}>{exerciseStats.progress}{exerciseStats.progress > 0 ? ' %' : ''}</Text>
                     <Text style={styles.statLabel}>Progress</Text>
                 </View>
                 <View style={[styles.statCard, { backgroundColor: backgroundColor }]}>
