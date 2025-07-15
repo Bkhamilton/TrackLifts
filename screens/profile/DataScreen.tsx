@@ -13,10 +13,11 @@ import FavoriteGraphDisplayModal from '@/components/modals/Data/FavoriteGraphDis
 import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
+import { DataContext } from '@/contexts/DataContext';
 import useHookData from '@/hooks/profile/useHookData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function DataScreen() {
@@ -25,8 +26,6 @@ export default function DataScreen() {
         setShowExerciseModal,
         selectedExercise,
         handleExerciseSelect,
-        favoriteGraphDisplay,
-        setFavoriteGraphDisplay,
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,
@@ -45,6 +44,8 @@ export default function DataScreen() {
         handleRequestRemoveFavorite,
         handleConfirmRemove,
     } = useHookData();
+
+    const { favoriteGraphs } = useContext(DataContext);
 
     const router = useRouter();
 
@@ -91,7 +92,7 @@ export default function DataScreen() {
             </View>
             
             <FavoriteGraphs
-                favorites={favoriteGraphDisplay}
+                favorites={favoriteGraphs}
                 onAddFavorite={() => setFavoriteGraphModal(true)}
                 onSelectGraph={handleSelectGraph}
             />
@@ -112,7 +113,7 @@ export default function DataScreen() {
             <FavoriteGraphDisplayModal
                 visible={showFavoriteGraphModal}
                 onClose={() => setShowFavoriteGraphModal(false)}
-                graph={selectedGraph || { id: '', exercise: '', exercise_id: 0, equipment: '', graphType: '', stats: [] }}
+                graph={selectedGraph || { id: '', exercise: '', exercise_id: 0, equipment: '', graphType: '', stats: [], currentMax: 0, progress: 0, lastUpdated: 0 }}
                 onRequestRemoveFavorite={handleRequestRemoveFavorite}
             />
             

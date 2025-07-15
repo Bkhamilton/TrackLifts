@@ -19,8 +19,8 @@ import {
     getFavoriteGraphsByUserId,
     insertFavoriteGraph,
 } from '@/db/workout/FavoriteGraphs';
-import { getRecentSorenessExercises, getTopExercise } from '@/db/workout/SessionExercises';
-import { getWeeklySetCount } from '@/db/workout/SessionSets';
+import { getCurrentMax, getRecentSorenessExercises, getTopExercise } from '@/db/workout/SessionExercises';
+import { getMax1RM, getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
     getMonthlyWorkoutCount,
     getQuarterlyWorkoutCount,
@@ -197,10 +197,39 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                             statType
                         );
                         if (!stats || stats.length === 0) {
-                            return { ...graph, stats: [] };
+                            return { ...graph, stats: [], currentMax: 0, progress: 0, lastUpdated: null };
                         }
                         const filledStats = fillResultsWithDates(stats, startDate, endDate);
-                        return { ...graph, stats: filledStats };
+                        const currentMax = await getCurrentMax(db, graph.exercise_id);
+
+                        const now = new Date();
+                        const oneDayMs = 24 * 60 * 60 * 1000;
+
+                        const thisMonth1RM = await getMax1RM(db, user.id, graph.exercise_id, '-30 days', '0 days');
+                        const lastMonth1RM = await getMax1RM(db, user.id, graph.exercise_id, '-60 days', '-30 days');
+
+                        let progress = 0;
+                        if (lastMonth1RM > 0) {
+                            progress = ((thisMonth1RM - lastMonth1RM) / lastMonth1RM) * 100;
+                        }
+
+                        // Find the most recent date in stats
+                        const allDates = stats
+                            .map((s: any) => new Date(s.workout_date || s.date))
+                            .filter(d => !isNaN(d.getTime()));
+                        const mostRecent = allDates.length > 0 ? new Date(Math.max(...allDates.map(d => d.getTime()))) : null;
+                        let lastUpdated = null;
+                        if (mostRecent) {
+                            const diffDays = Math.floor((now.getTime() - mostRecent.getTime()) / oneDayMs);
+                            lastUpdated = diffDays;
+                        }
+                        return {
+                            ...graph,
+                            stats: filledStats,
+                            currentMax,
+                            progress,
+                            lastUpdated
+                        };
                     })
                 );
                 setFavoriteGraphs(graphsWithStats);

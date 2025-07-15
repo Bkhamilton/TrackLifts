@@ -15,13 +15,10 @@ export default function useHookData() {
         workoutCount, 
         addFavoriteGraph, 
         removeFavoriteGraph,
-        favoriteGraphs, 
-        fetchExerciseStats, 
         refreshData,
         totalCaloriesBurned,
     } = useContext(DataContext);
 
-    const [favoriteGraphDisplay, setFavoriteGraphDisplay] = useState<FavoriteGraph[]>(favoriteGraphs);
     const [selectedGraph, setSelectedGraph] = useState<FavoriteGraph | null>(null);
 
     const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
@@ -48,9 +45,6 @@ export default function useHookData() {
 
     const handleRemoveFavorite = (exerciseId: number, graphType: string) => {
         removeFavoriteGraph(exerciseId, graphType);
-        setFavoriteGraphDisplay((prev) =>
-            prev.filter((graph) => graph.exercise_id !== exerciseId || graph.graphType !== graphType)
-        );
         setShowFavoriteGraphModal(false);
     }
 
@@ -65,44 +59,6 @@ export default function useHookData() {
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
         // Open modal to create new favorite graph
         await addFavoriteGraph(exercise.id, graphType);
-
-        // Prepare date range (last 1 months)
-        const endDate = new Date();
-        const startDate = new Date();
-        startDate.setMonth(endDate.getMonth() - 1);
-        const formattedEnd = endDate.toISOString().slice(0, 10);
-        const formattedStart = startDate.toISOString().slice(0, 10);
-
-        // Map graphType to statType
-        const graphTypeToStatType: Record<string, 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'> = {
-            'Top Set': 'top_set',
-            'Heaviest Set': 'heaviest_set',
-            'Most Weight Moved': 'total_volume',
-            'Average Weight': 'avg_weight',
-            'Most Repetitions': 'most_reps',
-        };
-        const statType = graphTypeToStatType[graphType] || 'top_set';
-
-        // Fetch stats
-        const stats = await fetchExerciseStats(
-            exercise.id,
-            formattedStart,
-            formattedEnd,
-            statType
-        );
-
-        // Add to display state (with stats)
-        setFavoriteGraphDisplay((prev) => [
-            ...prev,
-            {
-                id: (prev.length + 1).toString(),
-                exercise: exercise.title,
-                exercise_id: exercise.id,
-                equipment: exercise.equipment,
-                graphType: graphType,
-                stats,
-            },
-        ]);
     };
 
     const handleSelectGraph = (graph: FavoriteGraph) => {
@@ -130,8 +86,6 @@ export default function useHookData() {
         setShowExerciseModal,
         selectedExercise,
         setSelectedExercise,
-        favoriteGraphDisplay,
-        setFavoriteGraphDisplay,
         handleAddFavorite,
         handleSelectGraph,
         workoutStats,

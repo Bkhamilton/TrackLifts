@@ -117,4 +117,7 @@ export interface FavoriteGraph {
     equipment: string;
     graphType: string;
     stats?: any[];
+    currentMax: number;
+    progress: number;
+    lastUpdated: number;
 }

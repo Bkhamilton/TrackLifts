@@ -62,6 +62,27 @@ export const getWeeklySetCount = async (db, userId) => {
     }
 }
 
+export const getMax1RM = async (db, userId, exerciseId, startOffset, endOffset) => {
+    try {
+        const query = `
+            SELECT MAX(ss.estimated_1rm) AS max_1rm
+            FROM SessionSets ss
+            JOIN SessionExercises se ON ss.session_exercise_id = se.id
+            JOIN WorkoutSessions ws ON se.session_id = ws.id
+            WHERE ws.user_id = ?
+              AND se.exercise_id = ?
+              AND DATE(ws.start_time) >= DATE('now', ?)
+              AND DATE(ws.start_time) < DATE('now', ?)
+        `;
+        // startOffset: e.g. '-7 days', endOffset: '0 days' for this week
+        const result = await db.getFirstAsync(query, [userId, exerciseId, startOffset, endOffset]);
+        return result?.max_1rm || 0;
+    } catch (error) {
+        console.error('Error getting max 1RM:', error);
+        throw error;
+    }
+};
+
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(

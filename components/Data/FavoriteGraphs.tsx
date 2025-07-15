@@ -68,15 +68,15 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                             
                             <ClearView style={styles.graphStats}>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>0 lbs</Text>
+                                    <Text style={styles.statValue}>{graph.currentMax} lbs</Text>
                                     <Text style={styles.statLabel}>Current Max</Text>
                                 </ClearView>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>+0 lbs</Text>
+                                    <Text style={styles.statValue}>{graph.progress} lbs</Text>
                                     <Text style={styles.statLabel}>Progress</Text>
                                 </ClearView>
                                 <ClearView style={styles.statItem}>
-                                    <Text style={styles.statValue}>2 days ago</Text>
+                                    <Text style={styles.statValue}>{graph.lastUpdated} days ago</Text>
                                     <Text style={styles.statLabel}>Last Updated</Text>
                                 </ClearView>
                             </ClearView>
