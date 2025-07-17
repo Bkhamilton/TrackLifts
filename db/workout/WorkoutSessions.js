@@ -177,6 +177,55 @@ export const getTotalCaloriesBurned = async (db, userId) => {
     }
 }
 
+export const getWeeklyAverageDuration = async (db, userId) => {
+    try {
+        // 1. Get all end_time values for this user's workouts in the last 7 days
+        const query = `
+            SELECT end_time
+            FROM WorkoutSessions
+            WHERE user_id = ? 
+              AND start_time >= datetime('now', '-7 days')
+              AND end_time IS NOT NULL
+        `;
+        const rows = await db.getAllAsync(query, [userId]);
+        if (!rows || rows.length === 0) return "00:00:00";
+
+        // 2. Parse durations to seconds
+        const toSeconds = (str) => {
+            if (!str) return 0;
+            const parts = str.split(':').map(Number).reverse();
+            let [ss = 0, mm = 0, hh = 0, dd = 0] = [0, 0, 0, 0];
+            if (parts.length === 3) {
+                [ss, mm, hh] = parts;
+            } else if (parts.length === 4) {
+                [ss, mm, hh, dd] = parts;
+            }
+            return dd * 86400 + hh * 3600 + mm * 60 + ss;
+        };
+
+        const totalSeconds = rows.reduce((sum, row) => sum + toSeconds(row.end_time), 0);
+        const avgSeconds = Math.round(totalSeconds / rows.length);
+
+        // 3. Format back to DD:HH:MM:SS or HH:MM:SS
+        const formatDuration = (secs) => {
+            const dd = Math.floor(secs / 86400);
+            const hh = Math.floor((secs % 86400) / 3600);
+            const mm = Math.floor((secs % 3600) / 60);
+            const ss = secs % 60;
+            if (dd > 0) {
+                return `${dd.toString().padStart(2, '0')}:${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`;
+            } else {
+                return `${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`;
+            }
+        };
+
+        return formatDuration(avgSeconds);
+    } catch (error) {
+        console.error('Error getting weekly average duration:', error);
+        throw error;
+    }
+};
+
 export const insertWorkoutSession = async (db, session) => {
     try {
         const result = await db.runAsync(

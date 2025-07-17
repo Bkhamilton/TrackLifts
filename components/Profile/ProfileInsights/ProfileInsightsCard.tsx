@@ -1,23 +1,42 @@
 import { ClearView, Text } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
+import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
+import { getWeeklyWeightLifted } from '@/db/workout/SessionSets';
+import { getWeeklyAverageDuration } from '@/db/workout/WorkoutSessions';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { calculateLastWorkout, calculateStreak } from '@/utils/dataCalculations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ProfileInsightsCard() {
     const router = useRouter();
 
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
     const { workoutFrequency } = useContext(WorkoutContext);
     const { workoutCount, totalCaloriesBurned } = useContext(DataContext);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     const grayText = useThemeColor({}, 'grayText');
-    
+
+    const [averageDuration, setAverageDuration] = useState<string>('00:00:00');
+    const [totalWeightThisWeek, setTotalWeightThisWeek] = useState<number>(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const avgDuration = await getWeeklyAverageDuration(db, user.id);
+            const totalWeight = await getWeeklyWeightLifted(db, user.id);
+            setAverageDuration(avgDuration);
+            setTotalWeightThisWeek(totalWeight);
+        };
+        fetchData();
+    }, [db, user.id]);
+
     // Sample data - replace with your actual data
     const progressData = {
         workoutsThisWeek: workoutCount.weekly, // e.g., 3 workouts
@@ -25,9 +44,9 @@ export default function ProfileInsightsCard() {
         streak: calculateStreak(workoutFrequency), // days
         caloriesBurned: totalCaloriesBurned, // total calories burned
         lastWorkout: calculateLastWorkout(workoutFrequency), // e.g., "2 days ago"
-        totalWeightThisWeek: 12500,            // lbs lifted this week
-        averageDuration: 45,                  // minutes per session
-        activeDaysThisMonth: workoutCount.monthly,        
+        totalWeightThisWeek,
+        averageDuration,
+        activeDaysThisMonth: workoutCount.monthly,
     };
 
     // Helper: Score each stat for noteworthiness

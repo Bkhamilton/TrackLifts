@@ -62,6 +62,7 @@ export const getWeeklySetCount = async (db, userId) => {
     }
 }
 
+// Get the maximum estimated 1RM for a specific exercise from startOffset to endOffset
 export const getMax1RM = async (db, userId, exerciseId, startOffset, endOffset) => {
     try {
         const query = `
@@ -82,6 +83,27 @@ export const getMax1RM = async (db, userId, exerciseId, startOffset, endOffset) 
         throw error;
     }
 };
+
+// Get the total weight lifted in the last 7 days for a specific user
+export const getWeeklyWeightLifted = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                SUM(ss.weight * ss.reps) AS totalWeightLifted
+            FROM SessionSets ss
+            JOIN SessionExercises se ON ss.session_exercise_id = se.id
+            JOIN WorkoutSessions ws ON se.session_id = ws.id
+            WHERE 
+                ws.user_id = ? AND 
+                ws.start_time >= datetime('now', '-7 days')
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return result?.totalWeightLifted || 0;
+    } catch (error) {
+        console.error('Error getting weekly weight lifted:', error);
+        throw error;
+    }
+}
 
 export const insertSessionSet = async (db, sessionSet) => {
     try {
