@@ -41,6 +41,10 @@ export default function FavoriteExerciseAnalysisGraph({ data } : { data: any[] }
     const formatXLabel = (value: string) => {
         // Format Date to MM/DD, display one day per week
         const date = new Date(value);
+        if (isNaN(date.getTime())) {
+            // Invalid date
+            return "-/-";
+        }           
         const day = date.getDate();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         // Show label only for the first day of each week
