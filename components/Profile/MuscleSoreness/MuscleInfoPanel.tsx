@@ -31,16 +31,22 @@ const MuscleInfoPanel = ({
     view,
 }: MuscleInfoPanelProps) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [exerciseBreakdown, setExerciseBreakdown] = useState<any>(null);
 
-    const { getMuscleSoreness } = useContext(DataContext);
+    const { getMuscleSoreness, getMuscleGroupBreakdown } = useContext(DataContext);
     const [muscleSoreness, setMuscleSoreness] = useState<any[]>([]);
 
     // Fetch muscle-level soreness when muscle group changes
     useEffect(() => {
         if (selectedMuscleData?.id) {
             const fetchData = async () => {
-                const data = await getMuscleSoreness(selectedMuscleData.name);
-                setMuscleSoreness(data);
+                const [sorenessData, breakdownData] = await Promise.all([
+                    getMuscleSoreness(selectedMuscleData.name),
+                    getMuscleGroupBreakdown(selectedMuscleData.name)
+                ]);
+                
+                setMuscleSoreness(sorenessData);
+                setExerciseBreakdown(breakdownData);
             };
             fetchData();
         }
@@ -72,41 +78,6 @@ const MuscleInfoPanel = ({
         return getColor(normalized);
     };
 
-    const hardcodedBreakdown = {
-        routine: "Push Day A",
-        date: "2025-06-18",
-        exercises: [
-            {
-                name: "Bench Press",
-                sets: 4,
-                reps: 8,
-                weight: "185 lbs",
-                contribution: "40%"
-            },
-            {
-                name: "Incline Dumbbell Press",
-                sets: 3,
-                reps: 10,
-                weight: "55 lbs",
-                contribution: "25%"
-            },
-            {
-                name: "Push-ups",
-                sets: 3,
-                reps: 20,
-                weight: "Bodyweight",
-                contribution: "20%"
-            },
-            {
-                name: "Chest Fly",
-                sets: 2,
-                reps: 15,
-                weight: "25 lbs",
-                contribution: "15%"
-            }
-        ]
-    };
-
     return (
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
             {/* Info Card (clickable for modal) */}
@@ -136,6 +107,7 @@ const MuscleInfoPanel = ({
                     </Text>
                 </ClearView>
 
+                {/* Muscles Affected */}
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Affected</Text>
                     <ClearView style={styles.muscleContainer}>
@@ -179,7 +151,7 @@ const MuscleInfoPanel = ({
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 muscleData={selectedMuscleData}
-                breakdown={hardcodedBreakdown} // Replace with actual breakdown data
+                breakdown={exerciseBreakdown} // Replace with actual breakdown data
             />
         </View>
     );

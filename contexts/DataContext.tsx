@@ -8,6 +8,7 @@ import {
     getTotalVolumePerSession,
 } from '@/db/data/ExerciseStatSets';
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
+import { getMuscleGroupExerciseBreakdown } from '@/db/data/MuscleGroupBreakdown';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
 import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
@@ -81,6 +82,7 @@ interface DataContextValue {
         endDate: string,
         statType: 'heaviest_set' | 'top_set' | 'most_reps' | 'total_volume' | 'avg_weight'
     ) => Promise<any[]>;
+    getMuscleGroupBreakdown: (muscleGroupName: string) => Promise<any>;
     getMuscleSoreness: (muscleGroup: string) => Promise<any[]>;
     getRecentExercises: (muscleGroup: string) => Promise<any[]>;    
     addFavoriteGraph: (exerciseId: number, graphType: string) => Promise<void>;
@@ -118,6 +120,10 @@ export const DataContext = createContext<DataContextValue>({
         console.warn('fetchExerciseStats function not implemented');
         return [];
     }, 
+    getMuscleGroupBreakdown: async () => {
+        console.warn('getMuscleGroupBreakdown function not implemented');
+        return null;
+    },
     getMuscleSoreness: async () => {
         console.warn('getMuscleSoreness function not implemented');
         return [];
@@ -342,6 +348,16 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     };    
 
+    const getMuscleGroupBreakdown = async (muscleGroupName: string) => {
+        if (!db || !user?.id) return null;
+        try {
+            return await getMuscleGroupExerciseBreakdown(db, user.id, muscleGroupName);
+        } catch (error) {
+            console.error('Error fetching muscle group breakdown:', error);
+            return null;
+        }
+    };    
+
     const getMuscleSoreness = async (muscleGroup: string) => {
         if (!db || !user?.id) return [];
         try {
@@ -421,6 +437,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         refreshData,
         fetchExerciseSessionStats,
         fetchExerciseStats,
+        getMuscleGroupBreakdown,
         getMuscleSoreness,
         getRecentExercises,
         addFavoriteGraph,
