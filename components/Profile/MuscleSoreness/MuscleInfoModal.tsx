@@ -39,6 +39,18 @@ const getPrimaryMuscles = (muscleGroupId: string): string[] => {
     return muscles[muscleGroupId] || [];
 };
 
+const getRecommendedExercises = (muscleGroupId: string): string[] => {
+    const exercises: Record<string, string[]> = {
+        chest: ['Bench Press', 'Push-Ups', 'Chest Fly'],
+        back: ['Pull-Ups', 'Bent Over Rows', 'Deadlifts'],
+        arms: ['Bicep Curls', 'Tricep Dips', 'Hammer Curls'],
+        shoulders: ['Shoulder Press', 'Lateral Raises', 'Front Raises'],
+        core: ['Planks', 'Russian Twists', 'Leg Raises'],
+        legs: ['Squats', 'Lunges', 'Leg Press']
+    };
+    return exercises[muscleGroupId] || [];
+}
+
 const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakdown }) => {
     if (!muscleData) return null;
 
@@ -77,7 +89,7 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
                             Recommended Exercises:
                         </Text>
                         <View style={styles.modalExercisesContainer}>
-                            {muscleData.exercises.map((exercise, index) => (
+                            {getRecommendedExercises(muscleData.id).map((exercise, index) => (
                                 <View key={index} style={styles.modalExercisePill}>
                                     <Text style={styles.modalExerciseText}>{exercise}</Text>
                                 </View>
