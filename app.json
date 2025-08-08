@@ -13,7 +13,8 @@
       "bundleIdentifier": "com.benkhamilton.workoutapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {

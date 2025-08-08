@@ -22,6 +22,18 @@ type MuscleInfoPanelProps = {
     view: 'front' | 'back';
 };
 
+type ExerciseBreakdown = {
+    routine: string;
+    date: string;
+    exercises: {
+        name: string;
+        sets: number;
+        reps: number;
+        weight: string;
+        contribution: string;
+    }[];
+};
+
 const MuscleInfoPanel = ({
     selectedMuscleData,
     muscleData,
@@ -127,9 +139,9 @@ const MuscleInfoPanel = ({
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Exercises Done</Text>
                     <ClearView style={styles.chipRow}>
-                        {selectedMuscleData.exercises.map((exercise, idx) => (
+                        {exerciseBreakdown && exerciseBreakdown.exercises.map((exercise: ExerciseBreakdown['exercises'][number], idx: number) => (
                             <View key={idx} style={styles.chip}>
-                                <Text style={styles.chipText}>{exercise}</Text>
+                                <Text style={styles.chipText}>{exercise.name}</Text>
                             </View>
                         ))}
                     </ClearView>
