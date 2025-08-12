@@ -139,7 +139,7 @@ const MuscleInfoPanel = ({
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Exercises Done</Text>
                     <ClearView style={styles.chipRow}>
-                        {exerciseBreakdown && exerciseBreakdown.exercises.map((exercise: ExerciseBreakdown['exercises'][number], idx: number) => (
+                        {exerciseBreakdown && exerciseBreakdown.exercises && exerciseBreakdown.exercises.map((exercise: ExerciseBreakdown['exercises'][number], idx: number) => (
                             <View key={idx} style={styles.chip}>
                                 <Text style={styles.chipText}>{exercise.name}</Text>
                             </View>
