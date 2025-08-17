@@ -2,7 +2,9 @@ import { ActiveRoutine, Exercise } from '@/constants/types';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { clearAllStorage } from '@/utils/debugTools';
 import { useRouter } from 'expo-router';
+import * as Updates from 'expo-updates';
 import { useContext } from 'react';
+import { Alert } from 'react-native';
 
 interface UseHomeActionsProps {
     closeAddRoutineModal: () => void;
@@ -54,11 +56,36 @@ export default function useHomeActions({
         }
     };
 
-    const onConfirmClearData = (choice: 'yes' | 'no') => {
+    const onConfirmClearData = async (choice: 'yes' | 'no') => {
         if (choice === 'yes') {
-            clearAllStorage().then(() => {
-                alert('All data cleared successfully.');
-            });
+            try {
+                await clearAllStorage();
+                
+                Alert.alert(
+                    'Data Cleared Successfully',
+                    'All data has been cleared. The app will now restart to complete the process.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: async () => {
+                                try {
+                                    await Updates.reloadAsync();
+                                } catch (error) {
+                                    console.error('Error restarting app:', error);
+                                    // Fallback: just show a message if reload fails
+                                    Alert.alert(
+                                        'Please Restart App',
+                                        'Please manually close and reopen the app to complete the data clearing process.'
+                                    );
+                                }
+                            }
+                        }
+                    ]
+                );
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                Alert.alert('Error', 'Failed to clear data. Please try again.');
+            }
         }
     }
 
