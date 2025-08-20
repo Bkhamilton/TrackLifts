@@ -1,6 +1,3 @@
-import MiniSparkline from '@/components/Data/Graphs/MiniSparkline';
-// import StrengthProgressChart from '@/components/Data/StrengthProgressChart';
-// import WorkoutFrequencyChart from '@/components/Data/WorkoutFrequencyChart';
 import DataHeader from '@/components/Data/DataHeader';
 import ExerciseAnalysis from '@/components/Data/ExerciseAnalysis';
 import FavoriteGraphs from '@/components/Data/FavoriteGraphs';
@@ -62,15 +59,6 @@ export default function DataScreen() {
                     >
                         <MaterialCommunityIcons name="chevron-left" size={24} color="#666" />
                     </TouchableOpacity>
-                }
-                rightContent={
-                    <MiniSparkline data={[
-                        { x: 1, y: 2 },
-                        { x: 2, y: 3 },
-                        { x: 3, y: 5 },
-                        { x: 4, y: 4 },
-                        { x: 5, y: 6 }
-                    ]} />
                 }
             />
         <ScrollView 
