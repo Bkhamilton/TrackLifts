@@ -95,14 +95,10 @@ export default function DataScreen() {
                 onSelectGraph={handleSelectGraph}
             />
 
-            {
-                /*
-                <ExerciseAnalysis 
-                    exercise={selectedExercise || {id: 0, title: "Select an Exercise", equipment: "None", muscleGroupId: 0, muscleGroup: "None"}} 
-                    onSelectExercise={() => setShowExerciseModal(true)}
-                />
-                */
-            }
+            <ExerciseAnalysis 
+                exercise={selectedExercise || {id: 0, title: "Select an Exercise", equipment: "None", muscleGroupId: 0, muscleGroup: "None"}} 
+                onSelectExercise={() => setShowExerciseModal(true)}
+            />
             
             <MuscleGroupStats />
             
