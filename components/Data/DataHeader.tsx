@@ -26,6 +26,16 @@ interface DataHeaderProps {
 }
 
 export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps) {
+    // Provide default/fallback values to prevent undefined errors
+    const safeStats = stats || {
+        streak: 0,
+        frequency: '--',
+        lastWorkout: '--',
+        totalWorkouts: 0,
+        caloriesBurned: 0,
+    };
+    const safeWeeklyFrequency = Array.isArray(weeklyFrequency) ? weeklyFrequency : [];
+
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
@@ -36,34 +46,34 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
             <ClearView style={styles.statsRow}>
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="fire" size={20} color="#ff6b6b" />
-                    <Text style={styles.statValue}>{stats.streak} Day</Text>
+                    <Text style={styles.statValue}>{safeStats.streak} Day</Text>
                     <Text style={[styles.statLabel, { color: grayText }]}>Streak</Text>
                 </ClearView>
                 
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="calendar" size={20} color="#4dabf7" />
-                    <Text style={styles.statValue}>{stats.frequency}</Text>
+                    <Text style={styles.statValue}>{safeStats.frequency}</Text>
                     <Text style={[styles.statLabel, { color: grayText }]}>Frequency</Text>
                 </ClearView>
                 
                 <ClearView style={styles.statCard}>
                     <MaterialCommunityIcons name="clock" size={20} color="#51cf66" />
-                    <Text style={styles.statValue}>{stats.lastWorkout}</Text>
+                    <Text style={styles.statValue}>{safeStats.lastWorkout}</Text>
                     <Text style={[styles.statLabel, { color: grayText }]}>Last Workout</Text>
                 </ClearView>
             </ClearView>
 
             <WeeklyWorkoutFrequency
-                data={weeklyFrequency}
+                data={safeWeeklyFrequency}
             />
             
             <ClearView style={styles.summaryRow}>
                 <ClearView style={styles.summaryItem}>
-                    <Text style={styles.summaryValue}>{stats.totalWorkouts}</Text>
+                    <Text style={styles.summaryValue}>{safeStats.totalWorkouts}</Text>
                     <Text style={[styles.summaryLabel, { color: grayText }]}>Total Workouts</Text>
                 </ClearView>
                 <ClearView style={styles.summaryItem}>
-                    <Text style={styles.summaryValue}>{stats.caloriesBurned || 0}</Text>
+                    <Text style={styles.summaryValue}>{safeStats.caloriesBurned || 0}</Text>
                     <Text style={[styles.summaryLabel, { color: grayText }]}>Calories Burned</Text>
                 </ClearView>
             </ClearView>
