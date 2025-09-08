@@ -32,6 +32,15 @@ const MuscleGroupStats: React.FC = () => {
         percent: total > 0 ? Math.round(((statsMap[group] || 0) / total) * 100) : 0,
     }));
 
+    if (!muscleGroupFocusBySet.length) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Muscle Group Focus</Text>
+                <Text style={{ color: 'red' }}>No data available.</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Muscle Group Focus</Text>
