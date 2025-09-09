@@ -16,7 +16,25 @@ import React from 'react';
 import { LogBox } from 'react-native';
 import 'react-native-reanimated';
 
-export default function RootLayout() {
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://261b2553551f0d4b48f61b4d796334d7@o4509992067072000.ingest.us.sentry.io/4509992068579328',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
+
+export default Sentry.wrap(function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
@@ -49,7 +67,7 @@ export default function RootLayout() {
             </DBContextProvider>
         </SQLiteProvider>
     );
-}
+});
 
 function RootLayoutNav() {
     const colorScheme = useColorScheme();
