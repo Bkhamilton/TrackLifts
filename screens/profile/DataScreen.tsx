@@ -1,6 +1,5 @@
 import DataHeader from '@/components/Data/DataHeader';
 import ExerciseAnalysis from '@/components/Data/ExerciseAnalysis';
-import FavoriteGraphs from '@/components/Data/FavoriteGraphs';
 import FavoriteRoutines from '@/components/Data/FavoriteRoutines';
 import MiniSparkline from '@/components/Data/Graphs/MiniSparkline';
 import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
@@ -89,11 +88,16 @@ export default function DataScreen() {
                 />
             </View>
             
-            <FavoriteGraphs
-                favorites={favoriteGraphs}
-                onAddFavorite={() => setFavoriteGraphModal(true)}
-                onSelectGraph={handleSelectGraph}
-            />
+            {
+                /*
+                <FavoriteGraphs
+                    favorites={favoriteGraphs || []}
+                    onAddFavorite={() => setFavoriteGraphModal(true)}
+                    onSelectGraph={handleSelectGraph}
+                />
+                */
+            }
+
 
             <ExerciseAnalysis 
                 exercise={selectedExercise || {id: 0, title: "Select an Exercise", equipment: "None", muscleGroupId: 0, muscleGroup: "None"}} 
