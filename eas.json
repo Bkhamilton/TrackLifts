@@ -12,7 +12,13 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "distribution": "store",
+      "env": {
+        "SENTRY_PROPERTIES": "./sentry.properties",
+        "SENTRY_AUTH_TOKEN": "$SENTRY_AUTH_TOKEN"
+      }
+      
     }
   },
   "submit": {
