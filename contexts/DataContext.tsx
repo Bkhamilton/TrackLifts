@@ -30,7 +30,6 @@ import {
     getWorkoutCountByUser,
     getYearlyWorkoutCount
 } from '@/db/workout/WorkoutSessions';
-import { dataEvents } from '@/utils/events';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
@@ -419,9 +418,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
 
     useEffect(() => {
         refreshData();
-        const handler = () => refreshData();
-        dataEvents.addEventListener('refreshData', handler);
-        return () => dataEvents.removeEventListener('refreshData', handler);
+        // const handler = () => refreshData();
+        // dataEvents.addEventListener('refreshData', handler);
+        // return () => dataEvents.removeEventListener('refreshData', handler);
     }, [db, user]);
 
     const value = {
