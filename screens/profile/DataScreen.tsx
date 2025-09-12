@@ -6,7 +6,7 @@ import MuscleGroupStats from '@/components/Data/MuscleGroupStats';
 import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddFavoriteGraphModal from '@/components/modals/Data/AddFavoriteGraphModal';
-import FavoriteGraphDisplayModal from '@/components/modals/Data/FavoriteGraphDisplayModal';
+//import FavoriteGraphDisplayModal from '@/components/modals/Data/FavoriteGraphDisplayModal';
 import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
@@ -98,12 +98,12 @@ export default function DataScreen() {
             
             <FavoriteRoutines />
 
-            <FavoriteGraphDisplayModal
+            {/* <FavoriteGraphDisplayModal
                 visible={showFavoriteGraphModal}
                 onClose={() => setShowFavoriteGraphModal(false)}
                 graph={selectedGraph || { id: '', exercise: '', exercise_id: 0, equipment: '', graphType: '', stats: [], currentMax: 0, progress: 0, lastUpdated: 0 }}
                 onRequestRemoveFavorite={handleRequestRemoveFavorite}
-            />
+            /> */}
             
             <AddFavoriteGraphModal
                 visible={favoriteGraphModal}
