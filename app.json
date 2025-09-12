@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "workout-app",
-    "slug": "workout-app",
+    "name": "TrackLifts",
+    "slug": "tracklifts",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
