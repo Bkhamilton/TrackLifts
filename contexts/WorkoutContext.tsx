@@ -5,7 +5,6 @@ import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/Exerci
 import { clearSessionExercises, getSessionExerciseId, insertSessionExercise } from '@/db/workout/SessionExercises';
 import { clearSessionSets, clearSessionSetsByWorkout, insertSessionSet } from '@/db/workout/SessionSets';
 import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/WorkoutSessions';
-import { dataEvents } from '@/utils/events';
 import { areExerciseListsEqual, getHistoryData } from '@/utils/historyHelpers'; // Assuming you have a utility function to fetch history data
 import { calculateEstimated1RM } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -58,7 +57,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             });
         }
 
-        dataEvents.dispatchEvent('refreshData');
+        // dataEvents.dispatchEvent('refreshData');
     }
 
     const updateWorkout = async (newHistory: History) => {
