@@ -3,7 +3,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import WeeklyWorkoutFrequency from './Graphs/WeeklyWorkoutFrequency';
+// import WeeklyWorkoutFrequency from './Graphs/WeeklyWorkoutFrequency';
 
 interface WorkoutStats {
     streak: number;
@@ -63,9 +63,32 @@ export default function DataHeader({ stats, weeklyFrequency } : DataHeaderProps)
                 </ClearView>
             </ClearView>
 
-            <WeeklyWorkoutFrequency
+            <View
+                style={{
+                    backgroundColor: '#ffe066',
+                    borderRadius: 8,
+                    padding: 10,
+                    marginVertical: 10,
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: '#fab005',
+                }}
+            >
+                <Text
+                    style={{
+                        color: '#212529',
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        textAlign: 'center',
+                    }}
+                >
+                    Graphing features are temporarily unavailable. Required packages are not yet updated for the current SDK.
+                </Text>
+            </View>
+
+            {/* <WeeklyWorkoutFrequency
                 data={safeWeeklyFrequency}
-            />
+            /> */}
             
             <ClearView style={styles.summaryRow}>
                 <ClearView style={styles.summaryItem}>
