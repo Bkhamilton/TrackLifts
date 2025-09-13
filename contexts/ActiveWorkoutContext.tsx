@@ -288,16 +288,19 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
                 // Only update ExerciseSets if routineId is valid
                 if (workout.routine.id && workout.routine.id !== 0) {
-                    exercise.exercise_id ?
-                        await clearExerciseSets(db, workout.routine.id, exercise.exercise_id) :
-                        await clearExerciseSets(db, workout.routine.id, exercise.id);
+                    const exerciseId = exercise.exercise_id || exercise.id;
+                    await clearExerciseSets(db, user.id, exerciseId);
+
+                    // Fetch routine_exercise_id once per exercise
+                    const routineExercise = await getRoutineExercise(db, workout.routine.id, exerciseId);
+
+                    const routineExerciseId = routineExercise?.id;
+                    if (!routineExerciseId) continue; // Skip if not found
 
                     for (let i = 0; i < exercise.sets.length; i++) {
                         const set = exercise.sets[i];
                         await insertExerciseSet(db, {
-                            routine_exercise_id: exercise.exercise_id
-                                ? (await getRoutineExercise(db, workout.routine.id, exercise.exercise_id))?.id
-                                : (await getRoutineExercise(db, workout.routine.id, exercise.id))?.id,
+                            routine_exercise_id: routineExerciseId,
                             set_order: i + 1,
                             weight: set.weight,
                             reps: set.reps,
