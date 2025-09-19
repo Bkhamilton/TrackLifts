@@ -58,7 +58,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                 </View>
                 
                 <ClearView style={styles.contentContainer}>
-                    <Text style={styles.routineTitle}>{history.routine.title}</Text>
+                    <Text style={styles.routineTitle}>{history.routine.title || 'Untitled Routine'}</Text>
                     
                     <ClearView style={styles.statsContainer}>
                         <ClearView style={styles.statItem}>

@@ -38,7 +38,7 @@ export default function EditHistoryScreen() {
     return (
         <View style={styles.container}>
             <Title
-                title={editedRoutine.title}
+                title={editedRoutine.title || 'Unnamed Routine'}
                 leftContent={
                     <TouchableOpacity
                         onPress={() => {
