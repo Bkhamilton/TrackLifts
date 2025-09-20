@@ -1,9 +1,3 @@
-Of course! This is an important step—your GitHub README should act as a landing page for your project, directing traffic to the App Store. Replacing the default Expo text is a great idea.
-
-Here is a clean, professional, and direct README template you can use. Simply replace the placeholder text (`[LINK]`) with your actual App Store URL.
-
----
-
 # TrackLifts
 
 <p align="center">
