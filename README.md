@@ -1,50 +1,74 @@
-# Welcome to TrackLifts! 👋
+Of course! This is an important step—your GitHub README should act as a landing page for your project, directing traffic to the App Store. Replacing the default Expo text is a great idea.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Here is a clean, professional, and direct README template you can use. Simply replace the placeholder text (`[LINK]`) with your actual App Store URL.
 
-## Get started
+---
 
-1. Install dependencies
+# TrackLifts
 
-   ```bash
-   npm install
-   ```
+<p align="center">
+  <img src="https://via.placeholder.com/150?text=App+Icon" alt="TrackLifts App Icon" width="150">
+</p>
 
-2. Start the app
+<h3 align="center">Track Your Lifts. Measure Your Gains.</h3>
 
-   ```bash
-   npx expo start
-   ```
+<p align="center">
+  <strong>TrackLifts</strong> is a clean and powerful iOS workout tracker designed to help you focus on your long-term strength progression. Easily log your exercises and visualize your growth with a comprehensive data dashboard.
+</p>
 
-In the output, you'll find options to open the app in a
+<p align="center">
+  <a href="https://apps.apple.com/us/app/tracklifts/id6749166165">
+    <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" height="60">
+  </a>
+</p>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## About This Project
 
-## Get a fresh project
+This repository contains the source code for the TrackLifts iOS application, developed with **React Native** and **Expo**. It was created as the debut project for **Hamilton Development Studios**.
 
-When you're ready, run:
+The app is now publicly available on the **Apple App Store**. This repository serves as a code reference and a showcase of the development process. Please note that this is a compiled production build, and setting up a local development environment may require additional configuration.
 
-```bash
-npm run reset-project
-```
+## Features
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+*   **Effortless Logging:** Quickly add exercises, sets, reps, and weight for your daily workouts.
+*   **Progress Dashboard:** Visualize your strength gains over time with intuitive charts and statistics.
+*   **Data Persistence:** Your workout history is saved locally on your device.
+*   **Clean UI:** A user-friendly interface designed to be simple and distraction-free.
 
-## Learn more
+## Get the App
 
-To learn more about developing your project with Expo, look at the following resources:
+TrackLifts is available for download on the **Apple App Store**. This is the only official way to install and use the app.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+<p align="center">
+  <a href="https://apps.apple.com/us/app/tracklifts/id6749166165">
+    <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" height="60">
+  </a>
+</p>
 
-## Join the community
+## Tech Stack
 
-Join our community of developers creating universal apps.
+*   **Framework:** React Native
+*   **Development Platform:** Expo
+*   **Programming Language:** JavaScript/TypeScript
+*   **State Management:** React Hooks & Context API
+*   **Data Storage:** AsyncStorage / Expo SQLite
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Disclaimer
+
+This project is a production application. The code in this repository is provided for reference and educational purposes. It is not intended to be run directly via `expo start` in development mode without a proper configured environment and may contain build secrets or keys not included in this repo.
+
+---
+
+## License
+
+This project is proprietary and all rights are reserved to Hamilton Development Studios. You may view the code for reference, but you may not reuse, redistribute, or modify it without explicit permission.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://www.linkedin.com/in/benkhamilton/">Ben Hamilton</a> and <a href="https://github.com/Bkhamilton">Hamilton Development Studios</a>.</sub>
+</div>
+
+---
