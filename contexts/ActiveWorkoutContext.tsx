@@ -251,7 +251,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                     let est1RM;
                     // If bodyweight exercise (weight is 0 or undefined)
                     if (exercise.equipment == 'Bodyweight' || set.weight <= 0) {
-                        est1RM = calculateEstimated1RM(userStats.weight || 150, 1); // fallback to 150lbs if unknown
+                        est1RM = calculateEstimated1RM(userStats.weight || 180, 1); // fallback to 180lbs if unknown
                     } else {
                         est1RM = calculateEstimated1RM(set.weight, set.reps);
                     }
