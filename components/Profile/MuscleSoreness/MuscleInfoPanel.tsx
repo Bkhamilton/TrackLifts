@@ -86,7 +86,7 @@ const MuscleInfoPanel = ({
 
     // Function to get color for individual muscles
     const getMuscleColor = (score: number, max: number = 1) => {
-        const normalized = Math.min(1 - Math.exp(-0.8 * (score / max)), 1);
+        const normalized = Math.min(score / max, 1);
         return getColor(normalized);
     };
 
