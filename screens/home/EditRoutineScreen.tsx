@@ -1,6 +1,7 @@
 import EditableTitle from '@/components/EditableTitle';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
+import ReplaceWorkoutModal from '@/components/modals/Workout/ReplaceWorkoutModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
@@ -17,7 +18,12 @@ export default function EditRoutineScreen() {
     const { updateRoutineInDB } = useContext(RoutineContext);
     const { routineToEdit } = useContext(HomeContext);
     const [editedRoutine, setEditedRoutine] = useState(routineToEdit);
-    const { addExercise, updateSet, addSet, deleteSet, deleteExercise } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
+    const { addExercise, updateSet, addSet, deleteSet, deleteExercise, replaceExerciseInRoutine } = useEditWorkoutActions(editedRoutine, setEditedRoutine);
+
+    const [replaceWorkoutModal, setReplaceWorkoutModal] = useState(false);
+    const openReplaceWorkoutModal = () => setReplaceWorkoutModal(true);
+    const closeReplaceWorkoutModal = () => setReplaceWorkoutModal(false);
+    const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number | null>(null);
 
     const router = useRouter();
 
@@ -92,10 +98,25 @@ export default function EditRoutineScreen() {
                     onUpdateSet={updateSet}
                     onAddSet={addSet}
                     onDeleteSet={handleDeleteSet}
-                    onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
+                    onReplaceExercise={(exerciseIndex) => {
+                        setExerciseIndexToReplace(exerciseIndex);
+                        openReplaceWorkoutModal();
+                    }}
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
             </ScrollView>
+            <ReplaceWorkoutModal
+                visible={replaceWorkoutModal}
+                close={closeReplaceWorkoutModal}
+                onSelect={(newExercise) => {
+                    if (exerciseIndexToReplace !== null) {
+                        // You may need to update your replaceExerciseInRoutine to accept index
+                        replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
+                        setExerciseIndexToReplace(null);
+                    }
+                    closeReplaceWorkoutModal();
+                }}
+            />            
             <AddToWorkoutModal
                 visible={modal}
                 close={closeModal}

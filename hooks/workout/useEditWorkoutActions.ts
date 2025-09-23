@@ -94,5 +94,26 @@ export const useEditWorkoutActions = (
         });
     }
 
-    return { addExercise, updateSet, addSet, deleteSet, deleteExercise };
+    const replaceExerciseInRoutine = (oldExerciseId: number, newExercise: Exercise) => {
+        const newExerciseWithSets: ActiveExercise = {
+            ...newExercise,
+            sets: [
+                {
+                    id: Date.now(),
+                    reps: 10,
+                    weight: 0,
+                    restTime: 60,
+                    set_order: 1,
+                },
+            ],
+        };
+        setRoutine({
+            ...routine,
+            exercises: routine.exercises.map(exercise =>
+                exercise.id === oldExerciseId ? newExerciseWithSets : exercise
+            ),
+        });
+    };
+
+    return { addExercise, updateSet, addSet, deleteSet, deleteExercise, replaceExerciseInRoutine };
 };
