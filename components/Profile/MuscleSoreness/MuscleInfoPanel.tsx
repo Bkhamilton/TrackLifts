@@ -86,7 +86,10 @@ const MuscleInfoPanel = ({
 
     // Function to get color for individual muscles
     const getMuscleColor = (score: number, max: number = 1) => {
-        const normalized = Math.min(score / max, 1);
+        const linear = score / max;
+        const curved = 1 - Math.exp(-0.8 * linear);
+        const alpha = 0.2; // Adjust as needed for more/less curve
+        const normalized = Math.min((1 - alpha) * linear + alpha * curved, 1);
         return getColor(normalized);
     };
 

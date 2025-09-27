@@ -84,7 +84,12 @@ const MuscleSoreness = () => {
         const maxSoreness = dbData.max_soreness || 1;
         
         // Enhanced normalization function
-        const normalizedSoreness = Math.min(rawScore / maxSoreness, 1);
+        const linear = rawScore / maxSoreness;
+        const curved = 1 - Math.exp(-0.8 * linear);
+        const alpha = 0.2; // 0 = pure linear, 1 = pure curved
+        const normalizedSoreness = Math.min(
+            (1 - alpha) * linear + alpha * curved, 1
+        );
 
         // grab exercises from workout
         getRecentExercises(m.name).then(exercises => {
