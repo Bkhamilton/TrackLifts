@@ -25,12 +25,12 @@ export const useEditWorkoutActions = (
         });
     };
 
-    const updateSet = (exerciseId: number, setId: number, field: 'weight' | 'reps', value: string) => {
+    const updateSet = (exerciseIdx: number, setId: number, field: 'weight' | 'reps', value: string) => {
         const numericValue = parseFloat(value) || 0;
         setRoutine({
             ...routine,
-            exercises: routine.exercises.map(exercise => {
-                if (exercise.id === exerciseId) {
+            exercises: routine.exercises.map((exercise, idx) => {
+                if (idx === exerciseIdx) {
                     return {
                         ...exercise,
                         sets: exercise.sets.map(set => {
@@ -46,11 +46,11 @@ export const useEditWorkoutActions = (
         });
     };
 
-    const addSet = (exerciseId: number) => {
+    const addSet = (exerciseIdx: number) => {
         setRoutine({
             ...routine,
-            exercises: routine.exercises.map(exercise => {
-                if (exercise.id === exerciseId) {
+            exercises: routine.exercises.map((exercise, idx) => {
+                if (idx === exerciseIdx) {
                     const newSet = {
                         id: Date.now(),
                         set_order: exercise.sets.length + 1,
@@ -72,11 +72,11 @@ export const useEditWorkoutActions = (
         });
     };
 
-    const deleteSet = (exerciseId: number, setId: number) => {
+    const deleteSet = (exerciseIdx: number, setId: number) => {
         setRoutine({
             ...routine,
-            exercises: routine.exercises.map(exercise => {
-                if (exercise.id === exerciseId) {
+            exercises: routine.exercises.map((exercise, idx) => {
+                if (idx === exerciseIdx) {
                     return {
                         ...exercise,
                         sets: exercise.sets.filter(set => set.id !== setId),
@@ -87,12 +87,12 @@ export const useEditWorkoutActions = (
         });
     };
 
-    const deleteExercise = (exerciseId: number) => {
+    const deleteExercise = (exerciseIdx: number) => {
         setRoutine({
             ...routine,
-            exercises: routine.exercises.filter(exercise => exercise.id !== exerciseId),
+            exercises: routine.exercises.filter((_, idx) => idx !== exerciseIdx),
         });
-    }
+    };
 
     const replaceExerciseInRoutine = (oldExerciseId: number, newExercise: Exercise) => {
         const newExerciseWithSets: ActiveExercise = {
@@ -109,8 +109,8 @@ export const useEditWorkoutActions = (
         };
         setRoutine({
             ...routine,
-            exercises: routine.exercises.map(exercise =>
-                exercise.id === oldExerciseId ? newExerciseWithSets : exercise
+            exercises: routine.exercises.map((exercise, idx) =>
+                idx === oldExerciseId ? newExerciseWithSets : exercise
             ),
         });
     };
