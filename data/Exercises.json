@@ -307,5 +307,360 @@
             { "name": "Core", "value": 0.3 }
         ],
         "equipment": "Dumbbell"
-    }
+    },
+  {
+    "_id": "new_id_004",
+    "title": "Incline Dumbbell Fly",
+    "muscleGroup": "Chest",
+    "muscles": [
+      { "name": "Chest", "value": 1 },
+      { "name": "Front Delts", "value": 0.2 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_005",
+    "title": "Cable Crossover",
+    "muscleGroup": "Chest",
+    "muscles": [
+      { "name": "Chest", "value": 1 },
+      { "name": "Front Delts", "value": 0.2 }
+    ],
+    "equipment": "Cable"
+  },
+  {
+    "_id": "new_id_006",
+    "title": "Pec Deck Fly",
+    "muscleGroup": "Chest",
+    "muscles": [
+      { "name": "Chest", "value": 1 }
+    ],
+    "equipment": "Machine"
+  },
+  {
+    "_id": "new_id_007",
+    "title": "Single Arm Dumbbell Row",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lats", "value": 1 },
+      { "name": "Upper Back", "value": 0.5 },
+      { "name": "Biceps", "value": 0.3 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_008",
+    "title": "T-Bar Row",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lats", "value": 1 },
+      { "name": "Upper Back", "value": 0.7 },
+      { "name": "Biceps", "value": 0.4 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_009",
+    "title": "Chest Supported Row",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lats", "value": 1 },
+      { "name": "Upper Back", "value": 0.6 }
+    ],
+    "equipment": "Machine"
+  },
+  {
+    "_id": "new_id_010",
+    "title": "Reverse Pec Deck",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Rear Delts", "value": 1 },
+      { "name": "Upper Back", "value": 0.3 }
+    ],
+    "equipment": "Machine"
+  },
+  {
+    "_id": "new_id_011",
+    "title": "Straight Arm Pulldown",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lats", "value": 1 },
+      { "name": "Triceps", "value": 0.2 }
+    ],
+    "equipment": "Cable"
+  },
+  {
+    "_id": "new_id_012",
+    "title": "Good Morning",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lower Back", "value": 1 },
+      { "name": "Hamstrings", "value": 0.8 },
+      { "name": "Glutes", "value": 0.7 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_013",
+    "title": "Arnold Press",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Front Delts", "value": 1 },
+      { "name": "Side Delts", "value": 0.8 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_014",
+    "title": "Upright Row",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Side Delts", "value": 1 },
+      { "name": "Traps", "value": 0.7 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_015",
+    "title": "Front Raise",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Front Delts", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_016",
+    "title": "Rear Delt Fly",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Rear Delts", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_017",
+    "title": "Cable Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "muscles": [
+      { "name": "Side Delts", "value": 1 }
+    ],
+    "equipment": "Cable"
+  },
+  {
+    "_id": "new_id_018",
+    "title": "Concentration Curl",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Biceps", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_019",
+    "title": "Spider Curl",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Biceps", "value": 1 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_020",
+    "title": "Overhead Tricep Extension",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Triceps", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_021",
+    "title": "Close Grip Bench Press",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Triceps", "value": 1 },
+      { "name": "Chest", "value": 0.5 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_022",
+    "title": "Tricep Kickback",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Triceps", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_023",
+    "title": "Incline Hammer Curl",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Biceps", "value": 0.8 },
+      { "name": "Brachialis", "value": 1 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_024",
+    "title": "Romanian Deadlift",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Hamstrings", "value": 1 },
+      { "name": "Glutes", "value": 0.8 },
+      { "name": "Lower Back", "value": 0.6 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_025",
+    "title": "Bulgarian Split Squat",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Quads", "value": 1 },
+      { "name": "Glutes", "value": 0.8 },
+      { "name": "Hamstrings", "value": 0.4 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_026",
+    "title": "Walking Lunge",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Quads", "value": 1 },
+      { "name": "Glutes", "value": 0.8 },
+      { "name": "Hamstrings", "value": 0.5 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_027",
+    "title": "Goblet Squat",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Quads", "value": 1 },
+      { "name": "Glutes", "value": 0.8 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_028",
+    "title": "Hip Thrust",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Glutes", "value": 1 },
+      { "name": "Hamstrings", "value": 0.5 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_029",
+    "title": "Seated Calf Raise",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Calves", "value": 1 }
+    ],
+    "equipment": "Machine"
+  },
+  {
+    "_id": "new_id_030",
+    "title": "Sumo Deadlift",
+    "muscleGroup": "Legs",
+    "muscles": [
+      { "name": "Hamstrings", "value": 0.8 },
+      { "name": "Glutes", "value": 0.9 },
+      { "name": "Lower Back", "value": 0.5 },
+      { "name": "Quads", "value": 0.5 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_031",
+    "title": "Cable Crunch",
+    "muscleGroup": "Core",
+    "muscles": [
+      { "name": "Abs", "value": 1 }
+    ],
+    "equipment": "Cable"
+  },
+  {
+    "_id": "new_id_032",
+    "title": "Russian Twist",
+    "muscleGroup": "Core",
+    "muscles": [
+      { "name": "Obliques", "value": 1 },
+      { "name": "Abs", "value": 0.5 }
+    ],
+    "equipment": "Bodyweight"
+  },
+  {
+    "_id": "new_id_033",
+    "title": "Ab Wheel Rollout",
+    "muscleGroup": "Core",
+    "muscles": [
+      { "name": "Abs", "value": 1 },
+      { "name": "Hip Flexors", "value": 0.4 }
+    ],
+    "equipment": "Bodyweight"
+  },
+  {
+    "_id": "new_id_034",
+    "title": "Cable Woodchopper",
+    "muscleGroup": "Core",
+    "muscles": [
+      { "name": "Obliques", "value": 1 },
+      { "name": "Abs", "value": 0.5 }
+    ],
+    "equipment": "Cable"
+  },
+  {
+    "_id": "new_id_035",
+    "title": "Farmer's Walk",
+    "muscleGroup": "Full Body",
+    "muscles": [
+      { "name": "Forearms", "value": 1 },
+      { "name": "Traps", "value": 0.8 },
+      { "name": "Core", "value": 0.5 }
+    ],
+    "equipment": "Dumbbell"
+  },
+  {
+    "_id": "new_id_036",
+    "title": "Kettlebell Swing",
+    "muscleGroup": "Full Body",
+    "muscles": [
+      { "name": "Glutes", "value": 1 },
+      { "name": "Hamstrings", "value": 0.8 },
+      { "name": "Lower Back", "value": 0.6 },
+      { "name": "Shoulders", "value": 0.4 }
+    ],
+    "equipment": "Kettlebell"
+  },
+  {
+    "_id": "new_id_037",
+    "title": "Power Clean",
+    "muscleGroup": "Full Body",
+    "muscles": [
+      { "name": "Quads", "value": 0.7 },
+      { "name": "Glutes", "value": 0.7 },
+      { "name": "Hamstrings", "value": 0.6 },
+      { "name": "Traps", "value": 0.7 },
+      { "name": "Shoulders", "value": 0.4 }
+    ],
+    "equipment": "Barbell"
+  },
+  {
+    "_id": "new_id_038",
+    "title": "Medicine Ball Slam",
+    "muscleGroup": "Full Body",
+    "muscles": [
+      { "name": "Shoulders", "value": 0.7 },
+      { "name": "Abs", "value": 0.7 },
+      { "name": "Back", "value": 0.5 }
+    ],
+    "equipment": "Medicine Ball"
+  }    
 ]
