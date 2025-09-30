@@ -44,7 +44,7 @@ export default function SetCard({
                         style={[styles.input, isCompleted && styles.completedInput]}
                         value={set.weight.toString()}
                         onChangeText={(value) => onUpdateSet(set.id, 'weight', value)}
-                        keyboardType="numeric"
+                        keyboardType="decimal-pad"
                         onFocus={() => setEditingSet(set.id)}
                         onBlur={() => setEditingSet(null)}
                         editable={!isCompleted}
