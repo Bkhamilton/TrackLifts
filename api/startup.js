@@ -565,3 +565,54 @@ export const initializeDatabase = async (db) => {
         console.error("Error initializing database:", error);
     }
 };
+
+/**
+ * Drop only the Exercises and ExerciseMuscles tables.
+ * Note: ExerciseMuscles is dropped first due to foreign key constraint.
+ * @param {Object} db - The database connection object
+ */
+export const dropExerciseTables = async (db) => {
+    // Drop ExerciseMuscles first due to foreign key constraint
+    await db.execAsync(`
+        DROP TABLE IF EXISTS ExerciseMuscles;
+        DROP TABLE IF EXISTS Exercises;
+    `);
+};
+
+/**
+ * Create only the Exercises and ExerciseMuscles tables.
+ * @param {Object} db - The database connection object
+ */
+export const createExerciseTables = async (db) => {
+    await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS Exercises (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            equipment_id INTEGER,
+            muscle_group_id INTEGER,
+            FOREIGN KEY (equipment_id) REFERENCES Equipment(id),
+            FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
+        );
+        CREATE TABLE IF NOT EXISTS ExerciseMuscles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            exercise_id INTEGER,
+            muscle_id INTEGER,
+            intensity REAL NOT NULL,
+            FOREIGN KEY (exercise_id) REFERENCES Exercises(id),
+            FOREIGN KEY (muscle_id) REFERENCES Muscles(id)
+        );
+    `);
+};
+
+/**
+ * Drop, recreate, and repopulate the Exercises and ExerciseMuscles tables.
+ * This function performs a complete refresh of exercise data from JSON files.
+ * @param {Object} db - The database connection object
+ */
+export const repopulateExerciseTables = async (db) => {
+    await dropExerciseTables(db);
+    await createExerciseTables(db);
+    // Import and sync exercises data from JSON
+    const { syncExercises } = await import('@/api/sync');
+    await syncExercises(db);
+};

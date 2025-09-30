@@ -47,7 +47,7 @@ const syncEquipment = async (db) => {
     }
 };
 
-const syncExercises = async (db) => {
+export const syncExercises = async (db) => {
     // Fetch muscle IDs for mapping
     const muscles = await db.getAllAsync('SELECT id, name FROM Muscles');
     const muscleMap = new Map(muscles.map(m => [m.name, m.id]));
