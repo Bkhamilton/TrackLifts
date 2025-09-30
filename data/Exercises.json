@@ -1314,5 +1314,26 @@
       { "name": "Biceps", "value": 0.4 }
     ],
     "equipment": "Cable"
-  }    
+  },
+  {
+    "_id": "new_id_101",
+    "title": "Assisted Pull-Ups",
+    "muscleGroup": "Back",
+    "muscles": [
+      { "name": "Lats", "value": 1 },
+      { "name": "Upper Back", "value": 0.7 },
+      { "name": "Biceps", "value": 0.5 }
+    ],
+    "equipment": "Assisted Bodyweight"
+  },
+  {
+    "_id": "new_id_102",
+    "title": "Assisted Dips",
+    "muscleGroup": "Arms",
+    "muscles": [
+      { "name": "Triceps", "value": 1 },
+      { "name": "Chest", "value": 0.3 }
+    ],
+    "equipment": "Assisted Bodyweight"
+  }
 ]
