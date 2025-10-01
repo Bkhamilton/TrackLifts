@@ -1,17 +1,18 @@
-import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TextInput, View } from '@/components/Themed';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
-interface AddToWorkoutModalProps {
+interface AddExerciseModalProps {
     visible: boolean;
     close: () => void;
     onSelect: (props: Exercise) => void;
+    mode?: 'add' | 'replace';
 }
 
 // Muscle group icons mapping
@@ -26,7 +27,8 @@ const muscleGroupIcons = {
     // Add more muscle groups as needed
 };
 
-export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToWorkoutModalProps) {
+export default function AddExerciseModal({ visible, close, onSelect, mode = 'add' }: AddExerciseModalProps) {
+    const [searchQuery, setSearchQuery] = useState('');
     const { exercises } = useContext(ExerciseContext);
 
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
@@ -34,6 +36,12 @@ export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToW
     };
 
     const cardBackground = useThemeColor({}, 'grayBackground');
+
+    const headerText = mode === 'add' ? 'Add Exercise' : 'Replace Exercise';
+
+    const filteredExercises = exercises.filter(exercise =>
+        exercise.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <Modal
@@ -46,15 +54,32 @@ export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToW
                 <View style={styles.modalContainer}>
                     {/* Header */}
                     <View style={styles.header}>
-                        <Text style={styles.headerText}>Replace Exercise</Text>
+                        <Text style={styles.headerText}>{headerText}</Text>
                         <TouchableOpacity onPress={close} style={styles.closeButton}>
                             <MaterialCommunityIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>
                     </View>
 
+                    {/* Search Bar */}
+                    <View style={styles.searchBar}>
+                        <MaterialCommunityIcons 
+                            name="magnify" 
+                            size={20} 
+                            color="#999" 
+                            style={styles.searchIcon} 
+                        />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search exercises..."
+                            placeholderTextColor="#999"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </View>
+
                     {/* Exercises List */}
                     <FlatList
-                        data={exercises}
+                        data={filteredExercises}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <TouchableOpacity
@@ -123,6 +148,23 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         padding: 4,
+    },
+    searchBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        marginBottom: 12,
+        borderRadius: 8,
+        backgroundColor: '#f5f5f5',
+    },
+    searchIcon: {
+        marginRight: 8,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 15,
+        paddingVertical: 4,
     },
     listContent: {
         paddingBottom: 8,

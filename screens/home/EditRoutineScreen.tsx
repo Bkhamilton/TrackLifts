@@ -1,7 +1,6 @@
 import EditableTitle from '@/components/EditableTitle';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
-import ReplaceWorkoutModal from '@/components/modals/Workout/ReplaceWorkoutModal';
+import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
@@ -105,22 +104,23 @@ export default function EditRoutineScreen() {
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
             </ScrollView>
-            <ReplaceWorkoutModal
+            <AddExerciseModal
                 visible={replaceWorkoutModal}
                 close={closeReplaceWorkoutModal}
+                mode="replace"
                 onSelect={(newExercise) => {
                     if (exerciseIndexToReplace !== null) {
-                        // You may need to update your replaceExerciseInRoutine to accept index
                         replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
                         setExerciseIndexToReplace(null);
                     }
                     closeReplaceWorkoutModal();
                 }}
             />            
-            <AddToWorkoutModal
+            <AddExerciseModal
                 visible={modal}
                 close={closeModal}
-                add={addExercise}
+                mode="add"
+                onSelect={addExercise}
             />
             <ConfirmationModal
                 visible={confirmModal}
