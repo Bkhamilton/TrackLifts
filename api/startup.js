@@ -555,10 +555,17 @@ export const setupDatabase = async (db) => {
 export const initializeDatabase = async (db) => {
     try {
         const isFirstLaunch = await AsyncStorage.getItem('firstLaunch');
+        // Add a version key for exercise table repopulation
+        const exerciseTablesV2 = await AsyncStorage.getItem('exerciseTablesV2');
         if (isFirstLaunch === null) {
             // First time launch
             await setupDatabase(db);
             await AsyncStorage.setItem('firstLaunch', 'false');
+            await AsyncStorage.setItem('exerciseTablesV2', 'true');
+        } else if (!exerciseTablesV2) {
+            // Run repopulation for all users on update
+            await repopulateExerciseTables(db);
+            await AsyncStorage.setItem('exerciseTablesV2', 'true');
         }
         // Open a connection to the SQLite database.
     } catch (error) {
