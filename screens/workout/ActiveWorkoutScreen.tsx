@@ -1,6 +1,5 @@
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
-import ReplaceWorkoutModal from '@/components/modals/Workout/ReplaceWorkoutModal';
+import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
@@ -142,22 +141,23 @@ export default function ActiveWorkoutScreen() {
                     onRemoveExercise={handleDeleteExercise}
                 />
             </ScrollView>
-            <ReplaceWorkoutModal
+            <AddExerciseModal
                 visible={replaceWorkoutModal}
                 close={closeReplaceWorkoutModal}
+                mode="replace"
                 onSelect={(newExercise) => {
                     if (exerciseIndexToReplace !== null) {
-                        // You may need to update your replaceExerciseInRoutine to accept index
                         replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
                         setExerciseIndexToReplace(null);
                     }
                     closeReplaceWorkoutModal();
                 }}
             />
-            <AddToWorkoutModal
+            <AddExerciseModal
                 visible={addWorkoutModal}
                 close={closeWorkoutModal}
-                add={addExercise}
+                mode="add"
+                onSelect={addExercise}
             />            
             <ConfirmationModal
                 visible={confirmModal}

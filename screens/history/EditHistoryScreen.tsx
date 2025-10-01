@@ -1,7 +1,7 @@
 import NotesInput from '@/components/FinishWorkout/NotesInput';
 import EditHistoryCard from '@/components/History/EditHistory/EditHistoryCard';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
+import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
 import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
@@ -83,10 +83,11 @@ export default function EditHistoryScreen() {
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
             </ScrollView>
-            <AddToWorkoutModal
+            <AddExerciseModal
                 visible={addWorkoutModal}
                 close={closeWorkoutModal}
-                add={addExercise}
+                mode="add"
+                onSelect={addExercise}
             />
             <ConfirmationModal
                 visible={confirmModal}

@@ -3,7 +3,7 @@ import { Exercise } from '@/constants/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import AddToWorkoutModal from '../Workout/AddToWorkoutModal';
+import AddExerciseModal from '../Workout/AddExerciseModal';
 
 type GraphType =
     | 'Top Set'
@@ -143,10 +143,11 @@ const AddFavoriteGraphModal: React.FC<Props> = ({ visible, onClose, onSave }) =>
                 </Modal>
 
                 {/* Exercise Modal */}
-                <AddToWorkoutModal
+                <AddExerciseModal
                     visible={showExerciseModal}
                     close={() => setShowExerciseModal(false)}
-                    add={(exercise) => {
+                    mode="add"
+                    onSelect={(exercise) => {
                         setSelectedExercise(exercise);
                         setShowExerciseModal(false);
                     }}
