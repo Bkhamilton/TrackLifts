@@ -4,7 +4,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../../Themed';
+import { Text, View } from '@/components/Themed';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
