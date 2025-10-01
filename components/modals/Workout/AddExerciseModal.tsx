@@ -1,17 +1,18 @@
-import { Text, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from '../../Themed';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
-interface AddToWorkoutModalProps {
+interface AddExerciseModalProps {
     visible: boolean;
     close: () => void;
     onSelect: (props: Exercise) => void;
+    mode?: 'add' | 'replace';
 }
 
 // Muscle group icons mapping
@@ -26,7 +27,7 @@ const muscleGroupIcons = {
     // Add more muscle groups as needed
 };
 
-export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToWorkoutModalProps) {
+export default function AddExerciseModal({ visible, close, onSelect, mode = 'add' }: AddExerciseModalProps) {
     const { exercises } = useContext(ExerciseContext);
 
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
@@ -34,6 +35,8 @@ export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToW
     };
 
     const cardBackground = useThemeColor({}, 'grayBackground');
+
+    const headerText = mode === 'add' ? 'Add Exercise' : 'Replace Exercise';
 
     return (
         <Modal
@@ -46,7 +49,7 @@ export default function ReplaceWorkoutModal({ visible, close, onSelect }: AddToW
                 <View style={styles.modalContainer}>
                     {/* Header */}
                     <View style={styles.header}>
-                        <Text style={styles.headerText}>Replace Exercise</Text>
+                        <Text style={styles.headerText}>{headerText}</Text>
                         <TouchableOpacity onPress={close} style={styles.closeButton}>
                             <MaterialCommunityIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>

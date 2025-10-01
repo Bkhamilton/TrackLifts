@@ -7,7 +7,7 @@ import WorkoutHistory from '@/components/Data/WorkoutHistory';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddFavoriteGraphModal from '@/components/modals/Data/AddFavoriteGraphModal';
 //import FavoriteGraphDisplayModal from '@/components/modals/Data/FavoriteGraphDisplayModal';
-import AddToWorkoutModal from '@/components/modals/Workout/AddToWorkoutModal';
+import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DataContext } from '@/contexts/DataContext';
@@ -114,10 +114,11 @@ export default function DataScreen() {
                     setFavoriteGraphModal(false);
                 }}
             />
-            <AddToWorkoutModal
+            <AddExerciseModal
                 visible={showExerciseModal}
                 close={() => setShowExerciseModal(false)}
-                add={(exercise) => handleExerciseSelect(exercise)}
+                mode="add"
+                onSelect={(exercise) => handleExerciseSelect(exercise)}
             />
 
             <ConfirmationModal
