@@ -1,10 +1,10 @@
+import { Text, TextInput, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, TextInput, View } from '@/components/Themed';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -36,6 +36,7 @@ export default function AddExerciseModal({ visible, close, onSelect, mode = 'add
     };
 
     const cardBackground = useThemeColor({}, 'grayBackground');
+    const background = useThemeColor({}, 'background');
 
     const headerText = mode === 'add' ? 'Add Exercise' : 'Replace Exercise';
 
@@ -69,7 +70,7 @@ export default function AddExerciseModal({ visible, close, onSelect, mode = 'add
                             style={styles.searchIcon} 
                         />
                         <TextInput
-                            style={styles.searchInput}
+                            style={[styles.searchInput, { color: background }]}
                             placeholder="Search exercises..."
                             placeholderTextColor="#999"
                             value={searchQuery}
