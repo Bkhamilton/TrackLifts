@@ -15,7 +15,17 @@ export const useWorkoutActions = () => {
         field: 'weight' | 'reps',
         value: string
     ) => {
-        const numericValue = parseFloat(value) || 0;
+        // Allow empty string, or parse to number
+        // For partial decimals like "120." or "0.", parseFloat handles them correctly
+        // but we need to preserve trailing decimals during input
+        let numericValue: number;
+        if (value === '' || value === '.') {
+            numericValue = 0;
+        } else {
+            const parsed = parseFloat(value);
+            numericValue = isNaN(parsed) ? 0 : parsed;
+        }
+        
         updateRoutine({
             ...routine,
             exercises: routine.exercises.map((exercise, idx) => {

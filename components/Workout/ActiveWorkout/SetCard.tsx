@@ -2,7 +2,7 @@ import { ClearView, Text, TextInput, View } from '@/components/Themed';
 import { ActiveSet } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface SetCardProps {
@@ -28,6 +28,34 @@ export default function SetCard({
 }: SetCardProps) {
 
     const cardBackground = useThemeColor({}, 'grayBorder');
+    
+    // Local state for input values to handle partial decimals
+    const [weightInput, setWeightInput] = useState(set.weight.toString());
+    const [repsInput, setRepsInput] = useState(set.reps.toString());
+
+    // Sync local state with prop changes when not editing
+    useEffect(() => {
+        if (editingSet !== set.id) {
+            setWeightInput(set.weight.toString());
+            setRepsInput(set.reps.toString());
+        }
+    }, [set.weight, set.reps, editingSet, set.id]);
+
+    const handleWeightChange = (value: string) => {
+        // Allow empty, digits, and a single decimal point
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setWeightInput(value);
+            onUpdateSet(set.id, 'weight', value);
+        }
+    };
+
+    const handleRepsChange = (value: string) => {
+        // Allow empty and digits only (no decimals for reps)
+        if (value === '' || /^\d+$/.test(value)) {
+            setRepsInput(value);
+            onUpdateSet(set.id, 'reps', value);
+        }
+    };
 
     return (
         <View style={[
@@ -42,8 +70,8 @@ export default function SetCard({
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={[styles.input, isCompleted && styles.completedInput]}
-                        value={set.weight.toString()}
-                        onChangeText={(value) => onUpdateSet(set.id, 'weight', value)}
+                        value={weightInput}
+                        onChangeText={handleWeightChange}
                         keyboardType="decimal-pad"
                         onFocus={() => setEditingSet(set.id)}
                         onBlur={() => setEditingSet(null)}
@@ -55,8 +83,8 @@ export default function SetCard({
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={[styles.input, isCompleted && styles.completedInput]}
-                        value={set.reps.toString()}
-                        onChangeText={(value) => onUpdateSet(set.id, 'reps', value)}
+                        value={repsInput}
+                        onChangeText={handleRepsChange}
                         keyboardType="numeric"
                         onFocus={() => setEditingSet(set.id)}
                         onBlur={() => setEditingSet(null)}
