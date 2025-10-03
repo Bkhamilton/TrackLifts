@@ -26,16 +26,7 @@ export const useEditWorkoutActions = (
     };
 
     const updateSet = (exerciseIdx: number, setId: number, field: 'weight' | 'reps', value: string) => {
-        // Allow empty string, or parse to number
-        // For partial decimals like "120." or "0.", parseFloat handles them correctly
-        let numericValue: number;
-        if (value === '' || value === '.') {
-            numericValue = 0;
-        } else {
-            const parsed = parseFloat(value);
-            numericValue = isNaN(parsed) ? 0 : parsed;
-        }
-        
+        const numericValue = parseFloat(value) || 0;
         setRoutine({
             ...routine,
             exercises: routine.exercises.map((exercise, idx) => {
