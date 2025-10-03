@@ -249,12 +249,19 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                 let max1RM = 0;
                 for (const set of exercise.sets) {
                     let est1RM;
-                    // If bodyweight exercise (weight is 0 or undefined)
-                    if (exercise.equipment == 'Bodyweight' || set.weight <= 0) {
-                        est1RM = calculateEstimated1RM(userStats.weight || 180, 1); // fallback to 180lbs if unknown
-                    } else {
-                        est1RM = calculateEstimated1RM(set.weight, set.reps);
+                    // Calculate effective weight based on equipment type
+                    let effectiveWeight = set.weight;
+                    
+                    if (exercise.equipment === 'Bodyweight') {
+                        // Bodyweight + additional weight (if any)
+                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) + set.weight;
+                    } else if (exercise.equipment === 'Assisted Bodyweight') {
+                        // Bodyweight - assistance (assistance should be stored as positive value)
+                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) - Math.abs(set.weight);
                     }
+                    // For other equipment types, use weight as-is
+                    
+                    est1RM = calculateEstimated1RM(effectiveWeight, set.reps);
                     if (est1RM > max1RM) max1RM = est1RM;
                 }
 
@@ -274,7 +281,16 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
 
                 for (let i = 0; i < exercise.sets.length; i++) {
                     const set = exercise.sets[i];
-                    const estimated1RM = calculateEstimated1RM(set.weight, set.reps);
+                    
+                    // Calculate effective weight for 1RM estimation based on equipment type
+                    let effectiveWeight = set.weight;
+                    if (exercise.equipment === 'Bodyweight') {
+                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) + set.weight;
+                    } else if (exercise.equipment === 'Assisted Bodyweight') {
+                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) - Math.abs(set.weight);
+                    }
+                    
+                    const estimated1RM = calculateEstimated1RM(effectiveWeight, set.reps);
                     await insertSessionSet(db, {
                         sessionExerciseId: sessionExerciseId,
                         setOrder: i + 1,
