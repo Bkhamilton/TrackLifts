@@ -9,7 +9,7 @@ import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { useWorkoutTimer } from '@/hooks/workout/useWorkoutTimer';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ActiveWorkoutScreen() {
     const {
@@ -98,74 +98,81 @@ export default function ActiveWorkoutScreen() {
     const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number | null>(null);
     
     return (
-        <View style={styles.container}>
-            <Title
-                title={routine.title}
-                leftContent={<Text>{formattedTime}</Text>}
-                rightContent={
-                    <TouchableOpacity 
-                        onPress={allSetsCompleted ? () => handleWorkoutAction(true) : () => handleWorkoutAction(false)} 
-                        style={[
-                            styles.workoutActionButton,
-                            allSetsCompleted ? styles.completeButton : styles.cancelButton
-                        ]}
-                    >
-                        <Text 
-                            style={
-                                allSetsCompleted 
-                                    ? styles.doneButtonText 
-                                    : styles.cancelButtonText
-                            }
+        <KeyboardAvoidingView 
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        >
+            <View style={styles.container}>
+                <Title
+                    title={routine.title}
+                    leftContent={<Text>{formattedTime}</Text>}
+                    rightContent={
+                        <TouchableOpacity 
+                            onPress={allSetsCompleted ? () => handleWorkoutAction(true) : () => handleWorkoutAction(false)} 
+                            style={[
+                                styles.workoutActionButton,
+                                allSetsCompleted ? styles.completeButton : styles.cancelButton
+                            ]}
                         >
-                            {allSetsCompleted ? 'DONE' : 'CANCEL'}
-                        </Text>
-                    </TouchableOpacity>
-                }
-            />
-            <ScrollView 
-                style={styles.scrollView}
-                showsVerticalScrollIndicator={false}
-            >
-                <Workout
-                    routine={routine}
-                    open={openWorkoutModal}
-                    onUpdateSet={updateSet}
-                    onAddSet={addSet}
-                    onDeleteSet={handleDeleteSet} // Add this prop
-                    onToggleComplete={toggleSetComplete}
-                    completedSets={completedSets}
-                    onReplaceExercise={(exerciseIndex) => {
-                        setExerciseIndexToReplace(exerciseIndex);
-                        openReplaceWorkoutModal();
-                    }}
-                    onRemoveExercise={handleDeleteExercise}
-                />
-            </ScrollView>
-            <AddExerciseModal
-                visible={replaceWorkoutModal}
-                close={closeReplaceWorkoutModal}
-                mode="replace"
-                onSelect={(newExercise) => {
-                    if (exerciseIndexToReplace !== null) {
-                        replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
-                        setExerciseIndexToReplace(null);
+                            <Text 
+                                style={
+                                    allSetsCompleted 
+                                        ? styles.doneButtonText 
+                                        : styles.cancelButtonText
+                                }
+                            >
+                                {allSetsCompleted ? 'DONE' : 'CANCEL'}
+                            </Text>
+                        </TouchableOpacity>
                     }
-                    closeReplaceWorkoutModal();
-                }}
-            />
-            <AddExerciseModal
-                visible={addWorkoutModal}
-                close={closeWorkoutModal}
-                mode="add"
-                onSelect={addExercise}
-            />            
-            <ConfirmationModal
-                visible={confirmModal}
-                message="Are you sure you want to cancel this workout? Any completed sets will not be saved."
-                onClose={closeConfirmModal}
-                onSelect={(choice) => handleConfirmSave(choice)}
-            />
-        </View>
+                />
+                <ScrollView 
+                    style={styles.scrollView}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Workout
+                        routine={routine}
+                        open={openWorkoutModal}
+                        onUpdateSet={updateSet}
+                        onAddSet={addSet}
+                        onDeleteSet={handleDeleteSet} // Add this prop
+                        onToggleComplete={toggleSetComplete}
+                        completedSets={completedSets}
+                        onReplaceExercise={(exerciseIndex) => {
+                            setExerciseIndexToReplace(exerciseIndex);
+                            openReplaceWorkoutModal();
+                        }}
+                        onRemoveExercise={handleDeleteExercise}
+                    />
+                </ScrollView>
+                <AddExerciseModal
+                    visible={replaceWorkoutModal}
+                    close={closeReplaceWorkoutModal}
+                    mode="replace"
+                    onSelect={(newExercise) => {
+                        if (exerciseIndexToReplace !== null) {
+                            replaceExerciseInRoutine(exerciseIndexToReplace, newExercise);
+                            setExerciseIndexToReplace(null);
+                        }
+                        closeReplaceWorkoutModal();
+                    }}
+                />
+                <AddExerciseModal
+                    visible={addWorkoutModal}
+                    close={closeWorkoutModal}
+                    mode="add"
+                    onSelect={addExercise}
+                />            
+                <ConfirmationModal
+                    visible={confirmModal}
+                    message="Are you sure you want to cancel this workout? Any completed sets will not be saved."
+                    onClose={closeConfirmModal}
+                    onSelect={(choice) => handleConfirmSave(choice)}
+                />
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
