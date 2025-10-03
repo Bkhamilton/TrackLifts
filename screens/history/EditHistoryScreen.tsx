@@ -2,7 +2,7 @@ import NotesInput from '@/components/FinishWorkout/NotesInput';
 import EditHistoryCard from '@/components/History/EditHistory/EditHistoryCard';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
-import { ScrollView, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import useHookEditHistory from '@/hooks/history/useHookEditHistory';
@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function EditHistoryScreen() {
     const {
@@ -62,7 +63,14 @@ export default function EditHistoryScreen() {
                     </TouchableOpacity>
                 }
             />
-            <ScrollView style={styles.scrollView}>
+            <KeyboardAwareScrollView
+                style={styles.scrollView}
+                contentContainerStyle={{ flexGrow: 1 }}
+                showsVerticalScrollIndicator={false}
+                enableOnAndroid={true}
+                extraScrollHeight={40} // Adjust as needed to ensure input is visible above keyboard
+                keyboardShouldPersistTaps="handled"
+            >
                 <EditHistoryCard
                     startTime={startTime}
                     endTime={endTime!}
@@ -82,7 +90,7 @@ export default function EditHistoryScreen() {
                     onReplaceExercise={(exerciseId) => console.log(`Replace exercise ${exerciseId}`)}
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
-            </ScrollView>
+            </KeyboardAwareScrollView>
             <AddExerciseModal
                 visible={addWorkoutModal}
                 close={closeWorkoutModal}
