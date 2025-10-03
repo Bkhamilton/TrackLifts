@@ -36,7 +36,6 @@ export default function AddExerciseModal({ visible, close, onSelect, mode = 'add
     };
 
     const cardBackground = useThemeColor({}, 'grayBackground');
-    const background = useThemeColor({}, 'background');
 
     const headerText = mode === 'add' ? 'Add Exercise' : 'Replace Exercise';
 
@@ -70,7 +69,7 @@ export default function AddExerciseModal({ visible, close, onSelect, mode = 'add
                             style={styles.searchIcon} 
                         />
                         <TextInput
-                            style={[styles.searchInput, { color: background }]}
+                            style={[styles.searchInput, { color: 'black' }]}
                             placeholder="Search exercises..."
                             placeholderTextColor="#999"
                             value={searchQuery}
