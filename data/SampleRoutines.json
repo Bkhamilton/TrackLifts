@@ -10,27 +10,56 @@
                 "title": "Squat",
                 "equipment": "Barbell",
                 "sets": [
-                    { "weight": 200, "reps": 10, "order": 1 },
-                    { "weight": 210, "reps": 8, "order": 2 },
-                    { "weight": 220, "reps": 6, "order": 3 }
+                    { "weight": 185, "reps": 8, "order": 1 },
+                    { "weight": 205, "reps": 6, "order": 2 },
+                    { "weight": 225, "reps": 5, "order": 3 },
+                    { "weight": 225, "reps": 5, "order": 4 }
                 ]
             },
             {
                 "title": "Bench Press",
                 "equipment": "Barbell",
                 "sets": [
-                    { "weight": 150, "reps": 10, "order": 1 },
-                    { "weight": 160, "reps": 8, "order": 2 },
-                    { "weight": 170, "reps": 6, "order": 3 }
+                    { "weight": 135, "reps": 8, "order": 1 },
+                    { "weight": 155, "reps": 6, "order": 2 },
+                    { "weight": 175, "reps": 5, "order": 3 },
+                    { "weight": 175, "reps": 5, "order": 4 }
                 ]
             },
             {
                 "title": "Deadlift",
                 "equipment": "Barbell",
                 "sets": [
-                    { "weight": 250, "reps": 10, "order": 1 },
-                    { "weight": 260, "reps": 8, "order": 2 },
-                    { "weight": 270, "reps": 6, "order": 3 }
+                    { "weight": 225, "reps": 8, "order": 1 },
+                    { "weight": 275, "reps": 5, "order": 2 },
+                    { "weight": 315, "reps": 3, "order": 3 }
+                ]
+            },
+            {
+                "title": "Barbell Row",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 155, "reps": 8, "order": 2 },
+                    { "weight": 165, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Shoulder Press",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 50, "reps": 10, "order": 1 },
+                    { "weight": 55, "reps": 8, "order": 2 },
+                    { "weight": 60, "reps": 6, "order": 3 }
+                ]
+            },
+            {
+                "title": "Plank",
+                "equipment": "Bodyweight",
+                "sets": [
+                    { "weight": 0, "reps": 45, "order": 1 },
+                    { "weight": 0, "reps": 45, "order": 2 },
+                    { "weight": 0, "reps": 45, "order": 3 }
                 ]
             }
         ]
@@ -39,30 +68,76 @@
         "title": "Upper Body Workout",
         "exercises": [
             {
+                "title": "Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 155, "reps": 8, "order": 2 },
+                    { "weight": 175, "reps": 6, "order": 3 },
+                    { "weight": 185, "reps": 4, "order": 4 }
+                ]
+            },
+            {
+                "title": "Incline Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 115, "reps": 10, "order": 1 },
+                    { "weight": 135, "reps": 8, "order": 2 },
+                    { "weight": 145, "reps": 8, "order": 3 }
+                ]
+            },
+            {
                 "title": "Pull-Up",
                 "equipment": "Bodyweight",
                 "sets": [
-                    { "weight": 0, "reps": 8, "order": 1 },
+                    { "weight": 0, "reps": 10, "order": 1 },
                     { "weight": 0, "reps": 8, "order": 2 },
                     { "weight": 0, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Barbell Row",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 155, "reps": 8, "order": 2 },
+                    { "weight": 165, "reps": 8, "order": 3 }
                 ]
             },
             {
                 "title": "Shoulder Press",
                 "equipment": "Dumbbell",
                 "sets": [
-                    { "weight": 40, "reps": 10, "order": 1 },
-                    { "weight": 45, "reps": 8, "order": 2 },
-                    { "weight": 50, "reps": 6, "order": 3 }
+                    { "weight": 45, "reps": 10, "order": 1 },
+                    { "weight": 50, "reps": 8, "order": 2 },
+                    { "weight": 55, "reps": 8, "order": 3 }
                 ]
             },
             {
-                "title": "Incline Curl",
-                "equipment": "Barbell",
+                "title": "Lateral Raise",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 20, "reps": 12, "order": 1 },
+                    { "weight": 25, "reps": 10, "order": 2 },
+                    { "weight": 25, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Bicep Curl",
+                "equipment": "Dumbbell",
                 "sets": [
                     { "weight": 30, "reps": 12, "order": 1 },
                     { "weight": 35, "reps": 10, "order": 2 },
-                    { "weight": 40, "reps": 8, "order": 3 }
+                    { "weight": 35, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Tricep Extension",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 40, "reps": 12, "order": 1 },
+                    { "weight": 50, "reps": 10, "order": 2 },
+                    { "weight": 50, "reps": 10, "order": 3 }
                 ]
             }
         ]
@@ -71,54 +146,119 @@
         "title": "Legs",
         "exercises": [
             {
-                "title": "Leg Press",
-                "equipment": "Machine",
+                "title": "Squat",
+                "equipment": "Barbell",
                 "sets": [
-                    { "weight": 300, "reps": 10, "order": 1 },
-                    { "weight": 320, "reps": 8, "order": 2 },
-                    { "weight": 340, "reps": 6, "order": 3 }
+                    { "weight": 185, "reps": 10, "order": 1 },
+                    { "weight": 205, "reps": 8, "order": 2 },
+                    { "weight": 225, "reps": 6, "order": 3 },
+                    { "weight": 245, "reps": 5, "order": 4 }
                 ]
             },
             {
-                "title": "Calf Raises",
+                "title": "Romanian Deadlift",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 185, "reps": 8, "order": 2 },
+                    { "weight": 205, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Leg Press",
                 "equipment": "Machine",
                 "sets": [
-                    { "weight": 100, "reps": 15, "order": 1 },
-                    { "weight": 110, "reps": 12, "order": 2 },
-                    { "weight": 120, "reps": 10, "order": 3 }
+                    { "weight": 270, "reps": 12, "order": 1 },
+                    { "weight": 320, "reps": 10, "order": 2 },
+                    { "weight": 360, "reps": 8, "order": 3 }
                 ]
             },
             {
                 "title": "Leg Extension",
                 "equipment": "Machine",
                 "sets": [
-                    { "weight": 150, "reps": 10, "order": 1 },
-                    { "weight": 160, "reps": 8, "order": 2 },
-                    { "weight": 170, "reps": 6, "order": 3 }
+                    { "weight": 120, "reps": 12, "order": 1 },
+                    { "weight": 135, "reps": 10, "order": 2 },
+                    { "weight": 150, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Lying Leg Curl",
+                "equipment": "Machine",
+                "sets": [
+                    { "weight": 90, "reps": 12, "order": 1 },
+                    { "weight": 100, "reps": 10, "order": 2 },
+                    { "weight": 110, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Walking Lunge",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 40, "reps": 20, "order": 1 },
+                    { "weight": 45, "reps": 20, "order": 2 },
+                    { "weight": 50, "reps": 16, "order": 3 }
+                ]
+            },
+            {
+                "title": "Calf Raises",
+                "equipment": "Machine",
+                "sets": [
+                    { "weight": 135, "reps": 15, "order": 1 },
+                    { "weight": 155, "reps": 12, "order": 2 },
+                    { "weight": 175, "reps": 12, "order": 3 },
+                    { "weight": 185, "reps": 10, "order": 4 }
                 ]
             }
         ]
-    }
-    ,
+    },
     {
         "title": "Push",
         "exercises": [
             {
+                "title": "Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 155, "reps": 8, "order": 2 },
+                    { "weight": 175, "reps": 6, "order": 3 },
+                    { "weight": 185, "reps": 5, "order": 4 }
+                ]
+            },
+            {
                 "title": "Incline Bench Press",
                 "equipment": "Barbell",
                 "sets": [
-                    { "weight": 140, "reps": 10, "order": 1 },
-                    { "weight": 150, "reps": 8, "order": 2 },
-                    { "weight": 160, "reps": 6, "order": 3 }
+                    { "weight": 115, "reps": 10, "order": 1 },
+                    { "weight": 135, "reps": 8, "order": 2 },
+                    { "weight": 145, "reps": 8, "order": 3 }
                 ]
             },
             {
                 "title": "Shoulder Press",
                 "equipment": "Dumbbell",
                 "sets": [
-                    { "weight": 100, "reps": 10, "order": 1 },
-                    { "weight": 110, "reps": 8, "order": 2 },
-                    { "weight": 120, "reps": 6, "order": 3 }
+                    { "weight": 50, "reps": 10, "order": 1 },
+                    { "weight": 55, "reps": 8, "order": 2 },
+                    { "weight": 60, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Incline Dumbbell Fly",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 35, "reps": 12, "order": 1 },
+                    { "weight": 40, "reps": 10, "order": 2 },
+                    { "weight": 45, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Lateral Raise",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 20, "reps": 15, "order": 1 },
+                    { "weight": 25, "reps": 12, "order": 2 },
+                    { "weight": 25, "reps": 12, "order": 3 }
                 ]
             },
             {
@@ -126,8 +266,17 @@
                 "equipment": "Bodyweight",
                 "sets": [
                     { "weight": 0, "reps": 12, "order": 1 },
-                    { "weight": 0, "reps": 12, "order": 2 },
-                    { "weight": 0, "reps": 12, "order": 3 }
+                    { "weight": 0, "reps": 10, "order": 2 },
+                    { "weight": 0, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Tricep Extension",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 40, "reps": 15, "order": 1 },
+                    { "weight": 50, "reps": 12, "order": 2 },
+                    { "weight": 60, "reps": 10, "order": 3 }
                 ]
             }
         ]
@@ -136,12 +285,13 @@
         "title": "Pull",
         "exercises": [
             {
-                "title": "Barbell Row",
+                "title": "Deadlift",
                 "equipment": "Barbell",
                 "sets": [
-                    { "weight": 160, "reps": 10, "order": 1 },
-                    { "weight": 170, "reps": 8, "order": 2 },
-                    { "weight": 180, "reps": 6, "order": 3 }
+                    { "weight": 225, "reps": 8, "order": 1 },
+                    { "weight": 275, "reps": 5, "order": 2 },
+                    { "weight": 315, "reps": 3, "order": 3 },
+                    { "weight": 335, "reps": 2, "order": 4 }
                 ]
             },
             {
@@ -149,17 +299,54 @@
                 "equipment": "Bodyweight",
                 "sets": [
                     { "weight": 0, "reps": 10, "order": 1 },
-                    { "weight": 0, "reps": 10, "order": 2 },
-                    { "weight": 0, "reps": 10, "order": 3 }
+                    { "weight": 0, "reps": 8, "order": 2 },
+                    { "weight": 0, "reps": 8, "order": 3 },
+                    { "weight": 0, "reps": 6, "order": 4 }
+                ]
+            },
+            {
+                "title": "Barbell Row",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 135, "reps": 10, "order": 1 },
+                    { "weight": 155, "reps": 8, "order": 2 },
+                    { "weight": 175, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Lat Pulldown",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 120, "reps": 12, "order": 1 },
+                    { "weight": 135, "reps": 10, "order": 2 },
+                    { "weight": 150, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Seated Row",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 120, "reps": 12, "order": 1 },
+                    { "weight": 135, "reps": 10, "order": 2 },
+                    { "weight": 150, "reps": 10, "order": 3 }
                 ]
             },
             {
                 "title": "Face Pulls",
                 "equipment": "Cable",
                 "sets": [
-                    { "weight": 50, "reps": 12, "order": 1 },
-                    { "weight": 55, "reps": 10, "order": 2 },
-                    { "weight": 60, "reps": 8, "order": 3 }
+                    { "weight": 50, "reps": 15, "order": 1 },
+                    { "weight": 60, "reps": 12, "order": 2 },
+                    { "weight": 70, "reps": 12, "order": 3 }
+                ]
+            },
+            {
+                "title": "Hammer Curl",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 30, "reps": 12, "order": 1 },
+                    { "weight": 35, "reps": 10, "order": 2 },
+                    { "weight": 40, "reps": 8, "order": 3 }
                 ]
             }
         ]
@@ -173,25 +360,63 @@
                 "sets": [
                     { "weight": 30, "reps": 12, "order": 1 },
                     { "weight": 35, "reps": 10, "order": 2 },
-                    { "weight": 40, "reps": 8, "order": 3 }
-                ]
-            },
-            {
-                "title": "Tricep Extension",
-                "equipment": "Cable",
-                "sets": [
-                    { "weight": 40, "reps": 12, "order": 1 },
-                    { "weight": 45, "reps": 10, "order": 2 },
-                    { "weight": 50, "reps": 8, "order": 3 }
+                    { "weight": 40, "reps": 8, "order": 3 },
+                    { "weight": 40, "reps": 8, "order": 4 }
                 ]
             },
             {
                 "title": "Hammer Curl",
                 "equipment": "Dumbbell",
                 "sets": [
-                    { "weight": 25, "reps": 12, "order": 1 },
-                    { "weight": 30, "reps": 10, "order": 2 },
-                    { "weight": 35, "reps": 8, "order": 3 }
+                    { "weight": 30, "reps": 12, "order": 1 },
+                    { "weight": 35, "reps": 10, "order": 2 },
+                    { "weight": 35, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Preacher Curl",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 60, "reps": 12, "order": 1 },
+                    { "weight": 70, "reps": 10, "order": 2 },
+                    { "weight": 80, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Close Grip Bench Press",
+                "equipment": "Barbell",
+                "sets": [
+                    { "weight": 95, "reps": 10, "order": 1 },
+                    { "weight": 115, "reps": 8, "order": 2 },
+                    { "weight": 135, "reps": 6, "order": 3 },
+                    { "weight": 135, "reps": 6, "order": 4 }
+                ]
+            },
+            {
+                "title": "Tricep Extension",
+                "equipment": "Cable",
+                "sets": [
+                    { "weight": 40, "reps": 15, "order": 1 },
+                    { "weight": 50, "reps": 12, "order": 2 },
+                    { "weight": 60, "reps": 10, "order": 3 }
+                ]
+            },
+            {
+                "title": "Overhead Tricep Extension",
+                "equipment": "Dumbbell",
+                "sets": [
+                    { "weight": 50, "reps": 12, "order": 1 },
+                    { "weight": 60, "reps": 10, "order": 2 },
+                    { "weight": 70, "reps": 8, "order": 3 }
+                ]
+            },
+            {
+                "title": "Tricep Dips",
+                "equipment": "Bodyweight",
+                "sets": [
+                    { "weight": 0, "reps": 12, "order": 1 },
+                    { "weight": 0, "reps": 10, "order": 2 },
+                    { "weight": 0, "reps": 8, "order": 3 }
                 ]
             }
         ]
