@@ -4,6 +4,7 @@ import { Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import useHookActiveWorkout from '@/hooks/workout/useHookActiveWorkout';
 import { useWorkoutActions } from '@/hooks/workout/useWorkoutActions';
 import { useWorkoutTimer } from '@/hooks/workout/useWorkoutTimer';
@@ -59,6 +60,8 @@ export default function ActiveWorkoutScreen() {
     const totalSets = routine.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
     const allSetsCompleted = totalSets > 0 && completedSets.length === totalSets;
 
+    const background = useThemeColor({}, 'background');
+
     // Function to handle stopping the workout
     const handleWorkoutAction = (isFinished: boolean) => {
         stopTimer();
@@ -100,7 +103,7 @@ export default function ActiveWorkoutScreen() {
     
     return (
         <View 
-            style={[styles.container, { backgroundColor: 'transparent' }]}
+            style={[styles.container, { backgroundColor: background }]}
         >
             <Title
                 title={routine.title}
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
         width: '100%', // Ensure the ScrollView takes the full width
         paddingHorizontal: 12,
         paddingTop: 10,
+        backgroundColor: 'transparent',
     },
     workoutActionButton: {
         borderRadius: 8,
