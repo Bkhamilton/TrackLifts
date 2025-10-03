@@ -3,7 +3,7 @@ import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
@@ -30,6 +30,13 @@ const muscleGroupIcons = {
 export default function AddExerciseModal({ visible, close, onSelect, mode = 'add' }: AddExerciseModalProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const { exercises } = useContext(ExerciseContext);
+
+    // Reset search query when modal opens
+    useEffect(() => {
+        if (visible) {
+            setSearchQuery('');
+        }
+    }, [visible]);
 
     const getMuscleGroupIcon = (muscleGroup: string): IconName => {
         return (muscleGroupIcons[muscleGroup as keyof typeof muscleGroupIcons] as IconName) || 'dumbbell';
