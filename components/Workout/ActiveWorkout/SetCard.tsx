@@ -87,7 +87,7 @@ export default function SetCard({
                         onBlur={() => setEditingSet(null)}
                         editable={!isCompleted}
                     />
-                    <Text style={styles.unit}>{equipment === 'Bodyweight' || equipment === 'Assisted Bodyweight' ? 'lbs' : 'lbs'}</Text>
+                    <Text style={styles.unit}>lbs</Text>
                 </View>
                 
                 <View style={styles.inputContainer}>
