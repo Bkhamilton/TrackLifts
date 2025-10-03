@@ -1,7 +1,7 @@
 import EditableTitle from '@/components/EditableTitle';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
-import { ScrollView, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import Workout from '@/components/Workout/ActiveWorkout/Workout';
 import { HomeContext } from '@/contexts/HomeContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function EditRoutineScreen() {
     const [modal, setModal] = useState(false);
@@ -87,9 +88,13 @@ export default function EditRoutineScreen() {
                     </TouchableOpacity>
                 }
             />
-            <ScrollView 
+            <KeyboardAwareScrollView
                 style={styles.scrollView}
-                showsVerticalScrollIndicator={false}    
+                contentContainerStyle={{ flexGrow: 1 }}
+                showsVerticalScrollIndicator={false}
+                enableOnAndroid={true}
+                extraScrollHeight={40} // Adjust as needed to ensure input is visible above keyboard
+                keyboardShouldPersistTaps="handled"
             >
                 <Workout
                     routine={editedRoutine}
@@ -103,7 +108,7 @@ export default function EditRoutineScreen() {
                     }}
                     onRemoveExercise={(exerciseId) => deleteExercise(exerciseId)}
                 />
-            </ScrollView>
+            </KeyboardAwareScrollView>
             <AddExerciseModal
                 visible={replaceWorkoutModal}
                 close={closeReplaceWorkoutModal}
