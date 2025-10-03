@@ -76,7 +76,8 @@ export default function WorkoutInfo({
                 <SetCard 
                     key={index} 
                     set={set}
-                    index={index} 
+                    index={index}
+                    equipment={exercise.equipment}
                     onUpdateSet={onUpdateSet} 
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}

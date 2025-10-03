@@ -21,15 +21,25 @@ export default function ExerciseCard({ exercise }: ExerciseCardProps) {
             </View>
             
             <ClearView style={styles.setsContainer}>
-                {exercise.sets.map((set, index) => (
-                    <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder}]}>
-                        <Text style={styles.setNumber}>Set {set.set_order}</Text>
-                        <Text style={styles.setDetail}>{set.reps} reps × {set.weight} lbs</Text>
-                        {set.restTime > 0 && (
-                            <Text style={styles.restTime}>Rest: {set.restTime}s</Text>
-                        )}
-                    </View>
-                ))}
+                {exercise.sets.map((set, index) => {
+                    // Format weight display based on equipment type
+                    let weightDisplay = `${set.weight} lbs`;
+                    if (exercise.equipment === 'Assisted Bodyweight' && set.weight !== 0) {
+                        weightDisplay = `-${Math.abs(set.weight)} lbs`;
+                    } else if (exercise.equipment === 'Bodyweight' && set.weight === 0) {
+                        weightDisplay = 'Bodyweight';
+                    }
+                    
+                    return (
+                        <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder}]}>
+                            <Text style={styles.setNumber}>Set {set.set_order}</Text>
+                            <Text style={styles.setDetail}>{set.reps} reps × {weightDisplay}</Text>
+                            {set.restTime > 0 && (
+                                <Text style={styles.restTime}>Rest: {set.restTime}s</Text>
+                            )}
+                        </View>
+                    );
+                })}
             </ClearView>
         </View>
     );

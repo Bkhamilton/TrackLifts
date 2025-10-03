@@ -28,13 +28,23 @@ export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
                     </View>
                     
                     {/* Sets List */}
-                    {exercise.sets.map((set) => (
-                        <View key={set.id} style={[styles.setContainer, { backgroundColor: cardBorder}]}>
-                            <Text style={styles.setNumber}>#{set.set_order}</Text>
-                            <Text style={styles.setValue}>{set.weight} lbs</Text>
-                            <Text style={styles.setValue}>{set.reps} reps</Text>
-                        </View>
-                    ))}
+                    {exercise.sets.map((set) => {
+                        // Format weight display based on equipment type
+                        let weightDisplay = `${set.weight} lbs`;
+                        if (exercise.equipment === 'Assisted Bodyweight' && set.weight !== 0) {
+                            weightDisplay = `-${Math.abs(set.weight)} lbs`;
+                        } else if (exercise.equipment === 'Bodyweight' && set.weight === 0) {
+                            weightDisplay = 'Bodyweight';
+                        }
+                        
+                        return (
+                            <View key={set.id} style={[styles.setContainer, { backgroundColor: cardBorder}]}>
+                                <Text style={styles.setNumber}>#{set.set_order}</Text>
+                                <Text style={styles.setValue}>{weightDisplay}</Text>
+                                <Text style={styles.setValue}>{set.reps} reps</Text>
+                            </View>
+                        );
+                    })}
                 </View>
             ))}
             {

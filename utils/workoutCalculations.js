@@ -3,7 +3,18 @@ export function calculateTotalWeight(history) {
     return history.routine.exercises.reduce((exerciseSum, exercise) => {
         if (!exercise.sets) return exerciseSum;
         const setsSum = exercise.sets.reduce((setSum, set) => {
-            return setSum + (set.weight * set.reps);
+            // Calculate effective weight based on equipment type
+            let effectiveWeight = set.weight;
+            
+            // For Bodyweight and Assisted Bodyweight, we need user weight to calculate properly
+            // Since we don't have user weight here, we'll use the absolute value of weight for now
+            // This is mainly for display purposes
+            if (exercise.equipment === 'Assisted Bodyweight') {
+                // Use absolute value to avoid negative volume
+                effectiveWeight = Math.abs(set.weight);
+            }
+            
+            return setSum + (effectiveWeight * set.reps);
         }, 0);
         return exerciseSum + setsSum;
     }, 0);

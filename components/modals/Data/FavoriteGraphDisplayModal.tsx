@@ -86,16 +86,26 @@ const FavoriteGraphDisplayModal: React.FC<Props> = ({ visible, onClose, graph, o
                                 <Text style={{ fontWeight: '600', marginBottom: 4 }}>Workout Results:</Text>
                                 {graph.stats
                                     .filter(stat => stat.weight != null && stat.reps != null)
-                                    .map((stat, idx) => (
-                                        <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-                                            <Text style={{ fontSize: 13 }}>
-                                                {stat.workout_date ? new Date(stat.workout_date).toLocaleDateString() : 'Unknown date'}
-                                            </Text>
-                                            <Text style={{ fontSize: 13 }}>
-                                                {stat.weight} lbs × {stat.reps} reps
-                                            </Text>
-                                        </View>
-                                    ))}
+                                    .map((stat, idx) => {
+                                        // Format weight display based on equipment type
+                                        let weightDisplay = `${stat.weight} lbs`;
+                                        if (graph.equipment === 'Assisted Bodyweight' && stat.weight !== 0) {
+                                            weightDisplay = `-${Math.abs(stat.weight)} lbs`;
+                                        } else if (graph.equipment === 'Bodyweight' && stat.weight === 0) {
+                                            weightDisplay = 'Bodyweight';
+                                        }
+                                        
+                                        return (
+                                            <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
+                                                <Text style={{ fontSize: 13 }}>
+                                                    {stat.workout_date ? new Date(stat.workout_date).toLocaleDateString() : 'Unknown date'}
+                                                </Text>
+                                                <Text style={{ fontSize: 13 }}>
+                                                    {weightDisplay} × {stat.reps} reps
+                                                </Text>
+                                            </View>
+                                        );
+                                    })}
                             </View>
                         )}                        
                     </View>

@@ -8,6 +8,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 interface SetCardProps {
     set: ActiveSet;
     index: number; // Add this prop
+    equipment: string; // Add equipment type prop
     onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
     editingSet: number | null;
     setEditingSet: React.Dispatch<React.SetStateAction<number | null>>;
@@ -19,6 +20,7 @@ interface SetCardProps {
 export default function SetCard({ 
     set, 
     index, // Add this to destructuring
+    equipment, // Add equipment to destructuring
     onUpdateSet, 
     editingSet, 
     setEditingSet,
@@ -43,7 +45,11 @@ export default function SetCard({
 
     const handleWeightChange = (value: string) => {
         // Allow empty, digits, and a single decimal point
-        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+        // For Assisted Bodyweight, also allow negative values (minus sign at start)
+        const isAssistedBodyweight = equipment === 'Assisted Bodyweight';
+        const regex = isAssistedBodyweight ? /^-?\d*\.?\d*$/ : /^\d*\.?\d*$/;
+        
+        if (value === '' || regex.test(value)) {
             setWeightInput(value);
             onUpdateSet(set.id, 'weight', value);
         }
@@ -66,13 +72,17 @@ export default function SetCard({
             <View style={styles.contentContainer}>
                 <Text style={[styles.setNumber, isCompleted && styles.completedNumber]}>#{index + 1}</Text>
                 
-                {/* Rest of the component remains the same */}
+                {/* Weight input with equipment-specific display */}
                 <View style={styles.inputContainer}>
+                    {equipment === 'Assisted Bodyweight' && (
+                        <Text style={styles.assistancePrefix}>-</Text>
+                    )}
                     <TextInput
                         style={[styles.input, isCompleted && styles.completedInput]}
                         value={weightInput}
                         onChangeText={handleWeightChange}
-                        keyboardType="decimal-pad"
+                        keyboardType={equipment === 'Assisted Bodyweight' ? 'numeric' : 'decimal-pad'}
+                        placeholder={equipment === 'Bodyweight' ? '0' : ''}
                         onFocus={() => setEditingSet(set.id)}
                         onBlur={() => setEditingSet(null)}
                         editable={!isCompleted}
@@ -166,6 +176,12 @@ const styles = StyleSheet.create({
     unit: {
         fontSize: 12,
         color: '#777',
+    },
+    assistancePrefix: {
+        fontSize: 16,
+        color: '#555',
+        marginRight: 2,
+        fontWeight: '500',
     },
     completedSet: {
         backgroundColor: '#f0fff0',
