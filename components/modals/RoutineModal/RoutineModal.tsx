@@ -1,6 +1,7 @@
 import { ClearView, ScrollView, Text, View } from '@/components/Themed';
 import { ActiveRoutine } from '@/constants/types';
 import { SplitContext } from '@/contexts/SplitContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
@@ -18,6 +19,9 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
     const { isRoutineFavorite, toggleFavoriteRoutine } = useContext(SplitContext);
     const [isFavorite, setIsFavorite] = useState(false);
 
+    const borderColor = useThemeColor({}, 'grayBorder');
+    const grayText = useThemeColor({}, 'grayText');
+
     useEffect(() => {
         if (routine?.id) {
             isRoutineFavorite(routine.id).then(setIsFavorite);
@@ -31,6 +35,9 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
         if (onFavoriteChange) onFavoriteChange();
     };
 
+    // Calculate total exercises and sets
+    const totalExercises = routine.exercises.length;
+    const totalSets = routine.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
 
     return (
         <Modal
@@ -41,8 +48,13 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
             <View style={styles.modalBackdrop}>
                 <View style={styles.modalContainer}>
                     {/* Header */}
-                    <View style={styles.header}>
-                        <Text style={styles.headerText}>{routine.title}</Text>
+                    <View style={[styles.header, { borderBottomColor: borderColor }]}>
+                        <View style={styles.headerLeft}>
+                            <Text style={styles.headerText}>{routine.title}</Text>
+                            <Text style={[styles.headerSubtext, { color: grayText }]}>
+                                {totalExercises} {totalExercises === 1 ? 'Exercise' : 'Exercises'} • {totalSets} {totalSets === 1 ? 'Set' : 'Sets'}
+                            </Text>
+                        </View>
                         <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <TouchableOpacity onPress={handleToggleFavorite} style={{ marginRight: 8 }}>
                                 <MaterialCommunityIcons
@@ -111,13 +123,21 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
         paddingBottom: 12,
         backgroundColor: 'transparent',
     },
+    headerLeft: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
     headerText: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    headerSubtext: {
+        fontSize: 14,
+        fontWeight: '500',
     },
     closeButton: {
         padding: 4,
