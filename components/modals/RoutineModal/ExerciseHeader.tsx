@@ -12,12 +12,13 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
 
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
+    const grayText = useThemeColor({}, 'grayText');
 
     return (
         <View style={[styles.exerciseContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
             <View style={styles.exerciseHeader}>
                 <Text style={styles.exerciseTitle}>{exercise.title}</Text>
-                <Text style={styles.exerciseSubtitle}>
+                <Text style={[styles.exerciseSubtitle, { color: grayText }]}>
                     {exercise.muscleGroup} • {exercise.equipment}
                 </Text>
             </View>
@@ -34,7 +35,7 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
                     
                     return (
                         <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder }]}>
-                            <Text style={styles.setNumber}>#{set.set_order}</Text>
+                            <Text style={[styles.setNumber, { color: grayText }]}>#{set.set_order}</Text>
                             <Text style={styles.setDetail}>{set.reps} × {weightDisplay}</Text>
                         </View>
                     );
@@ -46,12 +47,10 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
 
 const styles = StyleSheet.create({
     exerciseContainer: {
-        backgroundColor: '#f9f9f9',
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#eee',
     },
     exerciseHeader: {
         backgroundColor: 'transparent',
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
     },
     exerciseSubtitle: {
         fontSize: 13,
-        color: '#666',
     },
     setsContainer: {
         marginTop: 8,
@@ -71,15 +69,13 @@ const styles = StyleSheet.create({
     setItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 6,
-        paddingHorizontal: 4,
+        paddingVertical: 8,
+        paddingHorizontal: 8,
         borderRadius: 4,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
+        marginBottom: 4,
     },
     setNumber: {
         fontSize: 14,
-        color: '#666',
     },
     setDetail: {
         fontSize: 14,
