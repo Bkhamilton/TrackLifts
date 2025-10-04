@@ -55,32 +55,48 @@ export default function useHookProfileInfo() {
         }
     });
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsEditing(false);
-        if (profile.username !== user.username) {
-            updateUsername(db, user.id, profile.username);
-            updateUser({ ...user, username: profile.username });
+        try {
+            // Save both username and stats in parallel
+            const promises = [];
+            
+            if (profile.username !== user.username) {
+                promises.push(
+                    updateUsername(db, user.id, profile.username).then(() => {
+                        updateUser({ ...user, username: profile.username });
+                    })
+                );
+            }
+            
+            promises.push(
+                updateUserProfileStats(db, user.id, profile.stats).then(() => {
+                    updateUserStats({
+                        ...userStats,
+                        height: profile.stats.height,
+                        weight: profile.stats.weight,
+                        bodyFat: profile.stats.bodyFat,
+                        favoriteExercise: profile.stats.favoriteExercise,
+                        memberSince: profile.stats.memberSince,
+                        goals: profile.stats.goals
+                    });
+                })
+            );
+            
+            await Promise.all(promises);
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            // Optionally show error to user
         }
-        updateUserProfileStats(db, user.id, profile.stats);
-        updateUserStats({
-            ...userStats,
-            height: profile.stats.height,
-            weight: profile.stats.weight,
-            bodyFat: profile.stats.bodyFat,
-            favoriteExercise: profile.stats.favoriteExercise,
-            memberSince: profile.stats.memberSince,
-            goals: profile.stats.goals
-        });
-        // Optionally: console.log('Saved profile:', profile);
     };
 
-    const handleEditToggle = () => {
+    const handleEditToggle = async () => {
         if (isEditing) {
             // If no changes were made, just toggle editing state
             if (JSON.stringify(profile.stats) === JSON.stringify(userStats) && profile.username === user.username) {
                 setIsEditing(false);
             } else {
-                handleSave();
+                await handleSave();
             }
         } else {
             setIsEditing(true);

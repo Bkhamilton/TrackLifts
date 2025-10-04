@@ -32,11 +32,15 @@ export default function AvatarUsernameSection({
             </View>
             {isEditing ? (
                 <>
-                    <TextInput
-                        style={styles.editableUsername}
-                        value={username}
-                        onChangeText={value => onChange('username', value)}
-                    />
+                    <View style={styles.editableUsernameContainer}>
+                        <TextInput
+                            style={styles.editableUsername}
+                            value={username}
+                            onChangeText={value => onChange('username', value)}
+                            placeholder="Enter username"
+                            placeholderTextColor="#999"
+                        />
+                    </View>
                     <Text style={styles.memberSince}>Member since {formatMemberSince(createdAt)}</Text>                
                 </>
             ) : (
@@ -70,14 +74,20 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         textAlign: 'center',
     },
+    editableUsernameContainer: {
+        alignSelf: 'center',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderWidth: 2,
+        borderColor: '#ff8787',
+        backgroundColor: 'rgba(255, 135, 135, 0.05)',
+    },
     editableUsername: {
         fontSize: 20,
         fontWeight: '600',
         textAlign: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ff8787',
-        padding: 4,
-        alignSelf: 'center',
+        minWidth: 150,
     },
     memberSince: {
         fontSize: 12,
