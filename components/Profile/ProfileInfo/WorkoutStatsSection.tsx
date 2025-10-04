@@ -14,29 +14,30 @@ export default function WorkoutStatsSection({
     return (
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Workout Stats</Text>
+            <Text style={styles.subtitle}>Automatically tracked</Text>
             <View style={styles.statsGrid}>
                 <EditableStatCard 
                     label="Workouts" 
                     value={stats.workoutsCompleted.toString()} 
-                    isEditing={isEditing}
+                    isEditing={false}
                     onChange={value => onChange('stats.workoutsCompleted', value)}
                 />
                 <EditableStatCard 
                     label="Weekly Workouts" 
                     value={stats.weeklyWorkouts.toString()} 
-                    isEditing={isEditing}
+                    isEditing={false}
                     onChange={value => onChange('stats.weeklyWorkouts', value)}
                 />
                 <EditableStatCard 
                     label="Weekly Sets" 
                     value={stats.weeklySets.toString()} 
-                    isEditing={isEditing}
+                    isEditing={false}
                     onChange={value => onChange('stats.weeklySets', value)}
                 />
                 <EditableStatCard 
                     label="Top Exercise" 
                     value={stats.topExercise} 
-                    isEditing={isEditing}
+                    isEditing={false}
                     onChange={value => onChange('stats.favoriteExercise', value)}
                 />
             </View>
@@ -51,7 +52,13 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
+        marginBottom: 4,
+    },
+    subtitle: {
+        fontSize: 12,
+        color: '#999',
         marginBottom: 12,
+        fontStyle: 'italic',
     },
     statsGrid: {
         flexDirection: 'row',

@@ -18,12 +18,18 @@ export default function EditableStatCard({
     const cardBorder = useThemeColor({}, 'grayBorder');
 
     return (
-        <View style={[styles.statCard, { backgroundColor, borderColor: cardBorder }]}>
+        <View style={[
+            styles.statCard, 
+            { backgroundColor, borderColor: cardBorder },
+            isEditing && styles.editingCard
+        ]}>
             {isEditing ? (
                 <TextInput
                     style={styles.editableStatValue}
                     value={value}
                     onChangeText={onChange}
+                    placeholder="Enter value"
+                    placeholderTextColor="#999"
                 />
             ) : (
                 <Text style={styles.statValue}>{value}</Text>
@@ -41,6 +47,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
     },
+    editingCard: {
+        borderColor: '#ff8787',
+        borderWidth: 2,
+        shadowColor: '#ff8787',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    },
     statValue: {
         fontSize: 18,
         fontWeight: '700',
@@ -50,7 +65,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '700',
         marginBottom: 4,
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
         borderBottomColor: '#ff8787',
         padding: 4,
         width: '100%',
