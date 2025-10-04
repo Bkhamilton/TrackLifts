@@ -24,7 +24,7 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
             </View>
             
             <ClearView style={styles.setsContainer}>
-                {exercise.sets.map((set) => {
+                {exercise.sets.map((set, idx) => {
                     // Format weight display based on equipment type
                     let weightDisplay = `${set.weight} lbs`;
                     if (exercise.equipment === 'Assisted Bodyweight' && set.weight !== 0) {
@@ -35,7 +35,7 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
                     
                     return (
                         <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder }]}>
-                            <Text style={[styles.setNumber, { color: grayText }]}>#{set.set_order}</Text>
+                            <Text style={[styles.setNumber, { color: grayText }]}>#{idx + 1}</Text>
                             <Text style={styles.setDetail}>{set.reps} × {weightDisplay}</Text>
                         </View>
                     );
