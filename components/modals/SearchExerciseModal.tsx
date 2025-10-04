@@ -1,6 +1,7 @@
 import { Text, TextInput, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
@@ -19,6 +20,12 @@ export default function SearchExerciseModal({
     const [searchQuery, setSearchQuery] = useState('');
     
     const { exercises } = useContext(ExerciseContext);
+    
+    // Get theme-aware colors
+    const iconColor = useThemeColor({}, 'icon');
+    const grayTextColor = useThemeColor({}, 'grayText');
+    const borderColor = useThemeColor({}, 'grayBorder');
+    const tintColor = useThemeColor({}, 'tint');
 
     const filteredExercises = exercises.filter(exercise =>
         exercise.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -33,23 +40,23 @@ export default function SearchExerciseModal({
         >
             <View style={styles.container}>
                 {/* Search Bar */}
-                <View style={styles.searchBar}>
+                <View style={[styles.searchBar, { borderBottomColor: borderColor }]}>
                     <MaterialCommunityIcons 
                         name="magnify" 
                         size={24} 
-                        color="#999" 
+                        color={iconColor} 
                         style={styles.searchIcon} 
                     />
                     <TextInput
                         style={styles.searchInput}
                         placeholder="Search exercises..."
-                        placeholderTextColor="#999"
+                        placeholderTextColor={iconColor}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                         autoFocus={true}
                     />
                     <TouchableOpacity onPress={onClose}>
-                        <Text style={styles.cancelText}>Cancel</Text>
+                        <Text style={[styles.cancelText, { color: tintColor }]}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
                 
@@ -59,18 +66,18 @@ export default function SearchExerciseModal({
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <TouchableOpacity 
-                            style={styles.routineItem}
+                            style={[styles.routineItem, { borderBottomColor: borderColor }]}
                             onPress={() => onSelect(item)}
                         >
                             <Text style={styles.routineTitle}>{item.title}</Text>
-                            <Text style={styles.routineDetails}>
+                            <Text style={[styles.routineDetails, { color: grayTextColor }]}>
                                 {item.muscleGroup} | {item.equipment}
                             </Text>
                         </TouchableOpacity>
                     )}
                     ListEmptyComponent={
                         <View style={styles.emptyContainer}>
-                            <Text style={styles.emptyText}>No exercises found</Text>
+                            <Text style={[styles.emptyText, { color: iconColor }]}>No exercises found</Text>
                         </View>
                     }
                     contentContainerStyle={styles.listContent}
@@ -91,7 +98,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
     },
     searchIcon: {
         marginRight: 10,
@@ -102,23 +108,19 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     cancelText: {
-        color: '#ff8787',
         fontSize: 16,
         marginLeft: 10,
     },
     routineItem: {
         padding: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
     },
     routineTitle: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#333',
     },
     routineDetails: {
         fontSize: 14,
-        color: '#666',
         marginTop: 4,
     },
     emptyContainer: {
@@ -129,7 +131,6 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         fontSize: 16,
-        color: '#999',
     },
     listContent: {
         paddingBottom: 20,
