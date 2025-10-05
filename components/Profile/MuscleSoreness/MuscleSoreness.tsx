@@ -6,8 +6,6 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import MuscleInfoPanel from './MuscleInfoPanel';
 import SorenessLegend from './SorenessLegend';
-import BodyFront from '@/assets/images/Muscles/body_front.svg';
-import BodyBack from '@/assets/images/Muscles/body_back.svg';
 
 type MuscleGroup = {
   id: string;
@@ -198,13 +196,57 @@ const MuscleSoreness = () => {
             <View style={styles.bodyInfoContainer}>
                 {/* Body Visualization */}
                 <View style={styles.bodyContainer}>
-                    <Svg width={300} height={400} viewBox={view === 'front' ? "0 0 185 335" : "0 0 165 331"}>
-                        {/* Body outline from SVG file */}
-                        {view === 'front' ? (
-                            <BodyFront width="100%" height="100%" />
-                        ) : (
-                            <BodyBack width="100%" height="100%" />
-                        )}
+                    <Svg width={300} height={400} viewBox="0 0 300 400">
+                        {/* Torso */}
+                        <Path
+                            transform="rotate(0.0271671 159.485 190.063)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m159.4846,95.86142c20.57139,-9.55146 47.9999,-9.55146 61.71416,4.09348c13.71426,13.64494 13.71426,40.93483 6.85713,68.22472c-23.31424,23.87865 -13.71426,54.57977 -20.57139,81.86966c-6.85713,27.28989 -27.42852,40.93483 -47.9999,40.93483c-20.57139,0 -41.14277,-13.64494 -47.9999,-40.93483c-6.85713,-27.28989 0,-55.94427 -20.57139,-81.86966c-6.85713,-27.28989 -6.85713,-54.57977 6.85713,-68.22472c13.71426,-13.64494 41.14277,-13.64494 61.71416,-4.09348z"
+                        />
+
+                        {/* Head */}
+                        <Path
+                            strokeWidth="2"
+                            stroke="#ccc"
+                            fill="#f8f8f8"
+                            d="m123,23c20,-20 50,-20 70,0c10,20 10,40 0,60c-20,10 -50,10 -70,0c-10,-20 -10,-40 0,-60z"
+                        />
+
+                        {/* Left Arm */}
+                        <Path
+                            transform="rotate(7.60753 77.5107 170)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m81.60118,104c-23.44583,36 -35.16874,96 -11.72291,132c23.44583,-12 35.16874,-60 23.44583,-96l-11.72291,-36z"
+                        />
+
+                        {/* Right Arm */}
+                        <Path
+                            transform="rotate(-5.296 236.489 168)"
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m232.79961,99c21.14861,37.63636 31.72291,100.36364 10.5743,138c-21.14861,-12.54545 -31.72291,-62.72727 -21.14861,-100.36364l10.5743,-37.63636z"
+                        />
+
+                        {/* Left Leg */}
+                        <Path
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m100.60434,246c-12.25542,45 -24.51085,101.25 0,135c24.51085,-11.25 36.76627,-67.5 24.51085,-101.25l-24.51085,-33.75z"
+                        />
+
+                        {/* Right Leg */}
+                        <Path
+                            stroke="#ccc"
+                            strokeWidth="2"
+                            fill="#f8f8f8"
+                            d="m218.37229,246c11.40964,43 22.81928,96.75 0,129.00001c-22.81928,-10.75 -34.22892,-64.5 -22.81928,-96.75l22.81928,-32.25z"
+                        />
                         
                         {/* Muscle groups with selectable highlighting */}
                         {Object.entries(musclePaths[view]).map(([group, path]) => {
