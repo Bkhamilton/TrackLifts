@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="185mm"
+   height="335mm"
+   viewBox="0 0 185 335"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs id="defs1" />
+  <g id="layer1">
+    <!-- Left Leg (Quadriceps/Hamstrings) -->
+    <path
+       style="fill:#ff0000;fill-opacity:0.5;stroke:#000000;stroke-width:0.5;stroke-opacity:1"
+       d="M 68,195 C 65,205 62,220 60,235 C 58,250 57,265 58,280 C 59,292 62,303 67,312 C 70,317 74,320 78,320 C 82,319 85,315 87,310 C 90,300 91,285 90,270 C 89,250 87,230 84,210 C 82,203 79,198 76,195 Z"
+       id="left-leg" />
+    
+    <!-- Right Leg (Quadriceps/Hamstrings) -->
+    <path
+       style="fill:#ff0000;fill-opacity:0.5;stroke:#000000;stroke-width:0.5;stroke-opacity:1"
+       d="M 117,195 C 120,205 123,220 125,235 C 127,250 128,265 127,280 C 126,292 123,303 118,312 C 115,317 111,320 107,320 C 103,319 100,315 98,310 C 95,300 94,285 95,270 C 96,250 98,230 101,210 C 103,203 106,198 109,195 Z"
+       id="right-leg" />
+  </g>
+</svg>
