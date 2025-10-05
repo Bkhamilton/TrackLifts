@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="185mm"
+   height="335mm"
+   viewBox="0 0 185 335"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs id="defs1" />
+  <g id="layer1">
+    <!-- Left Arm (Biceps/Triceps) -->
+    <path
+       style="fill:#ff0000;fill-opacity:0.5;stroke:#000000;stroke-width:0.5;stroke-opacity:1"
+       d="M 52,85 C 45,95 40,110 38,125 C 37,140 38,155 42,168 C 45,176 50,182 56,185 C 60,183 63,178 64,172 C 65,160 64,145 62,130 C 60,115 57,100 55,90 Z"
+       id="left-arm" />
+    
+    <!-- Right Arm (Biceps/Triceps) -->
+    <path
+       style="fill:#ff0000;fill-opacity:0.5;stroke:#000000;stroke-width:0.5;stroke-opacity:1"
+       d="M 133,85 C 140,95 145,110 147,125 C 148,140 147,155 143,168 C 140,176 135,182 129,185 C 125,183 122,178 121,172 C 120,160 121,145 123,130 C 125,115 128,100 130,90 Z"
+       id="right-arm" />
+  </g>
+</svg>
