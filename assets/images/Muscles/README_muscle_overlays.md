@@ -1,116 +1,117 @@
-# Muscle Group SVG Overlays - Front View
+# Muscle Back SVG Overlays
 
-This directory contains separate SVG overlay files for each major muscle group shown in the front view of a human body. These overlays are designed to work with `Muscles_front.svg` as the base anatomical image.
+This directory contains separate SVG overlay files for each major muscle group that can be overlayed on the `Muscles_back.svg` base image.
+
+## Overview
+
+These SVG files are designed to work with the muscle soreness visualizer in the TrackLifts app. Each file represents a specific muscle group and can be dynamically colored to represent different soreness levels.
 
 ## Files
 
 ### Base Image
-- **Muscles_front.svg** - Complete anatomical illustration of the human body (front view)
-  - ViewBox: `0 0 185 335`
-  - Contains detailed muscle anatomy
+- **Muscles_back.svg** - The base anatomical image of the back view of the human body
+  - ViewBox: `0 0 165 331`
+  - Dimensions: 165mm × 331mm
 
-### Muscle Group Overlays
+### Overlay Files
 
-1. **chest_front.svg**
-   - Contains: Left and right pectoralis major
-   - Paths: 2 (one for each pec)
-   - Coverage: Upper chest area
+#### 1. muscles_back_back.svg
+- **Muscle Groups:** Latissimus dorsi, trapezius, erector spinae
+- **Region:** Upper and mid back
+- **Coverage:** Central back area from shoulders to lower back
 
-2. **shoulders_front.svg**
-   - Contains: Left and right deltoid muscles
-   - Paths: 2 (one for each shoulder)
-   - Coverage: Shoulder caps and upper arm attachment
+#### 2. muscles_back_shoulders.svg
+- **Muscle Groups:** Posterior deltoids
+- **Region:** Upper shoulders
+- **Coverage:** Both left and right shoulder caps
 
-3. **arms_front.svg**
-   - Contains: Left and right arms (biceps, triceps, forearms)
-   - Paths: 2 (one for each arm)
-   - Coverage: Upper arms from shoulder to elbow region
+#### 3. muscles_back_arms.svg
+- **Muscle Groups:** Biceps, triceps
+- **Region:** Upper arms (both left and right)
+- **Coverage:** Full length of both arms from shoulders to elbows
 
-4. **core_front.svg**
-   - Contains: Abdominal muscles (rectus abdominis, obliques)
-   - Paths: 1 (unified core region)
-   - Coverage: Torso from chest to pelvis
-
-5. **legs_front.svg**
-   - Contains: Left and right legs (quadriceps, hamstrings)
-   - Paths: 2 (one for each leg)
-   - Coverage: Thighs and upper legs
-
-## Usage
-
-These overlay SVG files are designed to be used in the Muscle Soreness Visualizer component. They can be:
-
-1. **Layered over the base image** - Position each overlay SVG on top of Muscles_front.svg
-2. **Color-coded for data visualization** - Change the fill color to represent different soreness levels
-3. **Interactive** - Make each muscle group clickable/selectable for detailed information
-
-### Example Usage (React Native SVG)
-
-```jsx
-import { Svg, Path } from 'react-native-svg';
-
-// Import or define muscle paths
-const chestPaths = [
-  "M 62,90 C 72,85 82,85 88,89 C 92,92 93,105 90,113...",
-  "M 123,90 C 113,85 103,85 97,89 C 93,92 92,105 95,113..."
-];
-
-// Render with dynamic color
-<Svg width={185} height={335} viewBox="0 0 185 335">
-  {/* Base body image */}
-  <Image href={Muscles_front} />
-  
-  {/* Overlay muscle groups with color representing soreness */}
-  {chestPaths.map((path, i) => (
-    <Path 
-      key={i}
-      d={path} 
-      fill={getColorForSoreness(sorenessLevel)} 
-      opacity={0.6}
-    />
-  ))}
-</Svg>
-```
-
-### Color Mapping
-
-Suggested color gradient for muscle soreness:
-- **Green (Low soreness)**: RGB(50, 205, 50)
-- **Yellow (Medium soreness)**: RGB(255, 205, 50)
-- **Red (High soreness)**: RGB(255, 50, 50)
+#### 4. muscles_back_legs.svg
+- **Muscle Groups:** Hamstrings, glutes, calves
+- **Region:** Lower body (both left and right)
+- **Coverage:** Full length of both legs from glutes to calves
 
 ## Technical Specifications
 
-- **Format**: SVG 1.1
-- **ViewBox**: 0 0 185 335 (matching base image)
-- **Units**: millimeters (mm)
-- **Coordinate System**: 
-  - X-axis: 0 (left) to 185 (right)
-  - Y-axis: 0 (top) to 335 (bottom)
-  - Center: approximately x=92.5
+All overlay files:
+- Share the same viewBox (`0 0 165 331`) as the base image for perfect alignment
+- Use SVG path elements with stroke and fill properties
+- Are optimized for performance with simplified path data
+- Support dynamic color changes via CSS or inline styles
 
-## Anatomical Positioning
+## Usage
 
-Approximate Y-coordinates for body regions:
-- Head: 0-70
-- Shoulders: 70-90
-- Chest: 90-130
-- Arms: 85-185
-- Core: 120-195
-- Legs: 195-320
+These SVG overlays can be used in multiple ways:
 
-## Notes
+### 1. Direct Overlay in HTML
+```html
+<div style="position: relative;">
+  <img src="Muscles_back.svg" style="width: 100%;" />
+  <img src="muscles_back_back.svg" style="position: absolute; top: 0; left: 0; width: 100%;" />
+</div>
+```
 
-- All overlay SVGs use the same coordinate system as the base image
-- Paths are designed to cover the major muscle groups without overlapping
-- Fill opacity can be adjusted for better visibility when overlaying
-- Stroke properties can be customized for highlighting selected muscles
+### 2. In React Native (with react-native-svg)
+```jsx
+import { Svg, Path } from 'react-native-svg';
 
-## Future Enhancements
+<Svg viewBox="0 0 165 331">
+  {/* Base body outline */}
+  <Path d="..." fill="#f8f8f8" stroke="#ccc" />
+  
+  {/* Overlay muscle group with dynamic color */}
+  <Path 
+    d="M 50 65 C 60 55 70 52 82.5 52..." 
+    fill={getSorenessColor(backSoreness)}
+    stroke="#555"
+  />
+</Svg>
+```
 
-Potential improvements for these overlay files:
-- [ ] Add back view muscle group overlays
-- [ ] Include more detailed sub-muscle group paths
-- [ ] Add side view (lateral) muscle overlays
-- [ ] Create animation-ready versions
-- [ ] Add muscle group metadata/labels
+### 3. CSS Styling
+```css
+.muscle-overlay path {
+  stroke: #ff0000;
+  stroke-width: 2.5;
+  fill: rgba(255, 87, 87, 0.4);
+  opacity: 0.85;
+}
+```
+
+## Customization
+
+To modify the appearance for different soreness levels:
+- Change the `fill` color to represent intensity (e.g., green → yellow → red)
+- Adjust `opacity` for subtle or prominent highlighting
+- Modify `stroke-width` for thicker/thinner outlines
+- Use CSS classes or inline styles for dynamic updates
+
+## Coordinate System
+
+The viewBox coordinate system:
+- **Origin (0,0):** Top-left corner
+- **Width:** 165 units (horizontal)
+- **Height:** 331 units (vertical)
+- **Center X:** 82.5
+- **Body regions:**
+  - Head: Y 10-40
+  - Shoulders: Y 45-65
+  - Back/Arms: Y 65-190
+  - Legs: Y 190-320
+
+## Contributing
+
+When creating new overlay files or modifying existing ones:
+1. Maintain the same viewBox dimensions
+2. Use simple, clean path data
+3. Test alignment with the base image
+4. Document muscle groups covered
+5. Ensure paths don't overlap inappropriately with other muscle groups
+
+## License
+
+These files are part of the TrackLifts project and follow the same license as the main repository.
