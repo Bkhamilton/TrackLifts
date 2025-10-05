@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muscle Group Overlay Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #3498db;
+        }
+        .description {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .muscle-card {
+            background: #34495e;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .muscle-card h3 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        .svg-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .controls label {
+            background: #2c3e50;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        .controls label:hover {
+            background: #1a252f;
+        }
+        .controls input {
+            margin-right: 5px;
+        }
+        .combined-view {
+            grid-column: 1 / -1;
+        }
+        .legend {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .color-box {
+            width: 30px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+            border: 1px solid #000;
+        }
+        .info {
+            background: #2980b9;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦾 Muscle Group Overlay Verification</h1>
+        
+        <div class="description">
+            <p><strong>Purpose:</strong> This tool visualizes the muscle group SVG overlays created for the TrackLifts Muscle Soreness Visualizer.</p>
+            <p>Each overlay is shown separately with controls to toggle the base anatomy image and the overlay. The combined view shows all muscle groups together with different colors.</p>
+        </div>
+
+        <div class="visualization-grid">
+            <!-- Individual muscle group cards -->
+            <div class="muscle-card">
+                <h3>💪 Chest (Pectorals)</h3>
+                <div class="svg-wrapper" id="chest-wrapper">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <!-- Base (will be loaded) -->
+                        <g id="chest-base" opacity="0.3"></g>
+                        <!-- Overlay -->
+                        <g id="chest-overlay">
+                            <path d="M 62,90 C 72,85 82,85 88,89 C 92,92 93,105 90,113 C 87,119 65,118 63,116 C 60,115 58,97 62,90 Z" fill="#FF6B6B" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 123,90 C 113,85 103,85 97,89 C 93,92 92,105 95,113 C 98,119 120,118 122,116 C 125,115 127,97 123,90 Z" fill="#FF6B6B" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="chest-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="chest-overlay-toggle" checked> Overlay</label>
+                </div>
+            </div>
+
+            <div class="muscle-card">
+                <h3>🏋️ Shoulders (Deltoids)</h3>
+                <div class="svg-wrapper" id="shoulders-wrapper">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <g id="shoulders-base" opacity="0.3"></g>
+                        <g id="shoulders-overlay">
+                            <path d="M 52,78 C 56,73 62,70 68,70 C 74,70 80,72 84,76 C 86,78 87,82 86,86 C 84,90 80,92 76,93 C 70,94 63,93 58,90 C 54,88 51,83 52,78 Z" fill="#4ECDC4" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 133,78 C 129,73 123,70 117,70 C 111,70 105,72 101,76 C 99,78 98,82 99,86 C 101,90 105,92 109,93 C 115,94 122,93 127,90 C 131,88 134,83 133,78 Z" fill="#4ECDC4" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="shoulders-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="shoulders-overlay-toggle" checked> Overlay</label>
+                </div>
+            </div>
+
+            <div class="muscle-card">
+                <h3>💪 Arms (Biceps/Triceps)</h3>
+                <div class="svg-wrapper" id="arms-wrapper">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <g id="arms-base" opacity="0.3"></g>
+                        <g id="arms-overlay">
+                            <path d="M 52,85 C 45,95 40,110 38,125 C 37,140 38,155 42,168 C 45,176 50,182 56,185 C 60,183 63,178 64,172 C 65,160 64,145 62,130 C 60,115 57,100 55,90 Z" fill="#45B7D1" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 133,85 C 140,95 145,110 147,125 C 148,140 147,155 143,168 C 140,176 135,182 129,185 C 125,183 122,178 121,172 C 120,160 121,145 123,130 C 125,115 128,100 130,90 Z" fill="#45B7D1" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="arms-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="arms-overlay-toggle" checked> Overlay</label>
+                </div>
+            </div>
+
+            <div class="muscle-card">
+                <h3>🎯 Core (Abdominals)</h3>
+                <div class="svg-wrapper" id="core-wrapper">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <g id="core-base" opacity="0.3"></g>
+                        <g id="core-overlay">
+                            <path d="M 72,120 C 77,118 82,117 88,117 C 92,117 97,118 102,120 C 107,125 110,132 112,140 C 113,150 113,160 112,170 C 110,178 107,185 102,190 C 97,192 92,193 88,193 C 83,193 78,192 73,190 C 68,185 65,178 63,170 C 62,160 62,150 63,140 C 65,132 68,125 72,120 Z" fill="#FFA07A" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="core-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="core-overlay-toggle" checked> Overlay</label>
+                </div>
+            </div>
+
+            <div class="muscle-card">
+                <h3>🦵 Legs (Quads/Hamstrings)</h3>
+                <div class="svg-wrapper" id="legs-wrapper">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <g id="legs-base" opacity="0.3"></g>
+                        <g id="legs-overlay">
+                            <path d="M 68,195 C 65,205 62,220 60,235 C 58,250 57,265 58,280 C 59,292 62,303 67,312 C 70,317 74,320 78,320 C 82,319 85,315 87,310 C 90,300 91,285 90,270 C 89,250 87,230 84,210 C 82,203 79,198 76,195 Z" fill="#98D8C8" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 117,195 C 120,205 123,220 125,235 C 127,250 128,265 127,280 C 126,292 123,303 118,312 C 115,317 111,320 107,320 C 103,319 100,315 98,310 C 95,300 94,285 95,270 C 96,250 98,230 101,210 C 103,203 106,198 109,195 Z" fill="#98D8C8" fill-opacity="0.7" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="legs-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="legs-overlay-toggle" checked> Overlay</label>
+                </div>
+            </div>
+
+            <!-- Combined view -->
+            <div class="muscle-card combined-view">
+                <h3>🎨 Combined View - All Muscle Groups</h3>
+                <div class="svg-wrapper" id="combined-wrapper" style="height: 500px;">
+                    <svg viewBox="0 0 185 335" style="max-height: 100%; max-width: 100%;">
+                        <g id="combined-base" opacity="0.3"></g>
+                        <g id="combined-overlay">
+                            <!-- Chest -->
+                            <path d="M 62,90 C 72,85 82,85 88,89 C 92,92 93,105 90,113 C 87,119 65,118 63,116 C 60,115 58,97 62,90 Z" fill="#FF6B6B" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 123,90 C 113,85 103,85 97,89 C 93,92 92,105 95,113 C 98,119 120,118 122,116 C 125,115 127,97 123,90 Z" fill="#FF6B6B" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <!-- Shoulders -->
+                            <path d="M 52,78 C 56,73 62,70 68,70 C 74,70 80,72 84,76 C 86,78 87,82 86,86 C 84,90 80,92 76,93 C 70,94 63,93 58,90 C 54,88 51,83 52,78 Z" fill="#4ECDC4" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 133,78 C 129,73 123,70 117,70 C 111,70 105,72 101,76 C 99,78 98,82 99,86 C 101,90 105,92 109,93 C 115,94 122,93 127,90 C 131,88 134,83 133,78 Z" fill="#4ECDC4" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <!-- Arms -->
+                            <path d="M 52,85 C 45,95 40,110 38,125 C 37,140 38,155 42,168 C 45,176 50,182 56,185 C 60,183 63,178 64,172 C 65,160 64,145 62,130 C 60,115 57,100 55,90 Z" fill="#45B7D1" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 133,85 C 140,95 145,110 147,125 C 148,140 147,155 143,168 C 140,176 135,182 129,185 C 125,183 122,178 121,172 C 120,160 121,145 123,130 C 125,115 128,100 130,90 Z" fill="#45B7D1" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <!-- Core -->
+                            <path d="M 72,120 C 77,118 82,117 88,117 C 92,117 97,118 102,120 C 107,125 110,132 112,140 C 113,150 113,160 112,170 C 110,178 107,185 102,190 C 97,192 92,193 88,193 C 83,193 78,192 73,190 C 68,185 65,178 63,170 C 62,160 62,150 63,140 C 65,132 68,125 72,120 Z" fill="#FFA07A" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <!-- Legs -->
+                            <path d="M 68,195 C 65,205 62,220 60,235 C 58,250 57,265 58,280 C 59,292 62,303 67,312 C 70,317 74,320 78,320 C 82,319 85,315 87,310 C 90,300 91,285 90,270 C 89,250 87,230 84,210 C 82,203 79,198 76,195 Z" fill="#98D8C8" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                            <path d="M 117,195 C 120,205 123,220 125,235 C 127,250 128,265 127,280 C 126,292 123,303 118,312 C 115,317 111,320 107,320 C 103,319 100,315 98,310 C 95,300 94,285 95,270 C 96,250 98,230 101,210 C 103,203 106,198 109,195 Z" fill="#98D8C8" fill-opacity="0.6" stroke="#000" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <label><input type="checkbox" id="combined-base-toggle" checked> Base Image</label>
+                    <label><input type="checkbox" id="combined-overlay-toggle" checked> All Overlays</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>Color Legend</h3>
+            <div class="legend-item">
+                <div class="color-box" style="background: #FF6B6B;"></div>
+                <span>Chest (Pectorals)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #4ECDC4;"></div>
+                <span>Shoulders (Deltoids)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #45B7D1;"></div>
+                <span>Arms (Biceps/Triceps)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #FFA07A;"></div>
+                <span>Core (Abdominals)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #98D8C8;"></div>
+                <span>Legs (Quads/Hamstrings)</span>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>ℹ️ Note:</strong> This is a standalone verification tool. The actual implementation in the TrackLifts app will dynamically load the base anatomy SVG and overlay the muscle groups with colors representing soreness levels.
+        </div>
+    </div>
+
+    <script>
+        // Note: Since we're working in a sandboxed environment, the base SVG loading would need
+        // to be done via fetch() when this file is served from the same directory as the SVG files.
+        
+        // Toggle functionality
+        const groups = ['chest', 'shoulders', 'arms', 'core', 'legs', 'combined'];
+        
+        groups.forEach(group => {
+            const baseToggle = document.getElementById(`${group}-base-toggle`);
+            const overlayToggle = document.getElementById(`${group}-overlay-toggle`);
+            const baseGroup = document.getElementById(`${group}-base`);
+            const overlayGroup = document.getElementById(`${group}-overlay`);
+            
+            if (baseToggle && baseGroup) {
+                baseToggle.addEventListener('change', (e) => {
+                    baseGroup.style.display = e.target.checked ? 'block' : 'none';
+                });
+            }
+            
+            if (overlayToggle && overlayGroup) {
+                overlayToggle.addEventListener('change', (e) => {
+                    overlayGroup.style.display = e.target.checked ? 'block' : 'none';
+                });
+            }
+        });
+
+        console.log('Muscle Group Overlay Verification Tool loaded');
+        console.log('Toggle the checkboxes to show/hide the base anatomy and overlays');
+    </script>
+</body>
+</html>
