@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="165mm"
+   height="331mm"
+   viewBox="0 0 165 331"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <!-- Legs outline (hamstrings, glutes, calves - both left and right) -->
+  <g>
+    <!-- Left leg -->
+    <path
+       d="M 52 190 C 50 195 48 205 47 220 C 46 235 46 250 47 265 C 48 280 50 292 54 302 C 57 310 61 316 66 320 C 70 318 73 313 75 305 C 77 292 78 275 78 255 C 78 235 77 215 75 200 C 73 190 70 185 66 185 L 52 190 Z"
+       fill="none"
+       stroke="#000000"
+       stroke-width="2.5"
+       stroke-opacity="1"
+       opacity="0.85" />
+    <!-- Right leg -->
+    <path
+       d="M 113 190 C 115 195 117 205 118 220 C 119 235 119 250 118 265 C 117 280 115 292 111 302 C 108 310 104 316 99 320 C 95 318 92 313 90 305 C 88 292 87 275 87 255 C 87 235 88 215 90 200 C 92 190 95 185 99 185 L 113 190 Z"
+       fill="none"
+       stroke="#000000"
+       stroke-width="2.5"
+       stroke-opacity="1"
+       opacity="0.85" />
+  </g>
+</svg>
