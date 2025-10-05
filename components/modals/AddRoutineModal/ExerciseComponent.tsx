@@ -7,13 +7,50 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 interface ExerciseComponentProps {
     exercise: Exercise;
     onRemove: (exercise: Exercise) => void;
+    onMoveUp?: () => void;
+    onMoveDown?: () => void;
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
-export function ExerciseComponent({ exercise, onRemove }: ExerciseComponentProps) {
+export function ExerciseComponent({ 
+    exercise, 
+    onRemove, 
+    onMoveUp, 
+    onMoveDown, 
+    isFirst = false, 
+    isLast = false 
+}: ExerciseComponentProps) {
     return (
-        <View style={[
-            styles.container
-        ]}>
+        <View style={styles.container}>
+            {/* Reorder buttons on the left */}
+            {(onMoveUp || onMoveDown) && (
+                <View style={styles.reorderButtons}>
+                    <TouchableOpacity 
+                        onPress={onMoveUp}
+                        style={[styles.arrowButton, isFirst && styles.arrowButtonDisabled]}
+                        disabled={isFirst}
+                    >
+                        <MaterialCommunityIcons 
+                            name="chevron-up" 
+                            size={20} 
+                            color={isFirst ? "#ccc" : "#666"} 
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={onMoveDown}
+                        style={[styles.arrowButton, isLast && styles.arrowButtonDisabled]}
+                        disabled={isLast}
+                    >
+                        <MaterialCommunityIcons 
+                            name="chevron-down" 
+                            size={20} 
+                            color={isLast ? "#ccc" : "#666"} 
+                        />
+                    </TouchableOpacity>
+                </View>
+            )}
+            
             <View style={styles.content}>
                 <MaterialCommunityIcons 
                     name={"dumbbell"} 
@@ -55,6 +92,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 5,
+    },
+    reorderButtons: {
+        flexDirection: 'column',
+        marginRight: 8,
+        backgroundColor: 'transparent',
+    },
+    arrowButton: {
+        padding: 2,
+        backgroundColor: 'transparent',
+    },
+    arrowButtonDisabled: {
+        opacity: 0.3,
     },
     content: {
         flexDirection: 'row',

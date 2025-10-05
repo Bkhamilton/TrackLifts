@@ -2,10 +2,8 @@ import { ClearView, Text, TextInput, View } from '@/components/Themed';
 import { Exercise } from '@/constants/types';
 import { ExerciseContext } from '@/contexts/ExerciseContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useSharedValue } from 'react-native-reanimated';
 import { ExerciseComponent } from './ExerciseComponent';
 import { NewExerciseModal } from './NewExerciseModal';
 
@@ -15,26 +13,11 @@ interface AddRoutineModalProps {
     add: (routine: { title: string; exercises: Exercise[] }) => void;
 }
 
-type Position = {
-    y: number;
-    originalIndex: number;
-};
-
 export default function AddRoutineModal({ visible, close, add }: AddRoutineModalProps) {
     const [newModal, setNewModal] = useState(false);
     const [routineExercises, setRoutineExercises] = useState<Exercise[]>([]);
     const { exercises } = useContext(ExerciseContext);
     const [title, setTitle] = useState("");
-
-    const [isDragging, setIsDragging] = useState(false);
-    const positions = useSharedValue<Position[]>([]);
-
-    useEffect(() => {
-        positions.value = routineExercises.map((_, index) => ({
-            y: index * 60,
-            originalIndex: index,
-        }));
-    }, [routineExercises]);
 
     function addRoutine() {
         add({ title: title, exercises: routineExercises });
@@ -61,14 +44,7 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
 
     function onSelect(props: Exercise) {
         setNewModal(false);
-        setRoutineExercises((routineExercises) => {
-            const newExercises = [...routineExercises, props];
-            positions.value = newExercises.map((_, index) => ({
-                y: index * 60,
-                originalIndex: index,
-            }));
-            return newExercises;
-        });
+        setRoutineExercises((routineExercises) => [...routineExercises, props]);
     }
 
     function remove(props: Exercise) {
@@ -76,20 +52,22 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
         setRoutineExercises(temp);
     }
 
-    function handleDragEnd() {
-        setIsDragging(false);
-        // Update the actual exercises array based on new positions
+    function moveUp(index: number) {
+        if (index === 0) return; // Can't move up the first item
         const newExercises = [...routineExercises];
-        const newOrder = positions.value
-            .map((item, index) => ({ ...item, originalIndex: index }))
-            .sort((a, b) => a.y - b.y)
-            .map((item) => newExercises[item.originalIndex]);
-
-        setRoutineExercises(newOrder);
+        const temp = newExercises[index];
+        newExercises[index] = newExercises[index - 1];
+        newExercises[index - 1] = temp;
+        setRoutineExercises(newExercises);
     }
 
-    function handleLongPress() {
-        setIsDragging(true);
+    function moveDown(index: number) {
+        if (index === routineExercises.length - 1) return; // Can't move down the last item
+        const newExercises = [...routineExercises];
+        const temp = newExercises[index];
+        newExercises[index] = newExercises[index + 1];
+        newExercises[index + 1] = temp;
+        setRoutineExercises(newExercises);
     }
 
     return (
@@ -104,54 +82,56 @@ export default function AddRoutineModal({ visible, close, add }: AddRoutineModal
                 onSelect={onSelect}
                 exercises={exercises}
             />
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <View style={styles.modalBackdrop}>
-                    <View style={styles.modalContainer}>
-                        {/* Header */}
-                        <ClearView style={styles.header}>
-                            <TouchableOpacity onPress={closeMain} style={styles.closeButton}>
-                                <MaterialCommunityIcons name="close" size={24} color="#666" />
-                            </TouchableOpacity>
-                            <Text style={styles.headerText}>New Routine</Text>
-                            <TouchableOpacity onPress={addRoutine} style={styles.addButton}>
-                                <Text style={styles.addButtonText}>SAVE</Text>
-                            </TouchableOpacity>
-                        </ClearView>
-
-                        {/* Title Input */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Routine Title</Text>
-                            <TextInput
-                                style={styles.textInput}
-                                onChangeText={setTitle}
-                                value={title}
-                                placeholder="Enter routine name"
-                                placeholderTextColor="#999"
-                            />
-                        </ClearView>
-
-                        <FlatList
-                            data={routineExercises}
-                            renderItem={({ item, index }) => (
-                                <ExerciseComponent
-                                    key={item.id}
-                                    exercise={item}
-                                    onRemove={remove}
-                                />
-                            )}
-                            keyExtractor={(item) => item.id.toString()}
-                            style={styles.exercisesContainer}
-                            contentContainerStyle={styles.exercisesContent}
-                        />
-
-                        {/* Add Exercise Button */}
-                        <TouchableOpacity onPress={addExerciseModal} style={styles.addExerciseButton}>
-                            <MaterialCommunityIcons name="plus" size={20} color="#ff8787" />
-                            <Text style={styles.addExerciseButtonText}>Add Exercise</Text>
+            <View style={styles.modalBackdrop}>
+                <View style={styles.modalContainer}>
+                    {/* Header */}
+                    <ClearView style={styles.header}>
+                        <TouchableOpacity onPress={closeMain} style={styles.closeButton}>
+                            <MaterialCommunityIcons name="close" size={24} color="#666" />
                         </TouchableOpacity>
-                    </View>
+                        <Text style={styles.headerText}>New Routine</Text>
+                        <TouchableOpacity onPress={addRoutine} style={styles.addButton}>
+                            <Text style={styles.addButtonText}>SAVE</Text>
+                        </TouchableOpacity>
+                    </ClearView>
+
+                    {/* Title Input */}
+                    <ClearView style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>Routine Title</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={setTitle}
+                            value={title}
+                            placeholder="Enter routine name"
+                            placeholderTextColor="#999"
+                        />
+                    </ClearView>
+
+                    <FlatList
+                        data={routineExercises}
+                        renderItem={({ item, index }) => (
+                            <ExerciseComponent
+                                key={item.id}
+                                exercise={item}
+                                onRemove={remove}
+                                onMoveUp={() => moveUp(index)}
+                                onMoveDown={() => moveDown(index)}
+                                isFirst={index === 0}
+                                isLast={index === routineExercises.length - 1}
+                            />
+                        )}
+                        keyExtractor={(item) => item.id.toString()}
+                        style={styles.exercisesContainer}
+                        contentContainerStyle={styles.exercisesContent}
+                    />
+
+                    {/* Add Exercise Button */}
+                    <TouchableOpacity onPress={addExerciseModal} style={styles.addExerciseButton}>
+                        <MaterialCommunityIcons name="plus" size={20} color="#ff8787" />
+                        <Text style={styles.addExerciseButtonText}>Add Exercise</Text>
+                    </TouchableOpacity>
                 </View>
-            </GestureHandlerRootView>
+            </View>
         </Modal>
     );
 }
@@ -164,8 +144,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContainer: {
-        width: '90%',
-        maxHeight: '80%',
+        width: '95%',
+        maxHeight: '85%',
         borderRadius: 12,
         padding: 16,
         shadowColor: '#000',
