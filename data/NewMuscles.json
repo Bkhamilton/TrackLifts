@@ -93,7 +93,12 @@
     "anatomical_name": "Abductors",
     "name": "Outer Thigh",
     "muscle_group": "Legs"
-  },  
+  },
+  {
+    "anatomical_name": "Hip Flexors",
+    "name": "Hip Flexors",
+    "muscle_group": "Legs"
+  },
   {
     "anatomical_name": "Biceps Brachii",
     "name": "Biceps",
