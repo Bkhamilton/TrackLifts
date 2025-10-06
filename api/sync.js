@@ -97,7 +97,7 @@ export const syncExercises = async (db) => {
     }
 };
 
-const syncRoutines = async (db) => {
+export const syncRoutines = async (db) => {
     // Insert sample routines, their exercises, and sets
     for (const routine of sampleRoutines) {
         const routineId = await insertRoutine(db, {
