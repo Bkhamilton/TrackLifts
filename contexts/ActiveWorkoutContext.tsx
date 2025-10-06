@@ -305,7 +305,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
                 // Only update ExerciseSets if routineId is valid
                 if (workout.routine.id && workout.routine.id !== 0) {
                     const exerciseId = exercise.exercise_id || exercise.id;
-                    await clearExerciseSets(db, user.id, exerciseId);
+                    await clearExerciseSets(db, workout.routine.id, exerciseId);
 
                     // Fetch routine_exercise_id once per exercise
                     const routineExercise = await getRoutineExercise(db, workout.routine.id, exerciseId);
