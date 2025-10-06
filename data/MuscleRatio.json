@@ -1,0 +1,144 @@
+[
+  {
+    "muscle_group": "Chest",
+    "muscles": [
+      {
+        "name": "Chest",
+        "ratio": 0.6
+      },
+      {
+        "name": "Upper Chest",
+        "ratio": 0.3
+      },
+      {
+        "name": "Lower Chest",
+        "ratio": 0.1
+      }
+    ]
+  },
+  {
+    "muscle_group": "Back",
+    "muscles": [
+      {
+        "name": "Lats",
+        "ratio": 0.3
+      },
+      {
+        "name": "Upper Traps",
+        "ratio": 0.15
+      },
+      {
+        "name": "Middle Traps",
+        "ratio": 0.15
+      },
+      {
+        "name": "Lower Traps",
+        "ratio": 0.1
+      },
+      {
+        "name": "Rhomboids",
+        "ratio": 0.15
+      },
+      {
+        "name": "Teres",
+        "ratio": 0.05
+      },
+      {
+        "name": "Lower Back",
+        "ratio": 0.1
+      }
+    ]
+  },
+  {
+    "muscle_group": "Shoulders",
+    "muscles": [
+      {
+        "name": "Front Delts",
+        "ratio": 0.35
+      },
+      {
+        "name": "Side Delts",
+        "ratio": 0.35
+      },
+      {
+        "name": "Rear Delts",
+        "ratio": 0.3
+      }
+    ]
+  },
+  {
+    "muscle_group": "Arms",
+    "muscles": [
+      {
+        "name": "Biceps",
+        "ratio": 0.35
+      },
+      {
+        "name": "Triceps",
+        "ratio": 0.4
+      },
+      {
+        "name": "Brachialis",
+        "ratio": 0.15
+      },
+      {
+        "name": "Forearms",
+        "ratio": 0.1
+      }
+    ]
+  },
+  {
+    "muscle_group": "Legs",
+    "muscles": [
+      {
+        "name": "Quads",
+        "ratio": 0.25
+      },
+      {
+        "name": "Hamstrings",
+        "ratio": 0.25
+      },
+      {
+        "name": "Glutes",
+        "ratio": 0.25
+      },
+      {
+        "name": "Calves",
+        "ratio": 0.1
+      },
+      {
+        "name": "Adductors",
+        "ratio": 0.07
+      },
+      {
+        "name": "Abductors",
+        "ratio": 0.05
+      },
+      {
+        "name": "Hip Flexors",
+        "ratio": 0.03
+      }
+    ]
+  },
+  {
+    "muscle_group": "Core",
+    "muscles": [
+      {
+        "name": "Abs",
+        "ratio": 0.4
+      },
+      {
+        "name": "Obliques",
+        "ratio": 0.3
+      },
+      {
+        "name": "Deep Core",
+        "ratio": 0.2
+      },
+      {
+        "name": "Serratus",
+        "ratio": 0.1
+      }
+    ]
+  }
+]
