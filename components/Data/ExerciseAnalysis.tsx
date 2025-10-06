@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import DateRangeSelector from './DateRangeSelector';
-// import ExerciseAnalysisGraph from './Graphs/ExerciseAnalysisGraph';
+import ExerciseAnalysisGraph from './Graphs/ExerciseAnalysisGraph';
 
 interface Props {
     exercise: Exercise;
@@ -134,9 +134,9 @@ const ExerciseAnalysis: React.FC<Props> = ({ exercise, onSelectExercise }) => {
                     <TouchableOpacity 
                         style={[styles.graphContainer, { backgroundColor: backgroundColor, borderColor: borderColor }]}
                     >
-                        {/* <ExerciseAnalysisGraph
+                        <ExerciseAnalysisGraph
                             data={graphData}
-                        /> */}
+                        />
                     </TouchableOpacity>
                 ) : (
                     <View style={[styles.graphPlaceholder, { backgroundColor: backgroundColor, borderColor: borderColor }]}>
