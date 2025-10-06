@@ -4,7 +4,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-// import FavoriteExerciseAnalysisGraph from './Graphs/FavoriteExerciseAnalysisGraph';
+import FavoriteExerciseAnalysisGraph from './Graphs/FavoriteExerciseAnalysisGraph';
 
 interface Props {
     favorites: FavoriteGraph[];
@@ -48,9 +48,9 @@ const FavoriteGraphs: React.FC<Props> = ({ favorites, onAddFavorite, onSelectGra
                             {
                                 graph.stats && graph.stats.length > 0 ? (
                                     <View style={[styles.graphContainer, { backgroundColor: cardBorder, borderColor: cardBorder }]}>
-                                        {/* <FavoriteExerciseAnalysisGraph
+                                        <FavoriteExerciseAnalysisGraph
                                             data={graph.stats}
-                                        /> */}
+                                        />
                                     </View>
                                 ) : (
                                     <View style={[styles.graphPlaceholder, { backgroundColor: cardBorder, borderColor: cardBorder }]}>

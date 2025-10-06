@@ -3,7 +3,7 @@ import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-// import MuscleGroupPieChart from './Graphs/MuscleGroupPieChart';
+import MuscleGroupPieChart from './Graphs/MuscleGroupPieChart';
 
 const MUSCLE_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body'];
 const COLOR_PALETTE = [
@@ -45,7 +45,7 @@ const MuscleGroupStats: React.FC = () => {
         <View style={styles.container}>
             <Text style={styles.title}>Muscle Group Focus</Text>
             <View style={[styles.statsContainer, { backgroundColor, borderColor }]}>
-                {/* <MuscleGroupPieChart /> */}
+                <MuscleGroupPieChart />
                 <ClearView style={styles.legendContainer}>
                     {data.map((item) => (
                         <ClearView key={item.label} style={styles.legendRow}>
