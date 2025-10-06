@@ -5,9 +5,9 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 // import MuscleGroupPieChart from './Graphs/MuscleGroupPieChart';
 
-const MUSCLE_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'];
+const MUSCLE_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body'];
 const COLOR_PALETTE = [
-  "#ff8787", "#ffd43b", "#69db7c", "#4dabf7", "#b197fc", "#ffa94d"
+  "#ff8787", "#ffd43b", "#69db7c", "#4dabf7", "#b197fc", "#ffa94d", "#f783ac"
 ];
 
 const MuscleGroupStats: React.FC = () => {

@@ -3,7 +3,7 @@ import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-// import MonthlyWorkoutFrequency from './Graphs/MonthlyWorkoutFrequency';
+import MonthlyWorkoutFrequency from './Graphs/MonthlyWorkoutFrequency';
 
 interface WorkoutHistoryProps {
     data: { workout_date: string; session_count: number }[];
@@ -20,9 +20,9 @@ export default function WorkoutHistory({ data }: WorkoutHistoryProps) {
         <View style={styles.container}>
             <Text style={styles.title}>Workout History</Text>
             <View style={{ backgroundColor: backgroundColor, borderRadius: 12, paddingVertical: 8, marginBottom: 16 }}>
-                {/* <MonthlyWorkoutFrequency
+                <MonthlyWorkoutFrequency
                     data={data}
-                /> */}
+                />
             </View>
             
             <View style={styles.statsRow}>
