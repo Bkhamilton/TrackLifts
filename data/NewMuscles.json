@@ -50,18 +50,18 @@
     "muscle_group": "Back"
   },
   {
-    "anatomical_name": "Anterior Deltoid",
-    "name": "Front Delt",
+    "anatomical_name": "Anterior Deltoids",
+    "name": "Front Delts",
     "muscle_group": "Shoulders"
   },
   {
-    "anatomical_name": "Lateral Deltoid",
-    "name": "Side Delt",
+    "anatomical_name": "Lateral Deltoids",
+    "name": "Side Delts",
     "muscle_group": "Shoulders"
   },
   {
-    "anatomical_name": "Posterior Deltoid",
-    "name": "Rear Delt",
+    "anatomical_name": "Posterior Deltoids",
+    "name": "Rear Delts",
     "muscle_group": "Shoulders"
   },
   {
@@ -86,12 +86,12 @@
   },
   {
     "anatomical_name": "Adductors",
-    "name": "Inner Thigh",
+    "name": "Adductors",
     "muscle_group": "Legs"
   },
   {
     "anatomical_name": "Abductors",
-    "name": "Outer Thigh",
+    "name": "Abductors",
     "muscle_group": "Legs"
   },
   {
