@@ -12,6 +12,8 @@ This folder contains documentation for various features and future development p
 
 - **[Cardiovascular Activities](CARDIOVASCULAR_ACTIVITIES.md)** - Comprehensive plan for implementing cardiovascular activity tracking into the application. This document details the database schema changes, TypeScript interfaces, UI/UX considerations, and integration strategies needed to support cardio activities like treadmill, elliptical, stationary bike, and more. Includes discussion of active rest days and their benefits for recovery.
 
+- **[Split Tracking Enhancements](SPLIT_TRACKING_ENHANCEMENTS.md)** - Detailed plan for enhancing the Split tracking system to support flexible workout scheduling while maintaining adherence tracking. Addresses the limitation of rigid cycle progression by implementing dual tracking (expected vs. actual workouts), weekly calendar views, and comprehensive adherence metrics. Includes database schema changes, UI/UX designs, implementation phases, and integration with future cardio tracking features.
+
 ## Purpose
 
 The docs folder serves as a central repository for:
