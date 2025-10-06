@@ -1,0 +1,137 @@
+[
+  {
+    "anatomical_name": "Clavicular Head",
+    "name": "Upper Chest",
+    "muscle_group": "Chest"
+  },
+  {
+    "anatomical_name": "Sternal Head",
+    "name": "Chest",
+    "muscle_group": "Chest"
+  },
+  {
+    "anatomical_name": "Pectoralis Minor",
+    "name": "Lower Chest",
+    "muscle_group": "Chest"
+  },
+  {
+    "anatomical_name": "Latissimus Dorsi",
+    "name": "Lats",
+    "muscle_group": "Back"
+  },
+  {
+    "anatomical_name": "Rhomboids",
+    "name": "Rhomboids",
+    "muscle_group": "Back"
+  },
+  {
+    "anatomical_name": "Teres Major/Minor",
+    "name": "Teres",
+    "muscle_group": "Back"
+  },
+  {
+    "anatomical_name": "Trapezius (Upper)",
+    "name": "Upper Traps",
+    "muscle_group": "Back"
+  },  
+  {
+    "anatomical_name": "Trapezius (Middle)",
+    "name": "Middle Traps",
+    "muscle_group": "Back"
+  },  
+  {
+    "anatomical_name": "Trapezius (Lower)",
+    "name": "Lower Traps",
+    "muscle_group": "Back"
+  },
+  {
+    "anatomical_name": "Erector Spinae",
+    "name": "Lower Back",
+    "muscle_group": "Back"
+  },
+  {
+    "anatomical_name": "Anterior Deltoid",
+    "name": "Front Delt",
+    "muscle_group": "Shoulders"
+  },
+  {
+    "anatomical_name": "Lateral Deltoid",
+    "name": "Side Delt",
+    "muscle_group": "Shoulders"
+  },
+  {
+    "anatomical_name": "Posterior Deltoid",
+    "name": "Rear Delt",
+    "muscle_group": "Shoulders"
+  },
+  {
+    "anatomical_name": "Quadriceps",
+    "name": "Quads",
+    "muscle_group": "Legs"
+  },
+  {
+    "anatomical_name": "Hamstrings",
+    "name": "Hamstrings",
+    "muscle_group": "Legs"
+  },
+  {
+    "anatomical_name": "Gluteus Maximus/Medius",
+    "name": "Glutes",
+    "muscle_group": "Legs"
+  },
+  {
+    "anatomical_name": "Gastrocnemius & Soleus",
+    "name": "Calves",
+    "muscle_group": "Legs"
+  },
+  {
+    "anatomical_name": "Adductors",
+    "name": "Inner Thigh",
+    "muscle_group": "Legs"
+  },
+  {
+    "anatomical_name": "Abductors",
+    "name": "Outer Thigh",
+    "muscle_group": "Legs"
+  },  
+  {
+    "anatomical_name": "Biceps Brachii",
+    "name": "Biceps",
+    "muscle_group": "Arms"
+  },
+  {
+    "anatomical_name": "Triceps Brachii",
+    "name": "Triceps",
+    "muscle_group": "Arms"
+  },
+  {
+    "anatomical_name": "Brachialis",
+    "name": "Brachialis",
+    "muscle_group": "Arms"
+  },
+  {
+    "anatomical_name": "Forearms",
+    "name": "Forearms",
+    "muscle_group": "Arms"
+  },
+  {
+    "anatomical_name": "Rectus Abdominis",
+    "name": "Abs",
+    "muscle_group": "Core"
+  },
+  {
+    "anatomical_name": "Obliques",
+    "name": "Obliques",
+    "muscle_group": "Core"
+  },
+  {
+    "anatomical_name": "Transverse Abdominis",
+    "name": "Deep Core",
+    "muscle_group": "Core"
+  },
+  {
+    "anatomical_name": "Serratus Anterior",
+    "name": "Serratus",
+    "muscle_group": "Core"
+  }
+]
