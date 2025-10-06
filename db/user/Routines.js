@@ -72,3 +72,14 @@ export const deleteRoutine = async (db, id) => {
         throw error;
     }
 };
+
+// Function to delete all routines for a specific user
+export const deleteRoutinesByUserId = async (db, userId) => {
+    try {
+        await db.runAsync('DELETE FROM Routines WHERE user_id = ?', [userId]);
+        console.log('Routines deleted for user:', userId);
+    } catch (error) {
+        console.error('Error deleting routines by user ID:', error);
+        throw error;
+    }
+};

@@ -623,3 +623,61 @@ export const repopulateExerciseTables = async (db) => {
     const { syncExercises } = await import('@/api/sync');
     await syncExercises(db);
 };
+
+/**
+ * Drop only the Routines, RoutineExercises, and ExerciseSets tables for sample data.
+ * Note: Tables are dropped in reverse order of dependencies due to foreign key constraints.
+ * @param {Object} db - The database connection object
+ */
+export const dropRoutineTables = async (db) => {
+    // Drop ExerciseSets first, then RoutineExercises, then Routines due to foreign key constraints
+    await db.execAsync(`
+        DROP TABLE IF EXISTS ExerciseSets;
+        DROP TABLE IF EXISTS RoutineExercises;
+        DROP TABLE IF EXISTS Routines;
+    `);
+};
+
+/**
+ * Create only the Routines, RoutineExercises, and ExerciseSets tables.
+ * @param {Object} db - The database connection object
+ */
+export const createRoutineTables = async (db) => {
+    await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS Routines (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES Users(id)
+        );
+        CREATE TABLE IF NOT EXISTS RoutineExercises (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            routine_id INTEGER,
+            exercise_id INTEGER,
+            FOREIGN KEY (routine_id) REFERENCES Routines(id),
+            FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
+        );
+        CREATE TABLE IF NOT EXISTS ExerciseSets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            routine_exercise_id INTEGER,
+            set_order INTEGER NOT NULL,
+            weight REAL NOT NULL,
+            reps INTEGER NOT NULL,
+            date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (routine_exercise_id) REFERENCES RoutineExercises(id)
+        );
+    `);
+};
+
+/**
+ * Drop, recreate, and repopulate the Routines, RoutineExercises, and ExerciseSets tables.
+ * This function performs a complete refresh of sample routine data from JSON files.
+ * @param {Object} db - The database connection object
+ */
+export const repopulateRoutineTables = async (db) => {
+    await dropRoutineTables(db);
+    await createRoutineTables(db);
+    // Import and sync routines data from JSON
+    const { syncRoutines } = await import('@/api/sync');
+    await syncRoutines(db);
+};
