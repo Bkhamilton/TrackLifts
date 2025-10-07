@@ -8,6 +8,8 @@ This folder contains documentation for various features and future development p
 
 - **[Muscle Soreness Recalculation](MUSCLE_SORENESS_RECALCULATION.md)** - Detailed guide for implementing weighted muscle group soreness calculations using the MuscleRatio.json file. This document explains how to calculate muscle group soreness based on individual muscle contributions and their ratios.
 
+- **[Routine Muscle Soreness Integration](ROUTINE_MUSCLE_SORENESS_INTEGRATION.md)** - Comprehensive plan for incorporating Muscle Soreness visualizations into routine modals. Shows how to display which muscle groups and specific muscles are targeted by a routine, including a small Muscle Soreness diagram and breakdown of muscles worked. Includes database query design, UI/UX specifications, component architecture, and implementation phases.
+
 ### Feature Planning
 
 - **[Cardiovascular Activities](CARDIOVASCULAR_ACTIVITIES.md)** - Comprehensive plan for implementing cardiovascular activity tracking into the application. This document details the database schema changes, TypeScript interfaces, UI/UX considerations, and integration strategies needed to support cardio activities like treadmill, elliptical, stationary bike, and more. Includes discussion of active rest days and their benefits for recovery.
