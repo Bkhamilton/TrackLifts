@@ -562,20 +562,49 @@ export const setupDatabase = async (db) => {
     await syncData(db);
 };
 
+/**
+ * Add the UserIndividualMuscleMaxSoreness table for existing users.
+ * This function is called during app startup for users who don't have this table yet.
+ * @param {Object} db - The database connection object
+ */
+export const addIndividualMuscleSorenessTable = async (db) => {
+    await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS UserIndividualMuscleMaxSoreness (
+            user_id INTEGER NOT NULL,
+            muscle_id INTEGER NOT NULL,
+            max_soreness REAL NOT NULL,
+            last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, muscle_id),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (muscle_id) REFERENCES Muscles(id)
+        );
+    `);
+};
+
 export const initializeDatabase = async (db) => {
     try {
         const isFirstLaunch = await AsyncStorage.getItem('firstLaunch');
         // Add a version key for exercise table repopulation
         const exerciseTablesV2 = await AsyncStorage.getItem('exerciseTablesV2');
+        // Add a version key for UserIndividualMuscleMaxSoreness table
+        const individualMuscleSorenessTableV1 = await AsyncStorage.getItem('individualMuscleSorenessTableV1');
         if (isFirstLaunch === null) {
             // First time launch
             await setupDatabase(db);
             await AsyncStorage.setItem('firstLaunch', 'false');
             await AsyncStorage.setItem('exerciseTablesV2', 'true');
-        } else if (!exerciseTablesV2) {
-            // Run repopulation for all users on update
-            await repopulateExerciseTables(db);
-            await AsyncStorage.setItem('exerciseTablesV2', 'true');
+            await AsyncStorage.setItem('individualMuscleSorenessTableV1', 'true');
+        } else {
+            if (!exerciseTablesV2) {
+                // Run repopulation for all users on update
+                await repopulateExerciseTables(db);
+                await AsyncStorage.setItem('exerciseTablesV2', 'true');
+            }
+            if (!individualMuscleSorenessTableV1) {
+                // Add UserIndividualMuscleMaxSoreness table for existing users
+                await addIndividualMuscleSorenessTable(db);
+                await AsyncStorage.setItem('individualMuscleSorenessTableV1', 'true');
+            }
         }
         // Open a connection to the SQLite database.
     } catch (error) {
