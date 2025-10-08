@@ -142,6 +142,15 @@ export const createUserTables = async (db) => {
             PRIMARY KEY (user_id, muscle_group_id),
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (muscle_group_id) REFERENCES MuscleGroups(id)
+        );
+        CREATE TABLE IF NOT EXISTS UserIndividualMuscleMaxSoreness (
+            user_id INTEGER NOT NULL,
+            muscle_id INTEGER NOT NULL,
+            max_soreness REAL NOT NULL,
+            last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, muscle_id),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (muscle_id) REFERENCES Muscles(id)
         );        
     `);
 }
@@ -490,6 +499,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS FavoriteGraphs;
         DROP TABLE IF EXISTS MuscleSorenessHistory;
         DROP TABLE IF EXISTS UserMuscleMaxSoreness;
+        DROP TABLE IF EXISTS UserIndividualMuscleMaxSoreness;
     `);
 };
 

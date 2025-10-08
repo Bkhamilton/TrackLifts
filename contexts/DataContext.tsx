@@ -15,6 +15,7 @@ import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
 import { getMuscleSorenessByMuscleGroup } from '@/db/data/MuscleSoreness';
 import { getMuscleGroupIdByName } from '@/db/general/MuscleGroups';
 import { getMuscleMaxSoreness } from '@/db/user/UserMuscleMaxSoreness';
+import { getAllIndividualMuscleMaxSoreness } from '@/db/user/UserIndividualMuscleMaxSoreness';
 import {
     deleteFavoriteGraph,
     getFavoriteGraphsByUserId,
@@ -31,6 +32,10 @@ import {
     getYearlyWorkoutCount
 } from '@/db/workout/WorkoutSessions';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
+import { 
+    calculateWeightedMuscleGroupSoreness, 
+    createRatioMap 
+} from '@/utils/muscleSorenessCalculations';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
@@ -284,24 +289,58 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             getMuscleGroupIntensity(db, user.id).then((intensity) => {
                 setMuscleGroupIntensity(intensity);
             });
-            // Fetch both current soreness and max soreness
-            const [currentSoreness, maxSoreness] = await Promise.all([
+            
+            // Fetch muscle group soreness data
+            const [currentSoreness, maxSoreness, individualMaxSoreness] = await Promise.all([
                 getMuscleGroupSoreness(db, user.id),
-                getMuscleMaxSoreness(db, user.id)
+                getMuscleMaxSoreness(db, user.id),
+                getAllIndividualMuscleMaxSoreness(db, user.id)
             ]);
 
-            // Combine the data
-            const muscleData = currentSoreness.map((item: { muscle_group_id: any; }) => {
-                const max = maxSoreness.find((m: { muscle_group_id: any; }) => 
-                    m.muscle_group_id === item.muscle_group_id
-                );
-                return {
-                    ...item,
-                    max_soreness: max ? max.max_soreness : 1 // Default to 1 if no max
-                };
-            });
+            // Create a map of individual muscle max soreness for quick lookup
+            const individualMaxMap = new Map(
+                individualMaxSoreness.map((m: { muscle_id: any; max_soreness: any; }) => 
+                    [m.muscle_id, m.max_soreness]
+                )
+            );
+
+            // Calculate weighted soreness for each muscle group
+            const ratioMap = createRatioMap();
+            const muscleDataWithWeighted = await Promise.all(
+                currentSoreness.map(async (item: { muscle_group_id: any; muscle_group: any; }) => {
+                    const max = maxSoreness.find((m: { muscle_group_id: any; }) => 
+                        m.muscle_group_id === item.muscle_group_id
+                    );
+                    
+                    // Fetch individual muscle soreness for this group
+                    const individualMuscles = await getMuscleSorenessByMuscleGroup(
+                        db, 
+                        user.id, 
+                        item.muscle_group_id
+                    );
+                    
+                    // Add max soreness to each individual muscle
+                    const musclesWithMax = individualMuscles.map((muscle: { muscle_id: any; }) => ({
+                        ...muscle,
+                        max_soreness: individualMaxMap.get(muscle.muscle_id) || 1
+                    }));
+                    
+                    // Calculate weighted soreness
+                    const weightedSoreness = calculateWeightedMuscleGroupSoreness(
+                        item.muscle_group,
+                        musclesWithMax,
+                        ratioMap
+                    );
+                    
+                    return {
+                        ...item,
+                        max_soreness: max ? max.max_soreness : 1,
+                        weighted_soreness: weightedSoreness
+                    };
+                })
+            );
             
-            setMuscleGroupSoreness(muscleData);
+            setMuscleGroupSoreness(muscleDataWithWeighted);
         }
     }
 

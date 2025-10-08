@@ -505,9 +505,122 @@ The weighted muscle soreness calculation using `MuscleRatio.json` provides a mor
 
 The implementation should start simple (client-side calculation) and evolve based on user feedback and performance requirements. The modular nature of the design allows for easy iteration and enhancement over time.
 
+## Implementation Status
+
+### ✅ Completed Changes (Option 1: Calculate on Read)
+
+**Date Completed:** [Current Implementation as of this update]
+
+**What Was Changed:**
+
+1. **Database Schema Updates** (`api/startup.js`)
+   - Added `UserIndividualMuscleMaxSoreness` table to track maximum soreness for individual muscles
+   - Maintains the existing `UserMuscleMaxSoreness` table for backward compatibility
+   - Schema change includes:
+     ```sql
+     CREATE TABLE IF NOT EXISTS UserIndividualMuscleMaxSoreness (
+         user_id INTEGER NOT NULL,
+         muscle_id INTEGER NOT NULL,
+         max_soreness REAL NOT NULL,
+         last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+         PRIMARY KEY (user_id, muscle_id),
+         FOREIGN KEY (user_id) REFERENCES Users(id),
+         FOREIGN KEY (muscle_id) REFERENCES Muscles(id)
+     );
+     ```
+
+2. **Utility Functions** (`utils/muscleSorenessCalculations.js`)
+   - Created `createRatioMap()` - Builds a lookup map from MuscleRatio.json for efficient access
+   - Created `normalizeMuscleSoreness()` - Normalizes individual muscle soreness to 0-1 scale
+   - Created `calculateWeightedMuscleGroupSoreness()` - Implements the weighted formula:
+     ```
+     MuscleGroupSoreness = Σ (IndividualMuscleSoreness × MuscleRatio)
+     ```
+   - All calculations happen on read (client-side) as per Option 1
+
+3. **Database Functions**
+   - Added `db/user/UserIndividualMuscleMaxSoreness.js` with functions:
+     - `getIndividualMuscleMaxSoreness(db, userId, muscleId)` - Get max soreness for a specific muscle
+     - `getAllIndividualMuscleMaxSoreness(db, userId)` - Get all muscle max soreness for a user
+     - `updateIndividualMuscleMaxSoreness(db, userId, muscleId, maxSoreness)` - Update max soreness
+   
+   - Updated `db/data/MuscleSoreness.js`:
+     - Added `updateIndividualMuscleSoreness(db, userId)` - Updates max soreness for individual muscles
+   
+   - Updated `db/data/MuscleGroupSoreness.js`:
+     - Enhanced `updateMuscleSoreness()` to also update individual muscle max soreness
+
+4. **Data Context Updates** (`contexts/DataContext.tsx`)
+   - Imports the new weighted calculation utilities
+   - Fetches individual muscle soreness data alongside muscle group data
+   - Calculates weighted soreness for each muscle group on read
+   - Stores `weighted_soreness` field in muscle group soreness data
+   - Process flow:
+     1. Fetch muscle group soreness from views
+     2. Fetch individual muscle max soreness
+     3. For each muscle group, fetch individual muscle soreness
+     4. Calculate weighted soreness using ratios from MuscleRatio.json
+     5. Provide weighted soreness to components
+
+5. **UI Component Updates** (`components/Profile/MuscleSoreness/MuscleSoreness.tsx`)
+   - Uses `weighted_soreness` field instead of raw normalized soreness
+   - Maintains backward compatibility with existing visualization
+   - Enhanced normalization for better visual representation
+   - Displays weighted soreness on muscle diagram
+
+**Current Functionality:**
+
+1. **Individual Muscle Tracking**
+   - Each individual muscle's soreness is tracked separately in the `MuscleSoreness` view
+   - Maximum soreness ever achieved is stored per muscle in `UserIndividualMuscleMaxSoreness`
+   - Soreness scores are normalized against historical max for that specific muscle
+
+2. **Weighted Muscle Group Calculation**
+   - Muscle group soreness is calculated using weighted contributions from individual muscles
+   - Ratios are defined in `data/MuscleRatio.json`:
+     - **Chest:** Main Chest (60%), Upper Chest (30%), Lower Chest (10%)
+     - **Back:** Lats (30%), Upper Traps (15%), Middle Traps (15%), Lower Traps (10%), Rhomboids (15%), Teres (5%), Lower Back (10%)
+     - **Shoulders:** Front Delts (35%), Side Delts (35%), Rear Delts (30%)
+     - **Arms:** Biceps (35%), Triceps (40%), Brachialis (15%), Forearms (10%)
+     - **Legs:** Quads (25%), Hamstrings (25%), Glutes (25%), Calves (10%), Adductors (7%), Abductors (5%), Hip Flexors (3%)
+     - **Core:** Abs (40%), Obliques (30%), Deep Core (20%), Serratus (10%)
+   
+3. **Calculation on Read (Option 1)**
+   - No changes to database views (MuscleSoreness and MuscleGroupSoreness remain unchanged)
+   - Weighted calculation happens in the application layer when data is fetched
+   - Easy to adjust ratios by modifying MuscleRatio.json
+   - No database migration required
+
+4. **Handling Missing Data**
+   - If a muscle has never been trained, it contributes 0 to the group soreness
+   - Missing muscles are handled gracefully without errors
+   - Muscle group soreness reflects incomplete training accurately
+
+5. **Visual Display**
+   - Muscle soreness visualization uses weighted soreness values
+   - Color gradient reflects weighted soreness: green (0-25%), yellow (25-50%), orange (50-75%), red (75-100%)
+   - Enhanced normalization for better visual representation with slight curve
+
+**Benefits of This Implementation:**
+
+- ✅ More accurate representation of muscle group recovery
+- ✅ Accounts for relative importance of muscles within a group
+- ✅ Easy to iterate and adjust ratios (just edit MuscleRatio.json)
+- ✅ No breaking changes to existing database schema
+- ✅ Minimal performance impact (calculation happens once per data fetch)
+- ✅ Maintains backward compatibility
+
+**Known Limitations:**
+
+- Calculation happens on every data fetch (slight client-side overhead)
+- Ratios are static and not personalized per user (can be enhanced later)
+- Requires individual muscle data to be present in the database
+
 ## References
 
 - Current implementation: `api/startup.js` (createSorenessViews function)
 - Muscle ratios: `data/MuscleRatio.json`
-- Max soreness tracking: `db/user/UserMuscleMaxSoreness.js`
-- UI display: `components/Profile/MuscleSoreness/`
+- Weighted calculation utilities: `utils/muscleSorenessCalculations.js`
+- Max soreness tracking: `db/user/UserMuscleMaxSoreness.js`, `db/user/UserIndividualMuscleMaxSoreness.js`
+- Data context: `contexts/DataContext.tsx`
+- UI display: `components/Profile/MuscleSoreness/MuscleSoreness.tsx`
