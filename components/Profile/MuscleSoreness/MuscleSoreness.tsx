@@ -78,13 +78,15 @@ const MuscleSoreness = () => {
             s.muscle_group.toLowerCase() === m.name.toLowerCase()
         );
         
-        if (!dbData) return { ...m, value: 0, rawScore: 0, maxSoreness: 1 };
+        if (!dbData) return { ...m, value: 0, rawScore: 0, maxSoreness: 1, weightedSoreness: 0 };
         
+        // Use weighted soreness if available, otherwise fall back to normalized raw soreness
+        const weightedSoreness = dbData.weighted_soreness !== undefined ? dbData.weighted_soreness : 0;
         const rawScore = dbData.soreness_score || 0;
         const maxSoreness = dbData.max_soreness || 1;
         
-        // Enhanced normalization function
-        const linear = rawScore / maxSoreness;
+        // Enhanced normalization function for display
+        const linear = weightedSoreness;
         const curved = 1 - Math.exp(-0.8 * linear);
         const alpha = 0.2; // 0 = pure linear, 1 = pure curved
         const normalizedSoreness = Math.min(
@@ -102,7 +104,8 @@ const MuscleSoreness = () => {
             ...m,
             value: normalizedSoreness,
             rawScore,
-            maxSoreness
+            maxSoreness,
+            weightedSoreness
         };
     });
     
