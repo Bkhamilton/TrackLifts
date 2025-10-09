@@ -4,7 +4,7 @@ import { DBContextProvider } from '@/contexts/DBContext';
 import { ExerciseContextProvider } from '@/contexts/ExerciseContext';
 import { RoutineContextProvider } from '@/contexts/RoutineContext';
 import { SplitContextProvider } from '@/contexts/SplitContext';
-import { UserContextProvider } from '@/contexts/UserContext';
+import { UserContext, UserContextProvider } from '@/contexts/UserContext';
 import { WorkoutContextProvider } from '@/contexts/WorkoutContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -12,7 +12,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useContext } from 'react';
 import { LogBox } from 'react-native';
 import 'react-native-reanimated';
 
@@ -70,10 +70,12 @@ export default Sentry.wrap(function RootLayout() {
 });
 
 function RootLayoutNav() {
-    const colorScheme = useColorScheme();
+    const { appearancePreference } = useContext(UserContext);
+    const systemColorScheme = useColorScheme() ?? 'light';
+    const theme = appearancePreference === 'system' ? systemColorScheme : appearancePreference;
 
     return (
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
