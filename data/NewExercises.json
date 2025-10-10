@@ -2226,5 +2226,105 @@
             }
         ],
         "equipment": "Assisted Bodyweight"
+    },
+    {
+        "_id": "new_id_103",
+        "title": "Hack Squat",
+        "muscleGroup": "Legs",
+        "muscles": [
+            {
+                "name": "Quads",
+                "value": 1
+            },
+            {
+                "name": "Glutes",
+                "value": 0.7
+            },
+            {
+                "name": "Hamstrings",
+                "value": 0.4
+            }
+        ],
+        "equipment": "Plate Loaded"
+    },
+    {
+        "_id": "new_id_104",
+        "title": "Lever Row",
+        "muscleGroup": "Back",
+        "muscles": [
+            {
+                "name": "Lats",
+                "value": 1
+            },
+            {
+                "name": "Rhomboids",
+                "value": 0.7
+            },
+            {
+                "name": "Biceps",
+                "value": 0.4
+            }
+        ],
+        "equipment": "Plate Loaded"
+    },
+    {
+        "_id": "new_id_105",
+        "title": "Shoulder Press",
+        "muscleGroup": "Shoulders",
+        "muscles": [
+            {
+                "name": "Front Delts",
+                "value": 1
+            },
+            {
+                "name": "Triceps",
+                "value": 0.5
+            }
+        ],
+        "equipment": "Plate Loaded"
+    },
+    {
+        "_id": "new_id_106",
+        "title": "Seated Row",
+        "muscleGroup": "Back",
+        "muscles": [
+            {
+                "name": "Lats",
+                "value": 0.9
+            },
+            {
+                "name": "Rhomboids",
+                "value": 0.7
+            },
+            {
+                "name": "Biceps",
+                "value": 0.4
+            }
+        ],
+        "equipment": "Plate Loaded"
+    },
+    {
+        "_id": "new_id_107",
+        "title": "Hamstring Curl",
+        "muscleGroup": "Legs",
+        "muscles": [
+            {
+                "name": "Hamstrings",
+                "value": 1
+            }
+        ],
+        "equipment": "Plate Loaded"
+    },
+    {
+        "_id": "new_id_108",
+        "title": "Calf Raises",
+        "muscleGroup": "Legs",
+        "muscles": [
+            {
+                "name": "Calves",
+                "value": 1
+            }
+        ],
+        "equipment": "Plate Loaded"
     }
 ]
