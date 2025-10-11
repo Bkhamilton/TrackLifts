@@ -31,7 +31,7 @@ export default function ExerciseCard({ exercise }: ExerciseCardProps) {
                     }
                     
                     return (
-                        <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder}]}>
+                        <View key={index} style={[styles.setItem, { backgroundColor: cardBorder}]}>
                             <Text style={styles.setNumber}>Set {set.set_order}</Text>
                             <Text style={styles.setDetail}>{set.reps} reps × {weightDisplay}</Text>
                             {set.restTime > 0 && (

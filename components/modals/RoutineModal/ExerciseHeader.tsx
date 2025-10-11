@@ -34,7 +34,7 @@ export default function ExerciseHeader({ exercise }: ExerciseHeaderProps) {
                     }
                     
                     return (
-                        <View key={set.id} style={[styles.setItem, { backgroundColor: cardBorder }]}>
+                        <View key={idx} style={[styles.setItem, { backgroundColor: cardBorder }]}>
                             <Text style={[styles.setNumber, { color: grayText }]}>#{idx + 1}</Text>
                             <Text style={styles.setDetail}>{set.reps} × {weightDisplay}</Text>
                         </View>

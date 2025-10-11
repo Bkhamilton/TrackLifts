@@ -28,7 +28,7 @@ export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
                     </View>
                     
                     {/* Sets List */}
-                    {exercise.sets.map((set) => {
+                    {exercise.sets.map((set, idx) => {
                         // Format weight display based on equipment type
                         let weightDisplay = `${set.weight} lbs`;
                         if (exercise.equipment === 'Assisted Bodyweight' && set.weight !== 0) {
@@ -38,7 +38,7 @@ export default function WorkoutDisplay({ open, routine }: WorkoutProps) {
                         }
                         
                         return (
-                            <View key={set.id} style={[styles.setContainer, { backgroundColor: cardBorder}]}>
+                            <View key={idx} style={[styles.setContainer, { backgroundColor: cardBorder}]}>
                                 <Text style={styles.setNumber}>#{set.set_order}</Text>
                                 <Text style={styles.setValue}>{weightDisplay}</Text>
                                 <Text style={styles.setValue}>{set.reps} reps</Text>
