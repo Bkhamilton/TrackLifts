@@ -51,9 +51,9 @@ const RoutineMismatchModal: React.FC<RoutineMismatchModalProps> = ({
                 <Text style={{ marginBottom: 8 }}>
                     Which routine in your split does this most resemble?
                 </Text>
-                {routineOptions.map(opt => (
+                {routineOptions.map((opt, index) => (
                     <TouchableOpacity
-                        key={opt.routine_id}
+                        key={index}
                         style={{
                             backgroundColor: selectedRoutineId === opt.routine_id ? '#ff8787' : '#eee',
                             padding: 10,
