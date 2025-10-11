@@ -74,9 +74,9 @@ export default function RoutineModal({ visible, close, start, routine, onFavorit
                         style={styles.exercisesContainer}
                         contentContainerStyle={styles.exercisesContent}
                     >
-                        {routine.exercises.map((exercise) => (
+                        {routine.exercises.map((exercise, idx) => (
                             <ExerciseHeader 
-                                key={exercise.id}
+                                key={idx}
                                 exercise={exercise}
                             />
                         ))}
