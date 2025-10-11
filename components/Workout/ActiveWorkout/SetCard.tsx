@@ -30,6 +30,9 @@ export default function SetCard({
 }: SetCardProps) {
 
     const cardBackground = useThemeColor({}, 'grayBorder');
+    const completedSetBg = useThemeColor({}, 'completedSetBackground');
+    const completedInputBg = useThemeColor({}, 'completedInputBackground');
+    const completedTextColor = useThemeColor({}, 'completedText');
     
     // Local state for input values to handle partial decimals
     const [weightInput, setWeightInput] = useState(set.weight.toString());
@@ -66,11 +69,10 @@ export default function SetCard({
     return (
         <View style={[
             styles.setContainer,
-            isCompleted && styles.completedSet,
-            !isCompleted && { backgroundColor: cardBackground }
+            isCompleted ? { backgroundColor: completedSetBg } : { backgroundColor: cardBackground }
         ]}>
             <View style={styles.contentContainer}>
-                <Text style={[styles.setNumber, isCompleted && styles.completedNumber]}>#{index + 1}</Text>
+                <Text style={[styles.setNumber, isCompleted && { color: completedTextColor }]}>#{index + 1}</Text>
                 
                 {/* Weight input with equipment-specific display */}
                 <View style={styles.inputContainer}>
@@ -78,7 +80,10 @@ export default function SetCard({
                         <Text style={styles.assistancePrefix}>-</Text>
                     )}
                     <TextInput
-                        style={[styles.input, isCompleted && styles.completedInput]}
+                        style={[
+                            styles.input, 
+                            isCompleted && { backgroundColor: completedInputBg, color: completedTextColor }
+                        ]}
                         value={weightInput}
                         onChangeText={handleWeightChange}
                         keyboardType={equipment === 'Assisted Bodyweight' ? 'numeric' : 'decimal-pad'}
@@ -92,7 +97,10 @@ export default function SetCard({
                 
                 <View style={styles.inputContainer}>
                     <TextInput
-                        style={[styles.input, isCompleted && styles.completedInput]}
+                        style={[
+                            styles.input, 
+                            isCompleted && { backgroundColor: completedInputBg, color: completedTextColor }
+                        ]}
                         value={repsInput}
                         onChangeText={handleRepsChange}
                         keyboardType="numeric"
@@ -182,16 +190,6 @@ const styles = StyleSheet.create({
         color: '#555',
         marginRight: 2,
         fontWeight: '500',
-    },
-    completedSet: {
-        backgroundColor: '#f0fff0',
-    },
-    completedInput: {
-        backgroundColor: '#e0ffe0',
-        color: '#555',
-    },
-    completedNumber: {
-        color: '#555',
     },
     actionsContainer: {
         flexDirection: 'row',
