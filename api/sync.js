@@ -1,7 +1,7 @@
 import equipment from '@/data/Equipment.json';
-import exercises from '@/data/Exercises.json';
+import exercises from '@/data/NewExercises.json';
 import muscleGroups from '@/data/MuscleGroups.json';
-import muscles from '@/data/Muscles.json';
+import muscles from '@/data/NewMuscles.json';
 import sampleRoutines from '@/data/SampleRoutines.json';
 import sampleSplit from '@/data/SampleSplit.json';
 import { insertEquipment } from '@/db/general/Equipment';
@@ -32,7 +32,7 @@ const syncMuscleGroups = async (db) => {
 
 const syncMuscles = async (db) => {
     for (const muscle of muscles) {
-        const muscleGroupId = await getMuscleGroupIdByName(db, muscle.muscleGroup);
+        const muscleGroupId = await getMuscleGroupIdByName(db, muscle.muscle_group);
         const toAdd = {
             name: muscle.name,
             muscleGroupId: muscleGroupId,
