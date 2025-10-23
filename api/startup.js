@@ -387,12 +387,12 @@ export const createSorenessViews = async (db) => {
                 (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
                 *
                 CASE 
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 0.5 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1.5 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2.5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3.5 THEN 0.3
                     ELSE 0.1
                 END
                 )
@@ -413,7 +413,7 @@ export const createSorenessViews = async (db) => {
             FROM ExerciseMaxHistory
             GROUP BY user_id, exercise_id
         ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
-        WHERE ws.start_time >= date('now', '-14 days')
+        WHERE ws.start_time >= date('now', '-7 days')
         GROUP BY ws.user_id, mg.name;
 
         CREATE VIEW IF NOT EXISTS MuscleSoreness AS
@@ -428,12 +428,12 @@ export const createSorenessViews = async (db) => {
                 (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
                 *
                 CASE 
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 1.0
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.8
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3 THEN 0.65
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 4 THEN 0.55
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 5 THEN 0.45
-                    WHEN (julianday('now') - julianday(ws.start_time)) <= 7 THEN 0.3
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 0.5 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1.5 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2.5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3.5 THEN 0.3
                     ELSE 0.1
                 END
             ) AS soreness_score
@@ -452,7 +452,7 @@ export const createSorenessViews = async (db) => {
             FROM ExerciseMaxHistory
             GROUP BY user_id, exercise_id
         ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
-        WHERE ws.start_time >= date('now', '-14 days')
+        WHERE ws.start_time >= date('now', '-7 days')
         GROUP BY ws.user_id, mg.id, m.id;
     `);
 };
