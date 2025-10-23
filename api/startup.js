@@ -588,12 +588,15 @@ export const initializeDatabase = async (db) => {
         const exerciseTablesV2 = await AsyncStorage.getItem('exerciseTablesV2');
         // Add a version key for UserIndividualMuscleMaxSoreness table
         const individualMuscleSorenessTableV1 = await AsyncStorage.getItem('individualMuscleSorenessTableV1');
+        // Add a version key for new exercises migration
+        const exercisesV3NewMuscles = await AsyncStorage.getItem('exercisesV3NewMuscles');
         if (isFirstLaunch === null) {
             // First time launch
             await setupDatabase(db);
             await AsyncStorage.setItem('firstLaunch', 'false');
             await AsyncStorage.setItem('exerciseTablesV2', 'true');
             await AsyncStorage.setItem('individualMuscleSorenessTableV1', 'true');
+            await AsyncStorage.setItem('exercisesV3NewMuscles', 'true');
         } else {
             if (!exerciseTablesV2) {
                 // Run repopulation for all users on update
@@ -604,6 +607,12 @@ export const initializeDatabase = async (db) => {
                 // Add UserIndividualMuscleMaxSoreness table for existing users
                 await addIndividualMuscleSorenessTable(db);
                 await AsyncStorage.setItem('individualMuscleSorenessTableV1', 'true');
+            }
+            if (!exercisesV3NewMuscles) {
+                // Migrate exercises to use new muscles list
+                const { migrateToNewExercises } = await import('@/api/migrateExercises');
+                await migrateToNewExercises(db);
+                await AsyncStorage.setItem('exercisesV3NewMuscles', 'true');
             }
         }
         // Open a connection to the SQLite database.
