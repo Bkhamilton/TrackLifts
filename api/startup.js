@@ -581,6 +581,92 @@ export const addIndividualMuscleSorenessTable = async (db) => {
     `);
 };
 
+export const replaceSorenessViews = async (db) => {
+    await db.execAsync(`
+        DROP VIEW IF EXISTS MuscleSoreness;
+        DROP VIEW IF EXISTS MuscleGroupSoreness;
+    `);
+    await db.execAsync(`
+        CREATE VIEW IF NOT EXISTS MuscleGroupSoreness AS
+        SELECT
+            ws.user_id,
+            mg.id AS muscle_group_id,
+            mg.name AS muscle_group,
+            SUM(
+                (ss.weight * ss.reps * em.intensity * 
+                (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
+                *
+                CASE 
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 0.5 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1.5 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2.5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3.5 THEN 0.3
+                    ELSE 0.1
+                END
+                )
+            ) AS soreness_score
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        LEFT JOIN (
+            SELECT
+                user_id,
+                exercise_id,
+                MAX(one_rep_max) AS max_one_rep_max,
+                MAX(calculation_date) AS max_date
+            FROM ExerciseMaxHistory
+            GROUP BY user_id, exercise_id
+        ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
+        WHERE ws.start_time >= date('now', '-7 days')
+        GROUP BY ws.user_id, mg.name;
+
+        CREATE VIEW IF NOT EXISTS MuscleSoreness AS
+        SELECT
+            ws.user_id,
+            mg.id AS muscle_group_id,
+            mg.name AS muscle_group,
+            m.id AS muscle_id,
+            m.name AS muscle_name,
+            SUM(
+                ss.weight * ss.reps * em.intensity * 
+                (ss.weight / COALESCE(emh.max_one_rep_max, 1)) 
+                *
+                CASE 
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 0.5 THEN 1.0
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1 THEN 0.8
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 1.5 THEN 0.65
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2 THEN 0.55
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 2.5 THEN 0.45
+                    WHEN (julianday('now') - julianday(ws.start_time)) <= 3.5 THEN 0.3
+                    ELSE 0.1
+                END
+            ) AS soreness_score
+        FROM WorkoutSessions ws
+        JOIN SessionExercises se ON ws.id = se.session_id
+        JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        JOIN Exercises e ON se.exercise_id = e.id
+        JOIN ExerciseMuscles em ON em.exercise_id = e.id
+        JOIN Muscles m ON em.muscle_id = m.id
+        JOIN MuscleGroups mg ON m.muscle_group_id = mg.id
+        LEFT JOIN (
+            SELECT
+                user_id,
+                exercise_id,
+                MAX(one_rep_max) AS max_one_rep_max
+            FROM ExerciseMaxHistory
+            GROUP BY user_id, exercise_id
+        ) emh ON emh.exercise_id = e.id AND emh.user_id = ws.user_id
+        WHERE ws.start_time >= date('now', '-7 days')
+        GROUP BY ws.user_id, mg.id, m.id;
+    `);
+}
+
 export const initializeDatabase = async (db) => {
     try {
         const isFirstLaunch = await AsyncStorage.getItem('firstLaunch');
@@ -612,6 +698,7 @@ export const initializeDatabase = async (db) => {
                 // Migrate exercises to use new muscles list
                 const { migrateToNewExercises } = await import('@/api/migrateExercises');
                 await migrateToNewExercises(db);
+                await replaceSorenessViews(db);
                 await AsyncStorage.setItem('exercisesV3NewMuscles', 'true');
             }
         }
