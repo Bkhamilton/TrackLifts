@@ -43,8 +43,14 @@ export default function EditHistoryCard({
 
     // Handle time selection
     const handleTimeConfirm = (time: Date) => {
-        setSelectedDate(time);
-        onChangeStartTime(time.toISOString());
+        // Preserve the current date when changing the time
+        const newDateTime = new Date(selectedDate);
+        newDateTime.setHours(time.getHours());
+        newDateTime.setMinutes(time.getMinutes());
+        newDateTime.setSeconds(0);
+        newDateTime.setMilliseconds(0);
+        setSelectedDate(newDateTime);
+        onChangeStartTime(newDateTime.toISOString());
     };
 
     // Format duration input (HH:MM:SS)

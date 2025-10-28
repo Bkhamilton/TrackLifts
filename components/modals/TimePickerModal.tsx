@@ -1,6 +1,6 @@
 import { ClearView, Text, View } from '@/components/Themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 interface TimePickerModalProps {
@@ -19,13 +19,15 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
   const [selectedHour, setSelectedHour] = useState(initialTime.getHours());
   const [selectedMinute, setSelectedMinute] = useState(initialTime.getMinutes());
 
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const minutes = Array.from({ length: 60 }, (_, i) => i);
+  const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), []);
+  const minutes = useMemo(() => Array.from({ length: 60 }, (_, i) => i), []);
 
   const handleConfirm = () => {
     const newTime = new Date(initialTime);
     newTime.setHours(selectedHour);
     newTime.setMinutes(selectedMinute);
+    newTime.setSeconds(0);
+    newTime.setMilliseconds(0);
     onTimeSelected(newTime);
     onClose();
   };
