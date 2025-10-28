@@ -110,6 +110,15 @@ export interface UserProfileStats {
     goals: string;
 }
 
+export interface OnboardingData {
+    name: string;
+    username: string;
+    height: string;
+    weight: string;
+    bodyFat: string;
+    favoriteExercise: string;
+}
+
 export interface FavoriteGraph {
     id: string;
     exercise: string;

@@ -7,6 +7,7 @@ import HelpSupportModal from '@/components/modals/Home/HelpSupportModal';
 import NotificationSettingsModal from '@/components/modals/Home/NotificationSettingsModal';
 import PrivacySettingsModal from '@/components/modals/Home/PrivacySettingsModal';
 import SettingsModal from '@/components/modals/Home/SettingsModal';
+import OnboardingModal from '@/components/modals/OnboardingModal';
 import OptionsModal from '@/components/modals/OptionsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import { ScrollView, View } from '@/components/Themed';
@@ -15,11 +16,12 @@ import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HomeContext } from '@/contexts/HomeContext';
 import useHomeActions from '@/hooks/home/useHomeActions';
 import useHookHome from '@/hooks/home/useHookHome';
+import useOnboarding from '@/hooks/useOnboarding';
 import useRoutineOptionsHandler from '@/hooks/home/useRoutineOptionsHandler';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
     
@@ -59,6 +61,8 @@ export default function HomeScreen() {
     const { setRoutineToEdit } = useContext(HomeContext);
 
     const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+
+    const { showOnboarding, isLoading, handleOnboardingComplete } = useOnboarding();
 
     const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
 
@@ -123,6 +127,10 @@ export default function HomeScreen() {
                     favoritesRefreshKey={favoritesRefreshKey}
                 />
             </ScrollView>
+            <OnboardingModal
+                visible={showOnboarding}
+                onComplete={handleOnboardingComplete}
+            />
             <AppearanceSettingsModal
                 visible={appearanceSettingsModal}
                 close={closeAppearanceSettingsModal}
