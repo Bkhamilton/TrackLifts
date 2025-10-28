@@ -18,6 +18,8 @@ export default function OnboardingModal({
     const textColor = useThemeColor({}, 'text');
     const grayText = useThemeColor({}, 'grayText');
     const borderColor = useThemeColor({}, 'grayBorder');
+    const errorBackground = useThemeColor({}, 'errorBackground');
+    const errorTextColor = useThemeColor({}, 'errorText');
 
     const [formData, setFormData] = useState<OnboardingData>({
         name: '',
@@ -159,8 +161,8 @@ export default function OnboardingModal({
 
                     {/* Error Message */}
                     {errorMessage ? (
-                        <View style={styles.errorContainer}>
-                            <Text style={styles.errorText}>{errorMessage}</Text>
+                        <View style={[styles.errorContainer, { backgroundColor: errorBackground }]}>
+                            <Text style={[styles.errorText, { color: errorTextColor }]}>{errorMessage}</Text>
                         </View>
                     ) : null}
 
@@ -227,14 +229,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     errorContainer: {
-        backgroundColor: '#ffe6e6',
         padding: 12,
         borderRadius: 8,
         marginTop: 8,
         marginBottom: 8,
     },
     errorText: {
-        color: '#d32f2f',
         fontSize: 14,
         textAlign: 'center',
     },

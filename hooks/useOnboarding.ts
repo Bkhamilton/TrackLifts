@@ -35,7 +35,7 @@ export default function useOnboarding() {
         try {
             if (!db || !user.id) {
                 console.error('Database or user not available');
-                throw new Error('Database not ready. Please try again.');
+                throw new Error('Unable to initialize user profile. Please restart the app and try again.');
             }
 
             // Update user info

@@ -20,6 +20,8 @@ export const Colors = {
     completedSetBackground: '#f0fff0',
     completedInputBackground: '#e0ffe0',
     completedText: '#555',
+    errorBackground: '#ffe6e6',
+    errorText: '#d32f2f',
   },
   dark: {
     text: '#ECEDEE',
@@ -34,5 +36,7 @@ export const Colors = {
     completedSetBackground: '#1a3a1a',
     completedInputBackground: '#2a4a2a',
     completedText: '#a0d0a0',
+    errorBackground: '#4a2020',
+    errorText: '#ff8787',
   },
 };

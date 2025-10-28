@@ -35,7 +35,7 @@
 // Steps:
 // 1. Leave Name and Username fields empty
 // 2. Tap "Get Started" button
-// Expected: Alert should display: "Please fill in at least your name and username"
+// Expected: Inline error message should display: "Please fill in at least your name and username"
 // Expected: Modal should remain open
 
 // Test Scenario 4: Subsequent Launches - Modal Should Not Display
