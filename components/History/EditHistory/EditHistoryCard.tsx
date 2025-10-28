@@ -1,9 +1,10 @@
 import { Text, TextInput, View } from '@/components/Themed';
+import DatePickerModal from '@/components/modals/DatePickerModal';
+import TimePickerModal from '@/components/modals/TimePickerModal';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type EditHistoryCardProps = {
     startTime: string;
@@ -31,19 +32,26 @@ export default function EditHistoryCard({
 
     // Handle date selection
     const handleDateConfirm = (date: Date) => {
-        setSelectedDate(date);
-        onChangeStartTime(date.toISOString());
-        setShowDatePicker(false);
+        // Preserve the current time when changing the date
+        const newDateTime = new Date(date);
+        newDateTime.setHours(selectedDate.getHours());
+        newDateTime.setMinutes(selectedDate.getMinutes());
+        newDateTime.setSeconds(0);
+        newDateTime.setMilliseconds(0);
+        setSelectedDate(newDateTime);
+        onChangeStartTime(newDateTime.toISOString());
     };
 
     // Handle time selection
     const handleTimeConfirm = (time: Date) => {
+        // Preserve the current date when changing the time
         const newDateTime = new Date(selectedDate);
         newDateTime.setHours(time.getHours());
         newDateTime.setMinutes(time.getMinutes());
+        newDateTime.setSeconds(0);
+        newDateTime.setMilliseconds(0);
         setSelectedDate(newDateTime);
         onChangeStartTime(newDateTime.toISOString());
-        setShowTimePicker(false);
     };
 
     // Format duration input (HH:MM:SS)
@@ -105,21 +113,20 @@ export default function EditHistoryCard({
             </View>
 
             {/* Date Picker Modal */}
-            <DateTimePickerModal
-                isVisible={showDatePicker}
-                mode="date"
-                date={selectedDate}
-                onConfirm={handleDateConfirm}
-                onCancel={() => setShowDatePicker(false)}
+            <DatePickerModal
+                visible={showDatePicker}
+                onClose={() => setShowDatePicker(false)}
+                initialDate={selectedDate}
+                onDateSelected={handleDateConfirm}
+                mode="start"
             />
 
             {/* Time Picker Modal */}
-            <DateTimePickerModal
-                isVisible={showTimePicker}
-                mode="time"
-                date={selectedDate}
-                onConfirm={handleTimeConfirm}
-                onCancel={() => setShowTimePicker(false)}
+            <TimePickerModal
+                visible={showTimePicker}
+                onClose={() => setShowTimePicker(false)}
+                initialTime={selectedDate}
+                onTimeSelected={handleTimeConfirm}
             />
         </View>
     );
