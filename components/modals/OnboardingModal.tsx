@@ -1,4 +1,5 @@
 import { Text, View } from '@/components/Themed';
+import { OnboardingData } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -6,16 +7,7 @@ import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, TextInpu
 
 interface OnboardingModalProps {
     visible: boolean;
-    onComplete: (data: OnboardingData) => void;
-}
-
-export interface OnboardingData {
-    name: string;
-    username: string;
-    height: string;
-    weight: string;
-    bodyFat: string;
-    favoriteExercise: string;
+    onComplete: (data: OnboardingData) => Promise<void>;
 }
 
 export default function OnboardingModal({
@@ -35,21 +27,31 @@ export default function OnboardingModal({
         bodyFat: '',
         favoriteExercise: '',
     });
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const handleChange = (field: keyof OnboardingData, value: string) => {
+        // Clear error message when user starts typing
+        if (errorMessage) {
+            setErrorMessage('');
+        }
         setFormData(prev => ({
             ...prev,
             [field]: value
         }));
     };
 
-    const handleComplete = () => {
+    const handleComplete = async () => {
         // Validate required fields
         if (!formData.name || !formData.username) {
-            alert('Please fill in at least your name and username');
+            setErrorMessage('Please fill in at least your name and username');
             return;
         }
-        onComplete(formData);
+        
+        try {
+            await onComplete(formData);
+        } catch (error) {
+            setErrorMessage('Failed to save your information. Please try again.');
+        }
     };
 
     return (
@@ -155,6 +157,13 @@ export default function OnboardingModal({
                         </Text>
                     </ScrollView>
 
+                    {/* Error Message */}
+                    {errorMessage ? (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>{errorMessage}</Text>
+                        </View>
+                    ) : null}
+
                     {/* Complete Button */}
                     <TouchableOpacity 
                         style={styles.completeButton}
@@ -216,6 +225,18 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginTop: 8,
         marginBottom: 16,
+    },
+    errorContainer: {
+        backgroundColor: '#ffe6e6',
+        padding: 12,
+        borderRadius: 8,
+        marginTop: 8,
+        marginBottom: 8,
+    },
+    errorText: {
+        color: '#d32f2f',
+        fontSize: 14,
+        textAlign: 'center',
     },
     completeButton: {
         backgroundColor: '#ff8787',

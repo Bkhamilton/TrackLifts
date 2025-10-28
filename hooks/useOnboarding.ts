@@ -1,18 +1,10 @@
+import { OnboardingData } from '@/constants/types';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { updateUserProfileStats } from '@/db/user/UserProfileStats';
 import { updateUser } from '@/db/user/Users';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext, useEffect, useState } from 'react';
-
-export interface OnboardingData {
-    name: string;
-    username: string;
-    height: string;
-    weight: string;
-    bodyFat: string;
-    favoriteExercise: string;
-}
 
 export default function useOnboarding() {
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -43,7 +35,7 @@ export default function useOnboarding() {
         try {
             if (!db || !user.id) {
                 console.error('Database or user not available');
-                return;
+                throw new Error('Database not ready. Please try again.');
             }
 
             // Update user info
@@ -75,7 +67,7 @@ export default function useOnboarding() {
             setShowOnboarding(false);
         } catch (error) {
             console.error('Error completing onboarding:', error);
-            alert('Failed to save your information. Please try again.');
+            throw error; // Propagate error to modal
         }
     };
 
