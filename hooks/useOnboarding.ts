@@ -16,9 +16,15 @@ export default function useOnboarding() {
         const checkOnboardingStatus = async () => {
             try {
                 const hasCompletedOnboarding = await AsyncStorage.getItem('hasCompletedOnboarding');
+                const isFirstLaunch = await AsyncStorage.getItem('firstLaunch');
                 
-                // Show onboarding only if it hasn't been completed before
-                if (hasCompletedOnboarding === null) {
+                // If this is not the first launch (existing user), skip onboarding
+                if (isFirstLaunch === 'false' && hasCompletedOnboarding === null) {
+                    // Mark onboarding as completed for existing users
+                    await AsyncStorage.setItem('hasCompletedOnboarding', 'true');
+                    setShowOnboarding(false);
+                } else if (hasCompletedOnboarding === null) {
+                    // Show onboarding only for new users who haven't completed it
                     setShowOnboarding(true);
                 }
             } catch (error) {
