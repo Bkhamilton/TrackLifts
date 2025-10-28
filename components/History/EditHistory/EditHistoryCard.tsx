@@ -36,7 +36,8 @@ export default function EditHistoryCard({
         const newDateTime = new Date(date);
         newDateTime.setHours(selectedDate.getHours());
         newDateTime.setMinutes(selectedDate.getMinutes());
-        newDateTime.setSeconds(selectedDate.getSeconds());
+        newDateTime.setSeconds(0);
+        newDateTime.setMilliseconds(0);
         setSelectedDate(newDateTime);
         onChangeStartTime(newDateTime.toISOString());
     };
