@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import LottieView from 'lottie-react-native';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 
 type Props = {
@@ -8,13 +8,34 @@ type Props = {
 };
 
 export default function CelebrationSection({ totalWorkoutsCompleted }: Props) {
+    const animationRef = useRef<LottieView>(null);
+
+    useEffect(() => {
+        // Cleanup function to reset animation when component unmounts
+        const animation = animationRef.current;
+        return () => {
+            if (animation) {
+                animation.reset();
+            }
+        };
+    }, []);
+
+    const handleAnimationFinish = () => {
+        // Reset animation to prevent crash after completion
+        if (animationRef.current) {
+            animationRef.current.reset();
+        }
+    };
+
     return (
         <View style={styles.celebrationContainer}>
             <LottieView
+                ref={animationRef}
                 source={require('@/assets/animations/confetti.json')}
                 autoPlay
                 loop={false}
                 style={styles.celebrationAnimation}
+                onAnimationFinish={handleAnimationFinish}
             />
             <Text style={styles.successText}>🎉 Workout Completed! 🎉</Text>
             <Text style={styles.workoutCount}>{totalWorkoutsCompleted} Workouts Completed</Text>
