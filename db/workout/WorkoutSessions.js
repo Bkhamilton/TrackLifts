@@ -159,6 +159,41 @@ export const getWeeklyWorkoutCount = async (db, userId) => {
     }
 }
 
+/**
+ * Get all workout counts (total, weekly, monthly, quarterly, yearly) in a single query.
+ * This is much more efficient than making 5 separate database calls.
+ * @param {object} db - The database instance
+ * @param {number} userId - The user ID
+ * @returns {Promise<object>} Object containing all workout counts
+ */
+export const getAllWorkoutCounts = async (db, userId) => {
+    try {
+        const query = `
+            SELECT 
+                COUNT(*) AS total,
+                SUM(CASE WHEN start_time >= datetime('now', '-7 days') THEN 1 ELSE 0 END) AS weekly,
+                SUM(CASE WHEN strftime('%Y-%m', start_time) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) AS monthly,
+                SUM(CASE WHEN strftime('%Y-%m', start_time) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) AS quarterly,
+                SUM(CASE WHEN strftime('%Y', start_time) = strftime('%Y', 'now') THEN 1 ELSE 0 END) AS yearly
+            FROM 
+                WorkoutSessions
+            WHERE 
+                user_id = ?
+        `;
+        const result = await db.getFirstAsync(query, [userId]);
+        return {
+            total: result?.total || 0,
+            weekly: result?.weekly || 0,
+            monthly: result?.monthly || 0,
+            quarterly: result?.quarterly || 0,
+            yearly: result?.yearly || 0,
+        };
+    } catch (error) {
+        console.error('Error getting all workout counts:', error);
+        throw error;
+    }
+};
+
 export const getTotalCaloriesBurned = async (db, userId) => {
     try {
         const query = `

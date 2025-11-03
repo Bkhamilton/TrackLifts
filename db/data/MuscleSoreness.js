@@ -13,6 +13,43 @@ export const getMuscleSorenessByMuscleGroup = async (db, userId, muscleGroupId) 
     }
 };
 
+/**
+ * Get all muscle soreness data for a user with muscle group information in a single query.
+ * This is more efficient than calling getMuscleSorenessByMuscleGroup for each muscle group.
+ * @param {object} db - The database instance
+ * @param {number} userId - The user ID
+ * @returns {Promise<object>} Object with muscle soreness grouped by muscle_group_id
+ */
+export const getAllMuscleSorenessGrouped = async (db, userId) => {
+    if (!db || !userId) return {};
+    try {
+        const results = await db.getAllAsync(
+            `SELECT muscle_group_id, muscle_id, muscle_name, soreness_score 
+             FROM MuscleSoreness 
+             WHERE user_id = ?
+             ORDER BY muscle_group_id, muscle_name`,
+            [userId]
+        );
+        
+        // Group by muscle_group_id for easy lookup
+        const grouped = {};
+        for (const row of results) {
+            if (!grouped[row.muscle_group_id]) {
+                grouped[row.muscle_group_id] = [];
+            }
+            grouped[row.muscle_group_id].push({
+                muscle_id: row.muscle_id,
+                muscle_name: row.muscle_name,
+                soreness_score: row.soreness_score
+            });
+        }
+        return grouped;
+    } catch (e) {
+        console.error('Failed to fetch all muscle soreness:', e);
+        return {};
+    }
+};
+
 export const updateIndividualMuscleSoreness = async (db, userId) => {
     try {
         // Calculate current individual muscle soreness
