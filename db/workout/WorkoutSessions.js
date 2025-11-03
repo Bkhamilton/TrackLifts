@@ -98,16 +98,12 @@ export const getQuarterlyWorkoutCount = async (db, userId) => {
     try {
         const query = `
             SELECT
-                strftime('%Y-%m', start_time) AS quarter,
                 COUNT(*) AS count
             FROM
                 WorkoutSessions
             WHERE
-                user_id = ?
-            GROUP BY
-                quarter
-            ORDER BY
-                quarter DESC
+                user_id = ? AND
+                start_time >= datetime('now', '-3 months')
         `;
         const result = await db.getFirstAsync(query, [userId]);
         return result ? result.count : 0;
@@ -173,7 +169,7 @@ export const getAllWorkoutCounts = async (db, userId) => {
                 COUNT(*) AS total,
                 SUM(CASE WHEN start_time >= datetime('now', '-7 days') THEN 1 ELSE 0 END) AS weekly,
                 SUM(CASE WHEN strftime('%Y-%m', start_time) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) AS monthly,
-                SUM(CASE WHEN start_time >= datetime('now', 'start of month', '-3 months') THEN 1 ELSE 0 END) AS quarterly,
+                SUM(CASE WHEN start_time >= datetime('now', '-3 months') THEN 1 ELSE 0 END) AS quarterly,
                 SUM(CASE WHEN strftime('%Y', start_time) = strftime('%Y', 'now') THEN 1 ELSE 0 END) AS yearly
             FROM 
                 WorkoutSessions
