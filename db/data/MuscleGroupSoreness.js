@@ -62,11 +62,13 @@ export const updateMuscleSoreness = async (db, userId) => {
         
         // Batch insert soreness history for all muscle groups at once
         if (currentSoreness.length > 0) {
-            const values = currentSoreness.map(s => `(${userId}, ${s.muscle_group_id}, ${s.soreness_score})`).join(',');
+            // Use parameterized queries to prevent SQL injection
+            const placeholders = currentSoreness.map(() => '(?, ?, ?)').join(',');
+            const values = currentSoreness.flatMap(s => [userId, s.muscle_group_id, s.soreness_score]);
             await db.runAsync(`
                 INSERT INTO MuscleSorenessHistory (user_id, muscle_group_id, soreness_score)
-                VALUES ${values}
-            `);
+                VALUES ${placeholders}
+            `, values);
         }
         
         return true;
