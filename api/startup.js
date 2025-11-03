@@ -324,32 +324,57 @@ export const createExerciseViews = async (db) => {
         GROUP BY ws.id, se.exercise_id;
 
         CREATE VIEW IF NOT EXISTS ExerciseStatSets AS
+        WITH MaxValues AS (
+            SELECT 
+                se.id AS session_exercise_id,
+                ss.id AS set_id,
+                ss.weight,
+                ss.reps,
+                ss.estimated_1rm,
+                MAX(ss.weight) OVER (PARTITION BY se.id) AS max_weight,
+                MAX(ss.estimated_1rm) OVER (PARTITION BY se.id) AS max_1rm,
+                MAX(ss.reps) OVER (PARTITION BY se.id) AS max_reps
+            FROM SessionExercises se
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        ),
+        TieBreakers AS (
+            SELECT 
+                session_exercise_id,
+                set_id,
+                weight,
+                reps,
+                estimated_1rm,
+                max_weight,
+                max_1rm,
+                max_reps,
+                MAX(CASE WHEN weight = max_weight THEN reps END) OVER (PARTITION BY session_exercise_id) AS max_reps_at_max_weight,
+                MAX(CASE WHEN estimated_1rm = max_1rm THEN weight END) OVER (PARTITION BY session_exercise_id) AS max_weight_at_max_1rm,
+                MAX(CASE WHEN reps = max_reps THEN weight END) OVER (PARTITION BY session_exercise_id) AS max_weight_at_max_reps
+            FROM MaxValues
+        )
         SELECT
             ws.id AS session_id,
             ws.user_id,
             ws.start_time AS workout_date,
             se.exercise_id,
-            ss.id AS set_id,
-            ss.weight,
-            ss.reps,
+            tb.set_id,
+            tb.weight,
+            tb.reps,
             CASE 
-                WHEN ss.weight = MAX(ss.weight) OVER (PARTITION BY se.id)
-                     AND ss.reps = MAX(CASE WHEN ss.weight = MAX(ss.weight) OVER (PARTITION BY se.id) THEN ss.reps END) OVER (PARTITION BY se.id)
+                WHEN tb.weight = tb.max_weight AND tb.reps = tb.max_reps_at_max_weight
                 THEN 1 ELSE 0
             END AS is_heaviest_set,
             CASE 
-                WHEN ss.estimated_1rm = MAX(ss.estimated_1rm) OVER (PARTITION BY se.id)
-                     AND ss.weight = MAX(CASE WHEN ss.estimated_1rm = MAX(ss.estimated_1rm) OVER (PARTITION BY se.id) THEN ss.weight END) OVER (PARTITION BY se.id)
+                WHEN tb.estimated_1rm = tb.max_1rm AND tb.weight = tb.max_weight_at_max_1rm
                 THEN 1 ELSE 0
             END AS is_top_set,
             CASE 
-                WHEN ss.reps = MAX(ss.reps) OVER (PARTITION BY se.id)
-                     AND ss.weight = MAX(CASE WHEN ss.reps = MAX(ss.reps) OVER (PARTITION BY se.id) THEN ss.weight END) OVER (PARTITION BY se.id)
+                WHEN tb.reps = tb.max_reps AND tb.weight = tb.max_weight_at_max_reps
                 THEN 1 ELSE 0
             END AS is_most_reps_set
         FROM WorkoutSessions ws
         JOIN SessionExercises se ON ws.id = se.session_id
-        JOIN SessionSets ss ON se.id = ss.session_exercise_id;
+        LEFT JOIN TieBreakers tb ON se.id = tb.session_exercise_id;
 
         CREATE VIEW IF NOT EXISTS ExerciseSessionStatDetails AS
         WITH RankedSets AS (
@@ -712,32 +737,57 @@ export const recreateOptimizedViews = async (db) => {
     `);
     await db.execAsync(`
         CREATE VIEW ExerciseStatSets AS
+        WITH MaxValues AS (
+            SELECT 
+                se.id AS session_exercise_id,
+                ss.id AS set_id,
+                ss.weight,
+                ss.reps,
+                ss.estimated_1rm,
+                MAX(ss.weight) OVER (PARTITION BY se.id) AS max_weight,
+                MAX(ss.estimated_1rm) OVER (PARTITION BY se.id) AS max_1rm,
+                MAX(ss.reps) OVER (PARTITION BY se.id) AS max_reps
+            FROM SessionExercises se
+            JOIN SessionSets ss ON se.id = ss.session_exercise_id
+        ),
+        TieBreakers AS (
+            SELECT 
+                session_exercise_id,
+                set_id,
+                weight,
+                reps,
+                estimated_1rm,
+                max_weight,
+                max_1rm,
+                max_reps,
+                MAX(CASE WHEN weight = max_weight THEN reps END) OVER (PARTITION BY session_exercise_id) AS max_reps_at_max_weight,
+                MAX(CASE WHEN estimated_1rm = max_1rm THEN weight END) OVER (PARTITION BY session_exercise_id) AS max_weight_at_max_1rm,
+                MAX(CASE WHEN reps = max_reps THEN weight END) OVER (PARTITION BY session_exercise_id) AS max_weight_at_max_reps
+            FROM MaxValues
+        )
         SELECT
             ws.id AS session_id,
             ws.user_id,
             ws.start_time AS workout_date,
             se.exercise_id,
-            ss.id AS set_id,
-            ss.weight,
-            ss.reps,
+            tb.set_id,
+            tb.weight,
+            tb.reps,
             CASE 
-                WHEN ss.weight = MAX(ss.weight) OVER (PARTITION BY se.id)
-                     AND ss.reps = MAX(CASE WHEN ss.weight = MAX(ss.weight) OVER (PARTITION BY se.id) THEN ss.reps END) OVER (PARTITION BY se.id)
+                WHEN tb.weight = tb.max_weight AND tb.reps = tb.max_reps_at_max_weight
                 THEN 1 ELSE 0
             END AS is_heaviest_set,
             CASE 
-                WHEN ss.estimated_1rm = MAX(ss.estimated_1rm) OVER (PARTITION BY se.id)
-                     AND ss.weight = MAX(CASE WHEN ss.estimated_1rm = MAX(ss.estimated_1rm) OVER (PARTITION BY se.id) THEN ss.weight END) OVER (PARTITION BY se.id)
+                WHEN tb.estimated_1rm = tb.max_1rm AND tb.weight = tb.max_weight_at_max_1rm
                 THEN 1 ELSE 0
             END AS is_top_set,
             CASE 
-                WHEN ss.reps = MAX(ss.reps) OVER (PARTITION BY se.id)
-                     AND ss.weight = MAX(CASE WHEN ss.reps = MAX(ss.reps) OVER (PARTITION BY se.id) THEN ss.weight END) OVER (PARTITION BY se.id)
+                WHEN tb.reps = tb.max_reps AND tb.weight = tb.max_weight_at_max_reps
                 THEN 1 ELSE 0
             END AS is_most_reps_set
         FROM WorkoutSessions ws
         JOIN SessionExercises se ON ws.id = se.session_id
-        JOIN SessionSets ss ON se.id = ss.session_exercise_id;
+        LEFT JOIN TieBreakers tb ON se.id = tb.session_exercise_id;
 
         CREATE VIEW ExerciseSessionStatDetails AS
         WITH RankedSets AS (
