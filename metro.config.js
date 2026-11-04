@@ -11,7 +11,7 @@ const config = {
   transformer: {
     ...defaultConfig.transformer,
     ...sentryConfig.transformer,
-    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+    babelTransformerPath: require.resolve('react-native-svg-transformer/expo'),
   },
   resolver: {
     ...defaultConfig.resolver,

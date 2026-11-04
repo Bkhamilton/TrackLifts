@@ -20,6 +20,7 @@ export const getMuscleSorenessByMuscleGroup = async (db, userId, muscleGroupId) 
  * @param {number} userId - The user ID
  * @returns {Promise<object>} Object with muscle soreness grouped by muscle_group_id
  */
+/** @returns {Promise<Record<number, {muscle_id: number, muscle_name: string, soreness_score: number}[]>>} */
 export const getAllMuscleSorenessGrouped = async (db, userId) => {
     if (!db || !userId) return {};
     try {

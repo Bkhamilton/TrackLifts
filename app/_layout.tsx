@@ -7,19 +7,20 @@ import { SplitContextProvider } from '@/contexts/SplitContext';
 import { UserContext, UserContextProvider } from '@/contexts/UserContext';
 import { WorkoutContextProvider } from '@/contexts/WorkoutContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext } from 'react';
-import { LogBox } from 'react-native';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
 import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
-  dsn: 'https://261b2553551f0d4b48f61b4d796334d7@o4509992067072000.ingest.us.sentry.io/4509992068579328',
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
@@ -44,11 +45,9 @@ export default Sentry.wrap(function RootLayout() {
         return null;
     }
 
-    LogBox.ignoreLogs([
-        'Attempted to import the module "C:\\Users\\bkham\\Coding\\Mobile Apps\\workout-app\\node_modules\\victory-native"',
-    ]);
-
     return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+        <KeyboardProvider>
         <SQLiteProvider databaseName='workout-tracker.db' onInit={initializeDatabase} useSuspense>
             <DBContextProvider>
                 <UserContextProvider>
@@ -66,6 +65,8 @@ export default Sentry.wrap(function RootLayout() {
                 </UserContextProvider>
             </DBContextProvider>
         </SQLiteProvider>
+        </KeyboardProvider>
+        </GestureHandlerRootView>
     );
 });
 

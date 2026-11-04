@@ -41,6 +41,10 @@ TrackLifts is available for download on the **Apple App Store**. This is the onl
   </a>
 </p>
 
+## Development
+
+Use Node.js 24 LTS and `npm ci`, then `npm run ios` (macOS with Xcode) or `npm run android` (Android SDK and JDK). A fresh development build is required after this SDK upgrade. See [SDK upgrade notes](docs/sdk-58-upgrade.md) for validation and release checks.
+
 ## Tech Stack
 
 *   **Framework:** React Native

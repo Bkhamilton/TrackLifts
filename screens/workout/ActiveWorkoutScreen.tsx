@@ -11,7 +11,7 @@ import { useWorkoutTimer } from '@/hooks/workout/useWorkoutTimer';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 export default function ActiveWorkoutScreen() {
     const {
@@ -132,8 +132,7 @@ export default function ActiveWorkoutScreen() {
                 style={styles.scrollView}
                 contentContainerStyle={{ flexGrow: 1 }}
                 showsVerticalScrollIndicator={false}
-                enableOnAndroid={true}
-                extraScrollHeight={40} // Adjust as needed to ensure input is visible above keyboard
+                bottomOffset={40} // Adjust as needed to ensure input is visible above keyboard
                 keyboardShouldPersistTaps="handled"
             >
                 <Workout

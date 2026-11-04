@@ -1,5 +1,5 @@
 // app/contexts/DBContext.tsx
-import { MuscleGroup } from '@/constants/types';
+import { Muscle, MuscleGroup } from '@/constants/types';
 import { getEquipment } from '@/db/general/Equipment';
 import { getMuscleGroups } from '@/db/general/MuscleGroups';
 import { getMuscles } from '@/db/general/Muscles';
@@ -11,13 +11,6 @@ interface DBContextValue {
     equipment: any[];
     muscles: Muscle[];
     muscleGroups: MuscleGroup[];
-}
-
-type Muscle = {
-    id: string;
-    name: string;
-    muscleGroupId: string;
-    muscleGroup: string;
 }
 
 export const DBContext = createContext<DBContextValue>({
