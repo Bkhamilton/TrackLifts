@@ -1,5 +1,5 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useTheme } from '@react-navigation/native';
+import { useBottomTabBarHeight } from 'expo-router/tabs';
+import { useTheme } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { StyleSheet } from 'react-native';
 

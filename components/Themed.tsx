@@ -3,6 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
+import type { ComponentProps } from 'react';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import {
   ScrollView as DefaultScrollView,
@@ -16,10 +17,10 @@ type ThemeProps = {
   darkColor?: string;
 };
 
-export type TextProps = ThemeProps & DefaultText['props'];
-export type ViewProps = ThemeProps & DefaultView['props'];
-export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
-export type TextInputProps = ThemeProps & DefaultTextInput['props'];
+export type TextProps = ThemeProps & ComponentProps<typeof DefaultText>;
+export type ViewProps = ThemeProps & ComponentProps<typeof DefaultView>;
+export type ScrollViewProps = ThemeProps & ComponentProps<typeof DefaultScrollView>;
+export type TextInputProps = ThemeProps & ComponentProps<typeof DefaultTextInput>;
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;

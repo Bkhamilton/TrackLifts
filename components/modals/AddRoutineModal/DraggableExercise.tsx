@@ -110,7 +110,6 @@ export const DraggableExercise = ({
                     <ExerciseComponent
                         exercise={exercise}
                         onRemove={onRemove}
-                        isDragging={isDragging}
                     />
                 </View>
             </GestureDetector>

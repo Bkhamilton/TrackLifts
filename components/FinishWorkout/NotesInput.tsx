@@ -1,6 +1,6 @@
 import { Text, View } from '@/components/Themed';
 import React, { useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, StyleSheet, TextInput, type TextInputInstance, TouchableOpacity } from 'react-native';
 
 type NotesInputProps = {
     value: string;
@@ -9,7 +9,7 @@ type NotesInputProps = {
 
 export default function NotesInput({ value, onChangeText }: NotesInputProps) {
     const [modalVisible, setModalVisible] = useState(false);
-    const inputRef = useRef<TextInput>(null);
+    const inputRef = useRef<TextInputInstance>(null);
 
     const handleOpenModal = () => {
         setModalVisible(true);

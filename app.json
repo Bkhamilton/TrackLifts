@@ -7,7 +7,6 @@
     "icon": "./assets/images/logo.png",
     "scheme": "workoutapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.benkhamilton.workoutapp",
@@ -21,7 +20,6 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.benkhamilton.workoutapp"
     },
     "web": {

@@ -13,7 +13,7 @@ const useHookExercises = () => {
     const [addExerciseModal, setAddExerciseModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
     const [searchModalVisible, setSearchModalVisible] = useState(false);
-    const [exercise, setExercise] = useState({
+    const [exercise, setExercise] = useState<Exercise>({
         id: 0,
         title: '',
         equipment: '',

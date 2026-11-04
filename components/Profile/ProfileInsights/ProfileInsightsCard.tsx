@@ -50,20 +50,21 @@ export default function ProfileInsightsCard() {
     };
 
     // Helper: Score each stat for noteworthiness
-    function getStatScore(stat: { key: string, value: number }) {
+    function getStatScore(stat: { key: string, value: number | string }) {
+        const value = Number.parseFloat(String(stat.value)) || 0;
         switch (stat.key) {
             case 'streak':
-                return stat.value >= 7 ? 100 + stat.value : stat.value; // highlight long streaks
+                return value >= 7 ? 100 + value : value; // highlight long streaks
             case 'progressPercentage':
-                return Math.abs(stat.value); // highlight big changes
+                return Math.abs(value); // highlight big changes
             case 'totalWeightThisWeek':
-                return stat.value;
+                return value;
             case 'averageDuration':
-                return stat.value;
+                return value;
             case 'workoutsThisWeek':
-                return stat.value;
+                return value;
             case 'activeDaysThisMonth':
-                return stat.value;
+                return value;
             default:
                 return 0;
         }
