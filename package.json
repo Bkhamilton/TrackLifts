@@ -1,6 +1,6 @@
 {
   "name": "tracklifts",
-  "main": "expo-router/entry",
+  "main": "index",
   "version": "1.1.3",
   "scripts": {
     "start": "expo start",
@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "doctor": "npx expo-doctor",
     "check:dependencies": "expo install --check",
-    "export:web": "expo export --platform web"
+    "export:web": "expo export --platform web",
+    "postinstall": "setup-skia-web",
+    "test:web-bootstrap": "node --test __tests__/webGraphicsBootstrap.test.cjs"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.5",

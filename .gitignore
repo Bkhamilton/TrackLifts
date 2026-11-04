@@ -39,3 +39,6 @@ yarn-error.*
 app-example
 
 .env.local
+
+# Generated from the installed Skia/CanvasKit version by postinstall
+/public/canvaskit.wasm

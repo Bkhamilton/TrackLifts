@@ -48,3 +48,11 @@ Lottie 7.5 requires the optional peer `@lottiefiles/dotlottie-react` for web/ser
 Metro includes SQLite's `.wasm` assets and sets `Cross-Origin-Embedder-Policy: credentialless` and `Cross-Origin-Opener-Policy: same-origin` in development. Configure those same response headers on any production web host; Metro middleware does not configure exported hosting. See [Expo SQLite web setup](https://docs.expo.dev/versions/latest/sdk/sqlite/#web-setup). Browser runtime behavior still needs a smoke test.
 
 The web root defers local-storage providers and workout screens until client hydration. Static rendering must not access browser storage or render charts before their data providers are initialized. Native rendering is unaffected by this web-only guard.
+
+## Skia web initialization follow-up
+
+Skia v2 captures CanvasKit when its JavaScript modules are evaluated. Importing Victory charts before `LoadSkiaWeb` resolves leaves that captured engine undefined and can fail at `XYWHRect`.
+
+`index.web.ts` now loads CanvasKit before dynamically importing Expo Router's entry point (and therefore its chart routes). Native uses the standard Router entry through `index.ts`. The `postinstall` script runs Skia's `setup-skia-web` to copy the installed, matching CanvasKit WASM into `public/canvaskit.wasm`; it is generated and not checked in. Use `npm ci` normally, or `npm run postinstall` if install scripts were skipped. Both Metro and web exports serve that public file locally, without a CDN. If graphics initialization fails, the startup page displays a reload message rather than an unhandled rejection.
+
+Reference: [Skia v2 web loading](https://wcandillon.github.io/react-native-skia/v2/docs/getting-started/web/).
