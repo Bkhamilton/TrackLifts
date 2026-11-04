@@ -16,8 +16,25 @@ const config = {
   resolver: {
     ...defaultConfig.resolver,
     ...sentryConfig.resolver,
-    assetExts: defaultConfig.resolver.assetExts.filter(ext => ext !== 'svg'),
+    assetExts: [...new Set([...defaultConfig.resolver.assetExts.filter(ext => ext !== 'svg'), 'wasm'])],
     sourceExts: [...new Set([...(defaultConfig.resolver.sourceExts || []), 'svg'])],
+  },
+};
+
+// SQLite's web worker requires SharedArrayBuffer in a cross-origin isolated page.
+// Preserve Sentry/Expo middleware while applying the required development headers.
+const enhanceMiddleware = config.server?.enhanceMiddleware;
+config.server = {
+  ...config.server,
+  enhanceMiddleware: (middleware, metroServer) => {
+    const enhancedMiddleware = enhanceMiddleware
+      ? enhanceMiddleware(middleware, metroServer)
+      : middleware;
+    return (req, res, next) => {
+      res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+      return enhancedMiddleware(req, res, next);
+    };
   },
 };
 
