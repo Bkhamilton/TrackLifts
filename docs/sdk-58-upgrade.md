@@ -40,3 +40,11 @@ The Android project remains checked in. EAS does not automatically reapply app.j
 6. Fix the outstanding lint issues and complete TestFlight smoke testing before promoting this upgrade to production.
 
 References: [SDK 58 release notes](https://expo.dev/changelog/sdk-58), [upgrade guide](https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/).
+
+## Web bundling follow-up
+
+Lottie 7.5 requires the optional peer `@lottiefiles/dotlottie-react` for web/server bundles. It is now an explicit dependency. Run `npm ci`, restart with `npx expo start --web --clear`, and use `npm run export:web` to check static export.
+
+Metro includes SQLite's `.wasm` assets and sets `Cross-Origin-Embedder-Policy: credentialless` and `Cross-Origin-Opener-Policy: same-origin` in development. Configure those same response headers on any production web host; Metro middleware does not configure exported hosting. See [Expo SQLite web setup](https://docs.expo.dev/versions/latest/sdk/sqlite/#web-setup). Browser runtime behavior still needs a smoke test.
+
+The web root defers local-storage providers and workout screens until client hydration. Static rendering must not access browser storage or render charts before their data providers are initialized. Native rendering is unaffected by this web-only guard.

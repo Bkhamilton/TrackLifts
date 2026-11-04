@@ -12,9 +12,10 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import React, { useContext } from 'react';
+import React, { useContext, useSyncExternalStore } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
 import 'react-native-reanimated';
 
 import * as Sentry from '@sentry/react-native';
@@ -35,13 +36,23 @@ Sentry.init({
   // spotlight: __DEV__,
 });
 
+// Workout data lives in browser/native storage, not in the static renderer.
+const subscribeToHydration = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default Sentry.wrap(function RootLayout() {
+    const isClient = useSyncExternalStore(
+        subscribeToHydration,
+        getClientSnapshot,
+        getServerSnapshot,
+    );
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
 
-    if (!loaded) {
-        // Async font loading only occurs in development.
+    if (!loaded || (Platform.OS === 'web' && !isClient)) {
+        // Initialize local storage providers only after browser hydration.
         return null;
     }
 
