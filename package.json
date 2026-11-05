@@ -23,7 +23,7 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/slider": "5.2.1",
     "@react-native-picker/picker": "2.11.4",
-    "@sentry/react-native": "~8.28.0",
+    "@sentry/react-native": "~8.33.0",
     "@shopify/react-native-skia": "2.14.0",
     "expo": "^58.0.23",
     "expo-blur": "~58.0.5",
@@ -69,5 +69,12 @@
   "private": true,
   "engines": {
     "node": "^22.13.0 || ^24.3.0 || >=26.0.0"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "@sentry/react-native"
+      ]
+    }
   }
 }
