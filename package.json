@@ -14,7 +14,8 @@
     "check:dependencies": "expo install --check",
     "export:web": "expo export --platform web",
     "postinstall": "setup-skia-web",
-    "test:web-bootstrap": "node --test __tests__/webGraphicsBootstrap.test.cjs"
+    "test:web-bootstrap": "node --test __tests__/webGraphicsBootstrap.test.cjs",
+    "test:chart-compat": "node --test __tests__/chartFrameCompatibility.test.cjs"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.5",
@@ -52,7 +53,7 @@
     "react-native-svg": "15.16.0",
     "react-native-web": "~0.21.4",
     "react-native-webview": "14.0.1",
-    "victory-native": "^41.26.0",
+    "victory-native": "^42.0.1",
     "react-native-keyboard-controller": "1.22.7",
     "react-native-worklets": "0.13.0",
     "expo-dev-client": "~58.0.18"
