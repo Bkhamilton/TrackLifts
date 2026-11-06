@@ -22,6 +22,8 @@ type Props = {
             sets: number;
             reps: number;
             weight: string;
+            units?: number;
+            date?: string;
             contribution: string;
         }[];
     };    
@@ -29,7 +31,7 @@ type Props = {
 
 const getPrimaryMuscles = (muscleGroupId: string): string[] => {
     const muscles: Record<string, string[]> = {
-        chest: ['Pectoralis Major', 'Pectoralis Minor', 'Serratus Anterior'],
+        chest: ['Pectoralis Major (upper and sternocostal regions)'],
         back: ['Latissimus Dorsi', 'Trapezius', 'Rhomboids', 'Erector Spinae'],
         arms: ['Biceps Brachii', 'Triceps Brachii', 'Brachialis', 'Forearm Muscles'],
         shoulders: ['Anterior Deltoid', 'Lateral Deltoid', 'Posterior Deltoid', 'Rotator Cuff'],
@@ -86,7 +88,7 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
                         </View>
                         
                         <Text style={styles.modalSectionTitle}>
-                            Recommended Exercises:
+                            Example Exercises:
                         </Text>
                         <View style={styles.modalExercisesContainer}>
                             {getRecommendedExercises(muscleData.id).map((exercise, index) => (
@@ -96,30 +98,31 @@ const MuscleInfoModal: React.FC<Props> = ({ visible, onClose, muscleData, breakd
                             ))}
                         </View>
 
-                        {/* Intensity Breakdown Section */}
+                        {/* Recent Load Contributions Section */}
                         {breakdown && (
                             <View style={{ marginTop: 10 }}>
-                                <Text style={styles.modalSectionTitle}>Intensity Breakdown</Text>
+                                <Text style={styles.modalSectionTitle}>Recent Load Contributions</Text>
                                 <Text style={{ fontSize: 15, color: '#555', marginBottom: 4 }}>
                                     Routine: <Text style={{ fontWeight: 'bold' }}>{breakdown.routine}</Text>
                                 </Text>
                                 <Text style={{ fontSize: 14, color: '#888', marginBottom: 8 }}>
-                                    Date: {breakdown.date}
+                                    {breakdown.date}
                                 </Text>
+                                <Text style={{ fontSize: 12, marginBottom: 8 }}>Percentages describe shares of uncapped group load across all contributing workouts. Each set is counted once per exercise. Effort, soreness and recovery are not measured.</Text>
                                 <View style={{ borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, overflow: 'hidden' }}>
                                     <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f5', paddingVertical: 6 }}>
                                         <Text style={[styles.tableHeader, { flex: 2 }]}>Exercise</Text>
                                         <Text style={styles.tableHeader}>Sets</Text>
-                                        <Text style={styles.tableHeader}>Reps</Text>
-                                        <Text style={styles.tableHeader}>Weight</Text>
+                                        <Text style={styles.tableHeader}>Units</Text>
+                                        <Text style={styles.tableHeader}>Date</Text>
                                         <Text style={styles.tableHeader}>%</Text>
                                     </View>
                                     {breakdown.exercises.map((ex, idx) => (
                                         <View key={idx} style={{ flexDirection: 'row', paddingVertical: 5, backgroundColor: idx % 2 === 0 ? '#fff' : '#f9f9f9' }}>
                                             <Text style={[styles.tableCell, { flex: 2 }]}>{ex.name}</Text>
                                             <Text style={styles.tableCell}>{ex.sets}</Text>
-                                            <Text style={styles.tableCell}>{ex.reps}</Text>
-                                            <Text style={styles.tableCell}>{ex.weight}</Text>
+                                            <Text style={styles.tableCell}>{ex.units?.toFixed(2)}</Text>
+                                            <Text style={styles.tableCell}>{ex.date ? new Date(ex.date).toLocaleDateString() : '—'}</Text>
                                             <Text style={styles.tableCell}>{ex.contribution}</Text>
                                         </View>
                                     ))}

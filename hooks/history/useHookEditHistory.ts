@@ -1,3 +1,5 @@
+import { workoutDuration, finishFromDuration } from '@/utils/workoutDuration';
+import { Alert } from 'react-native';
 import { HistoryContext } from '@/contexts/HistoryContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
 import { useRouter } from 'expo-router';
@@ -13,7 +15,7 @@ export default function useHookHistory() {
     const { history } = useContext(HistoryContext);
     const { updateWorkout } = useContext(WorkoutContext);
     const [startTime, setStartTime] = useState(history.startTime);
-    const [endTime, setEndTime] = useState(history.endTime);
+    const [endTime, setEndTime] = useState(workoutDuration(history.startTime, history.endTime));
     const [editedNotes, setEditedNotes] = useState(history.notes);
     const [editedRoutine, setEditedRoutine] = useState(history.routine);
 
@@ -28,14 +30,14 @@ export default function useHookHistory() {
         if (JSON.stringify(editedRoutine) !== JSON.stringify(history.routine) || 
         editedNotes !== history.notes ||
         startTime !== history.startTime ||
-        endTime !== history.endTime) {
+        endTime !== workoutDuration(history.startTime, history.endTime)) {
             openConfirmModal();
         } else {
             router.replace('/(tabs)/history/main');
         }
     }
 
-    const handleConfirmSave = (option: 'yes' | 'no') => {
+    const handleConfirmSave = async (option: 'yes' | 'no') => {
         if (option === 'yes') {
             // Save the changes to the routine
             const updatedHistory = {
@@ -45,7 +47,13 @@ export default function useHookHistory() {
                 startTime,
                 endTime,
             };
-            updateWorkout(updatedHistory);
+            try {
+                const unchangedTimes = startTime === history.startTime && endTime === workoutDuration(history.startTime, history.endTime);
+                await updateWorkout({ ...updatedHistory, endTime: unchangedTimes ? history.endTime : finishFromDuration(startTime, endTime) });
+            } catch (error) {
+                Alert.alert('Changes not saved', error instanceof Error ? error.message : 'Please try again.');
+                return;
+            }
             router.replace('/(tabs)/history/main');
         }
     }    

@@ -108,8 +108,8 @@ export const getWeeklyWeightLifted = async (db, userId) => {
 export const insertSessionSet = async (db, sessionSet) => {
     try {
         const result = await db.runAsync(
-            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, estimated_1rm, completed, rest_time) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO SessionSets (session_exercise_id, set_order, weight, reps, estimated_1rm, completed, rest_time, completion_source, body_mass_lbs)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 sessionSet.sessionExerciseId,
                 sessionSet.setOrder,
@@ -117,7 +117,9 @@ export const insertSessionSet = async (db, sessionSet) => {
                 sessionSet.reps,
                 sessionSet.estimated1RM,
                 sessionSet.completed,
-                sessionSet.restTime
+                sessionSet.restTime,
+                sessionSet.completionSource ?? 'legacy-unknown',
+                sessionSet.bodyMassLbs ?? null
             ]
         );
         return result.lastInsertRowId;

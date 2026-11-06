@@ -1,3 +1,5 @@
+> Historical guide: the active profile now shows Recent Muscle Load. See Section 15 of [the source-of-truth plan](MUSCLE_SORENESS_ALGORITHM_PLAN.md) for current units, limitations and behavior.
+
 # User Guide: Weighted Muscle Soreness Feature
 
 ## What Changed?

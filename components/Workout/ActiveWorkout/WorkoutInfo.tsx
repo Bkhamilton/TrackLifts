@@ -83,7 +83,7 @@ export default function WorkoutInfo({
                     setEditingSet={setEditingSet}
                     onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(setId) : undefined}
                     onDeleteSet={(setId) => onDeleteSet(setId)}
-                    isCompleted={completedSets ? completedSets.includes(set.id) : false}
+                    isCompleted={completedSets ? completedSets.includes(set.id) : Boolean(set.completed)}
                 />
             ))}
             
