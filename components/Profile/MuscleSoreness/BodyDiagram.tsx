@@ -18,7 +18,7 @@ export default function BodyDiagram({ view, muscleData, selectedMuscle, getColor
     const detail = dark ? '#d0dce2' : '#52636e';
     const groups = Object.entries(data.groups) as [string, string[]][];
 
-    const label = `${view === 'front' ? 'Front' : 'Back'} recent muscle load diagram${selectedMuscle ? `, ${selectedMuscle} selected` : ''}. Use the muscle group buttons for details.`;
+    const label = `${view === 'front' ? 'Front' : 'Back'} estimated muscle soreness diagram${selectedMuscle ? `, ${selectedMuscle} selected` : ''}. Use the muscle group buttons for details.`;
 
     return (
         <Svg

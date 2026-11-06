@@ -1,5 +1,5 @@
 import { withWorkoutDataLock } from '../../utils/workoutDataLock.js';
-import { calculateMuscleLoad } from '../../utils/muscleLoadModel.js';
+import { calculateEstimatedSoreness } from '../../utils/sorenessModel.js';
 /** @param {number|undefined} [now] */
 export async function getMuscleLoadSnapshot(db, userId, ratios, now = undefined) {
     return withWorkoutDataLock(db, async () => {
@@ -17,6 +17,6 @@ export async function getMuscleLoadSnapshot(db, userId, ratios, now = undefined)
                 LEFT JOIN Equipment eq ON eq.id = e.equipment_id
                 LEFT JOIN Routines r ON r.id = ws.routine_id WHERE ws.user_id = ?`, [userId]),
         ]);
-        return calculateMuscleLoad({ muscles, mappings, sets, ratios, now: now ?? Date.now() });
+        return calculateEstimatedSoreness({ muscles, mappings, sets, ratios, now: now ?? Date.now() });
     });
 }

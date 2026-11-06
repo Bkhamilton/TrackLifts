@@ -6,6 +6,9 @@ export async function migrateRecordedLoad(db) {
         for (const [name, definition] of [
             ['completion_source', "TEXT NOT NULL DEFAULT 'legacy-unknown'"],
             ['body_mass_lbs', 'REAL'],
+            ['rir', 'REAL'],
+            ['is_warmup', 'INTEGER'],
+            ['duration_seconds', 'REAL'],
         ]) {
             if (!names.has(name)) await db.execAsync(`ALTER TABLE SessionSets ADD COLUMN ${name} ${definition}`);
         }

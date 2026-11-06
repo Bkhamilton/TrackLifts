@@ -171,7 +171,7 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     };
 
     const startWorkout = () => {
-        setRoutine(prev => ({ ...prev, exercises: prev.exercises.map(ex => ({ ...ex, sets: ex.sets.map(set => ({ ...set, completed: false })) })) }));
+        setRoutine(prev => ({ ...prev, exercises: prev.exercises.map(ex => ({ ...ex, sets: ex.sets.map(set => ({ ...set, completed: false, rir: null, is_warmup: null })) })) }));
         setIsActiveWorkout(true);
         const now = new Date();
         setStartTime(now.getTime());

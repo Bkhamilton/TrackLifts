@@ -1,3 +1,4 @@
+import { sorenessLabel } from '@/utils/sorenessModel';
 import { ClearView, Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import React, { useContext, useState } from 'react';
@@ -45,8 +46,8 @@ const MuscleInfoPanel = ({
     const [modalVisible, setModalVisible] = useState(false);
     const { muscleGroupSoreness } = useContext(DataContext);
     const group = muscleGroupSoreness.find(g => g.muscle_group === selectedMuscleData?.name);
-    const muscleSoreness = [...(group?.muscles ?? [])].sort((a, b) => b.units - a.units);
-    const exerciseBreakdown = group ? { routine: 'All contributing workouts', date: 'Time-weighted exposure', exercises: group.exercises } : null;
+    const muscleSoreness = [...(group?.muscles ?? [])].sort((a, b) => (b.value ?? -1) - (a.value ?? -1));
+    const exerciseBreakdown = group ? { routine: 'All contributing workouts', date: 'Contributions to this soreness estimate', exercises: group.exercises } : null;
 
     if (!selectedMuscleData) {
         return (
@@ -78,7 +79,7 @@ const MuscleInfoPanel = ({
             >
                 {/* Intensity Bar */}
                 <Text style={styles.sorenessTitle}>
-                    {selectedMuscleData.name} Load
+                    {selectedMuscleData.name} Soreness
                 </Text>                
                 <ClearView style={styles.intensityBarContainer}>
                     <View style={styles.intensityBarBackground}>
@@ -93,16 +94,19 @@ const MuscleInfoPanel = ({
                         />
                     </View>
                     <Text style={styles.intensityBarLabel}>
-                        {group?.value != null ? group.units.toFixed(1) : '—'}
+                        {group?.value != null ? `${Math.round(group.value * 100)}` : '—'}
                     </Text>
                 </ClearView>
 
                 <Text style={{ fontSize: 12, marginBottom: 6 }}>
-                    Weighted set units. {group?.units === 0 ? 'No recent recorded exposure.' : ''}
-                    {group?.status === 'limited-data' ? ' Limited data.' : ''}
+                    {sorenessLabel(group?.value)} · estimated /100.
+                    {group?.status === 'no-recent-training' ? ' No recent logged training.' : ''}
+                    {group?.confidence === 'limited' ? ' Limited information.' : ''}
                 </Text>
-                {group?.peak?.units > 0 && <Text style={{ fontSize: 12 }}>Highest: {group.peak.muscle_name} ({group.peak.units.toFixed(1)} units)</Text>}
+                {group?.peak?.value > 0 && <Text style={{ fontSize: 12 }}>Highest: {group.peak.muscle_name} ({Math.round(group.peak.value * 100)}/100)</Text>}
+                {group?.forecast48 != null && group.forecast48 > (group.value ?? 0) + .05 && <Text style={{ fontSize: 12 }}>May rise: next 48h estimate up to {Math.round(group.forecast48 * 100)}/100.</Text>}
                 {group?.unsupported?.length > 0 && <Text style={{ fontSize: 12 }}>Unmapped: {group.unsupported.join(', ')}</Text>}
+                {group?.reasons?.length > 0 && <Text style={{ fontSize: 11, marginVertical: 4 }}>{group.reasons.join('. ')}.</Text>}
                 {/* Muscles Affected */}
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Affected</Text>
@@ -110,7 +114,7 @@ const MuscleInfoPanel = ({
                         {muscleSoreness.map((muscle, idx) => (
                             <ClearView key={idx} style={styles.muscleItem}>
                                 <View style={[styles.muscleColorIndicator, { backgroundColor: getColor(muscle.value ?? NaN) }]} />
-                                <Text style={styles.muscleName}>{muscle.muscle_name}: {muscle.value === null ? (muscle.status === 'unsupported' ? 'unmapped' : 'unavailable') : muscle.units.toFixed(1)}</Text>
+                                <Text style={styles.muscleName}>{muscle.muscle_name}: {muscle.value === null ? (muscle.status === 'unsupported' ? 'unmapped' : 'unavailable') : `${Math.round(muscle.value * 100)}/100`}</Text>
                             </ClearView>
                         ))}
 

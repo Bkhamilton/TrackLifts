@@ -118,8 +118,8 @@ test('actual SQLite save/read/edit/delete replay and user isolation', async () =
     assert.equal(row.body_mass_lbs, 180); assert.equal(row.completion_source, 'confirmed'); assert.equal(row.estimated_1rm, 228);
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM SessionSets').get().n, 1);
     let snapshot = await getMuscleLoadSnapshot(db,1,ratios,now);
-    assert.ok(snapshot.groups[0].units > 0);
-    assert.equal((await getMuscleLoadSnapshot(db,2,ratios,now)).groups[0].units, 0);
+    assert.ok(snapshot.groups[0].value > 0);
+    assert.equal((await getMuscleLoadSnapshot(db,2,ratios,now)).groups[0].value, 0);
     // Editing preserves the workout's body mass; no current profile weight enters.
     db.sqlite.exec('DELETE FROM SessionSets; DELETE FROM SessionExercises');
     await insertRecordedExercises(db, 1, [{id:1,equipment:'Bodyweight',sets:[{...row,reps:4}]}], 250, true);
@@ -129,7 +129,7 @@ test('actual SQLite save/read/edit/delete replay and user isolation', async () =
     db.sqlite.exec('DELETE FROM SessionSets; DELETE FROM SessionExercises; DELETE FROM WorkoutSessions');
     await rebuildExerciseRecords(db,1);
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM ExerciseMaxHistory').get().n, 0);
-    assert.equal((await getMuscleLoadSnapshot(db,1,ratios,now)).groups[0].units, 0);
+    assert.equal((await getMuscleLoadSnapshot(db,1,ratios,now)).groups[0].value, 0);
     db.sqlite.close();
 });
 test('failed set writes roll back without partial exercises/records', async () => {

@@ -1,4 +1,4 @@
-import { loadColor } from '@/utils/muscleLoadModel';
+import { sorenessColor } from '@/utils/sorenessModel';
 import { useFocusEffect } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
@@ -79,7 +79,7 @@ const MuscleSoreness = () => {
         
         return { ...m, value: dbData?.value ?? NaN };
     });
-    const getColor = loadColor;
+    const getColor = sorenessColor;
 
     // Get currently selected muscle data
     const selectedMuscleData = selectedMuscle 
@@ -90,7 +90,7 @@ const MuscleSoreness = () => {
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
-                    Recent Muscle Load
+                    Estimated Muscle Soreness
                 </Text>
             </View>
             <View style={{ width: '100%', paddingHorizontal: 16 }}>
@@ -98,7 +98,7 @@ const MuscleSoreness = () => {
             </View>
 
             <Text style={{ fontSize: 12, paddingHorizontal: 16, marginBottom: 8 }}>
-                Completed-set exposure, weighted by muscle and time. Not measured soreness or readiness.
+                Expected soreness from your workouts. Compare muscles below; soreness can rise after training.
                 {muscleLoadStatus === 'loading' ? ' Loading…' : ''}
                 {muscleLoadStatus === 'error' ? ' Unavailable.' : ''}
             </Text>

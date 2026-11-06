@@ -1,3 +1,4 @@
+import { isHoldExercise } from '../../utils/sorenessModel.js';
 import { effectiveResistance, timestamp } from '../../utils/muscleLoadModel.js';
 import { insertSessionExercise } from './SessionExercises.js';
 import { insertSessionSet } from './SessionSets.js';
@@ -16,18 +17,23 @@ export async function insertRecordedExercises(db, sessionId, exercises, bodyMass
         const sessionExerciseId = await insertSessionExercise(db, { sessionId, exerciseId: exercise.exercise_id ?? exercise.id });
         for (let i = 0; i < sets.length; i++) {
             const set = sets[i];
-            if (!Number.isFinite(set.weight) || set.weight < 0 || !Number.isFinite(set.reps) || set.reps <= 0) {
-                throw new Error('Completed sets need non-negative weight and positive repetitions.');
+            const hold = isHoldExercise(exercise.title);
+            const weight = exercise.equipment === 'Assisted Bodyweight' ? Math.abs(set.weight) : set.weight;
+            if (!Number.isFinite(weight) || weight < 0 || (!hold && (!Number.isFinite(set.reps) || set.reps <= 0)) || (hold && ((!editing || set.duration_seconds != null) && (!Number.isFinite(set.duration_seconds) || set.duration_seconds <= 0)))) {
+                throw new Error('Completed sets need non-negative weight and positive repetitions (or seconds for holds).');
             }
             // Never apply today's body mass to an edited historical workout.
             const bodyMassLbs = editing ? set.body_mass_lbs ?? null : bodyMass;
-            const resistance = effectiveResistance(set.weight, exercise.equipment, bodyMassLbs);
-            const isHold = ['Plank', 'Side Plank', 'Hollow Body Hold', 'Wall Sit'].includes(exercise.title);
+            const resistance = effectiveResistance(weight, exercise.equipment, bodyMassLbs);
+            const isHold = hold;
             const estimated1RM = !isHold && resistance !== null && resistance > 0 && set.reps <= 12
                 ? (set.reps === 1 ? resistance : resistance * (1 + set.reps / 30)) : null;
             await insertSessionSet(db, {
-                sessionExerciseId, setOrder: i + 1, weight: set.weight, reps: set.reps,
+                sessionExerciseId, setOrder: i + 1, weight, reps: hold ? (set.reps || 0) : set.reps,
                 estimated1RM, restTime: set.restTime ?? set.rest_time ?? null, completed: true,
+                rir: Number.isFinite(set.rir) && set.rir >= 0 && set.rir <= 8 ? set.rir : null,
+                isWarmup: set.is_warmup == null ? null : Number(Boolean(set.is_warmup)),
+                durationSeconds: hold ? set.duration_seconds ?? null : null,
                 completionSource: editing ? set.completion_source ?? 'legacy-unknown' : 'confirmed', bodyMassLbs,
             });
         }

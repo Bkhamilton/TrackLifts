@@ -185,7 +185,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
             if (request !== loadRequest.current) return;
             setMuscleGroupSoreness([]);
             setMuscleLoadStatus('error');
-            setMuscleLoadIssues(['Muscle load could not be calculated. Tap Retry.']);
+            setMuscleLoadIssues(['Estimated soreness could not be calculated. Tap Retry.']);
         }
     }, [db, user.id]);
 
@@ -353,7 +353,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
 
     const getMuscleGroupBreakdown = async (name: string) => {
         const group = muscleGroupSoreness.find(g => g.muscle_group === name);
-        return group ? { routine: 'All contributing workouts', date: 'Time-weighted exposure', exercises: group.exercises } : null;
+        return group ? { routine: 'All contributing workouts', date: 'Contributions to this soreness estimate', exercises: group.exercises } : null;
     };
     const getMuscleSoreness = async (name: string) =>
         muscleGroupSoreness.find(g => g.muscle_group === name)?.muscles ?? [];
