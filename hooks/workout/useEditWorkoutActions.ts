@@ -1,4 +1,4 @@
-import { ActiveExercise, ActiveRoutine, Exercise } from '@/constants/types';
+import { SetInputField, ActiveExercise, ActiveRoutine, Exercise } from '@/constants/types';
 import React from 'react';
 
 export const useEditWorkoutActions = (
@@ -25,12 +25,12 @@ export const useEditWorkoutActions = (
         });
     };
 
-    const updateSet = (exerciseIdx: number, setId: number, field: 'weight' | 'reps', value: string) => {
+    const updateSet = (exerciseIdx: number, setId: number, field: SetInputField, value: string) => {
         // Allow empty string, or parse to number
         // For partial decimals like "120." or "0.", parseFloat handles them correctly
-        let numericValue: number;
+        let numericValue: number | null;
         if (value === '' || value === '.') {
-            numericValue = 0;
+            numericValue = ['rir', 'is_warmup', 'duration_seconds'].includes(field) ? null : 0;
         } else {
             const parsed = parseFloat(value);
             numericValue = isNaN(parsed) ? 0 : parsed;

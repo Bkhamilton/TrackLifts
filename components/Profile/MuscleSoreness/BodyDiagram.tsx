@@ -18,7 +18,7 @@ export default function BodyDiagram({ view, muscleData, selectedMuscle, getColor
     const detail = dark ? '#d0dce2' : '#52636e';
     const groups = Object.entries(data.groups) as [string, string[]][];
 
-    const label = `${view === 'front' ? 'Front' : 'Back'} muscle soreness diagram${selectedMuscle ? `, ${selectedMuscle} selected` : ''}. Use the muscle group buttons for details.`;
+    const label = `${view === 'front' ? 'Front' : 'Back'} estimated muscle soreness diagram${selectedMuscle ? `, ${selectedMuscle} selected` : ''}. Use the muscle group buttons for details.`;
 
     return (
         <Svg
@@ -36,7 +36,7 @@ export default function BodyDiagram({ view, muscleData, selectedMuscle, getColor
                     <Path d={anatomy.outline} fill="none" stroke={outline} strokeWidth={1.1} />
                     {groups.map(([group, paths]) => (
                         <G key={group}
-                            fill={getColor(muscleData.find(m => m.id === group)?.value ?? 0)}
+                            fill={getColor(muscleData.find(m => m.id === group)?.value ?? NaN)}
                             stroke={selectedMuscle === group ? '#4a86e8' : outline}
                             strokeWidth={selectedMuscle === group ? 2 : 0.8}
                             strokeLinejoin="round"

@@ -1,3 +1,7 @@
+import { AppState } from 'react-native';
+import muscleRatios from '@/data/MuscleRatio.json';
+import { getMuscleLoadSnapshot } from '@/db/data/MuscleLoad';
+import { subscribeWorkoutChanges } from '@/utils/workoutDataEvents';
 // app/contexts/DataContext.tsx
 import { getExerciseSessionStats } from '@/db/data/ExerciseSessionStats';
 import {
@@ -8,14 +12,9 @@ import {
     getTotalVolumePerSession,
 } from '@/db/data/ExerciseStatSets';
 import { getFavoriteRoutinesByUser } from '@/db/data/FavoriteRoutines';
-import { getMuscleGroupExerciseBreakdown } from '@/db/data/MuscleGroupBreakdown';
 import { getTotalMuscleGroupFocus } from '@/db/data/MuscleGroupFocus';
 import { getMuscleGroupIntensity } from '@/db/data/MuscleGroupIntensity';
-import { getMuscleGroupSoreness } from '@/db/data/MuscleGroupSoreness';
-import { getMuscleSorenessByMuscleGroup, getAllMuscleSorenessGrouped } from '@/db/data/MuscleSoreness';
 import { getMuscleGroupIdByName } from '@/db/general/MuscleGroups';
-import { getMuscleMaxSoreness } from '@/db/user/UserMuscleMaxSoreness';
-import { getAllIndividualMuscleMaxSoreness } from '@/db/user/UserIndividualMuscleMaxSoreness';
 import {
     deleteFavoriteGraph,
     getFavoriteGraphsByUserId,
@@ -24,20 +23,11 @@ import {
 import { getCurrentMax, getRecentSorenessExercises, getTopExercise } from '@/db/workout/SessionExercises';
 import { getMax1RM, getWeeklySetCount } from '@/db/workout/SessionSets';
 import {
-    getMonthlyWorkoutCount,
-    getQuarterlyWorkoutCount,
     getTotalCaloriesBurned,
-    getWeeklyWorkoutCount,
-    getWorkoutCountByUser,
-    getYearlyWorkoutCount,
     getAllWorkoutCounts
 } from '@/db/workout/WorkoutSessions';
 import { fillResultsWithDates } from '@/utils/workoutUtils';
-import { 
-    calculateWeightedMuscleGroupSoreness, 
-    createRatioMap 
-} from '@/utils/muscleSorenessCalculations';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useCallback, useEffect, useRef, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
 
@@ -75,6 +65,9 @@ interface DataContextValue {
     };
     muscleGroupIntensity: any[];
     muscleGroupSoreness: any[];
+    muscleLoadStatus: string;
+    muscleLoadIssues: string[];
+    refreshMuscleLoad: () => Promise<void>;
     refreshData: () => void;
     fetchExerciseSessionStats: (
         exerciseId: number,
@@ -114,6 +107,9 @@ export const DataContext = createContext<DataContextValue>({
     },
     muscleGroupIntensity: [],
     muscleGroupSoreness: [],
+    muscleLoadStatus: 'loading',
+    muscleLoadIssues: [],
+    refreshMuscleLoad: async () => {},
     refreshData: () => {
         console.warn('refreshData function not implemented');
     },
@@ -172,6 +168,50 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     const [muscleGroupFocusBySet, setMuscleGroupFocusBySet] = useState<MuscleGroupStat[]>([]);
     const [muscleGroupIntensity, setMuscleGroupIntensity] = useState<any[]>([]);
     const [muscleGroupSoreness, setMuscleGroupSoreness] = useState<any[]>([]);
+
+    const [muscleLoadStatus, setMuscleLoadStatus] = useState('loading');
+    const [muscleLoadIssues, setMuscleLoadIssues] = useState<string[]>([]);
+    const loadRequest = useRef(0);
+    const refreshMuscleLoad = useCallback(async () => {
+        const request = ++loadRequest.current;
+        if (!db || !user.id) return;
+        try {
+            const snapshot = await getMuscleLoadSnapshot(db, user.id, muscleRatios);
+            if (request !== loadRequest.current) return;
+            setMuscleGroupSoreness(snapshot.groups);
+            setMuscleLoadIssues(snapshot.issues);
+            setMuscleLoadStatus('ready');
+        } catch {
+            if (request !== loadRequest.current) return;
+            setMuscleGroupSoreness([]);
+            setMuscleLoadStatus('error');
+            setMuscleLoadIssues(['Estimated soreness could not be calculated. Tap Retry.']);
+        }
+    }, [db, user.id]);
+
+    useEffect(() => {
+        let active = true;
+        void Promise.resolve().then(() => {
+            if (!active) return;
+            setMuscleGroupSoreness([]);
+            setMuscleLoadStatus('loading');
+            void refreshMuscleLoad();
+        });
+        const unsubscribe = subscribeWorkoutChanges(() => { void refreshMuscleLoad(); });
+        const appState = AppState.addEventListener('change', state => {
+            if (state === 'active') void refreshMuscleLoad();
+        });
+        const timer = setInterval(() => {
+            if (AppState.currentState === 'active') void refreshMuscleLoad();
+        }, 60000);
+        return () => {
+            active = false;
+            // This ref is an async request generation counter, not a DOM ref.
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            ++loadRequest.current;
+            unsubscribe(); appState.remove(); clearInterval(timer);
+        };
+    }, [refreshMuscleLoad]);
 
     const refreshData = async () => {
         if (db && user.id !== 0) {
@@ -265,52 +305,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
                 setMuscleGroupIntensity(intensity);
             });
             
-            // Fetch muscle group soreness data
-            const [currentSoreness, maxSoreness, individualMaxSoreness, allMuscleSoreness] = await Promise.all([
-                getMuscleGroupSoreness(db, user.id),
-                getMuscleMaxSoreness(db, user.id),
-                getAllIndividualMuscleMaxSoreness(db, user.id),
-                getAllMuscleSorenessGrouped(db, user.id)  // Fetch all muscle soreness in one query
-            ]);
-
-            // Create a map of individual muscle max soreness for quick lookup
-            const individualMaxMap = new Map(
-                individualMaxSoreness.map((m: { muscle_id: any; max_soreness: any; }) => 
-                    [m.muscle_id, m.max_soreness]
-                )
-            );
-
-            // Calculate weighted soreness for each muscle group
-            const ratioMap = createRatioMap();
-            const muscleDataWithWeighted = currentSoreness.map((item: { muscle_group_id: any; muscle_group: any; }) => {
-                const max = maxSoreness.find((m: { muscle_group_id: any; }) => 
-                    m.muscle_group_id === item.muscle_group_id
-                );
-                
-                // Get individual muscle soreness for this group from pre-fetched data
-                const individualMuscles = allMuscleSoreness[item.muscle_group_id] || [];
-                
-                // Add max soreness to each individual muscle
-                const musclesWithMax = individualMuscles.map((muscle: { muscle_id: any; }) => ({
-                    ...muscle,
-                    max_soreness: individualMaxMap.get(muscle.muscle_id) || 1
-                }));
-                
-                // Calculate weighted soreness
-                const weightedSoreness = calculateWeightedMuscleGroupSoreness(
-                    item.muscle_group,
-                    musclesWithMax,
-                    ratioMap
-                );
-                
-                return {
-                    ...item,
-                    max_soreness: max ? max.max_soreness : 1,
-                    weighted_soreness: weightedSoreness
-                };
-            });
-            
-            setMuscleGroupSoreness(muscleDataWithWeighted);
+            await refreshMuscleLoad();
         }
     }
 
@@ -356,31 +351,12 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         }
     };    
 
-    const getMuscleGroupBreakdown = async (muscleGroupName: string) => {
-        if (!db || !user?.id) return null;
-        try {
-            return await getMuscleGroupExerciseBreakdown(db, user.id, muscleGroupName);
-        } catch (error) {
-            console.error('Error fetching muscle group breakdown:', error);
-            return null;
-        }
-    };    
-
-    const getMuscleSoreness = async (muscleGroup: string) => {
-        if (!db || !user?.id) return [];
-        try {
-            const muscleGroupId = await getMuscleGroupIdByName(db, muscleGroup);
-            if (!muscleGroupId) {
-                console.warn(`Muscle group "${muscleGroup}" not found.`);
-                return [];
-            }
-
-            return await getMuscleSorenessByMuscleGroup(db, user.id, muscleGroupId);
-        } catch (e) {
-            console.error('Failed to fetch muscle soreness:', e);
-            return [];
-        }
-    }
+    const getMuscleGroupBreakdown = async (name: string) => {
+        const group = muscleGroupSoreness.find(g => g.muscle_group === name);
+        return group ? { routine: 'All contributing workouts', date: 'Contributions to this soreness estimate', exercises: group.exercises } : null;
+    };
+    const getMuscleSoreness = async (name: string) =>
+        muscleGroupSoreness.find(g => g.muscle_group === name)?.muscles ?? [];
 
     const getRecentExercises = async (muscleGroup: string) => {
         if (!db || !user?.id) return [];
@@ -426,7 +402,7 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
     };
 
     useEffect(() => {
-        refreshData();
+        void Promise.resolve().then(refreshData);
         // const handler = () => refreshData();
         // dataEvents.addEventListener('refreshData', handler);
         // return () => dataEvents.removeEventListener('refreshData', handler);
@@ -442,6 +418,9 @@ export const DataContextProvider = ({ children }: DataContextValueProviderProps)
         workoutCount,
         muscleGroupIntensity,
         muscleGroupSoreness,
+        muscleLoadStatus,
+        muscleLoadIssues,
+        refreshMuscleLoad,
         refreshData,
         fetchExerciseSessionStats,
         fetchExerciseStats,

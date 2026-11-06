@@ -1,6 +1,7 @@
+import { isHoldExercise } from '@/utils/sorenessModel';
+import { SetInputField, ActiveExercise } from '@/constants/types';
 import ExerciseOptionsModal from '@/components/modals/Workout/ExerciseOptionsModal';
 import { ClearView, Text, View } from '@/components/Themed';
-import { ActiveExercise } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -10,7 +11,7 @@ import SetCard from './SetCard';
 interface WorkoutInfoProps {
     exercise: ActiveExercise;
     exerciseIndex: number;
-    onUpdateSet: (setId: number, field: 'weight' | 'reps', value: string) => void;
+    onUpdateSet: (setId: number, field: SetInputField, value: string) => void;
     onAddSet: () => void;
     onToggleComplete?: (setId: number) => void;
     onDeleteSet: (setId: number) => void;
@@ -67,23 +68,24 @@ export default function WorkoutInfo({
             <View style={styles.headerRow}>
                 <Text style={styles.headerText}>Set</Text>
                 <Text style={styles.headerText}>Weight</Text>
-                <Text style={styles.headerText}>Reps</Text>
+                <Text style={styles.headerText}>{isHoldExercise(exercise.title) ? 'Seconds' : 'Reps'}</Text>
                 <View style={{ width: 80 }}></View>
             </View>
             
             {/* Sets List */}
             {exercise.sets.map((set, index) => (
                 <SetCard 
-                    key={index} 
+                    key={set.id}
                     set={set}
                     index={index}
                     equipment={exercise.equipment}
+                    exerciseTitle={exercise.title}
                     onUpdateSet={onUpdateSet} 
                     editingSet={editingSet} 
                     setEditingSet={setEditingSet}
                     onToggleComplete={onToggleComplete ? (setId) => onToggleComplete(setId) : undefined}
                     onDeleteSet={(setId) => onDeleteSet(setId)}
-                    isCompleted={completedSets ? completedSets.includes(set.id) : false}
+                    isCompleted={Boolean(onToggleComplete) && (completedSets ? completedSets.includes(set.id) : Boolean(set.completed))}
                 />
             ))}
             

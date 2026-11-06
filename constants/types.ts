@@ -56,7 +56,15 @@ export interface ActiveExercise {
     routine_id?: number;
 }
 
+export type SetInputField = 'weight' | 'reps' | 'rir' | 'is_warmup' | 'duration_seconds';
+
 export interface ActiveSet {
+    rir?: number | null;
+    is_warmup?: number | null;
+    duration_seconds?: number | null;
+    completed?: boolean | number;
+    completion_source?: string;
+    body_mass_lbs?: number | null;
     id: number;
     reps: number;
     weight: number;

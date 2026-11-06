@@ -1,4 +1,4 @@
-import { Exercise } from '@/constants/types';
+import { SetInputField, Exercise } from '@/constants/types';
 import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { useContext } from 'react';
 
@@ -12,15 +12,15 @@ export const useWorkoutActions = () => {
     const updateSet = (
         exerciseIndex: number,
         setId: number,
-        field: 'weight' | 'reps',
+        field: SetInputField,
         value: string
     ) => {
         // Allow empty string, or parse to number
         // For partial decimals like "120." or "0.", parseFloat handles them correctly
         // but we need to preserve trailing decimals during input
-        let numericValue: number;
+        let numericValue: number | null;
         if (value === '' || value === '.') {
-            numericValue = 0;
+            numericValue = ['rir', 'is_warmup', 'duration_seconds'].includes(field) ? null : 0;
         } else {
             const parsed = parseFloat(value);
             numericValue = isNaN(parsed) ? 0 : parsed;

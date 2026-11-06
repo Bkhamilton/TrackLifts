@@ -1,3 +1,4 @@
+import { workoutDuration } from '@/utils/workoutDuration';
 import { History } from '@/constants/types'; // Adjust import path as needed
 import { HistoryContext } from '@/contexts/HistoryContext';
 import { WorkoutContext } from '@/contexts/WorkoutContext';
@@ -6,7 +7,7 @@ import { formatLengthTime, formatShortDate } from '@/utils/workoutUtils';
 import { MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../../Themed';
 import ConfirmationModal from '../ConfirmationModal';
 import OptionsModal from '../OptionsModal';
@@ -86,7 +87,7 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                         <View style={styles.statsContainer}>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="clock-outline" size={20} color="#ff8787" />
-                                <Text style={styles.statText}>{formatLengthTime(history.endTime)}</Text>
+                                <Text style={styles.statText}>{formatLengthTime(workoutDuration(history.startTime, history.endTime))}</Text>
                             </View>
                             <View style={styles.statItem}>
                                 <MaterialCommunityIcons name="weight-pound" size={20} color="#ff8787" />
@@ -131,8 +132,12 @@ export default function HistoryModal({ visible, close, history }: HistoryModalPr
                     if (choice === 'yes') {
                         console.log('Workout deleted');
                         // Add your deletion logic here
-                        await deleteWorkout(history);
-                        close();
+                        try {
+                            await deleteWorkout(history);
+                            close();
+                        } catch (error) {
+                            Alert.alert('Workout not deleted', 'Please try again. Your saved workout was kept.');
+                        }
                     }
                     setConfirmationModalVisible(false);
                 }}

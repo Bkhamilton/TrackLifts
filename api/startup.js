@@ -1,4 +1,5 @@
-import { createTables } from '@/api/createTables';
+import { migrateRecordedLoad } from './migrateRecordedLoad';
+import { createTables, createIndexes } from '@/api/createTables';
 import { createViews } from '@/api/createViews';
 import { syncTables } from '@/api/sync';
 import userData from '@/data/UserData.json';
@@ -349,9 +350,10 @@ export const initializeDatabase = async (db) => {
                 await AsyncStorage.setItem('optimizedViewsV1', 'true');
             }
         }
-        // Open a connection to the SQLite database.
+        await migrateRecordedLoad(db);
     } catch (error) {
         console.error("Error initializing database:", error);
+        throw error;
     }
 };
 
