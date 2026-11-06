@@ -1,5 +1,7 @@
 # Muscle Soreness Recalculation
 
+> Historical implementation guide. For future algorithm strategy and approved decisions, use [Muscle Soreness Algorithm Plan](MUSCLE_SORENESS_ALGORITHM_PLAN.md).
+
 ## Overview
 
 This document details the implementation strategy for recalculating muscle group soreness using weighted contributions from individual muscles, as defined in the `MuscleRatio.json` file. The goal is to provide a more accurate representation of muscle group soreness by accounting for the relative importance of each muscle within a muscle group.
