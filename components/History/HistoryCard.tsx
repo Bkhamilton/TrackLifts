@@ -1,3 +1,4 @@
+import { workoutDuration } from '@/utils/workoutDuration';
 import { ClearView, Text, View } from '@/components/Themed';
 import { History } from '@/constants/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -68,7 +69,7 @@ export default function HistoryCard({ history, open }: HistoryCardProps) {
                                 color="#ff8787" 
                                 style={styles.icon}
                             />
-                            <Text style={styles.statText}>{formatTime(history.endTime)}</Text>
+                            <Text style={styles.statText}>{formatTime(workoutDuration(history.startTime, history.endTime))}</Text>
                         </ClearView>
                         
                         <ClearView style={styles.statItem}>

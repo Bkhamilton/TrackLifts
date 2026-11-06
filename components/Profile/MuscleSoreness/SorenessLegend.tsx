@@ -13,7 +13,7 @@ const SorenessLegend = ({ getColor }: SorenessLegendProps) => {
 
     return (
         <View style={styles.legendContainer}>
-            <Text style={[styles.legendTitle, { color: grayText }]}>Soreness Scale:</Text>
+            <Text style={[styles.legendTitle, { color: grayText }]}>Time-weighted set exposure:</Text>
             <View style={styles.legendBar}>
                 {[...Array(10)].map((_, i) => (
                     <View
@@ -25,10 +25,11 @@ const SorenessLegend = ({ getColor }: SorenessLegendProps) => {
                     />
                 ))}
             </View>
+            <Text style={{ fontSize: 12 }}>Older sets fade by half every 48 hours for this overview. Effort is unknown; easy and hard sets count equally. This is not a recovery clock. Gray means unavailable or unmapped.</Text>
             <View style={styles.legendLabels}>
-                <Text style={[styles.legendLabel, { color: grayText }]}>Low</Text>
-                <Text style={[styles.legendLabel, { color: grayText }]}>Medium</Text>
-                <Text style={[styles.legendLabel, { color: grayText }]}>High</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>0 units</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>5 units</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>10+ units</Text>
             </View>
         </View>
     );

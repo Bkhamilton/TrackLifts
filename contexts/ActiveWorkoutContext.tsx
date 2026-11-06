@@ -1,13 +1,12 @@
+import { withWorkoutDataLock } from '@/utils/workoutDataLock';
 // app/contexts/ActiveWorkoutContext.tsx
 import { ActiveRoutine, Exercise, Workout } from '@/constants/types';
-import { updateMuscleSoreness } from '@/db/data/MuscleGroupSoreness';
-import { clearExerciseSets, insertExerciseSet } from '@/db/user/ExerciseSets';
-import { clearRoutineExercises, getRoutineExercise, insertRoutineExercise } from '@/db/user/RoutineExercises';
-import { getPreviousMax1RM, insertExerciseMaxHistory } from '@/db/workout/ExerciseMaxHistory';
-import { insertSessionExercise } from '@/db/workout/SessionExercises';
-import { insertSessionSet } from '@/db/workout/SessionSets';
+import { insertRecordedExercises, rebuildExerciseRecords, validateWorkoutTimes } from '@/db/workout/recordedWork';
+import { notifyWorkoutChanged } from '@/utils/workoutDataEvents';
+import { insertExerciseSet } from '@/db/user/ExerciseSets';
+import { clearRoutineExercises, insertRoutineExercise } from '@/db/user/RoutineExercises';
 import { insertWorkoutSession } from '@/db/workout/WorkoutSessions';
-import { calculateCaloriesBurned, calculateEstimated1RM } from '@/utils/workoutCalculations';
+import { calculateCaloriesBurned } from '@/utils/workoutCalculations';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { DBContext } from './DBContext';
 import { RoutineContext } from './RoutineContext';
@@ -172,170 +171,57 @@ export const ActiveWorkoutContextProvider = ({ children }: ActiveWorkoutContextV
     };
 
     const startWorkout = () => {
+        setRoutine(prev => ({ ...prev, exercises: prev.exercises.map(ex => ({ ...ex, sets: ex.sets.map(set => ({ ...set, completed: false })) })) }));
         setIsActiveWorkout(true);
         const now = new Date();
         setStartTime(now.getTime());
         setStartTimeStr(now.toISOString());
     };
 
-    const saveWorkoutToDatabase = async (workout: Workout) => {
-        // Only update RoutineExercises if routineId is valid (not 0)
-        if (workout.routine.id && workout.routine.id !== 0) {
-            if (workout.routine.exercises.some(ex => ex.exercise_id === undefined)) {
-                try {
-                    await db.runAsync('BEGIN TRANSACTION');
-                    await clearRoutineExercises(db, workout.routine.id);
-                    for (const exercise of workout.routine.exercises) {
-                        exercise.exercise_id ?
-                            await insertRoutineExercise(db, {
-                                routine_id: workout.routine.id,
-                                exercise_id: exercise.exercise_id
-                            }) :
-                            await insertRoutineExercise(db, {
-                                routine_id: workout.routine.id,
-                                exercise_id: exercise.id
-                            });
-                    }
-                    await db.runAsync('COMMIT');
-                } catch (error) {
-                    await db.runAsync('ROLLBACK');
-                    throw error;
-                }
-            }
+    const saveWorkoutToDatabase = async (workout: Workout) => withWorkoutDataLock(db, async () => {
+        if (!db || !user.id) throw new Error('Workout database is not ready.');
+        validateWorkoutTimes(workout.startTime, workout.endTime);
+        if (!workout.routine.exercises.some(ex => ex.sets.some(s => s.completed === true || s.completed === 1))) {
+            throw new Error('Mark at least one performed set complete before saving.');
         }
-
-        // Calculate duration in minutes
-        const start = new Date(workout.startTime!);
-        const end = new Date(workout.endTime || Date.now());
-        const durationMinutes = (end.getTime() - start.getTime()) / 1000 / 60;
-
-        // Get user weight in lbs (fallback to 180lbs if unknown)
-        const weightLbs = userStats?.weight
-            ? parseFloat(userStats.weight)
-            : 180;
-
-        // Calculate calories burned
-        const caloriesBurned = calculateCaloriesBurned({
-            weightLbs,
-            durationMinutes,
-            met: 4.5, // or adjust based on intensity
-        });        
-
-        // Insert WorkoutSession (allow routineId to be 0 or null for ad-hoc workouts)
-        const sessionId = await insertWorkoutSession(db, {
-            userId: user.id,
-            routineId: workout.routine.id !== 0 ? workout.routine.id : null, // or 0 if your schema requires
-            startTime: workout.startTime,
-            endTime: workout.endTime,
-            notes: workout.notes || null,
-            caloriesBurned,
-        });
-
-        // Insert session exercises and sets as usual
+        const mass = Number(userStats?.weight);
+        const bodyMass = Number.isFinite(mass) && mass > 0 ? mass : null;
+        const durationMinutes = (Date.parse(workout.endTime!) - Date.parse(workout.startTime!)) / 60000;
+        let sessionId: number;
         await db.runAsync('BEGIN TRANSACTION');
         try {
-            for (const exercise of workout.routine.exercises) {
-                const sessionExerciseId = exercise.exercise_id ?
-                    await insertSessionExercise(db, {
-                        sessionId: sessionId,
-                        exerciseId: exercise.exercise_id,
-                    }) :
-                    await insertSessionExercise(db, {
-                        sessionId: sessionId,
-                        exerciseId: exercise.id,
-                    }); 
-
-                // Calculate max 1RM for this exercise in this session
-                let max1RM = 0;
-                for (const set of exercise.sets) {
-                    let est1RM;
-                    // Calculate effective weight based on equipment type
-                    let effectiveWeight = set.weight;
-                    
-                    if (exercise.equipment === 'Bodyweight') {
-                        // Bodyweight + additional weight (if any)
-                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) + set.weight;
-                    } else if (exercise.equipment === 'Assisted Bodyweight') {
-                        // Bodyweight - assistance (assistance should be stored as positive value)
-                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) - Math.abs(set.weight);
-                    }
-                    // For other equipment types, use weight as-is
-                    
-                    est1RM = calculateEstimated1RM(effectiveWeight, set.reps);
-                    if (est1RM > max1RM) max1RM = est1RM;
-                }
-
-                // Get previous max 1RM from ExerciseMaxHistory
-                const exerciseId = exercise.exercise_id || exercise.id;
-                const prevMax1RM = await getPreviousMax1RM(db, user.id, exerciseId);
-
-                // If new max1RM is greater, insert into ExerciseMaxHistory
-                if (max1RM > prevMax1RM) {
-                    await insertExerciseMaxHistory(db, {
-                        user_id: user.id,
-                        exercise_id: exerciseId,
-                        one_rep_max: max1RM,
-                        calculation_date: workout.endTime || new Date().toISOString(),
-                    });
-                }
-
-                for (let i = 0; i < exercise.sets.length; i++) {
-                    const set = exercise.sets[i];
-                    
-                    // Calculate effective weight for 1RM estimation based on equipment type
-                    let effectiveWeight = set.weight;
-                    if (exercise.equipment === 'Bodyweight') {
-                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) + set.weight;
-                    } else if (exercise.equipment === 'Assisted Bodyweight') {
-                        effectiveWeight = (userStats?.weight ? parseFloat(userStats.weight) : 180) - Math.abs(set.weight);
-                    }
-                    
-                    const estimated1RM = calculateEstimated1RM(effectiveWeight, set.reps);
-                    await insertSessionSet(db, {
-                        sessionExerciseId: sessionExerciseId,
-                        setOrder: i + 1,
-                        weight: set.weight,
-                        reps: set.reps,
-                        estimated1RM: estimated1RM,
-                        restTime: set.restTime || null,
-                        completed: true,
-                    });
-                }
-
-                // Only update ExerciseSets if routineId is valid
-                if (workout.routine.id && workout.routine.id !== 0) {
-                    const exerciseId = exercise.exercise_id || exercise.id;
-                    await clearExerciseSets(db, workout.routine.id, exerciseId);
-
-                    // Fetch routine_exercise_id once per exercise
-                    const routineExercise = await getRoutineExercise(db, workout.routine.id, exerciseId);
-
-                    const routineExerciseId = routineExercise?.id;
-                    if (!routineExerciseId) continue; // Skip if not found
-
+            sessionId = await insertWorkoutSession(db, {
+                userId: user.id, routineId: workout.routine.id || null,
+                startTime: workout.startTime, endTime: workout.endTime,
+                notes: workout.notes || null,
+                caloriesBurned: bodyMass === null ? null : calculateCaloriesBurned({ weightLbs: bodyMass, durationMinutes }),
+            });
+            await insertRecordedExercises(db, sessionId, workout.routine.exercises, bodyMass);
+            if (workout.routine.id) {
+                await db.runAsync('DELETE FROM ExerciseSets WHERE routine_exercise_id IN (SELECT id FROM RoutineExercises WHERE routine_id = ?)', [workout.routine.id]);
+                await clearRoutineExercises(db, workout.routine.id);
+                for (const exercise of workout.routine.exercises) {
+                    const exerciseId = exercise.exercise_id ?? exercise.id;
+                    const routineExerciseId = await insertRoutineExercise(db, { routine_id: workout.routine.id, exercise_id: exerciseId });
                     for (let i = 0; i < exercise.sets.length; i++) {
                         const set = exercise.sets[i];
                         await insertExerciseSet(db, {
-                            routine_exercise_id: routineExerciseId,
-                            set_order: i + 1,
-                            weight: set.weight,
-                            reps: set.reps,
-                            date: new Date().toISOString(),
+                            routine_exercise_id: routineExerciseId, set_order: i + 1,
+                            weight: set.weight, reps: set.reps, date: workout.endTime,
                         });
                     }
                 }
-
-                await updateMuscleSoreness(db, user.id);
             }
+            await rebuildExerciseRecords(db, user.id);
             await db.runAsync('COMMIT');
         } catch (error) {
             await db.runAsync('ROLLBACK');
             throw error;
         }
         refreshRoutines();
-
+        notifyWorkoutChanged();
         return sessionId;
-    };
+    });
 
     const resetRoutine = () => {
         const defaultRoutine = {

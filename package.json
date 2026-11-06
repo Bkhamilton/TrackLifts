@@ -15,7 +15,8 @@
     "export:web": "expo export --platform web",
     "postinstall": "setup-skia-web",
     "test:web-bootstrap": "node --test __tests__/webGraphicsBootstrap.test.cjs",
-    "test:chart-compat": "node --test __tests__/chartFrameCompatibility.test.cjs"
+    "test:chart-compat": "node --test __tests__/chartFrameCompatibility.test.cjs",
+    "test:muscle-load": "node --test __tests__/muscleLoad.test.cjs"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.5",

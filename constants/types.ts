@@ -57,6 +57,9 @@ export interface ActiveExercise {
 }
 
 export interface ActiveSet {
+    completed?: boolean | number;
+    completion_source?: string;
+    body_mass_lbs?: number | null;
     id: number;
     reps: number;
     weight: number;
