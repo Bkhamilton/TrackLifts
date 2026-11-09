@@ -1,3 +1,4 @@
+import { workoutDuration } from '../../utils/workoutDuration.js';
 export const getTotalWorkoutSessions = async (db) => {
     try {
         const query = `
@@ -212,7 +213,7 @@ export const getWeeklyAverageDuration = async (db, userId) => {
     try {
         // 1. Get all end_time values for this user's workouts in the last 7 days
         const query = `
-            SELECT end_time
+            SELECT start_time, end_time
             FROM WorkoutSessions
             WHERE user_id = ? 
               AND start_time >= datetime('now', '-7 days')
@@ -234,7 +235,7 @@ export const getWeeklyAverageDuration = async (db, userId) => {
             return dd * 86400 + hh * 3600 + mm * 60 + ss;
         };
 
-        const totalSeconds = rows.reduce((sum, row) => sum + toSeconds(row.end_time), 0);
+        const totalSeconds = rows.reduce((sum, row) => sum + toSeconds(workoutDuration(row.start_time, row.end_time)), 0);
         const avgSeconds = Math.round(totalSeconds / rows.length);
 
         // 3. Format back to DD:HH:MM:SS or HH:MM:SS

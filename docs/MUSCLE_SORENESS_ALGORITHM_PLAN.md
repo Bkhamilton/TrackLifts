@@ -1,6 +1,6 @@
 # Muscle Soreness Algorithm: Source-of-Truth Plan
 
-**Status:** Draft strategy; implementation has not been approved.
+**Status:** Estimated-soreness v1 implemented for review after the user explicitly reaffirmed the soreness-indicator purpose. Section 16 is the current decision and implementation; Section 15 records the superseded workload-only approach. The estimate is physiology-informed, not clinically validated.
 **Created:** 2026-11-06
 **Scope:** Muscle load, soreness estimation, and related training guidance.
 
@@ -19,7 +19,7 @@ This document supersedes older documents for **future algorithm strategy**, incl
 
 Those documents remain historical implementation or feature references. They are not evidence that the existing model accurately predicts soreness or recovery.
 
-The running code remains the authority for current behavior until an approved implementation replaces it. This plan describes the repository inspected on 2026-11-06; the exact App Store build and installed database state have not been verified.
+The running code remains the authority for current behavior. Section 16 describes the implementation now proposed for merge. This plan describes the repository inspected on 2026-11-06; the exact App Store build and installed database state have not been verified.
 
 ### Decision labels
 
@@ -31,7 +31,7 @@ The running code remains the authority for current behavior until an approved im
 | Open | A decision or research question that must be resolved |
 | Approved | A design decision explicitly accepted and recorded here |
 
-Implementation phases below are proposals. Do not interpret an illustrative equation, suggested input, or phase as approval to change production code.
+Earlier implementation phases below are historical proposals. The user subsequently authorized the estimated-soreness implementation in Section 16, which takes precedence wherever earlier candidate-selection or workload-only decisions conflict. Training-clearance and validated personalized prediction remain outside this implementation.
 
 ### Maintaining this document
 
@@ -46,7 +46,7 @@ Keep model versions, calibration assumptions, release criteria, and unresolved q
 - Accuracy is the highest priority.
 - Retain useful existing architecture and algorithm components where justified.
 - Replace substantial portions when retaining them would compromise accuracy.
-- This stage produces a revisable plan, not application code changes.
+- The initial planning stage produced this revisable plan. The subsequent user request authorizes implementation; the first deliverable is corrected recorded exposure, with predictive release gates retained.
 
 **Proposed success definition**
 
@@ -62,7 +62,7 @@ It must not claim that:
 
 An accurate workload calculation is a prerequisite, not proof of accurate soreness prediction. Predictive and recommendation quality must be assessed against observations outside the algorithm itself.
 
-## 3. Current implementation baseline
+## 3. Historical implementation baseline (before recorded-load v1)
 
 ### 3.1 Data flow
 
@@ -513,8 +513,122 @@ Research informs hypotheses and limitations. TrackLifts-specific predictive clai
 | 2026-11-06 | Create this document as the source of truth for future algorithm strategy | Accepted constraint | Older guides remain historical references |
 | 2026-11-06 | Record current behavior, defects, candidate architecture, phases, and open decisions | Draft revision | No replacement formula, coefficients, or implementation approved |
 
-## 14. Next planning milestone
+## 14. Next milestone
 
-Resolve D1-D5 and define the initial observation and acceptance protocol. Then approve the input-correctness and mapping-audit scope.
+Review the recorded-load implementation in Section 15 and test it on an installed native app with a copy of existing workout history. Predictive work still needs the optional observation/privacy protocol, candidate comparisons, and predeclared acceptance criteria. Implementation authorization does not supply missing observations or establish predictive accuracy.
 
-The next milestone is an agreed specification that can be implemented and evaluated, not an unvalidated replacement equation.
+
+## 15. Superseded: recorded-load v1 implementation (2026-11-06)
+
+### Scope and decision log extension
+
+The user explicitly requested implementation after pushing this plan. This supersedes the initial planning-only restriction. The following are implementation choices for a reviewable PR, not evidence of biological validation or blanket approval of the predictive release gates.
+
+| Decision | Implementation and rationale |
+|---|---|
+| D1 / D4 | Label the active indicator **Recent Muscle Load**; show time-weighted set units instead of a soreness percentage. Recorded sets do not measure symptoms. |
+| D2 / D3 | No new symptom collection, analytics, or mandatory effort logging. Missing effort is not inferred from weight or repetitions. |
+| D5 | Any valid performed set with a known mapping contributes exposure, including zero-added bodyweight, assisted, band, machine and hold sets. A hold counts as one exposure, not as a known duration or an equivalent hard set. |
+| D6 | Existing group weights summarize supported catalog muscles, renormalized over that supported scope. Unsupported muscles are explicitly named and gray in details. The highest constituent and all individual values remain visible. |
+| D7 | Do not select a soreness predictor without observations. Use a deterministic exposure baseline now; retain old SQL/helper code as legacy comparison code, disconnected from the active visualization. |
+| D8 / D9 | No invented novelty, repeated-bout or personalized recovery coefficients. |
+| D10 | One pure JavaScript model, local SQLite inputs, one shared timestamp/snapshot for diagram, details and breakdown. No network or symptom-data export is introduced. |
+| D11 | Recompute exposure from surviving saved sets and current mappings. Later strength records cannot rewrite exposure. Mapping changes intentionally replay history under the identified mapping version. |
+| D14 | Historical completion is `legacy-unknown`; original rows and IDs stay intact. New checked sets are `confirmed`. Unknown body mass stays null. |
+
+### Exact arithmetic and interpretation
+
+For each valid stored performed set, per-muscle exposure is:
+
+`catalog coefficient × 2^(-elapsed hours / 48)`
+
+A completed set contributes one unit before mapping/time weighting. This **does not distinguish easy and hard sets with identical counts**, infer proximity to failure, measure tonnage, or claim that machine loads are interchangeable. More completed sets produce more exposure; secondary coefficients are preserved even at cold start. More assistance never increases dose. Weight/repetitions are validated but do not set exposure magnitude. This deliberately avoids fake precision when effort and mechanics are unknown.
+
+The 48-hour half-life is a **recency display convention**, not a muscle recovery duration. It is exposed in the legend. Contributions accumulate without a seven-day or midnight cliff. Only numerical tails below `1e-8` per set are ignored. Both timestamps must not be future-dated; invalid starts are excluded. Old duration-only finish fields fall back to start time with an explicit limitation. Time zones in ISO values are respected; zone-less SQLite timestamps are treated as UTC.
+
+Group units are the weighted mean of supported constituent units. The common color/bar scale is `clamp(units / 10, 0, 1)`, with 0, 5 and 10+ unit anchors. The numeric units are **not capped**. Ten units is a visualization endpoint, not a danger or soreness threshold. A low group average is accompanied by the highest constituent. Unsupported compartments are excluded from the denominator rather than represented as recovered.
+
+The explanation lists all contributing sessions, sorted by residual contribution. Its percentages are shares of **uncapped weighted group units**, not pain probabilities or shares of the saturated color scale. A set joined to several muscles is counted once per session-exercise.
+
+Versions: `recorded-load-v1`, `catalog-v3-audited-scope-v1`. Mapping coefficients remain catalog assumptions, not validated soreness fractions. Any changed coefficient/model convention requires a version bump and regression review.
+
+### Input, persistence and compatibility changes
+
+- Completion is stored in active workout state, including navigation between screens. Finish is available after at least one checked set; only checked sets enter workout history. Unchecked sets remain in the routine template. Creating a named routine on the finish screen preserves the completed-work snapshot.
+- Finish saves an ISO timestamp. Duration cards, weekly averages and duration editing accept both old duration fields and new timestamps.
+- Saves, edits and deletes use transactions. The full session and sets succeed or roll back together. Save/edit/delete failures stay visible to the user; repeated finish taps are guarded.
+- Additive, idempotent migration adds `completion_source` and `body_mass_lbs` to SessionSets. No existing history, muscle IDs or legacy maxima are deleted by migration. Migration failures propagate instead of exposing a half-ready database.
+- Body mass is snapshotted when available for new work. Added bodyweight and assistance use consistent resistance for estimated records, without a guessed 180 lb body mass. Dumbbell entries retain their existing per-dumbbell convention. Bands, catalog holds, unknown mass and sets above 12 reps do not generate new estimated 1RM values. This record policy does not affect exposure.
+- Edits retain historical body mass and provenance. Newly added history sets default to unverified completion. Exercise records rebuild from surviving stored set estimates after writes; old estimates are preserved unless their sets are edited/deleted. No lifetime maxima are used in the new indicator, so stale or remapped legacy muscle maxima cannot influence it.
+- Refresh on successful save/edit/delete, screen focus, app foreground and once per active minute. Request generations discard stale async results. Errors clear the active visualization to unavailable/gray with Retry, rather than a recovered/green result.
+
+### Catalog audit and supported scope
+
+All current catalog coefficients must be finite and in `(0, 1]`; duplicate exercise/muscle rows use their largest coefficient once and do not double-count work. The audit found duplicate Upper Traps entries in Shrug and Dumbbell Shrug; these are removed from the catalog, and existing databases are safely deduplicated by the model without changing IDs. Current unsupported compartments are **Teres, Middle Traps, Abductors, Deep Core and Serratus**. They are explicitly displayed as unmapped. No speculative coefficients were added to make colors reach an endpoint.
+
+Correct the `Lower Chest` anatomical metadata from pectoralis minor to the inferior sternocostal region of pectoralis major. Keep the display key and IDs stable. Chest regions and other catalog compartments remain approximate exercise labels, not validated non-overlapping biological models. A broader anatomical/technique/participation audit remains a predictive-release prerequisite.
+
+### Defect disposition
+
+| Finding | Result |
+|---|---|
+| C1 | No zero-added-weight disappearance or assistance-as-added-load in the indicator; consistent record resistance and snapshot provenance. |
+| C2 | Checked work alone enters new session history; legacy ambiguity retained and labeled. |
+| C3 / C4 | Shared units, colors and intentional endpoints; no raw-score/default-max division or extra display transform. |
+| C5 | Explicit unsupported compartments, supported-scope normalization, metadata correction; expanded biological mapping audit remains open. |
+| C6 | Actual residual group contributions across all sessions, no multiplied set counts. |
+| C7 | Mutation/focus/foreground/active-minute refresh and explicit errors. |
+| C8 | Read-time replay removes corrected/deleted exposure; record rebuild within writes. Legacy muscle maxima are retained but never consulted. |
+| C9 | No denominator-of-one fallback; no fabricated body mass or effort. |
+| C10 | Continuous elapsed-time weighting; invalid/future event exclusions and legacy timestamp limitations. |
+| C11 | New calculation uses current mappings and surviving events, never migrated muscle-ID maxima. Migration does not recreate muscle IDs. |
+
+### Validation and remaining gates
+
+Automated coverage is in `__tests__/muscleLoad.test.cjs` (`npm run test:muscle-load`), including real SQLite migration/save/read/edit/delete/rollback, user isolation, bodyweight/assistance, unsupported data, date behavior, duplicate mappings, uncapped explanations and shared display arithmetic. TypeScript and export checks cover integration. Existing graphics regression checks remain applicable.
+
+These tests establish calculation behavior, **not predictive accuracy**. No held-out soreness observations exist in this implementation, so no predictive error, calibration score, recovery recommendation, or validated DOMS curve is claimed. Manual native-device checks, existing-user database QA, empirical candidate comparison, personalization and guidance evaluation remain outstanding. Preserve the release gates in Section 9 for those later features.
+
+
+## 16. Current decision: preserve estimated soreness (supersedes Section 15)
+
+The user explicitly clarified that this component must estimate how sore muscle groups and their individual muscles are expected to be, including bodyweight and assisted work and soreness fading over time. A workload-only replacement does not meet that purpose. This decision supersedes D7–D9 and the predictive-release deferral **for an explicitly labeled heuristic estimate**. It does not claim measured symptoms, validated individual prediction or clearance to train. The transaction, completion, provenance, replay, mapping audit and refresh fixes from Section 15 remain.
+
+### Evidence and boundaries
+
+- [Hody et al., 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6510035/): delayed soreness commonly develops 12–24 hours after unfamiliar eccentric exercise, peaks around 24–72 hours and subsides over roughly 5–7 days. Repeated exposure attenuates responses; soreness is not a direct measure of muscle damage or recovered performance.
+- [Proximity-to-failure experiment, 2023](https://pubmed.ncbi.nlm.nih.gov/36752989/): in 24 resistance-trained participants performing six bench-press sets, failure produced more soreness than stopping three repetitions short at 24 and 48 hours. This supports considering effort; it does not provide a universal dose equation.
+- [Chen et al., 2019](https://pubmed.ncbi.nlm.nih.gov/30663816/): repeated eccentric bouts across arm, leg and trunk exercises attenuated responses. This supports familiarity as a directional factor, not a validated coefficient for every exercise or person.
+
+These sources inform **direction and time-course shape**. Every numeric coefficient below, including the 0–100 scale and labels, is an engineering heuristic requiring future comparison against reported soreness. There is no evidence-derived conversion from logged sets to an individual's pain score. We do not infer eccentric tempo, range of motion, sleep, injury, nutrition or muscle-specific recovery rates from data the app does not collect. Exercise participation coefficients remain catalog assumptions.
+
+### Inputs and effort
+
+Only performed sets enter the estimate. New saved sets must be checked complete. Legacy completion remains explicitly unverified; migration never invents old effort, duration or body mass. Nullable `rir`, `is_warmup`, and `duration_seconds` columns are added idempotently. The workout/edit screens offer optional effort and warm-up controls. Dynamic effort choices correspond to 5, 3, 1 or 0 repetitions left; holds use Easy/Moderate/Hard/At limit as an ordinal proxy stored in the same field, **not literal repetitions**. Copied routines clear effort and warm-up status for the next workout.
+
+For each dynamic set, explicit RIR (0–8) takes priority. Otherwise, use the median capacity of earlier comparable sessions within 42 days when possible. Capacity is resistance × (1 + (reps + RIR)/30), only for non-warm-up dynamic sets of at most 12 reps; missing historical RIR uses 3. Current inferred RIR is clamped to 0–8 from 30 × (reference/resistance − 1) − current reps, only through 30 current reps. With no reference, assume RIR 3 and label the assumption. This is an approximate within-exercise difficulty index, not a measured 1RM or reliable effort detector. No lifetime muscle maximum enters the score. Later/same-session records cannot influence earlier effort estimates.
+
+Bodyweight resistance index = saved historical body mass + added load. Assisted index = saved mass − absolute assistance. Both signed legacy assistance and positive entries are understood; new assistance is stored as a positive magnitude. The index is comparable only within the same exercise, not actual force on a muscle. Missing historical mass, mechanically invalid assisted indices, and bands use effort/volume fallback; **they still contribute soreness**. Today's profile mass never rewrites old workouts. At the same reported effort/reps, more assistance need not mean less soreness: a less strong person may work equally hard. Without reported effort, increased assistance reduces inferred difficulty when a comparable reference exists.
+
+Plank, Side Plank, Hollow Body Hold and Wall Sit use seconds. New holds require a positive finite duration; legacy unknown durations remain unknown and use a labeled typical-hold assumption. Existing repetitions are never silently converted to seconds. Holds and bands do not produce estimated strength records.
+
+### Exact model conventions (`utils/sorenessModel.js`)
+
+1. Effort weight = 0.3 + 0.9 × exp(−RIR/3). Dynamic volume = clamp(sqrt(reps/8), 0.35, 1.5). Hold volume = clamp(sqrt(seconds/30), 0.25, 1.5), or 1 if old duration is missing. Dose = effort × volume × warm-up factor (0.15 or 1) × hold factor (0.6 or 1).
+2. Familiarity uses only earlier sessions of the same exercise within 84 days. Each contributes min(non-warm-up dose/2, 1) × exp(−age/42 days). Familiarity = 1 − exp(−sum/2). Adaptation multiplier = 1 − 0.35 × familiarity. This modest, bounded attenuation avoids assuming familiar movements can no longer cause soreness. No transfer between different exercises is invented.
+3. Multiply dose by adaptation and the exercise/muscle participation coefficient. Deduplicate mappings by their maximum valid coefficient. Apply diminishing returns to total dose D **per session and muscle**: 6 × log(1 + D/6), allocating the result proportionally among sets.
+4. Each event's peak hour P = 42 − 10 × familiarity + min(6, unadapted event dose/3). With elapsed hours t, delayed response is zero through hour 4, then exp(3 × (ln(x) + 1 − x)), x = (t − 4)/(P − 4). A distinct small acute term 0.12 × exp(−t/8) keeps immediate postexercise discomfort visible. Their sum weights dose. The early acute term may fall before delayed soreness rises; this is intentional. Response tails fade continuously; only negligible contributions older than 21 days are dropped. Earlier history is still used for familiarity/reference.
+5. Sum residual doses across sessions for each muscle; display score = 100 × (1 − exp(−sum/6)). Labels: Minimal <10, Mild <30, Moderate <60, High otherwise. These are display bands, not clinical pain cutoffs or readiness thresholds.
+6. Group score = 70% weighted mean over supported muscles + 30% highest currently involved muscle with participation coefficient at least 0.5. If no such muscle contributes, use the weighted mean alone. This keeps a sore major muscle from disappearing in a large group's average. Existing importance weights are renormalized over supported scope. Individual values and the highest constituent remain visible.
+7. Forecast the same score at six-hour intervals through the next 48 hours; show the maximum when meaningfully higher than now. This is a forecast assuming no new workouts, not an additional current score. The forecast makes delayed onset visible immediately after a workout.
+8. Explanation shares allocate each muscle's nonlinear score proportionally to residual doses, then apply the same group weights. Contributions sum to the displayed group score; joined muscle rows never multiply completed-set counts.
+
+Version: `estimated-soreness-v1`; mapping version: `catalog-v3-deduplicated-v1`. Changes to conventions require version/test/doc updates. `muscleLoadModel.js` remains a disconnected comparison baseline and supplies shared timestamp/color/resistance helpers. The active SQLite snapshot calls `calculateEstimatedSoreness`, despite its compatibility name `getMuscleLoadSnapshot`.
+
+### Uncertainty, compatibility and verification
+
+Missing effort, old completion, unknown duration/mass, missing finish times and first-exposure uncertainty are visible reasons, not fabricated observations. Confidence describes input completeness (limited/moderate), not statistically validated prediction accuracy. Unmapped muscles remain gray/unavailable. Invalid performed data makes affected muscles unavailable rather than falsely recovered; future records are excluded with a visible issue. Reads and mutations remain serialized; save/edit/delete transaction failures roll back and surface errors. The indicator refreshes on writes, focus, foreground and active-minute ticks.
+
+Existing lifetime muscle maxima are preserved for compatibility and ignored. Old session IDs, muscle IDs and stored history are preserved. This new PR includes the necessary foundations from the prior unmerged PR and targets main independently; the old workload-only PR is superseded, not a merge prerequisite.
+
+Automated tests cover curve shape, effort, bodyweight/assistance, holds, familiarity, historical causality, robust references, nonlinear explanation totals, incomplete/invalid data, and real SQLite migration/save/edit/read behavior. Existing transaction/deletion/user-isolation tests are retained. See `ESTIMATED_SORENESS_TESTING.md` for commands and device scenarios. These checks establish implementation consistency, **not physiological predictive accuracy**. Native-device QA and prospective comparisons against users' actual soreness remain necessary before claiming calibrated accuracy. Optional future self-reports could validate and personalize the model; no new symptom collection is introduced here.

@@ -27,7 +27,8 @@ export default function ActiveWorkoutScreen() {
         handleConfirmSave
     } = useHookActiveWorkout();
     const { 
-        routine, 
+        routine,
+        updateRoutine,
         startTime,
         startTimeStr,
         setFinalTime, 
@@ -37,28 +38,15 @@ export default function ActiveWorkoutScreen() {
     } = useContext(ActiveWorkoutContext);
     const { addExercise, updateSet, addSet, deleteSet, deleteExercise, replaceExerciseInRoutine } = useWorkoutActions();
     const { formattedTime, stopTimer } = useWorkoutTimer(startTime, false);
-    const [completedSets, setCompletedSets] = useState<number[]>([]);
-
     const router = useRouter();
-
+    const completedCount = routine.exercises.reduce((n, ex) => n + ex.sets.filter(s => s.completed).length, 0);
+    const canFinish = completedCount > 0;
     const toggleSetComplete = (exerciseIndex: number, setId: number) => {
-        setCompletedSets(prev => {
-            if (prev.includes(setId)) {
-                return prev.filter(id => id !== setId);
-            } else {
-                return [...prev, setId];
-            }
-        });
+        updateRoutine({ ...routine, exercises: routine.exercises.map((ex, i) => i !== exerciseIndex ? ex : {
+            ...ex, sets: ex.sets.map(set => set.id !== setId ? set : { ...set, completed: !set.completed })
+        }) });
     };
-
-    const handleDeleteSet = (exerciseIndex: number, setId: number) => {
-        deleteSet(exerciseIndex, setId);
-        setCompletedSets(prev => prev.filter(id => id !== setId));
-    };
-
-    // Calculate total sets and completed sets
-    const totalSets = routine.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-    const allSetsCompleted = totalSets > 0 && completedSets.length === totalSets;
+    const handleDeleteSet = deleteSet;
 
     const background = useThemeColor({}, 'background');
 
@@ -70,7 +58,7 @@ export default function ActiveWorkoutScreen() {
             const workout = {       
                 routine: routine,
                 startTime: startTimeStr,
-                endTime: formattedTime,
+                endTime: new Date().toISOString(),
                 lengthMin: formattedTime,
                 notes: '',
             };
@@ -79,7 +67,7 @@ export default function ActiveWorkoutScreen() {
             router.replace('/finishWorkout')
         } else {
             // If any sets have been completed, prompt the user
-            if (completedSets.length > 0) {
+            if (completedCount > 0) {
                 openConfirmModal();
                 return;
             }
@@ -90,14 +78,7 @@ export default function ActiveWorkoutScreen() {
         }
     };
 
-    const handleDeleteExercise = (exerciseIndex: number) => {
-        deleteExercise(exerciseIndex);
-        // Remove all sets of the deleted exercise from completed sets
-        setCompletedSets(prev => {
-            const setsToRemove = routine.exercises[exerciseIndex]?.sets.map(set => set.id) || [];
-            return prev.filter(id => !setsToRemove.includes(id));
-        });
-    };
+    const handleDeleteExercise = deleteExercise;
 
     const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number | null>(null);
     
@@ -110,20 +91,20 @@ export default function ActiveWorkoutScreen() {
                 leftContent={<Text>{formattedTime}</Text>}
                 rightContent={
                     <TouchableOpacity 
-                        onPress={allSetsCompleted ? () => handleWorkoutAction(true) : () => handleWorkoutAction(false)} 
+                        onPress={canFinish ? () => handleWorkoutAction(true) : () => handleWorkoutAction(false)}
                         style={[
                             styles.workoutActionButton,
-                            allSetsCompleted ? styles.completeButton : styles.cancelButton
+                            canFinish ? styles.completeButton : styles.cancelButton
                         ]}
                     >
                         <Text 
                             style={
-                                allSetsCompleted 
+                                canFinish
                                     ? styles.doneButtonText 
                                     : styles.cancelButtonText
                             }
                         >
-                            {allSetsCompleted ? 'DONE' : 'CANCEL'}
+                            {canFinish ? 'DONE' : 'CANCEL'}
                         </Text>
                     </TouchableOpacity>
                 }
@@ -142,7 +123,6 @@ export default function ActiveWorkoutScreen() {
                     onAddSet={addSet}
                     onDeleteSet={handleDeleteSet}
                     onToggleComplete={toggleSetComplete}
-                    completedSets={completedSets}
                     onReplaceExercise={(exerciseIndex) => {
                         setExerciseIndexToReplace(exerciseIndex);
                         openReplaceWorkoutModal();

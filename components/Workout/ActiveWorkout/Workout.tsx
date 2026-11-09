@@ -1,5 +1,5 @@
+import { SetInputField, ActiveRoutine } from '@/constants/types';
 import { Text, View } from '@/components/Themed';
-import { ActiveRoutine } from '@/constants/types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import WorkoutInfo from './WorkoutInfo';
@@ -7,7 +7,7 @@ import WorkoutInfo from './WorkoutInfo';
 interface WorkoutProps {
     open: () => void;
     routine: ActiveRoutine;
-    onUpdateSet: (exerciseIndex: number, setId: number, field: 'weight' | 'reps', value: string) => void;
+    onUpdateSet: (exerciseIndex: number, setId: number, field: SetInputField, value: string) => void;
     onAddSet: (exerciseIndex: number) => void;
     onDeleteSet: (exerciseIndex: number, setId: number) => void;
     onToggleComplete?: (exerciseIndex: number, setId: number) => void;

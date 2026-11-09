@@ -1,6 +1,7 @@
+import { sorenessLabel } from '@/utils/sorenessModel';
 import { ClearView, Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import MuscleInfoModal from './MuscleInfoModal';
 import MuscleLabels from './MuscleLabels';
@@ -43,26 +44,10 @@ const MuscleInfoPanel = ({
     view,
 }: MuscleInfoPanelProps) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [exerciseBreakdown, setExerciseBreakdown] = useState<any>(null);
-
-    const { getMuscleSoreness, getMuscleGroupBreakdown } = useContext(DataContext);
-    const [muscleSoreness, setMuscleSoreness] = useState<any[]>([]);
-
-    // Fetch muscle-level soreness when muscle group changes
-    useEffect(() => {
-        if (selectedMuscleData?.id) {
-            const fetchData = async () => {
-                const [sorenessData, breakdownData] = await Promise.all([
-                    getMuscleSoreness(selectedMuscleData.name),
-                    getMuscleGroupBreakdown(selectedMuscleData.name)
-                ]);
-                
-                setMuscleSoreness(sorenessData);
-                setExerciseBreakdown(breakdownData);
-            };
-            fetchData();
-        }
-    }, [selectedMuscleData]);
+    const { muscleGroupSoreness } = useContext(DataContext);
+    const group = muscleGroupSoreness.find(g => g.muscle_group === selectedMuscleData?.name);
+    const muscleSoreness = [...(group?.muscles ?? [])].sort((a, b) => (b.value ?? -1) - (a.value ?? -1));
+    const exerciseBreakdown = group ? { routine: 'All contributing workouts', date: 'Contributions to this soreness estimate', exercises: group.exercises } : null;
 
     if (!selectedMuscleData) {
         return (
@@ -84,15 +69,6 @@ const MuscleInfoPanel = ({
         );
     }
 
-    // Function to get color for individual muscles
-    const getMuscleColor = (score: number, max: number = 1) => {
-        const linear = score / max;
-        const curved = 1 - Math.exp(-0.8 * linear);
-        const alpha = 0.2; // Adjust as needed for more/less curve
-        const normalized = Math.min((1 - alpha) * linear + alpha * curved, 1);
-        return getColor(normalized);
-    };
-
     return (
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
             {/* Info Card (clickable for modal) */}
@@ -111,30 +87,37 @@ const MuscleInfoPanel = ({
                             style={[
                                 styles.intensityBarFill,
                                 {
-                                    width: `${Math.round(selectedMuscleData.value * 100)}%`,
+                                    width: `${(Number.isFinite(selectedMuscleData.value) ? Math.round(selectedMuscleData.value * 100) : 0)}%`,
                                     backgroundColor: getColor(selectedMuscleData.value),
                                 },
                             ]}
                         />
                     </View>
                     <Text style={styles.intensityBarLabel}>
-                        {Math.round(selectedMuscleData.value * 100)}%
+                        {group?.value != null ? `${Math.round(group.value * 100)}` : '—'}
                     </Text>
                 </ClearView>
 
+                <Text style={{ fontSize: 12, marginBottom: 6 }}>
+                    {sorenessLabel(group?.value)} · estimated /100.
+                    {group?.status === 'no-recent-training' ? ' No recent logged training.' : ''}
+                    {group?.confidence === 'limited' ? ' Limited information.' : ''}
+                </Text>
+                {group?.peak?.value > 0 && <Text style={{ fontSize: 12 }}>Highest: {group.peak.muscle_name} ({Math.round(group.peak.value * 100)}/100)</Text>}
+                {group?.forecast48 != null && group.forecast48 > (group.value ?? 0) + .05 && <Text style={{ fontSize: 12 }}>May rise: next 48h estimate up to {Math.round(group.forecast48 * 100)}/100.</Text>}
+                {group?.unsupported?.length > 0 && <Text style={{ fontSize: 12 }}>Unmapped: {group.unsupported.join(', ')}</Text>}
+                {group?.reasons?.length > 0 && <Text style={{ fontSize: 11, marginVertical: 4 }}>{group.reasons.join('. ')}.</Text>}
                 {/* Muscles Affected */}
                 <ClearView style={styles.section}>
                     <Text style={styles.sectionTitle}>Muscles Affected</Text>
                     <ClearView style={styles.muscleContainer}>
-                        {muscleSoreness.slice(0, 4).map((muscle, idx) => (
+                        {muscleSoreness.map((muscle, idx) => (
                             <ClearView key={idx} style={styles.muscleItem}>
-                                <View style={[styles.muscleColorIndicator, { backgroundColor: getMuscleColor(muscle.soreness_score) }]} />
-                                <Text style={styles.muscleName}>{muscle.muscle_name}</Text>
+                                <View style={[styles.muscleColorIndicator, { backgroundColor: getColor(muscle.value ?? NaN) }]} />
+                                <Text style={styles.muscleName}>{muscle.muscle_name}: {muscle.value === null ? (muscle.status === 'unsupported' ? 'unmapped' : 'unavailable') : `${Math.round(muscle.value * 100)}/100`}</Text>
                             </ClearView>
                         ))}
-                        {muscleSoreness.length > 4 && (
-                            <Text style={{ fontSize: 16, color: '#888', marginLeft: 8 }}>...</Text>
-                        )}
+
                     </ClearView>
                 </ClearView>
 
@@ -166,7 +149,7 @@ const MuscleInfoPanel = ({
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 muscleData={selectedMuscleData}
-                breakdown={exerciseBreakdown} // Replace with actual breakdown data
+                breakdown={exerciseBreakdown ?? undefined} // Replace with actual breakdown data
             />
         </View>
     );

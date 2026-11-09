@@ -1,7 +1,9 @@
+import { sorenessColor } from '@/utils/sorenessModel';
+import { useFocusEffect } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import { DataContext } from '@/contexts/DataContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import BodyDiagram from './BodyDiagram';
 import MuscleInfoPanel from './MuscleInfoPanel';
@@ -22,7 +24,9 @@ const MuscleSoreness = () => {
     const cardBackground = useThemeColor({}, 'grayBackground');
     const cardBorder = useThemeColor({}, 'grayBorder');
     
-    const { muscleGroupSoreness, getRecentExercises } = useContext(DataContext);
+    const { muscleGroupSoreness, muscleLoadStatus, muscleLoadIssues, refreshMuscleLoad } = useContext(DataContext);
+
+    useFocusEffect(useCallback(() => { void refreshMuscleLoad(); }, [refreshMuscleLoad]));
 
     // Muscle data with descriptions and exercises
     const muscleData: MuscleGroup[] = [
@@ -73,53 +77,9 @@ const MuscleSoreness = () => {
             s.muscle_group.toLowerCase() === m.name.toLowerCase()
         );
         
-        if (!dbData) return { ...m, value: 0, rawScore: 0, maxSoreness: 1, weightedSoreness: 0 };
-        
-        // Use weighted soreness if available, otherwise fall back to normalized raw soreness
-        const weightedSoreness = dbData.weighted_soreness !== undefined ? dbData.weighted_soreness : 0;
-        const rawScore = dbData.soreness_score || 0;
-        const maxSoreness = dbData.max_soreness || 1;
-        
-        // Enhanced normalization function for display
-        const linear = weightedSoreness;
-        const curved = 1 - Math.exp(-0.8 * linear);
-        const alpha = 0.2; // 0 = pure linear, 1 = pure curved
-        const normalizedSoreness = Math.min(
-            (1 - alpha) * linear + alpha * curved, 1
-        );
-
-        // grab exercises from workout
-        getRecentExercises(m.name).then(exercises => {
-            m.exercises = exercises.map(e => e.name);
-        }).catch(err => {
-            console.error(`Error fetching exercises for ${m.name}:`, err);
-        });
-
-        return {
-            ...m,
-            value: normalizedSoreness,
-            rawScore,
-            maxSoreness,
-            weightedSoreness
-        };
+        return { ...m, value: dbData?.value ?? NaN };
     });
-    
-    // Improved color gradient: green (0) → yellow (0.5) → red (1)
-    const getColor = (intensity: number): string => {
-        if (intensity <= 0.5) {
-            // Green to yellow gradient
-            const r = Math.floor(50 + (intensity * 2 * 205));
-            const g = Math.floor(205);
-            const b = Math.floor(50);
-            return `rgb(${r}, ${g}, ${b})`;
-        } else {
-            // Yellow to red gradient
-            const r = Math.floor(255);
-            const g = Math.floor(205 - ((intensity - 0.5) * 2 * 155));
-            const b = Math.floor(50 - ((intensity - 0.5) * 2 * 50));
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-    };
+    const getColor = sorenessColor;
 
     // Get currently selected muscle data
     const selectedMuscleData = selectedMuscle 
@@ -130,13 +90,20 @@ const MuscleSoreness = () => {
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.getStartedText} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
-                    Muscle Soreness Visualization
+                    Estimated Muscle Soreness
                 </Text>
             </View>
             <View style={{ width: '100%', paddingHorizontal: 16 }}>
                 <View style={styles.separator} lightColor="#e3dada" darkColor="rgba(255,255,255,0.1)" />
             </View>
 
+            <Text style={{ fontSize: 12, paddingHorizontal: 16, marginBottom: 8 }}>
+                Expected soreness from your workouts. Compare muscles below; soreness can rise after training.
+                {muscleLoadStatus === 'loading' ? ' Loading…' : ''}
+                {muscleLoadStatus === 'error' ? ' Unavailable.' : ''}
+            </Text>
+            {muscleLoadIssues.length > 0 && <Text style={{ fontSize: 12, paddingHorizontal: 16 }}>{muscleLoadIssues.join('. ')}</Text>}
+            {muscleLoadStatus === 'error' && <TouchableOpacity onPress={() => void refreshMuscleLoad()}><Text>Retry</Text></TouchableOpacity>}
             {/* View Toggle */}
             <View style={[styles.toggleContainer, { backgroundColor: cardBackground, borderColor: cardBorder }]}>
                 <TouchableOpacity 

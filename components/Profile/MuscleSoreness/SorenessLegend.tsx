@@ -13,7 +13,7 @@ const SorenessLegend = ({ getColor }: SorenessLegendProps) => {
 
     return (
         <View style={styles.legendContainer}>
-            <Text style={[styles.legendTitle, { color: grayText }]}>Soreness Scale:</Text>
+            <Text style={[styles.legendTitle, { color: grayText }]}>Estimated soreness · 0–100:</Text>
             <View style={styles.legendBar}>
                 {[...Array(10)].map((_, i) => (
                     <View
@@ -25,9 +25,10 @@ const SorenessLegend = ({ getColor }: SorenessLegendProps) => {
                     />
                 ))}
             </View>
+            <Text style={{ fontSize: 12 }}>Soreness may build over the next 1–3 days, then fade. Compare this estimate with how you feel; low soreness does not guarantee recovery. Gray means unavailable or unmapped.</Text>
             <View style={styles.legendLabels}>
-                <Text style={[styles.legendLabel, { color: grayText }]}>Low</Text>
-                <Text style={[styles.legendLabel, { color: grayText }]}>Medium</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>Minimal</Text>
+                <Text style={[styles.legendLabel, { color: grayText }]}>Moderate</Text>
                 <Text style={[styles.legendLabel, { color: grayText }]}>High</Text>
             </View>
         </View>

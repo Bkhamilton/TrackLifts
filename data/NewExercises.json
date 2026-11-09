@@ -1079,10 +1079,6 @@
             {
                 "name": "Upper Traps",
                 "value": 1
-            },
-            {
-                "name": "Upper Traps",
-                "value": 0.8
             }
         ],
         "equipment": "Barbell"
@@ -1095,10 +1091,6 @@
             {
                 "name": "Upper Traps",
                 "value": 1
-            },
-            {
-                "name": "Upper Traps",
-                "value": 0.8
             }
         ],
         "equipment": "Dumbbell"
