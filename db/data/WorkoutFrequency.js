@@ -6,10 +6,12 @@
  */
 export const getWorkoutFrequencyByUser = async (db, userId) => {
     try {
-        return await db.getAllAsync(
+        const rows = await db.getAllAsync(
             'SELECT workout_date, session_count FROM WorkoutFrequency WHERE user_id = ? ORDER BY workout_date DESC',
             [userId]
         );
+        if (!Array.isArray(rows)) throw new Error('Workout frequency response is unavailable.');
+        return rows;
     } catch (error) {
         console.error('Error fetching workout frequency:', error);
         throw error;

@@ -127,7 +127,7 @@ export default function useHookFinishWorkout() {
                 await saveWorkoutToDatabase(safeFinalWorkout);
                 saved.current = true;
             }
-            refreshHistory();
+            void refreshHistory().catch(error => console.error('Error refreshing workout history:', error));
 
             // Handle split completion logic
             const completedNormally = await handleSplitCompletion();

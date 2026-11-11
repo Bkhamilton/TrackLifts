@@ -8,7 +8,7 @@ import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import AddFavoriteGraphModal from '@/components/modals/Data/AddFavoriteGraphModal';
 //import FavoriteGraphDisplayModal from '@/components/modals/Data/FavoriteGraphDisplayModal';
 import AddExerciseModal from '@/components/modals/Workout/AddExerciseModal';
-import { ScrollView, View } from '@/components/Themed';
+import { ScrollView, Text, View } from '@/components/Themed';
 import Title from '@/components/Title';
 import { DataContext } from '@/contexts/DataContext';
 import useHookData from '@/hooks/profile/useHookData';
@@ -31,6 +31,8 @@ export default function DataScreen() {
         selectedGraph,
         weeklyFrequency,
         monthlyFrequency,
+        frequencyStatus,
+        frequencyError,
         favoriteGraphModal,
         setFavoriteGraphModal,
         refreshing,
@@ -73,10 +75,19 @@ export default function DataScreen() {
             }
         >
             <View style={styles.cardContainer}>
-                <DataHeader 
+                {frequencyStatus === 'loading' && <Text>Loading workout frequency…</Text>}
+                {frequencyStatus === 'error' && (
+                    <View>
+                        <Text accessibilityRole="alert">{frequencyError}</Text>
+                        <TouchableOpacity onPress={handleRefresh} disabled={refreshing}>
+                            <Text>Retry workout frequency</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+                {frequencyStatus === 'ready' && <DataHeader
                     stats={workoutStats} 
                     weeklyFrequency={weeklyFrequency}
-                />
+                />}
             </View>
 
             <FavoriteGraphs
@@ -92,9 +103,9 @@ export default function DataScreen() {
             
             <MuscleGroupStats />
             
-            <WorkoutHistory 
+            {frequencyStatus === 'ready' && <WorkoutHistory
                 data={monthlyFrequency}
-            />
+            />}
             
             <FavoriteRoutines />
 

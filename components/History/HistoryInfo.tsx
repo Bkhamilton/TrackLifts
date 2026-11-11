@@ -30,6 +30,7 @@ function getMonthYear(dateString: string) {
 export default function HistoryInfo({ open, data }: HistoryInfoProps) {
 
     const { refreshHistory } = useContext(WorkoutContext);
+    const [refreshing, setRefreshing] = useState(false);
 
     // Group data by month/year, then by week
     const sections = useMemo(() => {
@@ -67,12 +68,15 @@ export default function HistoryInfo({ open, data }: HistoryInfoProps) {
         );
     }
 
-    const [refreshing, setRefreshing] = useState(false);
-
-    const handleRefresh = () => {
+    const handleRefresh = async () => {
         setRefreshing(true);
-        refreshHistory();
-        setRefreshing(false);
+        try {
+            await refreshHistory();
+        } catch (error) {
+            console.error('Error refreshing history:', error);
+        } finally {
+            setRefreshing(false);
+        }
     };    
 
     return (

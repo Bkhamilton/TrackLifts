@@ -93,7 +93,7 @@ export default function FinishWorkoutScreen() {
                 setSelectedRoutineId={setSelectedRoutineId}
                 onContinue={async () => {
                     await handleRoutineSelection();
-                    refreshHistory();
+                    void refreshHistory().catch(error => console.error('Error refreshing workout history:', error));
                     clearRoutine();
                     router.replace('/(tabs)/(index)');
                 }}

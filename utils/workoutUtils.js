@@ -31,6 +31,7 @@ export function getLast30Days() {
 
 // Fills in missing days with session_count: 0
 export function buildLast7DaysFrequency(rawFrequency) {
+    if (!Array.isArray(rawFrequency)) return [];
     const lookup = Object.fromEntries(
         rawFrequency.map(row => [row.workout_date, row.session_count])
     );
@@ -41,6 +42,7 @@ export function buildLast7DaysFrequency(rawFrequency) {
 }
 
 export const buildLast30DaysFrequency = (rawFrequency) => {
+    if (!Array.isArray(rawFrequency)) return [];
     const lookup = Object.fromEntries(
         rawFrequency.map(row => [row.workout_date, row.session_count])
     );

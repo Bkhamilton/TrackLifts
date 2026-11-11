@@ -1,8 +1,7 @@
 // app/contexts/ExerciseContext.tsx
 import { Exercise } from '@/constants/types';
-import { deleteExerciseMuscleByExerciseId, insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
+import { insertExerciseMuscle } from '@/db/general/ExerciseMuscles';
 import { deleteExercise, insertExercise } from '@/db/general/Exercises';
-import { deleteExerciseSetsByExerciseId } from '@/db/user/ExerciseSets';
 import { getExerciseData } from '@/utils/exerciseHelpers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { DBContext } from './DBContext';
@@ -65,22 +64,10 @@ export const ExerciseContextProvider = ({ children }: ExerciseContextValueProvid
     };
 
     const deleteExerciseFromDB = async (exerciseId: number): Promise<void> => {
-        if (db) {
-            try {
-                // Delete the exercise from the database
-                await deleteExercise(db, exerciseId);
-                // also delete the associated ExerciseMuscles and ExerciseSets entries
-                await deleteExerciseMuscleByExerciseId(db, exerciseId);
-                await deleteExerciseSetsByExerciseId(db, exerciseId);
-
-                // Update the exercises state to remove the deleted exercise
-                setExercises((prevExercises) =>
-                    prevExercises.filter((exercise) => exercise.id !== exerciseId)
-                );
-            } catch (error) {
-                console.error('Error deleting exercise from DB:', error);
-            }
-        }
+        await deleteExercise(db, exerciseId);
+        setExercises((prevExercises) =>
+            prevExercises.filter((exercise) => exercise.id !== exerciseId)
+        );
     }    
 
     useEffect(() => {
