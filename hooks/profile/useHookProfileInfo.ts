@@ -1,138 +1,150 @@
+import { UserProfileStats } from '@/constants/types';
 import { DataContext } from '@/contexts/DataContext';
-import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
-import { updateUserProfileStats } from '@/db/user/UserProfileStats';
-import { updateUsername } from '@/db/user/Users';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
-interface ProfileData {
-    username: string;
-    avatar: string;
-    createdAt: string;
-    stats: {
-        height: string;
-        weight: string;
-        bodyFat: string;
-        favoriteExercise: string;
-        memberSince: string;
-        goals: string;
-    };
-    workoutStats: {
-        workoutsCompleted: number;
-        weeklyWorkouts: number;
-        weeklySets: number;
-        topExercise: string;
-    }
+interface ProfileDraft {
+    username?: string;
+    stats?: Partial<UserProfileStats>;
 }
 
+const statFields: (keyof UserProfileStats)[] = [
+    'height', 'weight', 'bodyFat', 'favoriteExercise', 'memberSince', 'goals',
+];
+
 export default function useHookProfileInfo() {
-    const [isEditing, setIsEditing] = useState(false);
-    const { db } = useContext(DBContext);
-    const { user, userStats, updateUser, updateUserStats } = useContext(UserContext);
+    const { user, userStats, profileStatus, profileError, reloadProfile, saveProfile } = useContext(UserContext);
     const { weeklySetsCount, topExercise, workoutCount } = useContext(DataContext);
+    const [draft, setDraft] = useState<ProfileDraft | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const saving = useRef(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
+    const [aboutIsEditing, setAboutIsEditing] = useState(false);
+    const aboutEntry = useRef<{ draft: ProfileDraft | null; error: string | null } | null>(null);
+    const isEditing = draft !== null;
+    const isReady = profileStatus === 'ready';
 
-    const openAboutModal = () => setAboutModalVisible(true);
-    const closeAboutModal = () => setAboutModalVisible(false);
-
-    const [profile, setProfile] = useState<ProfileData>({
-        username: user.username || '',
+    // Untouched fields and readonly summaries always come from current providers.
+    const profile = {
+        username: draft?.username ?? user.username,
         avatar: '👤',
-        createdAt: user.createdAt || '',
-        stats: {
-            height: userStats.height,
-            weight: userStats.weight,
-            bodyFat: userStats.bodyFat,
-            favoriteExercise: userStats.favoriteExercise,
-            memberSince: userStats.memberSince,
-            goals: userStats.goals
-        },
+        createdAt: user.createdAt,
+        stats: { ...userStats, ...draft?.stats },
         workoutStats: {
             workoutsCompleted: workoutCount.total,
             weeklyWorkouts: workoutCount.weekly,
             weeklySets: weeklySetsCount,
-            topExercise: topExercise ? topExercise.title : 'N/A'
-        }
-    });
+            topExercise: topExercise ? topExercise.title : 'N/A',
+        },
+    };
 
-    const handleSave = async () => {
-        setIsEditing(false);
-        try {
-            // Save both username and stats in parallel
-            const promises = [];
-            
-            if (profile.username !== user.username) {
-                promises.push(
-                    updateUsername(db, user.id, profile.username).then(() => {
-                        updateUser({ ...user, username: profile.username });
-                    })
-                );
-            }
-            
-            promises.push(
-                updateUserProfileStats(db, user.id, profile.stats).then(() => {
-                    updateUserStats({
-                        ...userStats,
-                        height: profile.stats.height,
-                        weight: profile.stats.weight,
-                        bodyFat: profile.stats.bodyFat,
-                        favoriteExercise: profile.stats.favoriteExercise,
-                        memberSince: profile.stats.memberSince,
-                        goals: profile.stats.goals
-                    });
-                })
-            );
-            
-            await Promise.all(promises);
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            // Optionally show error to user
-        }
+    const handleCancel = () => {
+        if (saving.current) return;
+        setDraft(null);
+        setSaveError(null);
     };
 
     const handleEditToggle = async () => {
-        if (isEditing) {
-            // If no changes were made, just toggle editing state
-            if (JSON.stringify(profile.stats) === JSON.stringify(userStats) && profile.username === user.username) {
-                setIsEditing(false);
-            } else {
-                await handleSave();
-            }
-        } else {
-            setIsEditing(true);
+        if (!isReady || saving.current) return;
+        if (draft === null) {
+            setDraft({});
+            setSaveError(null);
+            return;
+        }
+        saving.current = true;
+        setIsSaving(true);
+        setSaveError(null);
+        try {
+            await saveProfile(draft);
+            setDraft(null);
+        } catch {
+            setSaveError('Unable to save your profile. Your changes are still here; please retry or cancel.');
+        } finally {
+            saving.current = false;
+            setIsSaving(false);
         }
     };
 
     const handleChange = (field: string, value: string) => {
-        setProfile(prev => {
-            if (field.includes('.')) {
-                const [parent, child] = field.split('.');
-                const parentValue = prev[parent as keyof ProfileData];
-                if (typeof parentValue === 'object' && parentValue !== null) {
-                    return {
-                        ...prev,
-                        [parent]: {
-                            ...parentValue,
-                            [child]: value
-                        }
-                    };
-                }
-                return prev;
+        if (!isReady || saving.current) return;
+        if (field === 'username') {
+            setDraft(previous => previous === null ? null : { ...previous, username: value });
+        } else {
+            const key = statFields.find(key => field === `stats.${key}`);
+            if (key) {
+                setDraft(previous => previous === null ? null : {
+                    ...previous, stats: { ...previous.stats, [key]: value },
+                });
             }
-            return {
-                ...prev,
-                [field]: value
-            };
-        });
+        }
+    };
+
+    const openAboutModal = () => {
+        if (saving.current || aboutModalVisible) return;
+        aboutEntry.current = { draft, error: saveError };
+        setAboutIsEditing(draft !== null);
+        setAboutModalVisible(true);
+    };
+
+    const closeAboutModal = () => {
+        if (saving.current) return;
+        const entry = aboutEntry.current;
+        if (entry) {
+            setDraft(entry.draft);
+            setSaveError(entry.error);
+        }
+        aboutEntry.current = null;
+        setAboutIsEditing(false);
+        setAboutModalVisible(false);
+    };
+
+    const handleAboutEditToggle = async () => {
+        if (!isReady || saving.current || !aboutEntry.current) return;
+        if (!aboutIsEditing) {
+            setDraft(previous => previous ?? {});
+            setAboutIsEditing(true);
+            setSaveError(null);
+            return;
+        }
+        saving.current = true;
+        setIsSaving(true);
+        setSaveError(null);
+        try {
+            // About saves Goals only; main-screen edits remain a separate pending draft.
+            await saveProfile({ stats: { goals: draft?.stats?.goals ?? userStats.goals } });
+            const entry = aboutEntry.current;
+            if (entry.draft?.stats) {
+                const stats = { ...entry.draft.stats };
+                delete stats.goals;
+                entry.draft = { ...entry.draft, stats };
+            }
+            setDraft(entry.draft);
+            setSaveError(entry.error);
+            setAboutIsEditing(false);
+        } catch {
+            setSaveError('Unable to save Goals. Your changes are still here; please retry or cancel.');
+        } finally {
+            saving.current = false;
+            setIsSaving(false);
+        }
     };
 
     return {
         aboutModalVisible,
+        aboutIsEditing,
         openAboutModal,
         closeAboutModal,
+        handleAboutEditToggle,
         profile,
         isEditing,
+        isSaving,
+        isReady,
+        profileStatus,
+        error: saveError ?? profileError,
+        reloadProfile,
         handleEditToggle,
+        handleCancel,
         handleChange,
     };
 }
