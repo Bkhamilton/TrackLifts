@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Exercise } from '@/constants/types';
@@ -11,15 +11,19 @@ interface ExerciseModalProps {
     visible: boolean;
     close: () => void;
     exercise: Exercise;
-    onDelete: (exerciseId: number) => void;
+    onDelete: (exerciseId: number) => Promise<void>;
 }
 
 export default function ExerciseModal({ visible, close, exercise, onDelete }: ExerciseModalProps) {
     const [selectedTab, setSelectedTab] = useState<'Muscles' | 'Data'>('Muscles');
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
+    const deleting = useRef(false);
 
     useEffect(() => {
         if (visible) {
             setSelectedTab('Muscles');
+            setDeleteError(null);
         }
     }, [visible]);
 
@@ -31,9 +35,20 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
         }
     };
 
-    const handleDelete = () => {
-        onDelete(exercise.id);
-        close();
+    const handleDelete = async () => {
+        if (deleting.current) return;
+        deleting.current = true;
+        setIsDeleting(true);
+        setDeleteError(null);
+        try {
+            await onDelete(exercise.id);
+            close();
+        } catch (error) {
+            setDeleteError(error instanceof Error ? error.message : 'Unable to delete exercise. Please try again.');
+        } finally {
+            deleting.current = false;
+            setIsDeleting(false);
+        }
     };
 
     return (
@@ -41,11 +56,12 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
             visible = {visible}
             transparent = {true}
             animationType = 'fade'
+            onRequestClose={() => { if (!deleting.current) close(); }}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalPopup}>
                     <View style={[styles.row, styles.alignCenter]}>
-                        <TouchableOpacity onPress={close}>
+                        <TouchableOpacity onPress={close} disabled={isDeleting}>
                             <View>
                                 <MaterialCommunityIcons name="close" size={24} color="#ff8787" />
                             </View>
@@ -98,9 +114,10 @@ export default function ExerciseModal({ visible, close, exercise, onDelete }: Ex
                         {renderTabContent()}
                     </View>
                     <View style={styles.paddingTopLarge}>
-                        <TouchableOpacity onPress={handleDelete}>
+                        {deleteError && <Text accessibilityRole="alert">{deleteError}</Text>}
+                        <TouchableOpacity onPress={handleDelete} disabled={isDeleting}>
                             <View style={styles.deleteButton}>
-                                <Text style={styles.deleteButtonText}>Delete Exercise</Text>
+                                <Text style={styles.deleteButtonText}>{isDeleting ? 'Deleting…' : 'Delete Exercise'}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

@@ -10,7 +10,7 @@ export default function useHookData() {
     const [showFavoriteGraphModal, setShowFavoriteGraphModal] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
-    const { workoutFrequency } = useContext(WorkoutContext);
+    const { workoutFrequency, frequencyStatus, frequencyError, refreshFrequency } = useContext(WorkoutContext);
     const { 
         workoutCount, 
         addFavoriteGraph, 
@@ -21,8 +21,8 @@ export default function useHookData() {
 
     const [selectedGraph, setSelectedGraph] = useState<FavoriteGraph | null>(null);
 
-    const weeklyFrequency = buildLast7DaysFrequency(workoutFrequency);
-    const monthlyFrequency = buildLast30DaysFrequency(workoutFrequency);
+    const weeklyFrequency = buildLast7DaysFrequency(frequencyStatus === 'ready' ? workoutFrequency : null);
+    const monthlyFrequency = buildLast30DaysFrequency(frequencyStatus === 'ready' ? workoutFrequency : null);
 
     const [favoriteGraphModal, setFavoriteGraphModal] = useState(false);
 
@@ -50,10 +50,15 @@ export default function useHookData() {
 
     const [refreshing, setRefreshing] = useState(false);
 
-    const handleRefresh = () => {
+    const handleRefresh = async () => {
         setRefreshing(true);
-        refreshData();
-        setRefreshing(false);
+        try {
+            await Promise.all([refreshData(), refreshFrequency()]);
+        } catch (error) {
+            console.error('Error refreshing Data:', error);
+        } finally {
+            setRefreshing(false);
+        }
     };    
 
     const handleAddFavorite = async (exercise: Exercise, graphType: string) => {
@@ -96,6 +101,8 @@ export default function useHookData() {
         setSelectedGraph,
         weeklyFrequency,
         monthlyFrequency,
+        frequencyStatus,
+        frequencyError,
         favoriteGraphModal,
         setFavoriteGraphModal,
         refreshing,

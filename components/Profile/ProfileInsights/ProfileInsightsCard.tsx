@@ -17,7 +17,7 @@ export default function ProfileInsightsCard() {
 
     const { db } = useContext(DBContext);
     const { user } = useContext(UserContext);
-    const { workoutFrequency } = useContext(WorkoutContext);
+    const { workoutFrequency, frequencyStatus, frequencyError } = useContext(WorkoutContext);
     const { workoutCount, totalCaloriesBurned } = useContext(DataContext);
 
     const cardBackground = useThemeColor({}, 'grayBackground');
@@ -41,9 +41,9 @@ export default function ProfileInsightsCard() {
     const progressData = {
         workoutsThisWeek: workoutCount.weekly, // e.g., 3 workouts
         progressPercentage: 0, // % increase from last week
-        streak: calculateStreak(workoutFrequency), // days
+        streak: frequencyStatus === 'ready' ? calculateStreak(workoutFrequency) : '—', // days
         caloriesBurned: totalCaloriesBurned, // total calories burned
-        lastWorkout: calculateLastWorkout(workoutFrequency), // e.g., "2 days ago"
+        lastWorkout: frequencyStatus === 'ready' ? calculateLastWorkout(workoutFrequency) : '—', // e.g., "2 days ago"
         totalWeightThisWeek,
         averageDuration,
         activeDaysThisMonth: workoutCount.monthly,
@@ -153,6 +153,8 @@ export default function ProfileInsightsCard() {
             </ClearView>
             
             <ClearView style={styles.statsContainer}>
+                {frequencyStatus === 'loading' && <Text>Loading workout frequency…</Text>}
+                {frequencyStatus === 'error' && <Text accessibilityRole="alert">{frequencyError}</Text>}
                 {displayedStats.map(({ icon, value, label, color, key }) => (
                     <StatItem
                         key={key}

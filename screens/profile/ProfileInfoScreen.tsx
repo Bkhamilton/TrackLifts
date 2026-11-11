@@ -15,11 +15,19 @@ export default function ProfileInfoScreen() {
     const router = useRouter();
     const {
         aboutModalVisible,
+        aboutIsEditing,
+        handleAboutEditToggle,
         openAboutModal,
         closeAboutModal,
         profile,
         isEditing,
+        isSaving,
+        isReady,
+        profileStatus,
+        error,
+        reloadProfile,
         handleEditToggle,
+        handleCancel,
         handleChange,
     } = useHookProfileInfo();
 
@@ -28,14 +36,17 @@ export default function ProfileInfoScreen() {
             <Title 
                 title="Profile"
                 leftContent={
-                    <TouchableOpacity onPress={() => router.replace('/(tabs)/profile/main')}>
+                    <TouchableOpacity disabled={isSaving} onPress={() => {
+                        handleCancel();
+                        router.replace('/(tabs)/profile/main');
+                    }}>
                         <MaterialCommunityIcons name="chevron-left" size={24} color="#333" />
                     </TouchableOpacity>
                 } 
                 rightContent={
-                    <TouchableOpacity onPress={handleEditToggle}>
+                    <TouchableOpacity onPress={handleEditToggle} disabled={!isReady || isSaving}>
                         <Text style={styles.editButton}>
-                            {isEditing ? 'Save' : 'Edit'}
+                            {isSaving ? 'Saving…' : isEditing ? 'Save' : 'Edit'}
                         </Text>
                     </TouchableOpacity>
                 }
@@ -45,16 +56,24 @@ export default function ProfileInfoScreen() {
                 style={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}    
             >
+                {profileStatus === 'loading' && <Text>Loading profile…</Text>}
+                {error && <Text accessibilityRole="alert">{error}</Text>}
+                {profileStatus === 'error' && (
+                    <TouchableOpacity onPress={reloadProfile}><Text>Retry loading profile</Text></TouchableOpacity>
+                )}
+                {isEditing && (
+                    <TouchableOpacity onPress={handleCancel} disabled={isSaving}><Text>Cancel changes</Text></TouchableOpacity>
+                )}
                 <AvatarUsernameSection
                     avatar={profile.avatar}
                     username={profile.username}
                     createdAt={profile.createdAt}
-                    isEditing={isEditing}
+                    isEditing={isEditing && !isSaving}
                     onChange={handleChange}
                 />
                 <BodyMetricsSection
                     stats={profile.stats}
-                    isEditing={isEditing}
+                    isEditing={isEditing && !isSaving}
                     onChange={handleChange}
                 />
                 <WorkoutStatsSection
@@ -72,6 +91,11 @@ export default function ProfileInfoScreen() {
                 onClose={closeAboutModal}
                 stats={profile.stats}
                 onChange={handleChange}
+                isEditing={aboutIsEditing}
+                isSaving={isSaving}
+                isReady={isReady}
+                error={error}
+                onEditToggle={handleAboutEditToggle}
             />
         </View>
     );

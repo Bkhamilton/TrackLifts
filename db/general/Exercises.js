@@ -1,3 +1,5 @@
+import { withWorkoutDataLock } from '../../utils/workoutDataLock.js';
+
 export const getExercises = async (db) => {
     try {
         const query = `
@@ -61,10 +63,25 @@ export const updateExercise = async (db, id, title, equipmentId, muscleGroupId) 
 };
 
 export const deleteExercise = async (db, id) => {
-    try {
-        await db.runAsync('DELETE FROM Exercises WHERE id = ?', [id]);
-    } catch (error) {
-        console.error('Error deleting exercise:', error);
-        throw error;
-    }
+    return withWorkoutDataLock(db, async () => {
+        await db.runAsync('BEGIN IMMEDIATE');
+        try {
+            const references = await db.getFirstAsync(`
+                SELECT EXISTS(SELECT 1 FROM RoutineExercises WHERE exercise_id = ?)
+                    OR EXISTS(SELECT 1 FROM SessionExercises WHERE exercise_id = ?)
+                    OR EXISTS(SELECT 1 FROM ExerciseMaxHistory WHERE exercise_id = ?)
+                    OR EXISTS(SELECT 1 FROM FavoriteGraphs WHERE exercise_id = ?) AS referenced
+            `, [id, id, id, id]);
+            if (references.referenced) {
+                throw new Error('This exercise is used by a routine, workout, record, or favorite graph and cannot be deleted.');
+            }
+            await db.runAsync('DELETE FROM ExerciseMuscles WHERE exercise_id = ?', [id]);
+            const result = await db.runAsync('DELETE FROM Exercises WHERE id = ?', [id]);
+            if (result.changes !== 1) throw new Error('This exercise no longer exists. Reopen the exercise list.');
+            await db.runAsync('COMMIT');
+        } catch (error) {
+            try { await db.runAsync('ROLLBACK'); } catch { /* Preserve the original failure. */ }
+            throw error;
+        }
+    });
 };

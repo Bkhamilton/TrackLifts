@@ -4,6 +4,10 @@ This folder contains documentation for various features and future development p
 
 ## Contents
 
+### Audit Backlogs
+
+- **[React Native Cleanup Backlog](REACT_NATIVE_CLEANUP_BACKLOG.md)** - The 31 findings from the November 8, 2026 static audit, with stable IDs, priorities, source references, acceptance criteria, verification questions, and implementation-status tracking.
+
 ### Implementation Guides
 
 - **[Muscle Soreness Recalculation](MUSCLE_SORENESS_RECALCULATION.md)** - Historical guide for the existing weighted calculation. Future algorithm strategy is governed by the Muscle Soreness Algorithm Plan below.

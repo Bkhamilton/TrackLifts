@@ -2,7 +2,6 @@ import EditableInfoRow from '@/components/Profile/ProfileInfo/EditableInfoRow';
 import { Text, View } from '@/components/Themed';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function AboutModal({
@@ -10,35 +9,43 @@ export default function AboutModal({
     onClose,
     stats,
     onChange,
+    isEditing,
+    isSaving,
+    isReady,
+    error,
+    onEditToggle,
 }: {
     visible: boolean;
     onClose: () => void;
     stats: any;
     onChange: (field: string, value: string) => void;
+    isEditing: boolean;
+    isSaving: boolean;
+    isReady: boolean;
+    error: string | null;
+    onEditToggle: () => Promise<void>;
 }) {
-    const [isEditing, setIsEditing] = useState(false);
-
     const grayText = useThemeColor({}, 'grayText');
 
-    const handleEditToggle = () => setIsEditing(e => !e);
-
     return (
-        <Modal visible={visible} animationType="slide" transparent>
+        <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
                     <View style={styles.header}>
                         <Text style={styles.title}>About</Text>
-                        <TouchableOpacity onPress={handleEditToggle}>
-                            <MaterialCommunityIcons name="pencil" size={22} color="#ff8787" />
+                        <TouchableOpacity onPress={onEditToggle} disabled={!isReady || isSaving}>
+                            <Text>{isSaving ? 'Saving…' : isEditing ? 'Save' : 'Edit'}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <MaterialCommunityIcons name="close" size={22} color={grayText} />
+                        <TouchableOpacity onPress={onClose} disabled={isSaving} style={styles.closeButton} accessibilityLabel="Close About and discard only unsaved Goals changes">
+                            {isEditing ? <Text>Cancel</Text> : <MaterialCommunityIcons name="close" size={22} color={grayText} />}
                         </TouchableOpacity>
                     </View>
+                    {isEditing && <Text>Save updates Goals only. Other profile edits stay pending.</Text>}
+                    {error && <Text accessibilityRole="alert">{error}</Text>}
                     <EditableInfoRow
                         label="Goals"
                         value={stats.goals}
-                        isEditing={isEditing}
+                        isEditing={isEditing && !isSaving}
                         onChange={value => onChange('stats.goals', value)}
                     />
                 </View>

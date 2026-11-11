@@ -8,16 +8,18 @@ import { deleteWorkoutSession, updateWorkoutSession } from '@/db/workout/Workout
 import { insertRecordedExercises, rebuildExerciseRecords, validateWorkoutTimes } from '@/db/workout/recordedWork';
 import { notifyWorkoutChanged } from '@/utils/workoutDataEvents';
 import { getHistoryData } from '@/utils/historyHelpers';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DBContext } from './DBContext';
 import { UserContext } from './UserContext';
 
 interface WorkoutContextValue {
     workoutHistory: History[];
     setWorkoutHistory: React.Dispatch<React.SetStateAction<History[]>>;
-    workoutFrequency: any; // Define a more specific type if possible
-    setWorkoutFrequency: React.Dispatch<React.SetStateAction<any>>;
-    refreshHistory: () => void;
+    workoutFrequency: { workout_date: string; session_count: number }[];
+    frequencyStatus: 'loading' | 'ready' | 'error';
+    frequencyError: string | null;
+    refreshFrequency: () => Promise<void>;
+    refreshHistory: () => Promise<void>;
     updateWorkout: (newHistory: History) => Promise<void>;
     deleteWorkout: (workout: History) => Promise<void>;
 }
@@ -25,9 +27,11 @@ interface WorkoutContextValue {
 export const WorkoutContext = createContext<WorkoutContextValue>({
     workoutHistory: [],
     setWorkoutHistory: () => {},
-    workoutFrequency: null,
-    setWorkoutFrequency: () => {},
-    refreshHistory: () => {},
+    workoutFrequency: [],
+    frequencyStatus: 'loading',
+    frequencyError: null,
+    refreshFrequency: async () => {},
+    refreshHistory: async () => {},
     updateWorkout: async () => {
         console.warn('updateWorkout function not implemented');
     },
@@ -45,21 +49,51 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
     const { user } = useContext(UserContext);
 
     const [workoutHistory, setWorkoutHistory] = useState<History[]>([]);
-    const [workoutFrequency, setWorkoutFrequency] = useState<any>(null);
+    const [frequencyResult, setFrequencyResult] = useState<{
+        connection: typeof db;
+        userId: number;
+        rows: WorkoutContextValue['workoutFrequency'];
+        status: WorkoutContextValue['frequencyStatus'];
+        error: string | null;
+    }>({ connection: null, userId: 0, rows: [], status: 'loading', error: null });
+    const isCurrentFrequency = frequencyResult.connection === db && frequencyResult.userId === user.id;
+    const workoutFrequency = isCurrentFrequency ? frequencyResult.rows : [];
+    const frequencyStatus = isCurrentFrequency ? frequencyResult.status : 'loading';
+    const frequencyError = isCurrentFrequency ? frequencyResult.error : null;
+    const frequencyRequest = useRef(0);
 
-    const refreshHistory = () => {
-        // This function can be used to refresh the workout history
-        if (db && user.id !== 0) {
-            getHistoryData(db, user.id).then(historyData => {
-                setWorkoutHistory(historyData || []);
-            });
-            getWorkoutFrequencyByUser(db, user.id).then(frequencyData => {
-                setWorkoutFrequency(frequencyData);
-            });
+    const loadFrequency = useCallback(async () => {
+        const request = ++frequencyRequest.current;
+        if (!db || !user.id) return;
+        try {
+            const rows = await getWorkoutFrequencyByUser(db, user.id);
+            if (request === frequencyRequest.current) {
+                setFrequencyResult({ connection: db, userId: user.id, rows, status: 'ready', error: null });
+            }
+        } catch (error) {
+            if (request === frequencyRequest.current) {
+                setFrequencyResult({
+                    connection: db, userId: user.id, rows: [], status: 'error',
+                    error: 'Unable to load workout frequency. Please retry.',
+                });
+            }
+            throw error;
         }
+    }, [db, user.id]);
 
-        // dataEvents.dispatchEvent('refreshData');
-    }
+    const refreshFrequency = useCallback(async () => {
+        setFrequencyResult({ connection: db, userId: user.id, rows: [], status: 'loading', error: null });
+        await loadFrequency();
+    }, [db, user.id, loadFrequency]);
+
+    const refreshHistory = useCallback(async () => {
+        await Promise.all([
+            db && user.id ? getHistoryData(db, user.id).then(historyData => {
+                setWorkoutHistory(historyData || []);
+            }) : Promise.resolve(),
+            refreshFrequency(),
+        ]);
+    }, [db, user.id, refreshFrequency]);
 
     const updateWorkout = async (newHistory: History) => withWorkoutDataLock(db, async () => {
         if (!db) return;
@@ -84,7 +118,7 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             await db.runAsync('ROLLBACK');
             throw error;
         }
-        refreshHistory();
+        void refreshHistory().catch(error => console.error('Error refreshing workout history:', error));
         notifyWorkoutChanged();
     });
 
@@ -101,20 +135,28 @@ export const WorkoutContextProvider = ({ children }: WorkoutContextValueProvider
             await db.runAsync('ROLLBACK');
             throw error;
         }
-        refreshHistory();
+        void refreshHistory().catch(error => console.error('Error refreshing workout history:', error));
         notifyWorkoutChanged();
     });
 
     useEffect(() => {
-        // Initialize or fetch history data from the database if needed
-        refreshHistory();
-    }, [db, user]);
+        const requests = frequencyRequest;
+        if (db && user.id) {
+            void getHistoryData(db, user.id).then(historyData => {
+                setWorkoutHistory(historyData || []);
+            }).catch(error => console.error('Error loading workout history:', error));
+        }
+        void loadFrequency().catch(error => console.error('Error loading workout frequency:', error));
+        return () => { requests.current++; };
+    }, [db, user.id, loadFrequency]);
 
     const value = {
         workoutHistory,
         setWorkoutHistory,
         workoutFrequency,
-        setWorkoutFrequency,
+        frequencyStatus,
+        frequencyError,
+        refreshFrequency,
         refreshHistory,
         updateWorkout,
         deleteWorkout,
