@@ -12,7 +12,6 @@ import OptionsModal from '@/components/modals/OptionsModal';
 import RoutineModal from '@/components/modals/RoutineModal/RoutineModal';
 import { ScrollView, View } from '@/components/Themed';
 import Title from '@/components/Title';
-import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { HomeContext } from '@/contexts/HomeContext';
 import useHomeActions from '@/hooks/home/useHomeActions';
 import useHookHome from '@/hooks/home/useHookHome';
@@ -60,8 +59,6 @@ export default function HomeScreen() {
 
     const { setRoutineToEdit } = useContext(HomeContext);
 
-    const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
-
     const { showOnboarding, isLoading, handleOnboardingComplete } = useOnboarding();
 
     const [favoritesRefreshKey, setFavoritesRefreshKey] = useState(0);
@@ -84,8 +81,6 @@ export default function HomeScreen() {
         openHelpSupportModal,
         openAppearanceSettingsModal,
         openConfirmationModal,
-        setRoutine,
-        isActiveWorkout
     });
 
     const handleOption = useRoutineOptionsHandler({

@@ -1,4 +1,5 @@
 import { ActiveRoutine, Exercise } from '@/constants/types';
+import { ActiveWorkoutContext } from '@/contexts/ActiveWorkoutContext';
 import { RoutineContext } from '@/contexts/RoutineContext';
 import { clearAllStorage } from '@/utils/debugTools';
 import { useRouter } from 'expo-router';
@@ -15,8 +16,6 @@ interface UseHomeActionsProps {
     openHelpSupportModal: () => void;
     openAppearanceSettingsModal: () => void;
     openConfirmationModal: () => void;
-    setRoutine: (routine: ActiveRoutine) => void;
-    isActiveWorkout: boolean;
 }
 
 export default function useHomeActions({
@@ -28,11 +27,10 @@ export default function useHomeActions({
     openHelpSupportModal,
     openAppearanceSettingsModal,
     openConfirmationModal,
-    setRoutine,
-    isActiveWorkout,
 } : UseHomeActionsProps) {
     const router = useRouter();
     const { addRoutineToDB } = useContext(RoutineContext);
+    const { trySetRoutineForNewWorkout } = useContext(ActiveWorkoutContext);
 
     const onAdd = (routine: { title: string; exercises: Exercise[] }) => {
         const newRoutine = { ...routine, id: 0 };
@@ -46,13 +44,12 @@ export default function useHomeActions({
     };
 
     const onStart = (routine: ActiveRoutine) => {
-        setRoutine(routine);
         closeRoutineModal();
-        if (isActiveWorkout) {
+        if (trySetRoutineForNewWorkout(routine)) {
+            router.replace('/(tabs)/workout/newWorkout');
+        } else {
             alert('You already have an active workout. Please finish it before starting a new one.');
             setTimeout(() => router.replace('/(tabs)/workout/activeWorkout'), 500);
-        } else {
-            router.replace('/(tabs)/workout/newWorkout');
         }
     };
 

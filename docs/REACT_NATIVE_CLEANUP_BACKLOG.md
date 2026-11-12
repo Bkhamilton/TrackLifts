@@ -70,7 +70,7 @@ explicitly records otherwise.
 | ID | Priority | Finding | Status |
 | --- | --- | --- | --- |
 | RN-001 | P1 | History changes hook order when records arrive | Implemented - verification pending |
-| RN-002 | P1 | Starting another routine overwrites an active workout | Needs revalidation |
+| RN-002 | P1 | Starting another routine overwrites an active workout | Implemented - verification pending |
 | RN-003 | P1 | Missing storage metadata authorizes database destruction | Needs revalidation |
 | RN-004 | P1 | Legacy migrations discard custom definitions/mappings | Needs revalidation |
 | RN-005 | P1 | Exercise deletion damages historical references | Implemented - verification pending |
@@ -192,6 +192,13 @@ between handlers. Preserve warning and navigation behavior.
 
 **Acceptance:** Begin A, enter/complete sets, leave the screen, then attempt B
 from Home and Your Routines. A's complete state and start time must survive.
+
+**2026-11-12 implementation — Implemented - verification pending**
+
+`ActiveWorkoutContext` now owns a guarded routine-selection method, and both
+routine-start handlers use it. The existing active-workout alert, modal close,
+and navigation behavior are preserved. Typecheck and lint passed; the Home and
+Your Routines acceptance scenario still needs behavioral verification.
 
 ### RN-003 - P1 - Missing metadata authorizes destruction of an existing database
 

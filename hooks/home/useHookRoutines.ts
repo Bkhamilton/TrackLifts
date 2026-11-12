@@ -11,7 +11,7 @@ export default function useHookRoutines({ favoritesRefreshKey = 0 }: { favorites
     const { db } = useContext(DBContext);
     const { user } = useContext(UserContext);
     const { routines } = useContext(RoutineContext);
-    const { isActiveWorkout, setRoutine } = useContext(ActiveWorkoutContext);
+    const { trySetRoutineForNewWorkout } = useContext(ActiveWorkoutContext);
     const [routineOptionsModal, setRoutineOptionsModal] = useState(false);
     const [routineModal, setRoutineModal] = useState(false);
     const [searchModalVisible, setSearchModalVisible] = useState(false);
@@ -43,15 +43,14 @@ export default function useHookRoutines({ favoritesRefreshKey = 0 }: { favorites
     };
 
     const onStart = (routine: ActiveRoutine) => {
-        setRoutine(routine);
         setRoutineModal(false);
-        if (isActiveWorkout) {
+        if (trySetRoutineForNewWorkout(routine)) {
+            router.replace('/(tabs)/workout/newWorkout');
+        } else {
             alert('You already have an active workout. Please finish it before starting a new one.');
             setTimeout(() => {
                 router.replace('/(tabs)/workout/activeWorkout');
             }, 500);
-        } else {
-            router.replace('/(tabs)/workout/newWorkout');
         }
     };
 
